@@ -43,7 +43,7 @@ public class Scenario {
     protected ArrayList<TelePortal> teleports;
     protected ArrayList<Area> shaded;
     
-    public Scenario(String mapFile){
+    public Scenario(String mapFile) {
         // set parameters
         mapDoc=mapFile;
                 
@@ -175,7 +175,7 @@ public class Scenario {
         return targetArea;
     }
     
-    public double[][] spawnGuards(){
+    public double[][] spawnGuards() {
         double[][] tmp = new double[numGuards][4];
         double dx=spawnAreaGuards.rightBoundary-spawnAreaGuards.rightBoundary;
         double dy=spawnAreaGuards.topBoundary-spawnAreaGuards.bottomBoundary;
