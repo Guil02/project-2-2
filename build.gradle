@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 group 'org.group7'
@@ -14,6 +16,15 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
+javafx {
+    version = "17"
+    modules = [ 'javafx.controls','javafx.fxml', 'javafx.media' ]
+}
+
 test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass.set("org.group7.Main")
 }
