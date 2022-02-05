@@ -11,7 +11,7 @@
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pause" text="Play/Pause">
+            <Button fx:id="pauseButton" mnemonicParsing="false" onMouseClicked="#pause" text="Play/Pause">
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding>
@@ -19,7 +19,7 @@
                   <Insets left="10.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="resetButton" mnemonicParsing="false" onAction="#reset" text="Reset">
+            <Button fx:id="resetButton" mnemonicParsing="false" onMouseClicked="#reset" text="Reset">
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding>

@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 
 public class Game {
 
@@ -29,22 +30,22 @@ public class Game {
     private Label timeLabel;
 
     @FXML
-    void pause(ActionEvent event) {
+    void pause(MouseEvent event) {
 
     }
 
     @FXML
-    void reset(ActionEvent event) {
+    void reset(MouseEvent event) {
 
     }
 
     @FXML
     void initialize() {
         // When the pause button is pressed, the pause method is run.
-        pauseButton.setOnMouseClicked(event -> pause(new ActionEvent()));
+        pauseButton.setOnMouseClicked(this::pause);
 
         // When the reset button is pressed the reset method is run.
-        resetButton.setOnMouseClicked(event -> reset(new ActionEvent()));
+        resetButton.setOnMouseClicked(this::reset);
 
     }
 
