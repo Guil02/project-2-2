@@ -14,14 +14,14 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.group7.Main;
+import org.group7.utils.Config;
+
+//import static org.group7.utils.Config.DEFAULT_MAP_PATH;
 
 /**
  * View controller for the Main Menu. Loaded statically from the Main class.
  */
 public class Menu {
-
-    //perhaps we should have a separate Config class to define all default global constants
-    private static final String defaultMapPath = "/scenarios/testmap.txt";
 
     @FXML private ImageView defaultMapView;
 
@@ -47,7 +47,7 @@ public class Menu {
 
         if (mapChoice.getSelectedToggle().equals(defaultChoice)) {
             //user selected default scenario
-            scenario = new File(getClass().getResource(defaultMapPath).getFile());
+            scenario = new File(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile());
 
             //switch scene
             Stage stage = Main.stage;
@@ -56,15 +56,17 @@ public class Menu {
         } else {
             //user uploaded a scenario file
             //should probably parse file and check for validity before continuing
+
             message.setText("Not implemented yet :(");
         }
     }
 
     @FXML
     void uploadScenario(ActionEvent event) {
+
         mapChoice.selectToggle(uploadChoice);   //select the radio button for the start() method
         message.setText("");                    //clear message text
-
+        startButton.setDisable(true);
         //open new FileChooser dialog. Only allow .txt files.
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
@@ -74,6 +76,7 @@ public class Menu {
         if (chosen != null) {
             scenario = chosen;
             uploadFileName.setText(scenario.getName());
+            startButton.setDisable(false);
         } else {
             message.setText("No file chosen!");
         }
@@ -83,14 +86,13 @@ public class Menu {
     void initialize() {
         //automatically called after the FXMLLoader injects the relevant fxml fields into this controller class
         //it's kinda like a constructor for JavaFX/FXML related stuff
-
         //clear labels
         message.setText("");
         uploadFileName.setText("");
 
         //define simple on-click events for the radio buttons
         uploadChoice.setOnMouseClicked(event -> uploadScenario(new ActionEvent()));     //open file chooser
-        defaultChoice.setOnMouseClicked(event -> message.setText(""));                  //clear message text
+        defaultChoice.setOnMouseClicked(event -> {message.setText(""); startButton.setDisable(false);});                  //clear message text
 
         //define simple hover styling for the start button
         startButton.setOnMouseEntered(event -> startButton.setStyle("-fx-background-color: #27ae60;"));
