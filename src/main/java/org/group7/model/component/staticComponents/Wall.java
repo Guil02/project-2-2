@@ -1,20 +1,11 @@
 package org.group7.model.component.staticComponents;
 
 import org.group7.utils.Point;
+import static org.group7.model.component.ComponentEnum.WALL_COMPONENT;
 
 public class Wall extends StaticComponent {
     public Wall(Point topLeft, Point bottomRight) {
         super(topLeft, bottomRight);
+        setComponent(WALL_COMPONENT);
     }
-
-    public Wall(int x1, int y1, int x2, int y2) {
-        super(x1, y1, x2, y2);
-    }
-
-    @Override
-    public String getTexture() {
-        return "";
-    }
-
-
 }

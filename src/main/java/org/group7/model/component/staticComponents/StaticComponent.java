@@ -11,11 +11,4 @@ public abstract class StaticComponent extends Component {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }
-
-    public StaticComponent(int x1, int y1, int x2, int y2){
-        topLeft = new Point(x1,y1);
-        bottomRight = new Point(x2, y2);
-    }
-
-    public abstract String getTexture();
 }
