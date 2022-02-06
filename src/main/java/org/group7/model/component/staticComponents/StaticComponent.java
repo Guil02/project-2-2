@@ -1,8 +1,9 @@
-package org.group7.model.component;
+package org.group7.model.component.staticComponents;
 
+import org.group7.model.component.Component;
 import org.group7.utils.Point;
 
-public abstract class StaticComponent extends Component{
+public abstract class StaticComponent extends Component {
     private Point topLeft;
     private Point bottomRight;
 
