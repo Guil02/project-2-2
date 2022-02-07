@@ -27,6 +27,10 @@ public class Area {
         return (y > point1.getX()) & (y < point1.getY()) & (x > point2.getX()) & (x < point2.getY());
     }
 
+    public boolean isHit(Point point) {
+        return (point.y > point1.getX()) & (point.y < point1.getY()) & (point.x > point2.getX()) & (point.x < point2.getY());
+    }
+
     /*
         Check whether something with a radius is in the target area
         STILL TO BE IMPLEMENTED

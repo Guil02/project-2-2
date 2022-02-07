@@ -17,4 +17,8 @@ public class Teleporter extends StaticComponent{
         this.target = target;
         setComponent(TELEPORTER_COMPONENT);
     }
+
+    public Point getTarget() {
+        return target;
+    }
 }
