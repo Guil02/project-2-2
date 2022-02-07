@@ -6,7 +6,9 @@ public enum ComponentEnum {
     WALL_COMPONENT(""),
     TELEPORTER_COMPONENT(""),
     SHADED_AREA_COMPONENT(""),
-    TARGET_AREA_COMPONENT("");
+    TARGET_AREA_COMPONENT(""),
+    INTRUDER_SPAWN_AREA(""),
+    GUARD_SPAWN_AREA("");
 
     private final String texture;
 
