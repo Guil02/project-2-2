@@ -12,10 +12,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Scenario {
+    private static boolean printInput = false;
+
     protected double baseSpeedIntruder;
     protected double sprintSpeedIntruder;
     protected double baseSpeedGuard;
@@ -73,93 +76,101 @@ public class Scenario {
     }
 
     private void parseLine(String line) {
-        try(Scanner scanner = new Scanner(line)){
-            String id = scanner.next();
-            String value = scanner.next();
+        try(Scanner scanner = new Scanner(line)) {
+            scanner.useDelimiter("=");
+            if (scanner.hasNext()) {
+                String id = scanner.next();
+                String value = scanner.next();
 
-            id = id.trim();
-            value = value.trim();
+                id = id.trim();
+                value = value.trim();
 
-            String[] items = value.split("");
-            Point topLeft;
-            Point bottomRight;
-            Component component;
-            switch(id){
-                case "name":
-                    name = value;
-                    break;
-                case "gameMode":
-                    gameMode = Integer.parseInt(value); // 0 is exploration, 1 evasion pursuit game
-                    break;
-                case "scaling":
-                    scaling = Double.parseDouble(value);
-                    break;
-                case "height":
-                    height = Integer.parseInt(value);
-                    break;
-                case "width":
-                    width = Integer.parseInt(value);
-                    break;
-                case "numGuards":
-                    numGuards = Integer.parseInt(value);
-                    break;
-                case "numIntruders":
-                    numIntruders = Integer.parseInt(value);
-                    break;
-                case "baseSpeedIntruder":
-                    baseSpeedIntruder = Double.parseDouble(value);
-                    break;
-                case "sprintSpeedIntruder":
-                    sprintSpeedIntruder = Double.parseDouble(value);
-                    break;
-                case "baseSpeedGuard":
-                    baseSpeedGuard = Double.parseDouble(value);
-                    break;
-                case "targetArea":
-                    topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
-                    bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
-                    component  = new TargetArea(topLeft, bottomRight);
-                    staticComponents.add(component);
-                    targetAreas.add((TargetArea) component);
-                    break;
-                case "spawnAreaIntruders":
-                    topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
-                    bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
-                    component = new IntruderSpawnArea(topLeft, bottomRight);
-                    staticComponents.add(component);
-                    intruderSpawnAreas.add((IntruderSpawnArea) component);
-                    break;
-                case "spawnAreaGuards":
-                    topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
-                    bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
-                    component = new GuardSpawnArea(topLeft, bottomRight);
-                    staticComponents.add(component);
-                    guardSpawnAreas.add((GuardSpawnArea) component);
-                    break;
-                case "wall":
-                    topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
-                    bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
-                    component = new Wall(topLeft, bottomRight);
-                    staticComponents.add(component);
-                    walls.add((Wall) component);
-                    break;
-                case "shaded":
-                    topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
-                    bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
-                    component = new ShadedArea(topLeft, bottomRight);
-                    staticComponents.add(component);
-                    shadedAreas.add((ShadedArea) component);
-                    break;
-                case "teleport":
-                    topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
-                    bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
-                    Point target = new Point(Integer.parseInt(items[4]), Integer.parseInt(items[5]));
-                    component = new Teleporter(topLeft, bottomRight, target);
-                    staticComponents.add(component);
-                    teleporters.add((Teleporter) component);
-                    break;
-                case "texture":
-                    // still to do. First the coordinates, then an int with texture type and then a double with orientation
+                if(printInput){
+                    System.out.println("id: " + id);
+                    System.out.println("value: " + value);
+                }
+
+                String[] items = value.split(" ");
+                Point topLeft;
+                Point bottomRight;
+                Component component;
+                switch (id) {
+                    case "name":
+                        name = value;
+                        break;
+                    case "gameMode":
+                        gameMode = Integer.parseInt(value); // 0 is exploration, 1 evasion pursuit game
+                        break;
+                    case "scaling":
+                        scaling = Double.parseDouble(value);
+                        break;
+                    case "height":
+                        height = Integer.parseInt(value);
+                        break;
+                    case "width":
+                        width = Integer.parseInt(value);
+                        break;
+                    case "numGuards":
+                        numGuards = Integer.parseInt(value);
+                        break;
+                    case "numIntruders":
+                        numIntruders = Integer.parseInt(value);
+                        break;
+                    case "baseSpeedIntruder":
+                        baseSpeedIntruder = Double.parseDouble(value);
+                        break;
+                    case "sprintSpeedIntruder":
+                        sprintSpeedIntruder = Double.parseDouble(value);
+                        break;
+                    case "baseSpeedGuard":
+                        baseSpeedGuard = Double.parseDouble(value);
+                        break;
+                    case "targetArea":
+                        topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
+                        bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
+                        component = new TargetArea(topLeft, bottomRight);
+                        staticComponents.add(component);
+                        targetAreas.add((TargetArea) component);
+                        break;
+                    case "spawnAreaIntruders":
+                        topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
+                        bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
+                        component = new IntruderSpawnArea(topLeft, bottomRight);
+                        staticComponents.add(component);
+                        intruderSpawnAreas.add((IntruderSpawnArea) component);
+                        break;
+                    case "spawnAreaGuards":
+                        topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
+                        bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
+                        component = new GuardSpawnArea(topLeft, bottomRight);
+                        staticComponents.add(component);
+                        guardSpawnAreas.add((GuardSpawnArea) component);
+                        break;
+                    case "wall":
+                        topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
+                        bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
+                        component = new Wall(topLeft, bottomRight);
+                        staticComponents.add(component);
+                        walls.add((Wall) component);
+                        break;
+                    case "shaded":
+                        topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
+                        bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
+                        component = new ShadedArea(topLeft, bottomRight);
+                        staticComponents.add(component);
+                        shadedAreas.add((ShadedArea) component);
+                        break;
+                    case "teleport":
+                        topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
+                        bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
+                        Point target = new Point(Integer.parseInt(items[4]), Integer.parseInt(items[5]));
+                        component = new Teleporter(topLeft, bottomRight, target);
+                        staticComponents.add(component);
+                        teleporters.add((Teleporter) component);
+                        break;
+                    case "texture":
+                        // still to do. First the coordinates, then an int with texture type and then a double with orientation
+                }
             }
         }
     }
@@ -214,5 +225,9 @@ public class Scenario {
 
     public double getScaling() {
         return scaling;
+    }
+
+    public static void setPrintInput(boolean printInput) {
+        Scenario.printInput = printInput;
     }
 }
