@@ -1,4 +1,4 @@
-package org.group7.utils;
+package org.group7.geometric;
 
 public class Point {
     public double x;

@@ -1,7 +1,7 @@
 package org.group7.model.component.staticComponents;
 
 import org.group7.model.component.Component;
-import org.group7.utils.Point;
+import org.group7.geometric.Point;
 
 public abstract class StaticComponent extends Component {
     private Point topLeft;

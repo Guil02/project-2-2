@@ -4,7 +4,7 @@ import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.staticComponents.*;
-import org.group7.utils.Point;
+import org.group7.geometric.Point;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 

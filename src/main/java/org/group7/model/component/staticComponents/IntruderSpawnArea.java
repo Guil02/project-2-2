@@ -1,6 +1,6 @@
 package org.group7.model.component.staticComponents;
 
-import org.group7.utils.Point;
+import org.group7.geometric.Point;
 
 import static org.group7.model.component.ComponentEnum.INTRUDER_SPAWN_AREA;
 
