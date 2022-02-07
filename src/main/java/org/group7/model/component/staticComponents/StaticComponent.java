@@ -19,4 +19,12 @@ public abstract class StaticComponent extends Component {
     public Point getBottomRight() {
         return bottomRight;
     }
+
+    public boolean isHit(double x, double y){
+        return x > topLeft.x && x < bottomRight.x && y > topLeft.y && y < bottomRight.y;
+    }
+
+    public boolean isHit(Point point){
+        return point.x > topLeft.x && point.x < bottomRight.x && point.y > topLeft.y && point.y < bottomRight.y;
+    }
 }
