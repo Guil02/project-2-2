@@ -1,6 +1,8 @@
 package org.group7.model;
 
 import org.group7.model.component.Component;
+import org.group7.model.component.playerComponents.Guard;
+import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.staticComponents.*;
 import org.group7.utils.Point;
 
@@ -31,13 +33,16 @@ public class Scenario {
     protected double scaling;
 
     List<Component> staticComponents;
-    List<Component> playerComponents;
     List<Wall> walls;
     List<ShadedArea> shadedAreas;
     List<Teleporter> teleporters;
     List<TargetArea> targetAreas;
     List<GuardSpawnArea> guardSpawnAreas;
     List<IntruderSpawnArea> intruderSpawnAreas;
+
+    List<Component> playerComponents;
+    List<Guard> guards;
+    List<Intruder> intruders;
 
     public Scenario(String mapFile){
         this.filePathString = mapFile;
@@ -50,6 +55,8 @@ public class Scenario {
         targetAreas = new ArrayList<>();
         guardSpawnAreas = new ArrayList<>();
         intruderSpawnAreas = new ArrayList<>();
+        guards = new ArrayList<>();
+        intruders = new ArrayList<>();
 
         filePath = Paths.get(filePathString);
         readMap();
@@ -166,11 +173,31 @@ public class Scenario {
     }
 
     public void spawnGuards(){
-        //TODO implement guard spawning, add them to the playerComponentList
+        int i = 0;
+        Point topLeft = guardSpawnAreas.get(0).getTopLeft();
+        Point bottomRight = guardSpawnAreas.get(0).getBottomRight();
+        double dx = bottomRight.x-topLeft.x;
+        double dy = bottomRight.y-topLeft.y;
+        while(i<numGuards){
+            Guard player = new Guard(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+            playerComponents.add(player);
+            guards.add(player);
+            i++;
+        }
     }
 
     public  void spawnIntruder(){
-        //TODO implement intruder spawning, add them to the playerComponentList
+        int i = 0;
+        Point topLeft = guardSpawnAreas.get(0).getTopLeft();
+        Point bottomRight = guardSpawnAreas.get(0).getBottomRight();
+        double dx = bottomRight.x-topLeft.x;
+        double dy = bottomRight.y-topLeft.y;
+        while(i<numGuards){
+            Intruder player = new Intruder(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+            playerComponents.add(player);
+            intruders.add(player);
+            i++;
+        }
     }
 
     public int getNumGuards() {

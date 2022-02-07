@@ -1,8 +1,8 @@
 package org.group7.utils;
 
 public class Point {
-    double x;
-    double y;
+    public double x;
+    public double y;
 
     public Point(double x, double y) {
         this.x = x;
