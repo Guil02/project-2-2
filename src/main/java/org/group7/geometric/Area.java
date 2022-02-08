@@ -7,7 +7,7 @@ public class Area {
     private Point point2;
 
 
-    public Area(Point point1, Point point2) {
+    public Area(Point point1, Point point2) { //TODO add convention to make sure that point 1 is top left and point 2 is bottom right!
         this.point1 = point1;
         this.point2 = point2;
     }
@@ -24,11 +24,11 @@ public class Area {
         Check whether a point is in the target area
     */
     public boolean isHit(double x, double y) {
-        return (y > point1.getX()) & (y < point1.getY()) & (x > point2.getX()) & (x < point2.getY());
+        return y > point1.getY() && y<point2.getY() && x>point1.getX() && x<point2.getX();
     }
 
     public boolean isHit(Point point) {
-        return (point.y > point1.getX()) & (point.y < point1.getY()) & (point.x > point2.getX()) & (point.x < point2.getY());
+        return point.y > point1.getY() && point.y<point2.getY() && point.x>point1.getX() && point.x<point2.getX();
     }
 
     /*

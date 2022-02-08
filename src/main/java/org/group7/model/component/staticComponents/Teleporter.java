@@ -4,6 +4,10 @@ import org.group7.geometric.Point;
 
 import static org.group7.model.component.ComponentEnum.TELEPORTER_COMPONENT;
 
+/**
+ * The class that describes the teleporter in the game. It teleports a player (when they enter into it i.e. if isHit()
+ * is true) to the target point.
+ */
 public class Teleporter extends StaticComponent{
     private Point target;
     public Teleporter(Point topLeft, Point bottomRight) {

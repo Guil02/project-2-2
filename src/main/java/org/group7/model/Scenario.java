@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class describes the entire map and thus the current game. All the parameters are stored inside of it.
+ */
 public class Scenario {
     private static boolean printInput = false;
 
@@ -34,6 +37,7 @@ public class Scenario {
     protected int width;
     protected double scaling;
 
+    // all the static components stored separately and in 1 list.
     List<Component> staticComponents;
     List<Wall> walls;
     List<ShadedArea> shadedAreas;
@@ -42,6 +46,7 @@ public class Scenario {
     List<GuardSpawnArea> guardSpawnAreas;
     List<IntruderSpawnArea> intruderSpawnAreas;
 
+    // all the player components stored separately and in 1 list.
     List<Component> playerComponents;
     List<Guard> guards;
     List<Intruder> intruders;
@@ -49,6 +54,7 @@ public class Scenario {
     public Scenario(String mapFile){
         this.filePathString = mapFile;
 
+        // initialize all the lists
         staticComponents = new ArrayList<>();
         playerComponents = new ArrayList<>();
         walls = new ArrayList<>();
@@ -61,9 +67,14 @@ public class Scenario {
         intruders = new ArrayList<>();
 
         filePath = Paths.get(filePathString);
+
+        // read in the map and initialize the game.
         readMap();
     }
 
+    /**
+     * This m
+     */
     private void readMap() {
         try(Scanner scanner = new Scanner(filePath, ENCODING.name())){
             while(scanner.hasNextLine()){
