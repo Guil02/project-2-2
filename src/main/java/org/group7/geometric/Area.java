@@ -7,9 +7,22 @@ public class Area {
     private Point point2;
 
 
-    public Area(Point point1, Point point2) { //TODO add convention to make sure that point 1 is top left and point 2 is bottom right!
+    public Area(Point point1, Point point2) {
         this.point1 = point1;
         this.point2 = point2;
+        if ((point1.getX() <= point2.getX()) && (point1.getY() > point2.getY())) {
+            double temp = point1.y;
+            point1.y = point2.y;
+            point2.y = temp;
+        } else if ((point1.getX() > point2.getX()) && (point1.getY() <= point2.getY())) {
+            double temp = point1.x;
+            point1.x = point2.x;
+            point2.x = temp;
+        } else if ((point1.getX() > point2.getX()) && (point1.getY() > point2.getY())) {
+            this.point1 = point2;
+            this.point2 = point1;
+        }
+
     }
 
     public Point getPoint1() {

@@ -50,17 +50,17 @@ public class Vector2D {
 
     public double dot(Vector2D v) {
         return (this.x * v.x + this.y * v.y);
-    }
+    } //dot product
 
     public double cross(Vector2D v) {
         return (this.x * v.y - this.y * v.x);
-    }
+    } //Name of operation?
 
     public Vector2D scale(double scalar) {
         return new Vector2D(this.x * scalar, this.y * scalar);
     }
 
-    public double distance(Vector2D v) {
+    public double distance(Vector2D v) { // can we re name it to euclideanDistance?
         double vx = v.x - this.x;
         double vy = v.y - this.y;
         return Math.sqrt(vx * vx + vy * vy);

@@ -14,5 +14,38 @@ public class Vector2DTest {
         Vector2D added = one.add(two);
         assertTrue(added.getX() == 3 && added.getY() == 7);
     }
+    @Test
+    public void testSub() {
+        Vector2D one = new Vector2D(2,3);
+        Vector2D two = new Vector2D(-1,4);
+        Vector2D substracted = one.sub(two);
+        assertTrue(substracted.getX() == 3 && substracted.getY() == -1);
+    }
 
+    @Test
+    public void testDot() {
+        Vector2D one = new Vector2D(2,3);
+        Vector2D two = new Vector2D(-1,4);
+        double dotProd = one.dot(two);
+        assertEquals(10, dotProd);
+    }
+
+     @Test
+    public void testScale() {
+        Vector2D v = new Vector2D(2,-3);
+        double scalar = 3;
+        Vector2D scaled = v.scale(scalar);
+        assertTrue(scaled.getX() == 6 && scaled.getY() == -9);
+    }
+
+    @Test
+    public void testDistance() {
+        Vector2D one = new Vector2D(2,3);
+        Vector2D two = new Vector2D(-1,4);
+        double distance = one.distance(two);
+        assertEquals(Math.sqrt(10), distance);
+    }
+
+
+    // TODO: getRotatedBy, cross
 }

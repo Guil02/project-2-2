@@ -46,6 +46,6 @@ class StaticComponentTest {
     private StaticComponent createComponent(){
         Point point = new Point(2,3);
         Point point2 = new Point(4,8);
-        return new Wall(point, point2);
+        return new Wall(point, point2); //not passing top left? but bottom left?
     }
 }
