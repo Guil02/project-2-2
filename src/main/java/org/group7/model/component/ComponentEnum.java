@@ -5,19 +5,24 @@ package org.group7.model.component;
  */
 public enum ComponentEnum {
     // all the components with the string path.
-    GUARD_COMPONENT(""),
-    INTRUDER_COMPONENT(""),
-    WALL_COMPONENT(""),
-    TELEPORTER_COMPONENT(""),
-    SHADED_AREA_COMPONENT(""),
-    TARGET_AREA_COMPONENT(""),
-    INTRUDER_SPAWN_AREA(""),
-    GUARD_SPAWN_AREA("");
+    GUARD_COMPONENT(1,""),
+    INTRUDER_COMPONENT(2,""),
+    WALL_COMPONENT(3,""),
+    TELEPORTER_COMPONENT(4,""),
+    SHADED_AREA_COMPONENT(5,""),
+    TARGET_AREA_COMPONENT(6,""),
+    INTRUDER_SPAWN_AREA(7,""),
+    GUARD_SPAWN_AREA(8,"");
 
     // a string with the path to the texture.
     private final String texture;
+    // the id of the component
+    private final int id;
 
-    // the internal enum constructor and the getter for the texture.
-    ComponentEnum(String texture){this.texture = texture;}
+    // the internal enum constructor and the getter for the texture and the id.
+    ComponentEnum(int id, String texture){this.id = id; this.texture = texture;}
     public String getTexture(){return texture;}
+    public int getId() {
+        return id;
+    }
 }
