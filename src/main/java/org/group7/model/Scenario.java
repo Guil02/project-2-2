@@ -73,9 +73,10 @@ public class Scenario {
     }
 
     /**
-     * This m
+     * This method reads from the file that we have given and constructs the entire map.
      */
     private void readMap() {
+        // create a scanner and iterate ove all the lines in the file.
         try(Scanner scanner = new Scanner(filePath, ENCODING.name())){
             while(scanner.hasNextLine()){
                 parseLine(scanner.nextLine());
@@ -85,10 +86,15 @@ public class Scenario {
         }
     }
 
+    /**
+     * this method checks the current line and creates the object related to it in the scenario.
+     * @param line the line that is currently being read.
+     */
     private void parseLine(String line) {
         try(Scanner scanner = new Scanner(line)) {
             scanner.useDelimiter("=");
             if (scanner.hasNext()) {
+                // separate the id and the value from the line.
                 String id = scanner.next();
                 String value = scanner.next();
 
@@ -100,10 +106,15 @@ public class Scenario {
                     System.out.println("value: " + value);
                 }
 
+                // if there are multiple values then split them into separate parts in an array
                 String[] items = value.split(" ");
+
+                // create some useful items.
                 Point topLeft;
                 Point bottomRight;
                 Component component;
+
+                // create the object in the scenario based upon the id provided
                 switch (id) {
                     case "name":
                         name = value;
@@ -115,62 +126,62 @@ public class Scenario {
                         scaling = Double.parseDouble(value);
                         break;
                     case "height":
-                        height = Integer.parseInt(value);
+                        height = Integer.parseInt(value); // the height of the map
                         break;
                     case "width":
-                        width = Integer.parseInt(value);
+                        width = Integer.parseInt(value); // the width of the map
                         break;
                     case "numGuards":
-                        numGuards = Integer.parseInt(value);
+                        numGuards = Integer.parseInt(value); // the amount of guards
                         break;
                     case "numIntruders":
-                        numIntruders = Integer.parseInt(value);
+                        numIntruders = Integer.parseInt(value); // the amount of intruders
                         break;
                     case "baseSpeedIntruder":
-                        baseSpeedIntruder = Double.parseDouble(value);
+                        baseSpeedIntruder = Double.parseDouble(value); // the walking speed of intruders
                         break;
                     case "sprintSpeedIntruder":
-                        sprintSpeedIntruder = Double.parseDouble(value);
+                        sprintSpeedIntruder = Double.parseDouble(value); // the sprinting speed of the intruders
                         break;
                     case "baseSpeedGuard":
-                        baseSpeedGuard = Double.parseDouble(value);
+                        baseSpeedGuard = Double.parseDouble(value); // the base speed of the guard.
                         break;
-                    case "targetArea":
+                    case "targetArea": // the area to which the intruders need to get.
                         topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
                         bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
                         component = new TargetArea(topLeft, bottomRight);
                         staticComponents.add(component);
                         targetAreas.add((TargetArea) component);
                         break;
-                    case "spawnAreaIntruders":
+                    case "spawnAreaIntruders": // the area where the intruders spawn onto the map
                         topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
                         bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
                         component = new IntruderSpawnArea(topLeft, bottomRight);
                         staticComponents.add(component);
                         intruderSpawnAreas.add((IntruderSpawnArea) component);
                         break;
-                    case "spawnAreaGuards":
+                    case "spawnAreaGuards": // the area where the guard spawn onto the map
                         topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
                         bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
                         component = new GuardSpawnArea(topLeft, bottomRight);
                         staticComponents.add(component);
                         guardSpawnAreas.add((GuardSpawnArea) component);
                         break;
-                    case "wall":
+                    case "wall": // the walls on the map
                         topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
                         bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
                         component = new Wall(topLeft, bottomRight);
                         staticComponents.add(component);
                         walls.add((Wall) component);
                         break;
-                    case "shaded":
+                    case "shaded": // the shaded areas on the map where intruders/guards could hide
                         topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
                         bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
                         component = new ShadedArea(topLeft, bottomRight);
                         staticComponents.add(component);
                         shadedAreas.add((ShadedArea) component);
                         break;
-                    case "teleport":
+                    case "teleport": // the teleporter
                         topLeft = new Point(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
                         bottomRight = new Point(Integer.parseInt(items[2]), Integer.parseInt(items[3]));
                         Point target = new Point(Integer.parseInt(items[4]), Integer.parseInt(items[5]));
@@ -179,7 +190,7 @@ public class Scenario {
                         teleporters.add((Teleporter) component);
                         break;
                     case "texture":
-                        // still to do. First the coordinates, then an int with texture type and then a double with orientation
+                        //TODO still to do. First the coordinates, then an int with texture type and then a double with orientation
                 }
             }
         }
@@ -193,6 +204,9 @@ public class Scenario {
         return playerComponents;
     }
 
+    /**
+     * a method that spawns guards on random positions inside their spawn area. The guards are then added to the player components list.
+     */
     public void spawnGuards(){
         int i = 0;
         Point topLeft = guardSpawnAreas.get(0).getTopLeft();
@@ -207,6 +221,9 @@ public class Scenario {
         }
     }
 
+    /**
+     * a method that spawns intruders on random positions inside their spawn area. The intruders are then added to the player components list.
+     */
     public  void spawnIntruder(){
         int i = 0;
         Point topLeft = guardSpawnAreas.get(0).getTopLeft();
@@ -221,6 +238,7 @@ public class Scenario {
         }
     }
 
+    // some getters for some of the private variables
     public int getNumGuards() {
         return numGuards;
     }
@@ -237,6 +255,10 @@ public class Scenario {
         return scaling;
     }
 
+    /**
+     * this method change the boolean variable that decides whether a print should be done for each line in the parseLine method.
+     * @param printInput a boolean for whether a print should be done or not
+     */
     public static void setPrintInput(boolean printInput) {
         Scenario.printInput = printInput;
     }
