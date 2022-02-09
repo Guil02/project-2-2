@@ -13,7 +13,7 @@ public class Ray {
     private Vector2D direction;
     private double viewField;
     private double viewFieldAngle;
-    private HashMap<Integer, ArrayList<DistanceAngleTuple>> hashMapComponentDistanceAngle = new HashMap<>();
+    private HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> hashMapComponentDistanceAngle = new HashMap<>();
 
     public Ray(PlayerComponent agent) {
         this.position = agent.getCoordinates();
@@ -22,7 +22,7 @@ public class Ray {
         this.viewFieldAngle = agent.getViewFieldAngle();
     }
 
-    public HashMap<Integer, ArrayList<DistanceAngleTuple>> getVisualField(ArrayList<Component> allAreas) {
+    public HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> getVisualField(ArrayList<Component> allAreas) {
         //TODO: make transformation from 20 degrees to start and end of visual field
         isHit(allAreas, direction);
         isHit(allAreas, direction);
@@ -79,11 +79,11 @@ public class Ray {
                 if (agentSawSomething){
                     //TODO: Insert component and distance to componentInterceptedDistance
                     int componentId = oneComponentComposed.getComponentEnum().getId();
-                    DistanceAngleTuple seenObjectInfo = new DistanceAngleTuple(shortestDistance,direction);
+                    DistanceAngleTuple<Double, Vector2D> seenObjectInfo = new DistanceAngleTuple<>(shortestDistance, direction);
 
-                    ArrayList<DistanceAngleTuple> items =  hashMapComponentDistanceAngle.get(componentId);
+                    ArrayList<DistanceAngleTuple<Double, Vector2D>> items =  hashMapComponentDistanceAngle.get(componentId);
                     if (items == null) {
-                        items = new ArrayList<DistanceAngleTuple>();
+                        items = new ArrayList<>();
                         items.add(seenObjectInfo);
                         hashMapComponentDistanceAngle.put(componentId,items);
                     } else {

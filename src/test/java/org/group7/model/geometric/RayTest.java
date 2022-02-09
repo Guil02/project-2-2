@@ -22,7 +22,7 @@ public class RayTest {
         ArrayList<Component> areaArray = new ArrayList<>();
         areaArray.add(wall1);
         areaArray.add(wall2);
-        HashMap<Integer, ArrayList<DistanceAngleTuple>> test = ray.getVisualField(areaArray);
+        HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
         System.out.println("TEST");
     }
 
