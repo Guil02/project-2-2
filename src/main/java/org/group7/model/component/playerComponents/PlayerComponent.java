@@ -9,7 +9,7 @@ import org.group7.model.component.Component;
  */
 public abstract class PlayerComponent extends Component {
     private double angle;
-    private double viewField = 20;
+    private double viewField = 250;
 
     public PlayerComponent(Point point1, Point point2, double angle) {
         super(point1, point2);

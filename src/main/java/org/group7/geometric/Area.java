@@ -10,18 +10,19 @@ public class Area {
     public Area(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
-        if ((topLeft.getX() <= bottomRight.getX()) && (topLeft.getY() > bottomRight.getY())) {
-            double temp = topLeft.y;
-            topLeft.y = bottomRight.y;
-            bottomRight.y = temp;
-        } else if ((topLeft.getX() > bottomRight.getX()) && (topLeft.getY() <= bottomRight.getY())) {
-            double temp = topLeft.x;
-            topLeft.x = bottomRight.x;
-            bottomRight.x = temp;
-        } else if ((topLeft.getX() > bottomRight.getX()) && (topLeft.getY() > bottomRight.getY())) {
-            this.topLeft = bottomRight;
-            this.bottomRight = topLeft;
-        }
+        //TODO: Meli and Mischa debugged this and it gave us an error by assigning the boundaries
+    //    if ((topLeft.getX() <= bottomRight.getX()) && (topLeft.getY() > bottomRight.getY())) {
+    //        double temp = topLeft.y;
+    //        topLeft.y = bottomRight.y;
+    //        bottomRight.y = temp;
+    //    } else if ((topLeft.getX() > bottomRight.getX()) && (topLeft.getY() <= bottomRight.getY())) {
+    //        double temp = topLeft.x;
+    //        topLeft.x = bottomRight.x;
+    //        bottomRight.x = temp;
+    //    } else if ((topLeft.getX() > bottomRight.getX()) && (topLeft.getY() > bottomRight.getY())) {
+    //        this.topLeft = bottomRight;
+    //        this.bottomRight = topLeft;
+    //    }
 
     }
 

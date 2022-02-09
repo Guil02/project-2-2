@@ -1,15 +1,11 @@
 package org.group7.geometric;
 
-import com.sun.scenario.effect.impl.prism.ps.PPSBlend_ADDPeer;
-import javafx.util.Pair;
 import org.group7.model.component.Component;
-import org.group7.model.component.ComponentEnum;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.Wall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 
 public class Ray {
 
@@ -23,6 +19,7 @@ public class Ray {
         this.viewField = agent.getViewField();
     }
 
+    //TODO: change input to ArrayList of Components
     public HashMap<Component, ArrayList<Double>> isHit(ArrayList<Area> allAreas) {
         HashMap<Component, ArrayList<Double>> componentsInterceptedDistance = new HashMap<>();
 
@@ -58,25 +55,29 @@ public class Ray {
                     double distance = interPoint.distance(agentPosition);
                     if (distance<=viewField){
                         shortestDistance=distance;
+                        agentSawSomething = true;
                     }
                 }
                 if (agentSawSomething){
+                    //TODO: Insert component and distance to componentInterceptedDistance
                     ArrayList<Double> temp = new ArrayList<>();
                     temp.add(shortestDistance);
                     componentsInterceptedDistance.put(new Wall(new Point(1,1), new Point(2,2)),temp);
                 }
-
             }
-
         }
         return componentsInterceptedDistance;
     }
 
     public ArrayList<Area> decomposeArea(Area area){
         ArrayList<Area> decomposedAreas = new ArrayList<>();
+        //works
         decomposedAreas.add(new Area(area.getTopLeft(), new Point(area.getTopLeft().getX(), area.getBottomRight().getY())));
+
         decomposedAreas.add(new Area(area.getTopLeft(), new Point(area.getBottomRight().getX(), area.getTopLeft().getY())));
         decomposedAreas.add(new Area(area.getBottomRight(), new Point(area.getBottomRight().getX(), area.getTopLeft().getY())));
+
+        //works
         decomposedAreas.add(new Area(area.getBottomRight(), new Point(area.getTopLeft().getX(), area.getBottomRight().getY())));
 
         return decomposedAreas;
