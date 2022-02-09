@@ -37,5 +37,7 @@ public abstract class PlayerComponent extends Component {
 
     public double getAngle() {return angle;}
 
+    public void setAngle(double angle) {this.angle = angle;}
+
     public double getViewField() {return viewField;}
 }
