@@ -8,8 +8,6 @@ import org.group7.model.component.Component;
  * it contains the coordinates of the position of the agent.
  */
 public abstract class PlayerComponent extends Component {
-    private double x;
-    private double y;
     private double angle;
     private double viewField = 20;
 
@@ -19,15 +17,22 @@ public abstract class PlayerComponent extends Component {
     }
 
     public Point getCoordinates(){
-        return new Point(x,y);
+        return getArea().getPoint1();
     }
 
     public double getX() {
-        return x;
+        return getArea().getPoint1().x;
     }
 
     public double getY() {
-        return y;
+        return getArea().getPoint1().y;
+    }
+
+    public void move(double dx, double dy){
+        getArea().getPoint1().x+=dx;
+        getArea().getPoint2().x+=dx;
+        getArea().getPoint1().y+=dy;
+        getArea().getPoint2().y+=dy;
     }
 
     public double getAngle() {return angle;}
