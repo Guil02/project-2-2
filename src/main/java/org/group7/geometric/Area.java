@@ -34,11 +34,11 @@ public class Area {
     }
 
     public double getWidth() {
-        return point2.x-point1.x;
+        return bottomRight.x-topLeft.x;
     }
 
     public double getHeight() {
-        return point2.y-point1.y;
+        return bottomRight.y-topLeft.y;
     }
 
     /*
