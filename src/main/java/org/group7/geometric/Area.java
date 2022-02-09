@@ -33,9 +33,17 @@ public class Area {
         return point2;
     }
 
+    public double getWidth() {
+        return point2.x-point1.x;
+    }
+
+    public double getHeight() {
+        return point2.y-point1.y;
+    }
+
     /*
-        Check whether a point is in the target area
-    */
+            Check whether a point is in the target area
+        */
     public boolean isHit(double x, double y) {
         return y > point1.getY() && y<point2.getY() && x>point1.getX() && x<point2.getX();
     }
