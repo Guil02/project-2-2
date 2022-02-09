@@ -70,6 +70,7 @@ public class Scenario {
 
         // read in the map and initialize the game.
         readMap();
+        System.out.println(staticComponents);
     }
 
     /**
