@@ -62,7 +62,7 @@ public class Menu {
                 e.printStackTrace();
             }
 
-        //    GameRunner runner = new GameRunner(new Scenario(Paths.get(temp).toString()));
+            GameRunner runner = new GameRunner(new Scenario(Paths.get(temp).toString()));
             //GameRunner runner = new GameRunner(new Scenario(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile()));
             runner.start();
 
