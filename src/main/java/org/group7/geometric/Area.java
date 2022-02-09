@@ -25,11 +25,11 @@ public class Area {
 
     }
 
-    public Point getPoint1() {
+    public Point getTopLeft() {
         return topLeft;
     }
 
-    public Point getPoint2() {
+    public Point getBottomRight() {
         return bottomRight;
     }
 

@@ -9,17 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RayTest {
 
-    @Test
-    public void isHitFalse() {
-        Area area = new Area(new Point(300,100),new Point(400,300));
-        Ray ray = new Ray(new Point(100,200),new Vector2D(0,1));
-        assertFalse(ray.isHit(area));
-    }
+    // @Test
+    //public void isHitTrue() {
 
-    @Test
-    public void isHitTrue() {
-        Area area = new Area(new Point(300,100),new Point(300,300));
-        Ray ray = new Ray(new Point(100,200),new Vector2D(1,0));
-        assertTrue(ray.isHit(area));
-    }
+      //  Area area = new Area(new Point(300,300),new Point(350,100));
+       // Ray ray = new Ray(new Point(100,200),new Vector2D(1,0));
+       // assertEquals(200, ray.isHit(area));
+    //}
+
+
 }
