@@ -6,6 +6,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+//TODO: IGNORE THIS CLASS
 public abstract class Renderer extends ScrollPane {
 
     double WIDTH, HEIGHT; //Not sure if we need them or if we just let javafx use calculated size

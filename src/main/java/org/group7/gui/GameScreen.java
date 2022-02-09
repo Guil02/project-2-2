@@ -6,13 +6,17 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 public class GameScreen extends AnchorPane {
 
-    public GameScreen() throws IOException {
+    Canvas canvas;
+
+    public GameScreen(Canvas canvas) throws IOException {
+        this.canvas = canvas;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameScreen.fxml"));
         loader.setController(this); //this class is the controller for the FXML view that the FXMLLoader is loading
         loader.setRoot(this);       //this class is also the Parent node of the FXML view
@@ -42,7 +46,7 @@ public class GameScreen extends AnchorPane {
 
     @FXML
     void initialize() {
-
+        renderContainer.getChildren().add(canvas);
     }
 
 }
