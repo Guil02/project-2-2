@@ -8,9 +8,12 @@ import org.group7.model.component.Component;
  * it contains the coordinates of the position of the agent.
  */
 public abstract class PlayerComponent extends Component {
+    private double angle;
+    private double viewField = 20;
 
-    public PlayerComponent(Point point1, Point point2) {
+    public PlayerComponent(Point point1, Point point2, double angle) {
         super(point1, point2);
+        this.angle = angle;
     }
 
     public Point getCoordinates(){
@@ -31,4 +34,8 @@ public abstract class PlayerComponent extends Component {
         getArea().getPoint1().y+=dy;
         getArea().getPoint2().y+=dy;
     }
+
+    public double getAngle() {return angle;}
+
+    public double getViewField() {return viewField;}
 }
