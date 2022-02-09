@@ -12,28 +12,23 @@ import org.group7.geometric.Point;
  * (x,y) = (20,4) to (25,6) will be a rectangle with a height of 2 and a width of 5.
  */
 public abstract class StaticComponent extends Component {
-    private Area area;
 
     public StaticComponent(Point topLeft, Point bottomRight) {
-        area = new Area(topLeft, bottomRight);
+        super(topLeft, bottomRight);
     }
 
     /**
      * @return the top left corner of the area that the component covers..
      */
     public Point getTopLeft() {
-        return area.getPoint1();
+        return getArea().getPoint1();
     }
 
     /**
      * @return the bottom right corner of the area that the component covers.
      */
     public Point getBottomRight() {
-        return area.getPoint2();
-    }
-
-    public Area getArea() {
-        return area;
+        return getArea().getPoint2();
     }
 
     /**
@@ -44,7 +39,7 @@ public abstract class StaticComponent extends Component {
      * @return true if the thing is intersecting with this component else it returns false.
      */
     public boolean isHit(double x, double y){
-        return area.isHit(x, y);
+        return getArea().isHit(x, y);
     }
 
     /**
@@ -54,6 +49,6 @@ public abstract class StaticComponent extends Component {
      * @return true if the thing is intersecting with this component else it returns false.
      */
     public boolean isHit(Point point){
-        return area.isHit(point);
+        return getArea().isHit(point);
     }
 }

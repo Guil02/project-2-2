@@ -214,7 +214,8 @@ public class Scenario {
         double dx = bottomRight.x-topLeft.x;
         double dy = bottomRight.y-topLeft.y;
         while(i<numGuards){
-            Guard player = new Guard(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+            Point point = new Point(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+            Guard player = new Guard(point, point.copy());
             playerComponents.add(player);
             guards.add(player);
             i++;
@@ -231,7 +232,8 @@ public class Scenario {
         double dx = bottomRight.x-topLeft.x;
         double dy = bottomRight.y-topLeft.y;
         while(i<numGuards){
-            Intruder player = new Intruder(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+            Point point = new Point(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+            Intruder player = new Intruder(point, point.copy());
             playerComponents.add(player);
             intruders.add(player);
             i++;

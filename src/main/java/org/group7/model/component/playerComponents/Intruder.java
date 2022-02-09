@@ -1,13 +1,15 @@
 package org.group7.model.component.playerComponents;
 
+import org.group7.geometric.Point;
+
 import static org.group7.model.component.ComponentEnum.INTRUDER_COMPONENT;
 
 /**
  * This class represent the player in the game that is an intruder.
  */
 public class Intruder extends PlayerComponent{
-    public Intruder(double x, double y) {
-        super(x, y);
+    public Intruder(Point point1, Point point2) {
+        super(point1, point2);
         setComponent(INTRUDER_COMPONENT);
     }
 
