@@ -15,12 +15,17 @@ public class GameScreen extends AnchorPane {
 
     Canvas canvas;
 
-    public GameScreen(Canvas canvas) throws IOException {
+    public GameScreen(Canvas canvas){
         this.canvas = canvas;
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameScreen.fxml"));
         loader.setController(this); //this class is the controller for the FXML view that the FXMLLoader is loading
         loader.setRoot(this);       //this class is also the Parent node of the FXML view
-        loader.load();              //this is the method that actually does the loading. It's non-static version of FXMLLoader.load()
+        try {
+            loader.load();              //this is the method that actually does the loading. It's non-static version of FXMLLoader.load()
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML private ResourceBundle resources;

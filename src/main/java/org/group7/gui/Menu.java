@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.group7.Main;
+import org.group7.model.GameRunner;
+import org.group7.model.Scenario;
 import org.group7.utils.Config;
 
 //import static org.group7.utils.Config.DEFAULT_MAP_PATH;
@@ -50,8 +52,11 @@ public class Menu {
             scenario = new File(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile());
 
             //switch scene
-            Stage stage = Main.stage;
+            //Stage stage = Main.stage;
             //Scene nextScene = new Scene(), etc...
+            //GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
+            GameRunner runner = new GameRunner(new Scenario(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile()));
+//            runner.start();
 
         } else {
             //user uploaded a scenario file

@@ -1,7 +1,11 @@
 package org.group7.model;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import org.group7.Main;
 import org.group7.gui.Game;
+import org.group7.gui.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +15,7 @@ public class GameRunner extends AnimationTimer {
     private Scenario scenario;
     State currentState;
     int counter = 0;
+    GameScreen gameScreen;
 
     public GameRunner(Scenario scenario) {
         this.scenario = scenario;
@@ -20,6 +25,9 @@ public class GameRunner extends AnimationTimer {
         scenario.spawnIntruder();
         currentState = new State(scenario.guards, scenario.intruders);
         states.add(currentState);
+
+        //gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+
     }
 
     @Override
