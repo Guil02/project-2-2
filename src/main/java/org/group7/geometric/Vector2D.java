@@ -52,10 +52,6 @@ public class Vector2D {
         return (this.x * v.x + this.y * v.y);
     } //dot product
 
-    public double cross(Vector2D v) {
-        return (this.x * v.y - this.y * v.x);
-    } //Name of operation?
-
     public Vector2D scale(double scalar) {
         return new Vector2D(this.x * scalar, this.y * scalar);
     }
@@ -93,7 +89,9 @@ public class Vector2D {
         }
         if (obj instanceof Vector2D) {
             Vector2D v = (Vector2D) obj;
-            return (x == v.x) && (y == v.y);
+            boolean a = (x-v.x)<0.000001 && (x-v.x)>-0.00001;
+            boolean b = (y-v.y)<0.000001 && (y-v.y)>-0.00001;
+            return a && b;
         }
         return false;
     }

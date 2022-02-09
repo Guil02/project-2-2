@@ -46,6 +46,11 @@ public class Vector2DTest {
         assertEquals(Math.sqrt(10), distance);
     }
 
-
-    // TODO: getRotatedBy, cross
+    @Test
+    public void testGetRotatedBy(){
+        Vector2D vector2D = new Vector2D(1,0);
+        Vector2D actual = vector2D.getRotatedBy(0.5*Math.PI);
+        Vector2D expected = new Vector2D(0,1);
+        assertEquals(expected, actual);
+    }
 }

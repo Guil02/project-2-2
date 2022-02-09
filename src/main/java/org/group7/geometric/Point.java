@@ -32,7 +32,8 @@ public class Point {
         return Objects.hash(x, y);
     }
 
-    public Point copy(){
+    @Override
+    public Point clone(){
         return new Point(this.x, this.y);
     }
 }
