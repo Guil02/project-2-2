@@ -57,6 +57,8 @@ public class Menu {
             //switch scene
             //Stage stage = Main.stage;
             //Scene nextScene = new Scene(), etc...
+            GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
+            runner.start();
 
 
             //GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
