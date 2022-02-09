@@ -18,6 +18,7 @@ public abstract class Component {
     public void setComponent(ComponentEnum component) {
         this.component = component;
     }
+    public ComponentEnum getComponentEnum() {return component;}
 
     public Area getArea() {
         return area;

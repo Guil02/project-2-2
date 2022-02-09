@@ -2,28 +2,46 @@ package org.group7.geometric;
 
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.PlayerComponent;
-import org.group7.model.component.staticComponents.Wall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class Ray {
 
     private Point position;
     private Vector2D direction;
     private double viewField;
+    private double viewFieldAngle;
+    private HashMap<Integer, ArrayList<DistanceAngleTuple>> hashMapComponentDistanceAngle = new HashMap<>();
 
     public Ray(PlayerComponent agent) {
         this.position = agent.getCoordinates();
         this.direction = new Vector2D(agent.getAngle());
         this.viewField = agent.getViewField();
+        this.viewFieldAngle = agent.getViewFieldAngle();
     }
 
-    //TODO: change input to ArrayList of Components
-    public HashMap<Component, ArrayList<Double>> isHit(ArrayList<Area> allAreas) {
-        HashMap<Component, ArrayList<Double>> componentsInterceptedDistance = new HashMap<>();
+    public HashMap<Integer, ArrayList<DistanceAngleTuple>> getVisualField(ArrayList<Component> allAreas) {
+        //TODO: make transformation from 20 degrees to start and end of visual field
+        isHit(allAreas, direction);
+        isHit(allAreas, direction);
 
-        for (Area oneAreaComposed : allAreas){
+        //For printing purposes
+        for (Integer name: hashMapComponentDistanceAngle.keySet()) {
+            String key = name.toString();
+            String value = hashMapComponentDistanceAngle.get(name).toString();
+            System.out.println(key + " " + value);
+        }
+
+        return hashMapComponentDistanceAngle;
+    }
+
+
+    public void isHit(ArrayList<Component> allAreas, Vector2D direction) {
+
+        for (Component oneComponentComposed : allAreas){
+            Area oneAreaComposed = oneComponentComposed.getArea();
             boolean agentSawSomething = false;
             double shortestDistance = this.viewField;
             ArrayList<Area> areasDecomposed = decomposeArea(oneAreaComposed);
@@ -60,28 +78,32 @@ public class Ray {
                 }
                 if (agentSawSomething){
                     //TODO: Insert component and distance to componentInterceptedDistance
-                    ArrayList<Double> temp = new ArrayList<>();
-                    temp.add(shortestDistance);
-                    componentsInterceptedDistance.put(new Wall(new Point(1,1), new Point(2,2)),temp);
+                    int componentId = oneComponentComposed.getComponentEnum().getId();
+                    DistanceAngleTuple seenObjectInfo = new DistanceAngleTuple(shortestDistance,direction);
+
+                    ArrayList<DistanceAngleTuple> items =  hashMapComponentDistanceAngle.get(componentId);
+                    if (items == null) {
+                        items = new ArrayList<DistanceAngleTuple>();
+                        items.add(seenObjectInfo);
+                        hashMapComponentDistanceAngle.put(componentId,items);
+                    } else {
+                        items.add(seenObjectInfo);
+                        hashMapComponentDistanceAngle.put(componentId,items);
+                    }
+
                 }
             }
         }
-        return componentsInterceptedDistance;
     }
 
     public ArrayList<Area> decomposeArea(Area area){
         ArrayList<Area> decomposedAreas = new ArrayList<>();
-        //works
         decomposedAreas.add(new Area(area.getTopLeft(), new Point(area.getTopLeft().getX(), area.getBottomRight().getY())));
-
         decomposedAreas.add(new Area(area.getTopLeft(), new Point(area.getBottomRight().getX(), area.getTopLeft().getY())));
         decomposedAreas.add(new Area(area.getBottomRight(), new Point(area.getBottomRight().getX(), area.getTopLeft().getY())));
-
-        //works
         decomposedAreas.add(new Area(area.getBottomRight(), new Point(area.getTopLeft().getX(), area.getBottomRight().getY())));
 
         return decomposedAreas;
     }
 
-    // TODO:
 }

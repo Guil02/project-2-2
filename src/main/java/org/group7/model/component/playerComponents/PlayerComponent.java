@@ -9,7 +9,9 @@ import org.group7.model.component.Component;
  */
 public abstract class PlayerComponent extends Component {
     private double angle;
-    private double viewField = 250;
+    private double viewField = 500;
+    //20 degrees = 0.349066 in radian
+    private double viewFieldAngle = 0.349066;
 
     public PlayerComponent(Point point1, Point point2, double angle) {
         super(point1, point2);
@@ -40,4 +42,6 @@ public abstract class PlayerComponent extends Component {
     public void setAngle(double angle) {this.angle = angle;}
 
     public double getViewField() {return viewField;}
+
+    public double getViewFieldAngle() {return viewFieldAngle;}
 }
