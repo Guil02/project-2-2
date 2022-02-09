@@ -1,7 +1,10 @@
 package org.group7.gui;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -14,6 +17,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.group7.Main;
+import org.group7.model.GameRunner;
+import org.group7.model.Scenario;
 import org.group7.utils.Config;
 
 //import static org.group7.utils.Config.DEFAULT_MAP_PATH;
@@ -50,8 +55,24 @@ public class Menu {
             scenario = new File(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile());
 
             //switch scene
-            Stage stage = Main.stage;
+            //Stage stage = Main.stage;
             //Scene nextScene = new Scene(), etc...
+            GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
+            runner.start();
+
+
+            //GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
+            //GameRunner runner = new GameRunner(new Scenario(Config.DEFAULT_MAP_PATH));
+            URI temp = null;
+            try {
+                temp = getClass().getResource(Config.DEFAULT_MAP_PATH).toURI();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            GameRunner runner = new GameRunner(new Scenario(Paths.get(temp).toString()));
+            //GameRunner runner = new GameRunner(new Scenario(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile()));
+//            runner.start();
 
         } else {
             //user uploaded a scenario file

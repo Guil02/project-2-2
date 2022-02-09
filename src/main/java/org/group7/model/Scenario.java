@@ -6,6 +6,9 @@ import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.staticComponents.*;
 import org.group7.geometric.Point;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -67,9 +70,11 @@ public class Scenario {
         intruders = new ArrayList<>();
 
         filePath = Paths.get(filePathString);
+        //filePath = Path.of(getClass().getResource(filePathString).getFile());
 
         // read in the map and initialize the game.
         readMap();
+        System.out.println(staticComponents);
     }
 
     /**
@@ -77,6 +82,18 @@ public class Scenario {
      */
     private void readMap() {
         // create a scanner and iterate ove all the lines in the file.
+//        try {
+//            BufferedReader reader = new BufferedReader(new FileReader(filePathString));
+//            String line = reader.readLine();
+//            while (line!=null){
+//                parseLine(line);
+//                line = reader.readLine();
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         try(Scanner scanner = new Scanner(filePath, ENCODING.name())){
             while(scanner.hasNextLine()){
                 parseLine(scanner.nextLine());
