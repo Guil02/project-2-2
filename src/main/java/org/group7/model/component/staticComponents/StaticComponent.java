@@ -21,14 +21,14 @@ public abstract class StaticComponent extends Component {
      * @return the top left corner of the area that the component covers..
      */
     public Point getTopLeft() {
-        return getArea().getPoint1();
+        return getArea().getTopLeft();
     }
 
     /**
      * @return the bottom right corner of the area that the component covers.
      */
     public Point getBottomRight() {
-        return getArea().getPoint2();
+        return getArea().getBottomRight();
     }
 
     /**

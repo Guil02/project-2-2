@@ -57,7 +57,7 @@ public class GameScreen extends AnchorPane {
         //g.setFill(Color.RED);
         //g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g.setFill(Color.GREEN);
-        g.fillRect(component.getArea().getPoint1().x, component.getArea().getPoint1().y, component.getArea().getWidth(), component.getArea().getHeight());
+        g.fillRect(component.getArea().getTopLeft().x, component.getArea().getTopLeft().y, component.getArea().getWidth(), component.getArea().getHeight());
     }
 
     @FXML

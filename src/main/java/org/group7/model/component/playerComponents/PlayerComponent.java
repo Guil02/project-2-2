@@ -17,22 +17,22 @@ public abstract class PlayerComponent extends Component {
     }
 
     public Point getCoordinates(){
-        return getArea().getPoint1();
+        return getArea().getTopLeft();
     }
 
     public double getX() {
-        return getArea().getPoint1().x;
+        return getArea().getTopLeft().x;
     }
 
     public double getY() {
-        return getArea().getPoint1().y;
+        return getArea().getTopLeft().y;
     }
 
     public void move(double dx, double dy){
-        getArea().getPoint1().x+=dx;
-        getArea().getPoint2().x+=dx;
-        getArea().getPoint1().y+=dy;
-        getArea().getPoint2().y+=dy;
+        getArea().getTopLeft().x+=dx;
+        getArea().getBottomRight().x+=dx;
+        getArea().getTopLeft().y+=dy;
+        getArea().getBottomRight().y+=dy;
     }
 
     public double getAngle() {return angle;}
