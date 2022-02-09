@@ -67,6 +67,7 @@ public class Scenario {
         intruders = new ArrayList<>();
 
         filePath = Paths.get(filePathString);
+        //filePath = Path.of(getClass().getResource(filePathString).getFile());
 
         // read in the map and initialize the game.
         readMap();
