@@ -7,9 +7,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import org.group7.model.component.Component;
 
 public class GameScreen extends AnchorPane {
 
@@ -47,6 +50,14 @@ public class GameScreen extends AnchorPane {
     @FXML
     void resetSimulation(ActionEvent event) {
 
+    }
+
+    public void render(Component component) {
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        //g.setFill(Color.RED);
+        //g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setFill(Color.GREEN);
+        g.fillRect(component.getArea().getPoint1().x, component.getArea().getPoint1().y, component.getArea().getWidth(), component.getArea().getHeight());
     }
 
     @FXML

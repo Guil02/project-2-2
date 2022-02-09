@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import org.group7.Main;
 import org.group7.gui.Game;
 import org.group7.gui.GameScreen;
+import org.group7.model.component.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,8 @@ public class GameRunner extends AnimationTimer {
         currentState = new State(scenario.guards, scenario.intruders);
         states.add(currentState);
 
-        //gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
-
+        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+        Main.stage.setScene(new Scene(gameScreen));
     }
 
     @Override
@@ -39,6 +40,9 @@ public class GameRunner extends AnimationTimer {
             stop();
             System.out.println(states);
         }
+
+        for (Component c : scenario.getStaticComponents())
+            gameScreen.render(c);
 
         counter++;
     }

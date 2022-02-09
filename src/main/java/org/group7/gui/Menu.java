@@ -54,15 +54,7 @@ public class Menu {
             //user selected default scenario
             scenario = new File(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile());
 
-            //switch scene
-            //Stage stage = Main.stage;
-            //Scene nextScene = new Scene(), etc...
-            GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
-            runner.start();
-
-
             //GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
-            //GameRunner runner = new GameRunner(new Scenario(Config.DEFAULT_MAP_PATH));
             URI temp = null;
             try {
                 temp = getClass().getResource(Config.DEFAULT_MAP_PATH).toURI();
@@ -72,7 +64,7 @@ public class Menu {
 
             GameRunner runner = new GameRunner(new Scenario(Paths.get(temp).toString()));
             //GameRunner runner = new GameRunner(new Scenario(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile()));
-//            runner.start();
+            runner.start();
 
         } else {
             //user uploaded a scenario file
