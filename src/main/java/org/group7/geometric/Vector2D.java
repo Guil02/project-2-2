@@ -97,7 +97,9 @@ public class Vector2D {
             Vector2D v = (Vector2D) obj;
             boolean a = (x-v.x)<0.000001 && (x-v.x)>-0.00001;
             boolean b = (y-v.y)<0.000001 && (y-v.y)>-0.00001;
+
             return a && b;
+            //return (Math.abs(x - v.x) < 0.000001) && (Math.abs(y - v.y) < 0.000001); (?) wouldn't this one-liner work?
         }
         return false;
     }

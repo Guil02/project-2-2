@@ -51,6 +51,8 @@ public class Tuple<A, B> {
 
 
     /**
+     * EXAMPLE of specialized, parameterized Tuple. We don't need to use it
+     *
      * This class is a Tuple which is given the semantic meaning of representing a (Distance, Angle) Tuple.
      * Here the "A" parameter has been renamed to "Distance", and the "B" parameter has been renamed to "Angle"
      * The generic parameter Distance can only accept classes that are or extend from Double
