@@ -60,4 +60,9 @@ public class Area {
     public boolean isHit(double x, double y, double radius) {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "<Area(" + topLeft + ", " + bottomRight + ")>";
+    }
 }

@@ -1,7 +1,10 @@
 package org.group7.geometric;
 
+import javafx.geometry.Point2D;
+
 import java.util.Objects;
 
+//TODO why not just use the Point2D class that has all of this implemented and much more?
 public class Point {
     public double x;
     public double y;
