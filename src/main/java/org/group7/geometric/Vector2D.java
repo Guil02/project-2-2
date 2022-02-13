@@ -71,7 +71,7 @@ public class Vector2D {
         return Math.atan2(y, x);
     }
 
-    //TODO: Is this radian angle change?
+    //angle = radian
     public Vector2D getRotatedBy(double angle) {
         double cos = Math.cos(angle);
         double sin = Math.sin(angle);

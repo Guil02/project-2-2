@@ -13,4 +13,9 @@ public class Guard extends PlayerComponent{
         setComponent(GUARD);
     }
 
+    public Guard(Point point1, Point point2, double directionAngle, double viewFieldLength, double viewFieldAngle) {
+        super(point1, point2, directionAngle, viewFieldLength, viewFieldAngle);
+        setComponent(GUARD);
+    }
+
 }
