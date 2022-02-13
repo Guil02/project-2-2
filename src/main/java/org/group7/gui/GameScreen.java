@@ -16,10 +16,13 @@ import org.group7.model.component.Component;
 
 public class GameScreen extends AnchorPane {
 
-    Canvas canvas;
+    //Canvas canvas;
+    public Renderer renderer;
 
-    public GameScreen(Canvas canvas){
-        this.canvas = canvas;
+
+    public GameScreen(Renderer renderer) {
+        this.renderer = renderer;
+        //this.canvas = renderer.canvas;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameScreen.fxml"));
         loader.setController(this); //this class is the controller for the FXML view that the FXMLLoader is loading
@@ -46,23 +49,28 @@ public class GameScreen extends AnchorPane {
     @FXML private Button slowDownBtn;
 
     @FXML private Button speedUpBtn;
+    @FXML
+    private AnchorPane renderBox;
+
 
     @FXML
     void resetSimulation(ActionEvent event) {
 
     }
 
-    public void render(Component component) {
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        //g.setFill(Color.RED);
-        //g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g.setFill(Color.GREEN);
-        g.fillRect(component.getArea().getTopLeft().x, component.getArea().getTopLeft().y, component.getArea().getWidth(), component.getArea().getHeight());
-    }
+//    public void render(Component component) {
+//        renderer.render();
+//        //GraphicsContext g = canvas.getGraphicsContext2D();
+//        //g.setFill(Color.RED);
+//        //g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+//        g.setFill(Color.GREEN);
+//        g.fillRect(component.getArea().getTopLeft().x, component.getArea().getTopLeft().y, component.getArea().getWidth(), component.getArea().getHeight());
+//    }
 
     @FXML
     void initialize() {
-        renderContainer.getChildren().add(canvas);
+//        renderContainer.getChildren().add(canvas);
+        renderBox.getChildren().add(renderer);
     }
 
 }

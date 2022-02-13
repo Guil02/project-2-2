@@ -4,8 +4,10 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import org.group7.Main;
+import org.group7.gui.ExplorationSim;
 import org.group7.gui.Game;
 import org.group7.gui.GameScreen;
+import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
 
 import java.util.ArrayList;
@@ -27,7 +29,9 @@ public class GameRunner extends AnimationTimer {
         currentState = new State(scenario.guards, scenario.intruders);
         states.add(currentState);
 
-        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+//        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+        Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
+        gameScreen = new GameScreen(renderer);
         Main.stage.setScene(new Scene(gameScreen));
     }
 
@@ -35,14 +39,16 @@ public class GameRunner extends AnimationTimer {
     public void handle(long now) {
         //where update the game
         createState();
-        System.out.println("counter: "+counter);
-        if (counter == 10) {
-            stop();
-            System.out.println(states);
-        }
+        //System.out.println("counter: "+counter);
+        //if (counter == 100000) {
+            //stop();
+            //System.out.println(states);
+        //}
 
-        for (Component c : scenario.getStaticComponents())
-            gameScreen.render(c);
+        gameScreen.renderer.render(scenario.getStaticComponents());
+
+//        for (Component c : scenario.getStaticComponents())
+//            gameScreen.renderer.render(c);
 
         counter++;
     }
