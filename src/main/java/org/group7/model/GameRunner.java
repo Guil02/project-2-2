@@ -45,7 +45,7 @@ public class GameRunner extends AnimationTimer {
             //System.out.println(states);
         //}
 
-        gameScreen.renderer.render(scenario.getStaticComponents());
+        gameScreen.render(scenario);
 
 //        for (Component c : scenario.getStaticComponents())
 //            gameScreen.renderer.render(c);

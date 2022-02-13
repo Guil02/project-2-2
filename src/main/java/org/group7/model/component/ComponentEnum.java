@@ -5,12 +5,12 @@ package org.group7.model.component;
  */
 public enum ComponentEnum {
     // all the components with the string path.
-    GUARD_COMPONENT(1,""),
-    INTRUDER_COMPONENT(2,""),
-    WALL_COMPONENT(3,""),
-    TELEPORTER_COMPONENT(4,""),
-    SHADED_AREA_COMPONENT(5,""),
-    TARGET_AREA_COMPONENT(6,""),
+    GUARD(1,""),
+    INTRUDER(2,""),
+    WALL(3,""),
+    TELEPORTER(4,""),
+    SHADED_AREA(5,""),
+    TARGET_AREA(6,""),
     INTRUDER_SPAWN_AREA(7,""),
     GUARD_SPAWN_AREA(8,"");
 

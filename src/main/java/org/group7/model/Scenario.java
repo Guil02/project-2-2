@@ -40,6 +40,7 @@ public class Scenario {
     protected int width;
     protected double scaling;
 
+
     // all the static components stored separately and in 1 list.
     List<Component> staticComponents;
     List<Wall> walls;
@@ -280,5 +281,42 @@ public class Scenario {
      */
     public static void setPrintInput(boolean printInput) {
         Scenario.printInput = printInput;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Wall> getWalls() {
+        return walls;
+    }
+
+    public List<ShadedArea> getShadedAreas() {
+        return shadedAreas;
+    }
+
+    public List<Teleporter> getTeleporters() {
+        return teleporters;
+    }
+
+    public List<TargetArea> getTargetAreas() {
+        return targetAreas;
+    }
+
+    public List<GuardSpawnArea> getGuardSpawnAreas() {
+        return guardSpawnAreas;
+    }
+
+    public List<IntruderSpawnArea> getIntruderSpawnAreas() {
+        return intruderSpawnAreas;
+    }
+
+    public List<Guard> getGuards() {
+        return guards;
+    }
+
+    public List<Intruder> getIntruders() {
+        return intruders;
     }
 }

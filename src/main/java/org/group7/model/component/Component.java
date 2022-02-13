@@ -3,6 +3,8 @@ package org.group7.model.component;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 
+import java.util.Comparator;
+
 /**
  * This class is meant to be the super class of all the components that will exist in the project.
  * They contain a reference to their own object in the componentEnum so that the gui can easily access the texture path.
@@ -30,5 +32,13 @@ public abstract class Component {
      */
     public String getTexture(){
         return component.getTexture();
+    }
+
+    public static class ComponentTypeSort implements Comparator<Component> {
+
+        @Override
+        public int compare(Component o1, Component o2) {
+            return 0;
+        }
     }
 }

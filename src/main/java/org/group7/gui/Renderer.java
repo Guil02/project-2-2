@@ -3,17 +3,19 @@ package org.group7.gui;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import org.group7.model.Scenario;
 import org.group7.model.component.Component;
 import org.group7.model.component.markerComponent.MarkerComponent;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.StaticComponent;
+import org.group7.utils.Config;
 
 import java.util.List;
 
 public abstract class Renderer extends ScrollPane {
 
     double WIDTH, HEIGHT; //Not sure if we need them or if we just let javafx use calculated size
-    double res = 0.5;
+    double res = Config.DEFAULT_RENDER_RESOLUTION;
     Canvas canvas;
 
     private int agentFocus;
@@ -74,9 +76,8 @@ public abstract class Renderer extends ScrollPane {
 
 
     public abstract void addKeyHandler();
-    protected abstract void render();
 
     public abstract void render(Component c);
 
-    public abstract void render(List<Component> staticComponents);
+    public abstract void render(Scenario scenario);
 }

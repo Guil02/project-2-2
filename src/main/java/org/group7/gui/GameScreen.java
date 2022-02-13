@@ -12,50 +12,34 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.group7.model.Scenario;
 import org.group7.model.component.Component;
+import org.group7.utils.Methods;
 
 public class GameScreen extends AnchorPane {
 
-    //Canvas canvas;
     public Renderer renderer;
-
 
     public GameScreen(Renderer renderer) {
         this.renderer = renderer;
-        //this.canvas = renderer.canvas;
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameScreen.fxml"));
-        loader.setController(this); //this class is the controller for the FXML view that the FXMLLoader is loading
-        loader.setRoot(this);       //this class is also the Parent node of the FXML view
-        try {
-            loader.load();              //this is the method that actually does the loading. It's non-static version of FXMLLoader.load()
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Methods.loadFXML(this, "/fxml/gameScreen.fxml");
     }
 
-    @FXML private ResourceBundle resources;
-
-    @FXML private URL location;
-
     @FXML private Button pauseBtn;
-
     @FXML private Button playBtn;
-
     @FXML private VBox renderContainer;
-
     @FXML private Button resetBtn;
-
     @FXML private Button slowDownBtn;
-
     @FXML private Button speedUpBtn;
-    @FXML
-    private AnchorPane renderBox;
-
+    @FXML private AnchorPane renderBox;
 
     @FXML
     void resetSimulation(ActionEvent event) {
+        ((ExplorationSim)renderer).reset(); //doesn't actual reset the simulation, it just restores the default view
+    }
 
+    public void render(Scenario scenario) {
+        renderer.render(scenario);
     }
 
 //    public void render(Component component) {
@@ -69,7 +53,6 @@ public class GameScreen extends AnchorPane {
 
     @FXML
     void initialize() {
-//        renderContainer.getChildren().add(canvas);
         renderBox.getChildren().add(renderer);
     }
 
