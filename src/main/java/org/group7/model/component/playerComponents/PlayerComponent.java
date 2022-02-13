@@ -31,10 +31,10 @@ public abstract class PlayerComponent extends Component {
     }
 
     public void move(double dx, double dy){
-        getArea().getTopLeft().x+=dx;
-        getArea().getBottomRight().x+=dx;
-        getArea().getTopLeft().y+=dy;
-        getArea().getBottomRight().y+=dy;
+        getArea().getTopLeft().x += dx;
+        getArea().getBottomRight().x += dx;
+        getArea().getTopLeft().y += dy;
+        getArea().getBottomRight().y += dy;
     }
 
     public double getAngle() {return angle;}

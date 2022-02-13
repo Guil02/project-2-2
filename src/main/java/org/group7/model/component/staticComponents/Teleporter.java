@@ -10,6 +10,7 @@ import static org.group7.model.component.ComponentEnum.TELEPORTER;
  */
 public class Teleporter extends StaticComponent{
     private Point target;
+
     public Teleporter(Point topLeft, Point bottomRight) {
         super(topLeft, bottomRight);
         target = new Point(0,0);

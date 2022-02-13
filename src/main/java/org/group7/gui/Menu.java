@@ -1,10 +1,8 @@
 package org.group7.gui;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -15,7 +13,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.group7.Main;
 import org.group7.model.GameRunner;
 import org.group7.model.Scenario;
@@ -44,7 +41,7 @@ public class Menu {
 
     @FXML private Button uploadScenarioButton;
 
-    private File scenario;
+    private File scenarioFile;
 
     @FXML
     void start(ActionEvent event) {
@@ -52,23 +49,16 @@ public class Menu {
 
         if (mapChoice.getSelectedToggle().equals(defaultChoice)) {
             //user selected default scenario
-            scenario = new File(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile());
-
-            //GameRunner runner = new GameRunner(new Scenario(scenario.getPath()));
-            URI temp = null;
-            try {
-                temp = getClass().getResource(Config.DEFAULT_MAP_PATH).toURI();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
-            GameRunner runner = new GameRunner(new Scenario(Paths.get(temp).toString()));
-            //GameRunner runner = new GameRunner(new Scenario(getClass().getResource(Config.DEFAULT_MAP_PATH).getFile()));
+            Scenario s = new Scenario(scenarioFile);
+            GameRunner runner = new GameRunner(s);
             runner.start();
 
         } else {
             //user uploaded a scenario file
+            Scenario s = new Scenario(scenarioFile);
             //should probably parse file and check for validity before continuing
+            GameRunner runner = new GameRunner(s);
+            runner.start();
 
             message.setText("Not implemented yet :(");
         }
@@ -87,8 +77,8 @@ public class Menu {
 
         //make sure user actually selected a file
         if (chosen != null) {
-            scenario = chosen;
-            uploadFileName.setText(scenario.getName());
+            scenarioFile = chosen;
+            uploadFileName.setText(scenarioFile.getName());
             startButton.setDisable(false);
         } else {
             message.setText("No file chosen!");
@@ -105,11 +95,18 @@ public class Menu {
 
         //define simple on-click events for the radio buttons
         uploadChoice.setOnMouseClicked(event -> uploadScenario(new ActionEvent()));     //open file chooser
-        defaultChoice.setOnMouseClicked(event -> {message.setText(""); startButton.setDisable(false);});                  //clear message text
+        defaultChoice.setOnMouseClicked(event -> {message.setText(""); startButton.setDisable(false);}); //clear message text
 
         //define simple hover styling for the start button
         startButton.setOnMouseEntered(event -> startButton.setStyle("-fx-background-color: #27ae60;"));
         startButton.setOnMouseExited(event -> startButton.setStyle("-fx-background-color: #2ecc71;"));
+
+        try {
+            //initialize scenarioFile to default
+            scenarioFile = new File(getClass().getResource(Config.DEFAULT_MAP_PATH).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         /*
                 I want to eventually add a drop-down menu or something similar for the user to choose between some

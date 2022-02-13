@@ -7,6 +7,8 @@ plugins {
 group 'org.group7'
 version '1.0'
 
+compileJava.options.encoding = 'UTF-8'
+
 repositories {
     mavenCentral()
 }
@@ -21,10 +23,13 @@ javafx {
     modules = [ 'javafx.controls','javafx.fxml', 'javafx.media' ]
 }
 
+mainClassName = 'org.group7.Main'
+
 test {
     useJUnitPlatform()
 }
 
-application {
-    mainClass.set("org.group7.Main")
-}
+//commented out bc gradle was saying it was deprecated or something
+//application {
+//    mainClass.set("org.group7.Main")
+//}

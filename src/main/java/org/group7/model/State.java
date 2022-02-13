@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class State {
+
     List<Vector2D> intruderCoords;
     List<Vector2D> guardCoords;
 
@@ -24,6 +25,14 @@ public class State {
             Vector2D v = new Vector2D(intruder.getX(), intruder.getY());
             intruderCoords.add(v);
         }
+    }
+
+    public List<Vector2D> getIntruderCoords() {
+        return intruderCoords;
+    }
+
+    public List<Vector2D> getGuardCoords() {
+        return guardCoords;
     }
 
     @Override

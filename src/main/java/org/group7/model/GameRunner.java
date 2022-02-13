@@ -39,16 +39,8 @@ public class GameRunner extends AnimationTimer {
     public void handle(long now) {
         //where update the game
         createState();
-        //System.out.println("counter: "+counter);
-        //if (counter == 100000) {
-            //stop();
-            //System.out.println(states);
-        //}
 
         gameScreen.render(scenario);
-
-//        for (Component c : scenario.getStaticComponents())
-//            gameScreen.renderer.render(c);
 
         counter++;
     }
