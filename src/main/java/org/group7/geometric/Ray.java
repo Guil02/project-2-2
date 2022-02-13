@@ -6,26 +6,34 @@ import org.group7.model.component.playerComponents.PlayerComponent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+//inspired by //https://github.com/CodingTrain/website/tree/main/CodingChallenges/CC_145_Ray_Casting/Processing
+//inspired by https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 public class Ray {
 
     private Point position;
     private Vector2D direction;
-    private double viewField;
+    private double viewFieldLength;
     private double viewFieldAngle;
     private HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> hashMapComponentDistanceAngle = new HashMap<>();
 
     public Ray(PlayerComponent agent) {
         this.position = agent.getCoordinates();
-        this.direction = new Vector2D(agent.getAngle());
-        this.viewField = agent.getViewField();
+        this.direction = new Vector2D(agent.getDirectionAngle());
+        this.viewFieldLength = agent.getViewFieldLength();
         this.viewFieldAngle = agent.getViewFieldAngle();
     }
 
     public HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> getVisualField(ArrayList<Component> allAreas) {
-        //TODO: make transformation from 20 degrees to start and end of visual field
-        isHit(allAreas, direction);
-        isHit(allAreas, direction);
+        //calculates the start and end angles of the area to look for
+        Vector2D startAngle = direction.getRotatedBy(viewFieldAngle/2);
+        Vector2D endAngle = direction.getRotatedBy(-(viewFieldAngle/2));
+        Vector2D currentAngle = startAngle;
+
+        while(currentAngle.getAngle() >= endAngle.getAngle()) {
+            isHit(allAreas, currentAngle);
+            //change for each ray - experiment with this value
+            currentAngle = currentAngle.getRotatedBy(Math.toRadians(-5));
+        }
 
         //For printing purposes
         for (Integer name: hashMapComponentDistanceAngle.keySet()) {
@@ -39,13 +47,14 @@ public class Ray {
 
 
     public void isHit(ArrayList<Component> allAreas, Vector2D direction) {
-
+        //get one component of the area list
         for (Component oneComponentComposed : allAreas){
             Area oneAreaComposed = oneComponentComposed.getArea();
             boolean agentSawSomething = false;
-            double shortestDistance = this.viewField;
+            double shortestDistance = this.viewFieldLength;
             ArrayList<Area> areasDecomposed = decomposeArea(oneAreaComposed);
-
+            //decompose one area object into four lines and check intersection with ray
+            // and keep track of shortest distance
             for (Area area : areasDecomposed) {
                 double x1 = area.getTopLeft().getX();
                 double y1 = area.getTopLeft().getY();
@@ -54,8 +63,8 @@ public class Ray {
                 //ray coordinates
                 double x3 = this.position.getX(); //ray position
                 double y3 = this.position.getY(); //ray position
-                double x4 = this.position.getX() + this.direction.getX(); //ray endpoint
-                double y4 = this.position.getY() + this.direction.getY(); //ray endpoint
+                double x4 = this.position.getX() + direction.getX(); //ray endpoint
+                double y4 = this.position.getY() + direction.getY(); //ray endpoint
 
                 double denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
                 //if denominator is 0 area and ray are perpendicular ie. will never intersect
@@ -71,13 +80,12 @@ public class Ray {
                     Vector2D interPoint = new Vector2D(interX, interY);
                     Vector2D agentPosition = new Vector2D(x3, y3);
                     double distance = interPoint.distance(agentPosition);
-                    if (distance<=viewField){
+                    if (distance<= shortestDistance){
                         shortestDistance=distance;
                         agentSawSomething = true;
                     }
                 }
                 if (agentSawSomething){
-                    //TODO: Insert component and distance to componentInterceptedDistance
                     int componentId = oneComponentComposed.getComponentEnum().getId();
                     DistanceAngleTuple<Double, Vector2D> seenObjectInfo = new DistanceAngleTuple<>(shortestDistance, direction);
 
@@ -90,6 +98,7 @@ public class Ray {
                         items.add(seenObjectInfo);
                         hashMapComponentDistanceAngle.put(componentId,items);
                     }
+                    agentSawSomething = false;
 
                 }
             }

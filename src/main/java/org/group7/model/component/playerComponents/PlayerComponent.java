@@ -8,14 +8,21 @@ import org.group7.model.component.Component;
  * it contains the coordinates of the position of the agent.
  */
 public abstract class PlayerComponent extends Component {
-    private double angle;
-    private double viewField = 500;
-    //20 degrees = 0.349066 in radian
-    private double viewFieldAngle = 0.349066;
+    private double directionAngle;
+    private double viewFieldLength;
+    private double viewFieldAngle; //how wide the visual range is
 
-    public PlayerComponent(Point point1, Point point2, double angle) {
+    public PlayerComponent(Point point1, Point point2, double directionAngle) {
         super(point1, point2);
-        this.angle = angle;
+        this.directionAngle = directionAngle;
+        this.viewFieldLength = 200;
+        this.viewFieldAngle = Math.toRadians(20);
+    }
+    public PlayerComponent(Point point1, Point point2, double directionAngle, double viewFieldLength, double viewFieldAngle) {
+        super(point1, point2);
+        this.directionAngle = directionAngle;
+        this.viewFieldLength = viewFieldLength;
+        this.viewFieldAngle = viewFieldAngle;
     }
 
     public Point getCoordinates(){
@@ -37,11 +44,11 @@ public abstract class PlayerComponent extends Component {
         getArea().getBottomRight().y += dy;
     }
 
-    public double getAngle() {return angle;}
+    public double getDirectionAngle() {return directionAngle;}
 
-    public void setAngle(double angle) {this.angle = angle;}
+    public void setDirectionAngle(double directionAngle) {this.directionAngle = directionAngle;}
 
-    public double getViewField() {return viewField;}
+    public double getViewFieldLength() {return viewFieldLength;}
 
     public double getViewFieldAngle() {return viewFieldAngle;}
 }
