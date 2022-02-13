@@ -24,7 +24,7 @@ public class ExplorationSim extends Renderer {
         HEIGHT = 3000;
         canvas = new Canvas(WIDTH, HEIGHT);
         initRenderView();
-        requestFocus();
+        requestFocus(); //GRRR why does this not work
     }
 
     @Override
