@@ -56,9 +56,7 @@ public class Scenario {
 
     public Scenario(File mapFile){
         this();
-
         System.out.println("File: " + mapFile.getName());
-
         parseFile(mapFile);
         //System.out.println(staticComponents);
     }
@@ -102,6 +100,7 @@ public class Scenario {
             case "baseSpeedIntruder"    -> baseSpeedIntruder = Double.parseDouble(value); // the walking speed of intruders
             case "sprintSpeedIntruder"  -> sprintSpeedIntruder = Double.parseDouble(value); // the sprinting speed of the intruders
             case "baseSpeedGuard"       -> baseSpeedGuard = Double.parseDouble(value); // the base speed of the guard.
+            case "sprintSpeedGuard"     -> sprintSpeedGuard = Double.parseDouble(value); // the sprinting speed of the intruders
 
             //regions:
             //lots of duplicate code here still, so still room for cleanup
@@ -185,7 +184,8 @@ public class Scenario {
         double dy = bottomRight.y - topLeft.y;
         while (i < numGuards){
             Point point = new Point(topLeft.x + dx * Math.random(), topLeft.y + dy * Math.random());
-            Guard player = new Guard(point, point.clone(), (int) (Math.random() * 360));
+//            Guard player = new Guard(point, point.clone(), (int) (Math.random() * 360));
+            Guard player = new Guard(point, point.clone(), Math.random()*2*Math.PI);
             playerComponents.add(player);
             guards.add(player);
             i++;
@@ -197,13 +197,14 @@ public class Scenario {
      */
     public void spawnIntruder(){
         int i = 0;
-        Point topLeft = guardSpawnAreas.get(0).getTopLeft();
-        Point bottomRight = guardSpawnAreas.get(0).getBottomRight();
+        Point topLeft = intruderSpawnAreas.get(0).getTopLeft();
+        Point bottomRight = intruderSpawnAreas.get(0).getBottomRight();
         double dx = bottomRight.x-topLeft.x;
         double dy = bottomRight.y-topLeft.y;
-        while(i<numGuards){
+        while(i<numIntruders){
             Point point = new Point(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
-            Intruder player = new Intruder(point, point.clone(), (int) (Math.random()*360));
+//            Intruder player = new Intruder(point, point.clone(), (int) (Math.random()*360));
+            Intruder player = new Intruder(point, point.clone(), Math.random()*2*Math.PI);
             playerComponents.add(player);
             intruders.add(player);
             i++;
@@ -269,6 +270,18 @@ public class Scenario {
 
     public List<Intruder> getIntruders() {
         return intruders;
+    }
+
+    public int getGameMode() {
+        return gameMode;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 }
 

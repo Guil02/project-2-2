@@ -3,6 +3,9 @@ package org.group7.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.group7.Main;
 import org.group7.model.Scenario;
 import org.group7.model.component.Component;
 import org.group7.utils.Methods;
@@ -19,9 +23,11 @@ import org.group7.utils.Methods;
 public class GameScreen extends AnchorPane {
 
     public Renderer renderer;
+    private Scenario scenario;
 
-    public GameScreen(Renderer renderer) {
+    public GameScreen(Renderer renderer, Scenario scenario) {
         this.renderer = renderer;
+        this.scenario = scenario;
         Methods.loadFXML(this, "/fxml/gameScreen.fxml");
     }
 
@@ -54,6 +60,13 @@ public class GameScreen extends AnchorPane {
     @FXML
     void initialize() {
         renderBox.getChildren().add(renderer);
+
+        renderBox.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                renderer.res = 1.05 * Math.max(scenario.getWidth() / renderer.getViewportBounds().getWidth(), scenario.getHeight() / renderer.getViewportBounds().getHeight());
+            }
+        });
     }
 
 }

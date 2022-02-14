@@ -8,6 +8,7 @@ import org.group7.model.Scenario;
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
+import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.Teleporter;
 import org.group7.utils.Config;
 
@@ -20,6 +21,7 @@ public class ExplorationSim extends Renderer {
     public ExplorationSim(double width, double height) {
         mapWidth = width;
         mapHeight = height;
+        //tile size = screenwidth / mapwidth
         WIDTH = 3000; //need to figure out a better way to define canvas size
         HEIGHT = 3000;
         canvas = new Canvas(WIDTH, HEIGHT);
@@ -76,13 +78,34 @@ public class ExplorationSim extends Renderer {
 
         g.setFill(ORANGE);
         for (Intruder intruder : scenario.getIntruders()) {
-            paintPoint(intruder.getCoordinates(), g);
+            paintAgent(intruder, g);
+            g.setFill(DARKMAGENTA);
+            drawDirection(intruder, g);
+            g.setFill(ORANGE);
         }
 
         g.setFill(BLUE);
         for (Guard guard : scenario.getGuards()) {
-            paintPoint(guard.getCoordinates(), g);
+            paintAgent(guard, g);
+            g.setFill(DARKBLUE);
+            drawDirection(guard, g);
+            g.setFill(BLUE);
         }
+    }
+
+    protected void drawDirection(PlayerComponent p, GraphicsContext g) {
+        double x = WIDTH / 2 + toCoord(p.getX()) - toCoord(mapWidth / 2);
+        double y = HEIGHT / 2 + toCoord(p.getY()) - toCoord(mapHeight / 2);
+
+        g.strokeLine(x, y, x + toCoord(Math.cos(p.getDirectionAngle())*p.getViewFieldLength()), y + toCoord(Math.sin(p.getDirectionAngle()) * p.getViewFieldLength()));
+
+    }
+
+    protected void paintAgent(PlayerComponent p, GraphicsContext g) {
+        double x = WIDTH / 2 + toCoord(p.getX()) - toCoord(mapWidth / 2) - toCoord(2.5);
+        double y = HEIGHT / 2 + toCoord(p.getY()) - toCoord(mapHeight / 2) - toCoord(2.5);
+
+        g.fillOval(x, y, toCoord(5), toCoord(5));
     }
 
     //kinda janky but works for now

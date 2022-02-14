@@ -2,6 +2,7 @@ package org.group7.model.component.playerComponents;
 
 import org.group7.geometric.Point;
 import org.group7.model.component.Component;
+import org.group7.utils.Config;
 
 /**
  * This class is made as a super class for all the possible component that can be considered player, i.e. agents and intruders.
@@ -15,7 +16,7 @@ public abstract class PlayerComponent extends Component {
     public PlayerComponent(Point point1, Point point2, double directionAngle) {
         super(point1, point2);
         this.directionAngle = directionAngle;
-        this.viewFieldLength = 200;
+        this.viewFieldLength = Config.DEFAULT_VIEW_DISTANCE;
         this.viewFieldAngle = Math.toRadians(20);
     }
     public PlayerComponent(Point point1, Point point2, double directionAngle, double viewFieldLength, double viewFieldAngle) {

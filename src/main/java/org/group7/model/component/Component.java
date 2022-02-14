@@ -20,6 +20,7 @@ public abstract class Component {
     public void setComponent(ComponentEnum component) {
         this.component = component;
     }
+
     public ComponentEnum getComponentEnum() {return component;}
 
     public Area getArea() {
@@ -34,11 +35,4 @@ public abstract class Component {
         return component.getTexture();
     }
 
-    public static class ComponentTypeSort implements Comparator<Component> {
-
-        @Override
-        public int compare(Component o1, Component o2) {
-            return 0;
-        }
-    }
 }

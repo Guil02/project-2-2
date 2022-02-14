@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class Renderer extends ScrollPane {
 
     double WIDTH, HEIGHT; //Not sure if we need them or if we just let javafx use calculated size
-    double res = Config.DEFAULT_RENDER_RESOLUTION;
+    public double res = Config.DEFAULT_RENDER_RESOLUTION;
     Canvas canvas;
 
     private int agentFocus;
