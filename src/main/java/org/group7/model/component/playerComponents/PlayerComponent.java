@@ -1,5 +1,6 @@
 package org.group7.model.component.playerComponents;
 
+import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.geometric.Vector2D;
 import org.group7.model.component.Component;
@@ -54,6 +55,12 @@ public abstract class PlayerComponent extends Component {
         getArea().getBottomRight().y += dy;
     }
 
+    public void move(double distance){
+        double dx = Math.cos(directionAngle)*distance;
+        double dy = Math.sin(directionAngle)*distance;
+        move(dx,dy);
+    }
+
     public double getDirectionAngle() {return directionAngle;}
 
     public void setDirectionAngle(double directionAngle) {this.directionAngle = directionAngle;}
@@ -61,4 +68,19 @@ public abstract class PlayerComponent extends Component {
     public double getViewFieldLength() {return viewFieldLength;}
 
     public double getViewFieldAngle() {return viewFieldAngle;}
+
+    public void turn(double angle){
+        setDirectionAngle(this.directionAngle+angle);
+        direction = new Vector2D(getDirectionAngle());
+    }
+
+    public boolean collision(Component c, double distance){
+        double dx = Math.cos(directionAngle)*distance;
+        double dy = Math.sin(directionAngle)*distance;
+        return c.getArea().isHit(new Point(this.getArea().getTopLeft().x + dx, this.getArea().getTopLeft().y + dy));
+    }
+
+    public void setPosition(Point p){
+        setArea(new Area(p, p.clone()));
+    }
 }

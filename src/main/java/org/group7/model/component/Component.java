@@ -27,6 +27,10 @@ public abstract class Component {
         return area;
     }
 
+    public void setArea(Area area){
+        this.area = area;
+    }
+
     /**
      * this method returns to the user a string with the path to the texture.
      * @return the path to the texture of the specified component.
