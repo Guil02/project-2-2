@@ -1,6 +1,7 @@
 package org.group7.model.component.playerComponents;
 
 import org.group7.geometric.Point;
+import org.group7.geometric.Vector2D;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
@@ -9,6 +10,9 @@ import org.group7.utils.Config;
  * it contains the coordinates of the position of the agent.
  */
 public abstract class PlayerComponent extends Component {
+    public Vector2D position;
+    public Vector2D direction;
+    public Vector2D viewField;
     private double directionAngle;
     private double viewFieldLength;
     private double viewFieldAngle; //how wide the visual range is
@@ -17,13 +21,18 @@ public abstract class PlayerComponent extends Component {
         super(point1, point2);
         this.directionAngle = directionAngle;
         this.viewFieldLength = Config.DEFAULT_VIEW_DISTANCE;
-        this.viewFieldAngle = Math.toRadians(20);
+        this.viewFieldAngle = Math.toRadians(90);
+
+        this.directionAngle = Math.toRadians(90);
+        position = new Vector2D(getX(), getY());
+        direction = new Vector2D(directionAngle);
+        viewField = new Vector2D(viewFieldAngle);
     }
     public PlayerComponent(Point point1, Point point2, double directionAngle, double viewFieldLength, double viewFieldAngle) {
-        super(point1, point2);
-        this.directionAngle = directionAngle;
+        this(point1, point2, directionAngle);
         this.viewFieldLength = viewFieldLength;
         this.viewFieldAngle = viewFieldAngle;
+        viewField = new Vector2D(viewFieldAngle);
     }
 
     public Point getCoordinates(){

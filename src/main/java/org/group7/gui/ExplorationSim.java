@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import org.group7.geometric.Point;
+import org.group7.geometric.Vector2D;
 import org.group7.model.Scenario;
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.Guard;
@@ -46,7 +47,11 @@ public class ExplorationSim extends Renderer {
         //List<Component> walls = staticComponents.stream().filter(c -> c.getComponentEnum() == WALL).toList();
         g.setFill(BLACK);
         for (Component w : scenario.getWalls()) {
+            //g.beginPath();
             paintRect(w, g);
+            //g.closePath();
+            //g.clip();
+
         }
 
         g.setFill(AQUAMARINE);
@@ -79,26 +84,53 @@ public class ExplorationSim extends Renderer {
         g.setFill(ORANGE);
         for (Intruder intruder : scenario.getIntruders()) {
             paintAgent(intruder, g);
-            g.setFill(DARKMAGENTA);
+            g.setStroke(DARKMAGENTA);
             drawDirection(intruder, g);
+            g.setStroke(AQUA);
+            drawFOV(intruder, g);
             g.setFill(ORANGE);
         }
 
         g.setFill(BLUE);
         for (Guard guard : scenario.getGuards()) {
             paintAgent(guard, g);
-            g.setFill(DARKBLUE);
+            g.setStroke(DARKBLUE);
             drawDirection(guard, g);
+            g.setStroke(RED);
+            drawFOV(guard, g);
             g.setFill(BLUE);
         }
+    }
+
+    protected void drawFOV(PlayerComponent p, GraphicsContext g) {
+        double x = WIDTH / 2 + toCoord(p.getX()) - toCoord(mapWidth / 2);
+        double y = HEIGHT / 2 + toCoord(p.getY()) - toCoord(mapHeight / 2);
+
+        g.setLineWidth(2);
+        //g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getRotatedBy(p.getViewFieldAngle() / 2).getAngle()) * p.getViewFieldLength() - 10), y + toCoord(Math.sin(p.direction.getRotatedBy(p.getViewFieldAngle() / 2).getAngle()) * p.getViewFieldLength()));
+        //g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getRotatedBy(-(p.getViewFieldAngle() / 2)).getAngle()) * p.getViewFieldLength() - 10), y + toCoord(Math.sin(-(p.direction.getRotatedBy(p.getViewFieldAngle() / 2)).getAngle()) * p.getViewFieldLength()));
+
+        //g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getAngle() - (p.getViewFieldLength() / 2))) * p.getViewFieldLength(), y + toCoord(Math.sin(p.direction.getAngle() - (p.getViewFieldLength() / 2))) * p.getViewFieldLength());
+        //g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getAngle() + (p.getViewFieldLength() / 2))) * p.getViewFieldLength(), y + toCoord(Math.sin(p.direction.getAngle() + (p.getViewFieldLength() / 2))) * p.getViewFieldLength());
+
+        g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getRotatedBy(p.getViewFieldAngle() / 2).getAngle())) * p.getViewFieldLength(), y + toCoord(Math.sin(p.direction.getRotatedBy(p.getViewFieldAngle() / 2).getAngle())) * p.getViewFieldLength());
+        g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getRotatedBy((-1 * p.getViewFieldAngle()) / 2).getAngle())) * p.getViewFieldLength(), y + toCoord(Math.sin(p.direction.getRotatedBy((-1 * p.getViewFieldAngle()) / 2).getAngle())) * p.getViewFieldLength());
+
+        g.setStroke(BLACK);
+        g.strokeLine(x, y, x + toCoord(Math.cos(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(45) / 2).getAngle()) * p.getViewFieldLength()), y + toCoord(Math.sin(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(45) / 2).getAngle()) * p.getViewFieldLength()));
+        g.strokeLine(x, y, x + toCoord(Math.cos(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(-45) / 2).getAngle()) * p.getViewFieldLength()), y + toCoord(Math.sin(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(-45) / 2).getAngle()) * p.getViewFieldLength()));
+
+
+        g.setLineWidth(1);
     }
 
     protected void drawDirection(PlayerComponent p, GraphicsContext g) {
         double x = WIDTH / 2 + toCoord(p.getX()) - toCoord(mapWidth / 2);
         double y = HEIGHT / 2 + toCoord(p.getY()) - toCoord(mapHeight / 2);
 
-        g.strokeLine(x, y, x + toCoord(Math.cos(p.getDirectionAngle())*p.getViewFieldLength()), y + toCoord(Math.sin(p.getDirectionAngle()) * p.getViewFieldLength()));
-
+        g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getAngle())) * p.getViewFieldLength(), y + toCoord(Math.sin(p.direction.getAngle()))* p.getViewFieldLength());
+        g.setStroke(GREEN);
+        g.strokeLine(x, y, x + toCoord(Math.cos(Math.toRadians(90)) * p.getViewFieldLength()), y + toCoord(Math.sin(Math.toRadians(90)) * p.getViewFieldLength()));
     }
 
     protected void paintAgent(PlayerComponent p, GraphicsContext g) {

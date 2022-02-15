@@ -46,7 +46,8 @@ public class GameRunner extends AnimationTimer {
     @Override
     public void handle(long now) {
         //where update the game
-        createState();
+        //createState();
+        //updatePlayers();
 
         gameScreen.render(scenario);
 
