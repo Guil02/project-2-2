@@ -93,7 +93,7 @@ public class ExplorationSim extends Renderer {
             g.setStroke(AQUA);
             drawFOV(intruder, g);
             g.setFill(ORANGE);
-//            drawRay(intruder, g, scenario);
+            drawRay(intruder, g, scenario);
         }
 
         g.setFill(BLUE);
@@ -104,6 +104,7 @@ public class ExplorationSim extends Renderer {
             g.setStroke(RED);
             drawFOV(guard, g);
             g.setFill(BLUE);
+            drawRay(guard, g, scenario);
         }
     }
 
@@ -128,7 +129,7 @@ public class ExplorationSim extends Renderer {
                 }
 
             }
-            g.strokeLine(x, y, x + dx, y + dy);
+            g.strokeLine(x, y, x + toCoord(dx), y + toCoord(dy));
         }
     }
 

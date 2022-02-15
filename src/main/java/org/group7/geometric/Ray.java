@@ -30,6 +30,7 @@ public class Ray {
         this.direction = new Vector2D(agent.getDirectionAngle());
         this.viewFieldLength = agent.getViewFieldLength();
         this.viewFieldAngle = agent.getViewFieldAngle();
+        hashMapComponentDistanceAngle = new HashMap<>();
     }
 
     public HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> getVisualField(ArrayList<Component> allAreas) {
@@ -38,10 +39,12 @@ public class Ray {
         Vector2D startAngle = direction.getRotatedBy(viewFieldAngle/2);
         Vector2D endAngle = direction.getRotatedBy(-(viewFieldAngle/2));
         Vector2D currentAngle = startAngle;
+        double previous = currentAngle.getAngle();
 
-        while(currentAngle.getAngle() >= endAngle.getAngle()) {
+        while(currentAngle.getAngle() >= endAngle.getAngle() && previous >= currentAngle.getAngle()) {
             isHit(allAreas, currentAngle);
             //change for each ray - experiment with this value
+            previous = currentAngle.getAngle();
             currentAngle = currentAngle.getRotatedBy(Math.toRadians(-5));
         }
 

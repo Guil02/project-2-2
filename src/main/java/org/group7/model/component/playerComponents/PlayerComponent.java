@@ -24,11 +24,11 @@ public abstract class PlayerComponent extends Component {
         super(point1, point2);
         this.directionAngle = directionAngle;
         this.viewFieldLength = Config.DEFAULT_VIEW_DISTANCE;
-        this.viewFieldAngle = Math.toRadians(90);
+        this.viewFieldAngle = Math.toRadians(20);
 
         this.directionAngle = Math.toRadians(90);
         position = new Vector2D(getX(), getY());
-        direction = new Vector2D(directionAngle);
+        direction = new Vector2D(this.directionAngle);
         viewField = new Vector2D(viewFieldAngle);
         this.ray = new Ray(this);
     }
@@ -79,6 +79,13 @@ public abstract class PlayerComponent extends Component {
     }
 
     public boolean collision(Component c, double distance){
+        for(int i = 0; i<distance; i++){
+            double dx = Math.cos(directionAngle)*i;
+            double dy = Math.sin(directionAngle)*i;
+            if(c.getArea().isHit(new Point(this.getArea().getTopLeft().x + dx, this.getArea().getTopLeft().y + dy))){
+                return true;
+            }
+        }
         double dx = Math.cos(directionAngle)*distance;
         double dy = Math.sin(directionAngle)*distance;
         return c.getArea().isHit(new Point(this.getArea().getTopLeft().x + dx, this.getArea().getTopLeft().y + dy));
