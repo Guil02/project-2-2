@@ -3,6 +3,7 @@ package org.group7.gui;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import org.group7.geometric.DistanceAngleTuple;
 import org.group7.geometric.Point;
 import org.group7.geometric.Vector2D;
 import org.group7.model.Scenario;
@@ -12,6 +13,9 @@ import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.Teleporter;
 import org.group7.utils.Config;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static javafx.scene.paint.Color.*;
 
@@ -89,6 +93,7 @@ public class ExplorationSim extends Renderer {
             g.setStroke(AQUA);
             drawFOV(intruder, g);
             g.setFill(ORANGE);
+            drawRay(intruder, g, scenario);
         }
 
         g.setFill(BLUE);
@@ -99,6 +104,24 @@ public class ExplorationSim extends Renderer {
             g.setStroke(RED);
             drawFOV(guard, g);
             g.setFill(BLUE);
+        }
+    }
+
+    protected void drawRay(PlayerComponent p, GraphicsContext g, Scenario scenario){
+        double x = WIDTH / 2 + toCoord(p.getX()) - toCoord(mapWidth / 2);
+        double y = HEIGHT / 2 + toCoord(p.getY()) - toCoord(mapHeight / 2);
+
+        g.setLineWidth(2);
+        HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> rayMap = p.getRay().getVisualField((ArrayList<Component>) scenario.getStaticComponents());
+        for(Integer name: rayMap.keySet()){
+            ArrayList<DistanceAngleTuple<Double,Vector2D>> subSet = rayMap.get(name);
+            for (DistanceAngleTuple<Double, Vector2D> ray : subSet) {
+                double distance = ray.getDistance();
+                double dx = distance * ray.getAngle().x;
+                double dy = distance * ray.getAngle().y;
+                g.strokeLine(x, y, x + dx, y + dy);
+
+            }
         }
     }
 

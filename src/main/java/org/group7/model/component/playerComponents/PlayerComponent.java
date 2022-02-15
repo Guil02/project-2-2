@@ -2,6 +2,7 @@ package org.group7.model.component.playerComponents;
 
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
+import org.group7.geometric.Ray;
 import org.group7.geometric.Vector2D;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
@@ -17,6 +18,7 @@ public abstract class PlayerComponent extends Component {
     private double directionAngle;
     private double viewFieldLength;
     private double viewFieldAngle; //how wide the visual range is
+    private Ray ray;
 
     public PlayerComponent(Point point1, Point point2, double directionAngle) {
         super(point1, point2);
@@ -28,12 +30,14 @@ public abstract class PlayerComponent extends Component {
         position = new Vector2D(getX(), getY());
         direction = new Vector2D(directionAngle);
         viewField = new Vector2D(viewFieldAngle);
+        this.ray = new Ray(this);
     }
     public PlayerComponent(Point point1, Point point2, double directionAngle, double viewFieldLength, double viewFieldAngle) {
         this(point1, point2, directionAngle);
         this.viewFieldLength = viewFieldLength;
         this.viewFieldAngle = viewFieldAngle;
         viewField = new Vector2D(viewFieldAngle);
+        this.ray = new Ray(this);
     }
 
     public Point getCoordinates(){
@@ -82,5 +86,9 @@ public abstract class PlayerComponent extends Component {
 
     public void setPosition(Point p){
         setArea(new Area(p, p.clone()));
+    }
+
+    public Ray getRay() {
+        return ray;
     }
 }
