@@ -38,6 +38,7 @@ public class Scenario {
     protected int height;
     protected int width;
     protected double scaling;
+    protected double timeStep;
 
 
     // all the static components stored separately and in 1 list.
@@ -101,6 +102,7 @@ public class Scenario {
             case "sprintSpeedIntruder"  -> sprintSpeedIntruder = Double.parseDouble(value); // the sprinting speed of the intruders
             case "baseSpeedGuard"       -> baseSpeedGuard = Double.parseDouble(value); // the base speed of the guard.
             case "sprintSpeedGuard"     -> sprintSpeedGuard = Double.parseDouble(value); // the sprinting speed of the intruders
+            case "timeStep"             -> timeStep = Double.parseDouble(value);
 
             //regions:
             //lots of duplicate code here still, so still room for cleanup
@@ -226,6 +228,10 @@ public class Scenario {
 
     public double getScaling() {
         return scaling;
+    }
+
+    public double getTimeStep() {
+        return timeStep;
     }
 
     /**

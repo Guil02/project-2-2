@@ -93,7 +93,7 @@ public class ExplorationSim extends Renderer {
             g.setStroke(AQUA);
             drawFOV(intruder, g);
             g.setFill(ORANGE);
-            drawRay(intruder, g, scenario);
+//            drawRay(intruder, g, scenario);
         }
 
         g.setFill(BLUE);

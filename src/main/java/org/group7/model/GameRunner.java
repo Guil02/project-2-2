@@ -66,10 +66,14 @@ public class GameRunner extends AnimationTimer {
         }
     }
 
+    /**
+     * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
+     * @param p a player component you want to move
+     */
     private void doMovement(PlayerComponent p){
         double mul = 0.3;
         double sub = mul/2;
-        double distance = 0.1;
+        double distance = getSpeed(p)*scenario.getTimeStep();
         p.turn(Math.random()*mul-sub);
         if(checkWallCollision(p, distance)){
             if(Math.random()>0.5){
@@ -90,7 +94,23 @@ public class GameRunner extends AnimationTimer {
         }
     }
 
+    public double getSpeed(PlayerComponent p){
+        switch (p.getComponentEnum()){
+            case GUARD -> {
+                return scenario.baseSpeedGuard;
+            }
+            case INTRUDER -> {
+                return scenario.baseSpeedIntruder;
+            }
+            default -> {
+                return 0;
+            }
+
+        }
+    }
+
     private boolean checkTargetCollision(PlayerComponent p, double distance) {
+        // check if the agent collides with a wall.
         for(int i = 0; i<scenario.targetAreas.size(); i++){
             if(p.collision(scenario.targetAreas.get(i), distance)){
                 return true;
