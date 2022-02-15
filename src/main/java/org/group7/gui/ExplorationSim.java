@@ -115,13 +115,20 @@ public class ExplorationSim extends Renderer {
         HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> rayMap = p.getRay().getVisualField((ArrayList<Component>) scenario.getStaticComponents());
         for(Integer name: rayMap.keySet()){
             ArrayList<DistanceAngleTuple<Double,Vector2D>> subSet = rayMap.get(name);
+            double distance = p.getViewFieldLength();
+            double dx = 0;
+            double dy = 0;
             for (DistanceAngleTuple<Double, Vector2D> ray : subSet) {
-                double distance = ray.getDistance();
-                double dx = distance * ray.getAngle().x;
-                double dy = distance * ray.getAngle().y;
-                g.strokeLine(x, y, x + dx, y + dy);
+                if(ray.getDistance()<distance){
+                    distance = ray.getDistance();
+                    double angle = ray.getAngle().getAngle();
+                    dx = Math.cos(angle)*distance;
+                    dy = Math.sin(angle)*distance;
+
+                }
 
             }
+            g.strokeLine(x, y, x + dx, y + dy);
         }
     }
 
@@ -140,8 +147,8 @@ public class ExplorationSim extends Renderer {
         g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getRotatedBy((-1 * p.getViewFieldAngle()) / 2).getAngle())) * p.getViewFieldLength(), y + toCoord(Math.sin(p.direction.getRotatedBy((-1 * p.getViewFieldAngle()) / 2).getAngle())) * p.getViewFieldLength());
 
         g.setStroke(BLACK);
-        g.strokeLine(x, y, x + toCoord(Math.cos(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(45) / 2).getAngle()) * p.getViewFieldLength()), y + toCoord(Math.sin(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(45) / 2).getAngle()) * p.getViewFieldLength()));
-        g.strokeLine(x, y, x + toCoord(Math.cos(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(-45) / 2).getAngle()) * p.getViewFieldLength()), y + toCoord(Math.sin(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(-45) / 2).getAngle()) * p.getViewFieldLength()));
+//        g.strokeLine(x, y, x + toCoord(Math.cos(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(45) / 2).getAngle()) * p.getViewFieldLength()), y + toCoord(Math.sin(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(45) / 2).getAngle()) * p.getViewFieldLength()));
+//        g.strokeLine(x, y, x + toCoord(Math.cos(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(-45) / 2).getAngle()) * p.getViewFieldLength()), y + toCoord(Math.sin(new Vector2D(Math.toRadians(90)).getRotatedBy(Math.toRadians(-45) / 2).getAngle()) * p.getViewFieldLength()));
 
 
         g.setLineWidth(1);
@@ -153,7 +160,7 @@ public class ExplorationSim extends Renderer {
 
         g.strokeLine(x, y, x + toCoord(Math.cos(p.direction.getAngle())) * p.getViewFieldLength(), y + toCoord(Math.sin(p.direction.getAngle()))* p.getViewFieldLength());
         g.setStroke(GREEN);
-        g.strokeLine(x, y, x + toCoord(Math.cos(Math.toRadians(90)) * p.getViewFieldLength()), y + toCoord(Math.sin(Math.toRadians(90)) * p.getViewFieldLength()));
+//        g.strokeLine(x, y, x + toCoord(Math.cos(Math.toRadians(90)) * p.getViewFieldLength()), y + toCoord(Math.sin(Math.toRadians(90)) * p.getViewFieldLength()));
     }
 
     protected void paintAgent(PlayerComponent p, GraphicsContext g) {

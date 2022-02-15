@@ -15,8 +15,17 @@ public class Ray {
     private double viewFieldLength;
     private double viewFieldAngle;
     private HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> hashMapComponentDistanceAngle = new HashMap<>();
+    private PlayerComponent agent;
 
     public Ray(PlayerComponent agent) {
+        this.position = agent.getCoordinates();
+        this.direction = new Vector2D(agent.getDirectionAngle());
+        this.viewFieldLength = agent.getViewFieldLength();
+        this.viewFieldAngle = agent.getViewFieldAngle();
+        this.agent = agent;
+    }
+
+    public void refresh(){
         this.position = agent.getCoordinates();
         this.direction = new Vector2D(agent.getDirectionAngle());
         this.viewFieldLength = agent.getViewFieldLength();
@@ -24,6 +33,7 @@ public class Ray {
     }
 
     public HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> getVisualField(ArrayList<Component> allAreas) {
+        refresh();
         //calculates the start and end angles of the area to look for
         Vector2D startAngle = direction.getRotatedBy(viewFieldAngle/2);
         Vector2D endAngle = direction.getRotatedBy(-(viewFieldAngle/2));
@@ -36,11 +46,11 @@ public class Ray {
         }
 
         //For printing purposes
-        for (Integer name: hashMapComponentDistanceAngle.keySet()) {
-            String key = name.toString();
-            String value = hashMapComponentDistanceAngle.get(name).toString();
-            System.out.println(key + " " + value);
-        }
+//        for (Integer name: hashMapComponentDistanceAngle.keySet()) {
+//            String key = name.toString();
+//            String value = hashMapComponentDistanceAngle.get(name).toString();
+//            System.out.println(key + " " + value);
+//        }
 
         return hashMapComponentDistanceAngle;
     }
