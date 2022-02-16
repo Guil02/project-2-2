@@ -74,7 +74,7 @@ public class GameRunner extends AnimationTimer {
         double mul = 0.3;
         double sub = mul/2;
         double distance = getSpeed(p)*scenario.getTimeStep();
-//        distance = 0.1;
+        distance = 0.1;
         p.turn(Math.random()*mul-sub);
         if(checkWallCollision(p, distance)){
             if(Math.random()>0.5){

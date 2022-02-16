@@ -24,7 +24,7 @@ public abstract class PlayerComponent extends Component {
         super(point1, point2);
         this.directionAngle = directionAngle;
         this.viewFieldLength = Config.DEFAULT_VIEW_DISTANCE;
-        this.viewFieldAngle = Math.toRadians(20);
+        this.viewFieldAngle = Math.toRadians(60);
 
         this.directionAngle = Math.toRadians(90);
         position = new Vector2D(getX(), getY());

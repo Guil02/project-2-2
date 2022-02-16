@@ -120,12 +120,12 @@ public class ExplorationSim extends Renderer {
             double dx = 0;
             double dy = 0;
             for (DistanceAngleTuple<Double, Vector2D> ray : subSet) {
-                if(ray.getDistance()<distance){
+                if(ray.getDistance()<distance ){
                     distance = ray.getDistance();
                     double angle = ray.getAngle().getAngle();
                     dx = Math.cos(angle)*distance;
                     dy = Math.sin(angle)*distance;
-
+                    g.strokeLine(x, y, x + toCoord(dx), y + toCoord(dy));
                 }
 
             }
