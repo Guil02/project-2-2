@@ -29,6 +29,12 @@ test {
     useJUnitPlatform()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
+
 //commented out bc gradle was saying it was deprecated or something
 //application {
 //    mainClass.set("org.group7.Main")

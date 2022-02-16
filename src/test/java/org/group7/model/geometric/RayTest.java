@@ -26,7 +26,21 @@ public class RayTest {
         areaArray.add(wall1);
         areaArray.add(wall2);
         HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
-        System.out.println("TEST");
+        //ray.isHit(areaArray, pc.getDirection());
+        System.out.println(test);
     }
 
+    @Test
+    //Checking if agent looks over/throw  another guard (apart from wall)
+    public void isHit2() {
+        PlayerComponent pc = new Guard(new Point(50,100), new Point(50,100),0);
+        Ray ray = new Ray(pc);
+        Component guard = new Guard(new Point(100,150), new Point(125,50), 0);
+        Component wall = new Wall(new Point(150,150), new Point(200,50));
+        ArrayList<Component> areaArray = new ArrayList<>();
+        areaArray.add(guard);
+        areaArray.add(wall);
+        HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
+
+    }
 }

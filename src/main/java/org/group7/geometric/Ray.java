@@ -49,21 +49,22 @@ public class Ray {
             isHit(allAreas, currentAngle);
             //change for each ray - experiment with this value
             previous = currentAngle.getAngle();
-            currentAngle = currentAngle.getRotatedBy(Math.toRadians(-0.5));
+            currentAngle = currentAngle.getRotatedBy(Math.toRadians(1));
         }
 
         //For printing purposes
-//        for (Integer name: hashMapComponentDistanceAngle.keySet()) {
-//            String key = name.toString();
-//            String value = hashMapComponentDistanceAngle.get(name).toString();
-//            System.out.println(key + " " + value);
-//        }
+        //for (Integer name: hashMapComponentDistanceAngle.keySet()) {
+        //    String key = name.toString();
+        //    String value = hashMapComponentDistanceAngle.get(name).toString();
+        //   System.out.println(key + " " + value);
+        //}
 
         return hashMapComponentDistanceAngle;
     }
 
-
     public void isHit(ArrayList<Component> allAreas, Vector2D direction) {
+        //TODO: sort list so that closest element to user is first (explain to mischa the problem)
+
         //get one component of the area list
         for (Component oneComponentComposed : allAreas){
             Area oneAreaComposed = oneComponentComposed.getArea();
@@ -94,48 +95,44 @@ public class Ray {
                 double t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator;
                 double u = ((x1 - x3) * (y1 - y2) - (y1 - y3) * (x1 - x2)) / denominator;
 
-                if (t > 0 && t < 1 && u > 0) {
+                if (t > 0 && t < 1 && u > 0) { //there exists an interception with a component
                     interSectionX = x1 + t * (x2 - x1);
                     interSectionY = y1 + t * (y2 - y1);
                     Vector2D interPoint = new Vector2D(interSectionX, interSectionY);
                     Vector2D agentPosition = new Vector2D(x3, y3);
                     double distance = interPoint.distance(agentPosition);
                     if (distance<= shortestDistance){
-                        shortestDistance=distance;
-                        agentSawSomething = true;
+                        if (oneComponentComposed.getComponentEnum().getId() ==3){ // 3= wall
+                            shortestDistance=distance;
+                            int componentId = oneComponentComposed.getComponentEnum().getId();
+                            addToHashMap(distance, componentId);
+                        } else {
+                            // if agent sees something else (not a wall) we dont store the shortest distance,
+                            // as it could see other things behind it
+                            int  componentId = oneComponentComposed.getComponentEnum().getId();
+                            addToHashMap(distance, componentId);
+                         }
                     }
-                }
-                if (agentSawSomething){
-                    int componentId = oneComponentComposed.getComponentEnum().getId();
-                    DistanceAngleTuple<Double, Vector2D> seenObjectInfo = new DistanceAngleTuple<>(shortestDistance, direction);
-
-                    ArrayList<DistanceAngleTuple<Double, Vector2D>> items =  hashMapComponentDistanceAngle.get(componentId);
-                    if (items == null) {
-                        items = new ArrayList<>();
-                        items.add(seenObjectInfo);
-                        hashMapComponentDistanceAngle.put(componentId,items);
-                    } else {
-                        items.add(seenObjectInfo);
-                        hashMapComponentDistanceAngle.put(componentId,items);
-                    }
-                    //safe the intersection point
+                    //save the intersection point
                     interSectionPoints.add(new Point(interSectionX,interSectionY));
-                    agentSawSomething = false;
-                }
-                else {
-                    int componentId = oneComponentComposed.getComponentEnum().getId();
-                    DistanceAngleTuple<Double, Vector2D> seenObjectInfo = new DistanceAngleTuple<>(shortestDistance, direction);
-                    ArrayList<DistanceAngleTuple<Double, Vector2D>> items =  hashMapComponentDistanceAngle.get(componentId);
-                    if (items == null) {
-                        items = new ArrayList<>();
-                        items.add(seenObjectInfo);
-                        hashMapComponentDistanceAngle.put(componentId,items);
-                    } else {
-                        items.add(seenObjectInfo);
-                        hashMapComponentDistanceAngle.put(componentId,items);
-                    }
+                }else { //the agent sees nothing
+                    int componentId=0;
+                    addToHashMap(shortestDistance, componentId);
                 }
             }
+        }
+    }
+
+    public void addToHashMap(double shortestDistance, int componentId){
+        DistanceAngleTuple<Double, Vector2D> seenObjectInfo = new DistanceAngleTuple<>(shortestDistance, direction);
+        ArrayList<DistanceAngleTuple<Double, Vector2D>> items =  hashMapComponentDistanceAngle.get(componentId);
+        if (items == null) {
+            items = new ArrayList<>();
+            items.add(seenObjectInfo);
+            hashMapComponentDistanceAngle.put(componentId,items);
+        } else {
+            items.add(seenObjectInfo);
+            hashMapComponentDistanceAngle.put(componentId,items);
         }
     }
 
