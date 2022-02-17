@@ -49,15 +49,15 @@ public class Ray {
             isHit(allAreas, currentAngle);
             //change for each ray - experiment with this value
             previous = currentAngle.getAngle();
-            currentAngle = currentAngle.getRotatedBy(Math.toRadians(1));
+            currentAngle = currentAngle.getRotatedBy(Math.toRadians(-5));
         }
 
         //For printing purposes
-        //for (Integer name: hashMapComponentDistanceAngle.keySet()) {
-        //    String key = name.toString();
-        //    String value = hashMapComponentDistanceAngle.get(name).toString();
-        //   System.out.println(key + " " + value);
-        //}
+        for (Integer name: hashMapComponentDistanceAngle.keySet()) {
+            String key = name.toString();
+            String value = hashMapComponentDistanceAngle.get(name).toString();
+            System.out.println(key + " " + value);
+         }
 
         return hashMapComponentDistanceAngle;
     }

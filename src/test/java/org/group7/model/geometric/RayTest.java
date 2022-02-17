@@ -13,11 +13,15 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class RayTest {
 
     @Test
     public void isHit() {
+        //agents viewFieldAngle 20 degrees
         PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0);
         Ray ray = new Ray(pc);
         Component wall1 = new Wall(new Point(300,300), new Point(350,100));
@@ -25,9 +29,19 @@ public class RayTest {
         ArrayList<Component> areaArray = new ArrayList<>();
         areaArray.add(wall1);
         areaArray.add(wall2);
+        //ray rotation by 5 degrees
         HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
-        //ray.isHit(areaArray, pc.getDirection());
-        System.out.println(test);
+        int seenWalls = test.get(3).size();
+        int seenShadedAreas = test.get(5).size();
+        assertTrue(seenWalls == 3 && seenShadedAreas == 2 && test.get(3).get(0).getDistance() == 50);
+    }
+
+    @Test
+    public void checkRotation() {
+        Vector2D vector2D = new Vector2D(0,1);
+        Vector2D actual = vector2D.getRotatedBy(Math.toRadians(-90));
+        Vector2D expected = new Vector2D(-1,0);
+        assertEquals(expected, actual);
     }
 
     @Test
