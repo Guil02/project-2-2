@@ -32,8 +32,11 @@ public class RayTest {
         //ray rotation by 5 degrees
         HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
         int seenWalls = test.get(3).size();
-        int seenShadedAreas = test.get(5).size();
-        assertTrue(seenWalls == 3 && seenShadedAreas == 2 && test.get(3).get(0).getDistance() == 50);
+        int seenShadedAreas = test.get(5).size(); // needs to be 4
+
+        assertEquals(3, seenWalls ); assertEquals(4, seenShadedAreas );
+        assertEquals(50.0,  test.get(0).get(0).getDistance() );
+
     }
 
     @Test

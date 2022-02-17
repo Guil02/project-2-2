@@ -64,6 +64,7 @@ public class Ray {
 
     public void isHit(ArrayList<Component> allAreas, Vector2D direction) {
         //TODO: sort list so that closest element to user is first (explain to mischa the problem)
+        boolean objectSeen= false;
 
         //get one component of the area list
         for (Component oneComponentComposed : allAreas){
@@ -73,6 +74,7 @@ public class Ray {
             ArrayList<Area> areasDecomposed = decomposeArea(oneAreaComposed);
             //decompose one area object into four lines and check intersection with ray
             // and keep track of shortest distance
+
             for (Area area : areasDecomposed) {
                 double x1 = area.getTopLeft().getX();
                 double y1 = area.getTopLeft().getY();
@@ -105,25 +107,28 @@ public class Ray {
                         if (oneComponentComposed.getComponentEnum().getId() ==3){ // 3= wall
                             shortestDistance=distance;
                             int componentId = oneComponentComposed.getComponentEnum().getId();
-                            addToHashMap(distance, componentId);
+                            addToHashMap(distance, componentId, direction);
                         } else {
                             // if agent sees something else (not a wall) we dont store the shortest distance,
                             // as it could see other things behind it
                             int  componentId = oneComponentComposed.getComponentEnum().getId();
-                            addToHashMap(distance, componentId);
+                            addToHashMap(distance, componentId, direction);
                          }
+                        objectSeen= true;
                     }
                     //save the intersection point
                     interSectionPoints.add(new Point(interSectionX,interSectionY));
-                }else { //the agent sees nothing
-                    int componentId=0;
-                    addToHashMap(shortestDistance, componentId);
                 }
             }
+
+        }
+        if (!objectSeen){ //the agent sees nothing with the ray
+            int componentId=0;
+            addToHashMap(this.viewFieldLength, componentId, direction);
         }
     }
 
-    public void addToHashMap(double shortestDistance, int componentId){
+    public void addToHashMap(double shortestDistance, int componentId, Vector2D direction){
         DistanceAngleTuple<Double, Vector2D> seenObjectInfo = new DistanceAngleTuple<>(shortestDistance, direction);
         ArrayList<DistanceAngleTuple<Double, Vector2D>> items =  hashMapComponentDistanceAngle.get(componentId);
         if (items == null) {
