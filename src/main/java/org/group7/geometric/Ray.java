@@ -53,11 +53,11 @@ public class Ray {
         }
 
         //For printing purposes
-        for (Integer name: hashMapComponentDistanceAngle.keySet()) {
-            String key = name.toString();
-            String value = hashMapComponentDistanceAngle.get(name).toString();
-            System.out.println(key + " " + value);
-         }
+        //for (Integer name: hashMapComponentDistanceAngle.keySet()) {
+        //    String key = name.toString();
+        //    String value = hashMapComponentDistanceAngle.get(name).toString();
+        //   System.out.println(key + " " + value);
+        //}
 
         return hashMapComponentDistanceAngle;
     }
