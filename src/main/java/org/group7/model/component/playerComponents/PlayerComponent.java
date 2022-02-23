@@ -80,6 +80,16 @@ public abstract class PlayerComponent extends Component {
         direction = new Vector2D(getDirectionAngle());
     }
 
+    //TODO: maybe one method only left or right momvement
+    public void turnLeft() {
+        setDirectionAngle(this.directionAngle-Math.toRadians(90));
+        direction = new Vector2D(getDirectionAngle());
+    }
+    public void turnRight() {
+        setDirectionAngle(this.directionAngle-Math.toRadians(-90));
+        direction = new Vector2D(getDirectionAngle());
+    }
+
     public boolean collision(Component c, double distance){
         for(int i = 0; i<distance; i++){
             double dx = Math.cos(directionAngle)*i;
