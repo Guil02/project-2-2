@@ -127,7 +127,7 @@ public class ExplorationSim extends Renderer {
                     double angle = ray.getAngle().getAngle();
                     dx = Math.cos(angle)*distance;
                     dy = Math.sin(angle)*distance;
-
+                    g.strokeLine(x, y, x + toCoord(dx), y + toCoord(dy));
                 }
 
             }

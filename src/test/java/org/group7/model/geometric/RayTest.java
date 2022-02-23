@@ -13,11 +13,15 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class RayTest {
 
     @Test
     public void isHit() {
+        //agents viewFieldAngle 20 degrees
         PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0);
         Ray ray = new Ray(pc);
         Component wall1 = new Wall(new Point(300,300), new Point(350,100));
@@ -25,8 +29,35 @@ public class RayTest {
         ArrayList<Component> areaArray = new ArrayList<>();
         areaArray.add(wall1);
         areaArray.add(wall2);
+        //ray rotation by 5 degrees
         HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
-        System.out.println("TEST");
+        int seenWalls = test.get(3).size();
+        int seenShadedAreas = test.get(5).size(); // needs to be 4
+
+        assertEquals(3, seenWalls ); assertEquals(4, seenShadedAreas );
+        assertEquals(50.0,  test.get(0).get(0).getDistance() );
+
     }
 
+    @Test
+    public void checkRotation() {
+        Vector2D vector2D = new Vector2D(0,1);
+        Vector2D actual = vector2D.getRotatedBy(Math.toRadians(-90));
+        Vector2D expected = new Vector2D(-1,0);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    //Checking if agent looks over/throw  another guard (apart from wall)
+    public void isHit2() {
+        PlayerComponent pc = new Guard(new Point(50,100), new Point(50,100),0);
+        Ray ray = new Ray(pc);
+        Component guard = new Guard(new Point(100,150), new Point(125,50), 0);
+        Component wall = new Wall(new Point(150,150), new Point(200,50));
+        ArrayList<Component> areaArray = new ArrayList<>();
+        areaArray.add(guard);
+        areaArray.add(wall);
+        HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
+
+    }
 }

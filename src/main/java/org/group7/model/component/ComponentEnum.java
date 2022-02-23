@@ -5,6 +5,7 @@ package org.group7.model.component;
  */
 public enum ComponentEnum {
     // all the components with the string path.
+    EMPTY_SPACE(0,""),
     GUARD(1,""),
     INTRUDER(2,""),
     WALL(3,""),
