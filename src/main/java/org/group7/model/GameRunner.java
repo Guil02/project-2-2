@@ -12,6 +12,7 @@ import org.group7.model.component.Component;
 import org.group7.model.component.ComponentEnum;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.utils.Methods;
+import org.group7.utils.MoveEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class GameRunner extends AnimationTimer {
         currentState = new State(scenario.guards, scenario.intruders);
         states.add(currentState);
 
-//        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+//      gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
         Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
         gameScreen = new GameScreen(renderer, scenario);
         Main.stage.setScene(new Scene(gameScreen));
@@ -69,15 +70,52 @@ public class GameRunner extends AnimationTimer {
     }
 
     /**
+     * //TODO: delete this
      * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
      * @param p a player component you want to move
      */
     private void doMovement(PlayerComponent p){
-        double mul = 0.3;
+        double mul = 0.3; //
         double sub = mul/2;
         double distance = getSpeed(p)*scenario.getTimeStep();
         distance = 0.1;
         p.turn(Math.random()*mul-sub);
+        if(checkWallCollision(p, distance)){
+            if(Math.random()>0.5){
+                p.turn(0.5*Math.PI);
+            }
+            else{
+                p.turn(-0.5*Math.PI);
+            }
+        }
+        else if(checkTeleporterCollision(p, distance)){
+            doTeleport(p, distance);
+        }
+        else if(p.getComponentEnum() == ComponentEnum.INTRUDER && checkTargetCollision(p, distance)){
+            stop(); //TODO implement game over screen
+        }
+        else{
+            Area a = p.getArea().clone();
+            p.move(distance);
+            scenario.movePlayerMap(a, p.getArea(), p);
+        }
+    }
+
+    /**
+     * //TODO: change name
+     * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
+     * @param p a player component you want to move
+     * @param type_movement 0= dont turn, 1 = turn right, 2= turn left
+     */
+    private void doMovementNotRandom(PlayerComponent p, int type_movement){
+        double distance = getSpeed(p)*scenario.getTimeStep(); //TODO: Guil fix this
+        distance = 0.1;
+
+        if (type_movement == MoveEnum.RIGHT.getId()){
+            p.turn(-Math.PI/2);
+        }else if(type_movement == MoveEnum.LEFT.getId()){
+            p.turn(Math.PI/2);
+        }
         if(checkWallCollision(p, distance)){
             if(Math.random()>0.5){
                 p.turn(0.5*Math.PI);

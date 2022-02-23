@@ -98,6 +98,7 @@ public class Scenario {
     }
 
     private void parseValue(String key, String value) {
+
         switch (key) {
             //simple properties:
             case "name"                 -> name = value;

@@ -3,9 +3,7 @@ package org.group7.geometric;
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.PlayerComponent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 //inspired by //https://github.com/CodingTrain/website/tree/main/CodingChallenges/CC_145_Ray_Casting/Processing
 //inspired by https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
@@ -62,9 +60,13 @@ public class Ray {
         return hashMapComponentDistanceAngle;
     }
 
+
+
+
+
     public void isHit(ArrayList<Component> allAreas, Vector2D direction) {
-        //TODO: sort list so that closest element to user is first (explain to mischa the problem)
         boolean objectSeen= false;
+        sortList(allAreas);
 
         //get one component of the area list
         for (Component oneComponentComposed : allAreas){
@@ -126,7 +128,25 @@ public class Ray {
             int componentId=0;
             addToHashMap(this.viewFieldLength, componentId, direction);
         }
+
+
     }
+
+    /**
+     * Sorts (ascending order) in place an arraylist of components based on distance to agent
+     * Inspired from: https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
+     * @param allAreas
+     */
+    public void sortList(ArrayList<Component> allAreas){
+        Point agent_position = this.position;
+        Collections.sort(allAreas, new Comparator<Component>() {
+            @Override
+            public int compare(Component c1, Component c2) {
+                return c1.getDistanceToAgent(agent_position).compareTo(c2.getDistanceToAgent(agent_position));
+            }
+        });
+    }
+
 
     public void addToHashMap(double shortestDistance, int componentId, Vector2D direction){
         DistanceAngleTuple<Double, Vector2D> seenObjectInfo = new DistanceAngleTuple<>(shortestDistance, direction);

@@ -28,7 +28,7 @@ public class RayTest {
         Component wall2 = new ShadedArea(new Point(300,500), new Point(350,300));
         ArrayList<Component> areaArray = new ArrayList<>();
         areaArray.add(wall1);
-        //areaArray.add(wall2);
+        areaArray.add(wall2);
         //ray rotation by 5 degrees
         HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
         int seenWalls = test.get(3).size();
@@ -38,6 +38,21 @@ public class RayTest {
 //        assertEquals(50.0,  test.get(0).get(0).getDistance() );
 
     }
+    @Test
+    public void sortList() {
+        PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0);
+        Ray ray = new Ray(pc);
+        Component wall1 = new Wall(new Point(1000,1000), new Point(2250,900));
+        Component wall2 = new ShadedArea(new Point(300,500), new Point(350,300));
+        ArrayList<Component> areaArray = new ArrayList<>();
+        areaArray.add(wall1);
+        areaArray.add(wall2);
+        ray.sortList(areaArray);
+        assertEquals(areaArray.get(0), wall2);
+        assertEquals(areaArray.get(1), wall1);
+
+    }
+
 
     @Test
     public void checkRotation() {
