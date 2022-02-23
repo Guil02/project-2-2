@@ -129,6 +129,8 @@ public class GameRunner extends AnimationTimer {
             if(p.collision(scenario.teleporters.get(i), distance)){
                 Point target = scenario.teleporters.get(i).getTarget();
                 p.setPosition(target.clone());
+                //Change does not gets rendered although the values from get and set matches
+                p.setDirectionAngle(scenario.teleporters.get(i).getDirection().getAngle());
             }
         }
     }
