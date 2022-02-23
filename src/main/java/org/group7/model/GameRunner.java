@@ -3,6 +3,7 @@ package org.group7.model;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import org.group7.Main;
+import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
@@ -10,6 +11,7 @@ import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
 import org.group7.model.component.ComponentEnum;
 import org.group7.model.component.playerComponents.PlayerComponent;
+import org.group7.utils.Methods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +93,9 @@ public class GameRunner extends AnimationTimer {
             stop(); //TODO implement game over screen
         }
         else{
+            Area a = p.getArea().clone();
             p.move(distance);
+            scenario.movePlayerMap(a, p.getArea(), p);
         }
     }
 

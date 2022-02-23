@@ -113,7 +113,9 @@ public class ExplorationSim extends Renderer {
         double y = HEIGHT / 2 + toCoord(p.getY()) - toCoord(mapHeight / 2);
 
         g.setLineWidth(2);
-        HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> rayMap = p.getRay().getVisualField((ArrayList<Component>) scenario.getStaticComponents());
+        ArrayList<Component> list = (ArrayList<Component>) scenario.getStaticComponents();
+        list.addAll(scenario.getPlayerComponents());
+        HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> rayMap = p.getRay().getVisualField(list);
         for(Integer name: rayMap.keySet()){
             ArrayList<DistanceAngleTuple<Double,Vector2D>> subSet = rayMap.get(name);
             double distance = p.getViewFieldLength();

@@ -65,4 +65,9 @@ public class Area {
     public String toString() {
         return "<Area(" + topLeft + ", " + bottomRight + ")>";
     }
+
+    @Override
+    public Area clone() {
+        return new Area(topLeft.clone(), bottomRight.clone());
+    }
 }

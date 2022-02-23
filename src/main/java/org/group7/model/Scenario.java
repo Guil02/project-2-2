@@ -1,9 +1,11 @@
 package org.group7.model;
 
+import org.group7.geometric.Area;
 import org.group7.geometric.Tuple;
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
+import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.*;
 import org.group7.geometric.Point;
 
@@ -39,7 +41,8 @@ public class Scenario {
     protected int width;
     protected double scaling;
     protected double timeStep;
-
+    protected Grid[][] map;
+    private boolean initialized = false;
 
     // all the static components stored separately and in 1 list.
     List<Component> staticComponents;
@@ -59,7 +62,13 @@ public class Scenario {
         this();
         System.out.println("File: " + mapFile.getName());
         parseFile(mapFile);
-        //System.out.println(staticComponents);
+        System.out.println(staticComponents);
+        for(int i = 0; i<height; i++){
+            for(int j = 0; j<width; j++){
+                System.out.print(map[j][i]);
+            }
+            System.out.println();
+        }
     }
 
     public Scenario() {
@@ -111,6 +120,7 @@ public class Scenario {
                 TargetArea component = new TargetArea(points.getA(), points.getB());
                 staticComponents.add(component);
                 targetAreas.add(component);
+                addStaticComponent(component);
             }
 
             case "spawnAreaIntruders" -> {
@@ -118,6 +128,7 @@ public class Scenario {
                 IntruderSpawnArea component= new IntruderSpawnArea(points.getA(), points.getB());
                 staticComponents.add(component);
                 intruderSpawnAreas.add(component);
+                addStaticComponent(component);
             }
 
             case "spawnAreaGuards" -> {
@@ -125,6 +136,7 @@ public class Scenario {
                 GuardSpawnArea component= new GuardSpawnArea(points.getA(), points.getB());
                 staticComponents.add(component);
                 guardSpawnAreas.add(component);
+                addStaticComponent(component);
             }
 
             case "wall" -> {
@@ -132,6 +144,7 @@ public class Scenario {
                 Wall component= new Wall(points.getA(), points.getB());
                 staticComponents.add(component);
                 walls.add(component);
+                addStaticComponent(component);
             }
 
             case "shaded" -> {
@@ -139,6 +152,7 @@ public class Scenario {
                 ShadedArea component= new ShadedArea(points.getA(), points.getB());
                 staticComponents.add(component);
                 shadedAreas.add(component);
+                addStaticComponent(component);
             }
 
             case "teleport" -> {
@@ -148,6 +162,7 @@ public class Scenario {
                 Teleporter component = new Teleporter(points.getA(), points.getB(), target);
                 staticComponents.add(component);
                 teleporters.add(component);
+                addStaticComponent(component);
             }
 
             case "texture" -> {
@@ -157,6 +172,10 @@ public class Scenario {
             default -> {
                 System.out.println("Unrecognized Property: " + key);
             }
+        }
+        if(width>0 && height>0 && !initialized){
+            initializeMap();
+            initialized = true;
         }
     }
 
@@ -190,6 +209,7 @@ public class Scenario {
             Guard player = new Guard(point, point.clone(), Math.random()*2*Math.PI);
             playerComponents.add(player);
             guards.add(player);
+            addPlayerComponent(player);
             i++;
         }
     }
@@ -209,11 +229,48 @@ public class Scenario {
             Intruder player = new Intruder(point, point.clone(), Math.random()*2*Math.PI);
             playerComponents.add(player);
             intruders.add(player);
+            addPlayerComponent(player);
             i++;
         }
     }
 
+    public void initializeMap(){
+        map = new Grid[width][height];
+        for(int i = 0; i<width; i++){
+            for(int j = 0; j<height; j++){
+                map[i][j] = new Grid();
+            }
+        }
+    }
+
+    public void movePlayerMap(Area a, Area b, PlayerComponent p) {
+        int x = (int) a.getTopLeft().x;
+        int y = (int) a.getTopLeft().y;
+
+        int tarX = (int) b.getTopLeft().x;
+        int tarY = (int) b.getTopLeft().y;
+
+        map[tarX][tarY].setPlayerComponent(p);
+        map[x][y].setPlayerComponent(null);
+    }
+
+    public void addStaticComponent(StaticComponent c){
+        for(int i = (int) c.getTopLeft().x; i<c.getBottomRight().x; i++){
+            for(int j = (int) c.getTopLeft().y; j<c.getBottomRight().y; j++){
+                map[i][j].setStaticComponent(c);
+            }
+        }
+    }
+    public void addPlayerComponent(PlayerComponent c){
+        Area a = c.getArea();
+        for(int i = (int) a.getTopLeft().x; i<a.getBottomRight().x; i++){
+            for(int j = (int) a.getTopLeft().y; j<a.getBottomRight().y; j++){
+                map[i][j].setPlayerComponent(c);
+            }
+        }
+    }
     // some getters for some of the private variables
+
     public int getNumGuards() {
         return numGuards;
     }
