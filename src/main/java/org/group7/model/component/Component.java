@@ -18,6 +18,7 @@ public abstract class Component {
 
     public Component(Point point1, Point point2){
         this.area = new Area(point1, point2);
+        //TODO: Area is defined by topLeft and bottomRight - decide on one common way!
         this.topRightPoint = point1;
         this.bottomleftPoint = point1;
     }

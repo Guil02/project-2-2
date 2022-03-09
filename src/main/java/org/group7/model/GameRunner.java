@@ -10,6 +10,8 @@ import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
 import org.group7.model.component.ComponentEnum;
+import org.group7.model.component.playerComponents.Guard;
+import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.utils.Methods;
 import org.group7.utils.MoveEnum;
@@ -95,6 +97,8 @@ public class GameRunner extends AnimationTimer {
             stop(); //TODO implement game over screen
         }
         else{
+           // if(checkSoundCollision(p))
+            //    System.out.println("HEARED SOMETHING");
             Area a = p.getArea().clone();
             p.move(distance);
             scenario.movePlayerMap(a, p.getArea(), p);
@@ -194,6 +198,23 @@ public class GameRunner extends AnimationTimer {
     private boolean checkCollision(PlayerComponent p, List<Component> list, double distance){
         for (Component component : list) {
             if (p.collision(component, distance)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkSoundCollision(PlayerComponent p) {
+        p.setMovingSound();
+        Area soundArea = p.getMovingSound();
+        for (Guard guard: currentState.getGuards()) {
+            if (soundArea.isHit(guard.getX(), guard.getY())) {
+                return true;
+            }
+        }
+        for (Intruder inturder: currentState.getIntruders()) {
+            inturder.setMovingSound();
+            if (soundArea.isHit(inturder.getX(), inturder.getY())) {
                 return true;
             }
         }

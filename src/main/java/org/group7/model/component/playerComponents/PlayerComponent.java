@@ -19,6 +19,7 @@ public abstract class PlayerComponent extends Component {
     private double viewFieldLength;
     private double viewFieldAngle; //how wide the visual range is
     private Ray ray;
+    private Area movingSound;
 
     public PlayerComponent(Point point1, Point point2, double directionAngle) {
         super(point1, point2);
@@ -110,4 +111,14 @@ public abstract class PlayerComponent extends Component {
     public Ray getRay() {
         return ray;
     }
+
+    public void setMovingSound() {
+        Area initArea = this.getArea();
+        Point topLeft = new Point((initArea.getTopLeft().x - (0.25*Config.DEFAULT_SOUND_DISTANCE)),initArea.getTopLeft().y + (0.25*Config.DEFAULT_SOUND_DISTANCE));
+        Point bottomRight = new Point(initArea.getTopLeft().x + (0.25*Config.DEFAULT_SOUND_DISTANCE),initArea.getTopLeft().y - (0.25*Config.DEFAULT_SOUND_DISTANCE));
+        this.movingSound = new Area(topLeft,bottomRight);
+    }
+
+    public Area getMovingSound() { return movingSound;}
+
 }
