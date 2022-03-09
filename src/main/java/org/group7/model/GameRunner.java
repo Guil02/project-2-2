@@ -97,8 +97,9 @@ public class GameRunner extends AnimationTimer {
             stop(); //TODO implement game over screen
         }
         else{
-           // if(checkSoundCollision(p))
-            //    System.out.println("HEARED SOMETHING");
+            if(checkSoundCollision(p)) {
+                //Gets here if something is beeing heared - we can do something with this information in phase 2
+            }
             Area a = p.getArea().clone();
             p.move(distance);
             scenario.movePlayerMap(a, p.getArea(), p);
@@ -208,14 +209,19 @@ public class GameRunner extends AnimationTimer {
         p.setMovingSound();
         Area soundArea = p.getMovingSound();
         for (Guard guard: currentState.getGuards()) {
+            guard.setMovingSound();
             if (soundArea.isHit(guard.getX(), guard.getY())) {
-                return true;
+                //make sure agents don't go nuts when they hear themselves
+                if (p.getCoordinates() != guard.getCoordinates())
+                    return true;
             }
         }
-        for (Intruder inturder: currentState.getIntruders()) {
-            inturder.setMovingSound();
-            if (soundArea.isHit(inturder.getX(), inturder.getY())) {
-                return true;
+        for (Intruder intruder: currentState.getIntruders()) {
+            intruder.setMovingSound();
+            if (soundArea.isHit(intruder.getX(), intruder.getY())) {
+                //make sure agents don't go nuts when they hear themselves
+                if (p.getCoordinates() != intruder.getCoordinates())
+                    return true;
             }
         }
         return false;
