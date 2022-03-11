@@ -6,11 +6,13 @@ import org.group7.model.component.ComponentEnum;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AStar {
+public class AStar implements Algorithm{
     private final int initialX;
     private final int initialY;
     private final Grid[][] map;
     private AStarNode current;
+
+    private static final boolean TEMP = true;//TODO REMOVE HCOST METHOD AND this or just this.
 
     List<AStarNode> open;
 
@@ -19,8 +21,17 @@ public class AStar {
         this.initialY = initialY;
         open = new ArrayList<>();
         this.map = map;
+        current = new AStarNode(initialX, initialY, this);
     }
 
+    @Override
+    public Grid calculateMovement() {
+        return null;//TODO implement
+    }
+
+    //***********************************************//
+    // methods for all the costs in the A* algorithm //
+    //***********************************************//
     public int gCost(int x, int y) {
         return Math.abs(initialX - x) + Math.abs(initialY - y);
     }
@@ -38,7 +49,9 @@ public class AStar {
                 }
             }
         }
-
+        if(TEMP){
+            return 0;
+        }
         return ((total-walls-explored)*100) / (total - walls);
     }
 

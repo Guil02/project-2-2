@@ -1,14 +1,16 @@
 package org.group7.model.component.staticComponents;
 
 import org.group7.geometric.Point;
+import org.group7.model.Scenario;
+
 import static org.group7.model.component.ComponentEnum.WALL;
 
 /**
  * The class that describes a wall that appears in the game. It is a wall.
  */
 public class Wall extends StaticComponent {
-    public Wall(Point topLeft, Point bottomRight) {
-        super(topLeft, bottomRight);
+    public Wall(Point topLeft, Point bottomRight, Scenario scenario) {
+        super(topLeft, bottomRight, scenario);
         setComponent(WALL);
     }
 }

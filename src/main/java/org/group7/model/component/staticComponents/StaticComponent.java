@@ -1,6 +1,7 @@
 package org.group7.model.component.staticComponents;
 
 import org.group7.geometric.Area;
+import org.group7.model.Scenario;
 import org.group7.model.component.Component;
 import org.group7.geometric.Point;
 
@@ -13,8 +14,8 @@ import org.group7.geometric.Point;
  */
 public abstract class StaticComponent extends Component {
 
-    public StaticComponent(Point topLeft, Point bottomRight) {
-        super(topLeft, bottomRight);
+    public StaticComponent(Point topLeft, Point bottomRight, Scenario scenario) {
+        super(topLeft, bottomRight, scenario);
     }
 
     /**

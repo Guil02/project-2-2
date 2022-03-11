@@ -2,6 +2,7 @@ package org.group7.model.component;
 
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
+import org.group7.model.Scenario;
 
 import java.util.Comparator;
 
@@ -12,9 +13,11 @@ import java.util.Comparator;
 public abstract class Component {
     private ComponentEnum component;
     private Area area;
+    private Scenario scenario;
 
-    public Component(Point point1, Point point2){
+    public Component(Point point1, Point point2, Scenario scenario){
         this.area = new Area(point1, point2);
+        this.scenario = scenario;
     }
 
     public void setComponent(ComponentEnum component) {
