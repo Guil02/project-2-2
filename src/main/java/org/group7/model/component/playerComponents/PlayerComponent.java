@@ -127,7 +127,7 @@ public abstract class PlayerComponent extends Component {
 
     private void initializeAlgorithm() {
         switch(algorithmValue){
-            case A_STAR -> algorithm = new AStar((int) initialPosition.x, (int) initialPosition.y, null); //TODO replace null with map
+            case A_STAR -> algorithm = new AStar((int) initialPosition.x, (int) initialPosition.y, getScenario().getMap());
             case WALL_FOLLOWING -> {
                 //TODO implement constructor of wall following algorithm
             }

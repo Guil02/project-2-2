@@ -346,6 +346,10 @@ public class Scenario {
     public int getWidth() {
         return width;
     }
+
+    public Grid[][] getMap() {
+        return map;
+    }
 }
 
 
