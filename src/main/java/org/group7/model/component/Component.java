@@ -34,6 +34,10 @@ public abstract class Component {
         this.area = area;
     }
 
+    public Scenario getScenario() {
+        return scenario;
+    }
+
     /**
      * this method returns to the user a string with the path to the texture.
      * @return the path to the texture of the specified component.
