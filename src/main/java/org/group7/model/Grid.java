@@ -66,7 +66,7 @@ public class Grid {
     }
 
     @Override
-    protected Grid clone() {
+    public Grid clone() {
         Grid g = new Grid(x, y);
         g.setPlayerComponent(this.playerComponent);
         g.setStaticComponent(this.staticComponent);
