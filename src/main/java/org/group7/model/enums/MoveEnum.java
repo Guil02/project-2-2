@@ -1,4 +1,4 @@
-package org.group7.utils;
+package org.group7.model.enums;
 
 public enum MoveEnum {
     LEFT(2),

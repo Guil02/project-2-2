@@ -4,7 +4,7 @@ import org.group7.geometric.Point;
 import org.group7.model.Scenario;
 import org.group7.geometric.Vector2D;
 
-import static org.group7.model.component.ComponentEnum.TELEPORTER;
+import static org.group7.model.enums.ComponentEnum.TELEPORTER;
 
 /**
  * The class that describes the teleporter in the game. It teleports a player (when they enter into it i.e. if isHit()

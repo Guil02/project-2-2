@@ -3,7 +3,7 @@ package org.group7.model.component.staticComponents;
 import org.group7.geometric.Point;
 import org.group7.model.Scenario;
 
-import static org.group7.model.component.ComponentEnum.SHADED_AREA;
+import static org.group7.model.enums.ComponentEnum.SHADED_AREA;
 
 /**
  * The class that describes what the shaded areas look like.

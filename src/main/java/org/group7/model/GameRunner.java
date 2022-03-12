@@ -9,12 +9,11 @@ import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
-import org.group7.model.component.ComponentEnum;
+import org.group7.model.enums.ComponentEnum;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
-import org.group7.utils.Methods;
-import org.group7.utils.MoveEnum;
+import org.group7.model.enums.MoveEnum;
 
 import java.util.ArrayList;
 import java.util.List;
