@@ -133,9 +133,9 @@ public class GameRunner extends AnimationTimer {
         if (action == Actions.STRAIGHT){
             //TODO: if straight walk one grid cell
         }
-        if (type_movement == MoveEnum.RIGHT){
+        if (action == Actions.RIGHT){
             p.turn(-Math.PI/2);
-        }else if(type_movement == MoveEnum.LEFT){
+        }else if(action == Actions.LEFT){
             p.turn(Math.PI/2);
         }
         if (checkWallCollision(p, distance)){

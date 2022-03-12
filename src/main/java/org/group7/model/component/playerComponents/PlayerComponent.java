@@ -1,5 +1,6 @@
 package org.group7.model.component.playerComponents;
 
+import org.group7.enums.Actions;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.geometric.Ray;
@@ -83,9 +84,11 @@ public abstract class PlayerComponent extends Component {
     /**
      * method that queries the algorithm for a move that it should execute.
      */
-    public void move(){
-        Grid g = algorithm.calculateMovement();
-    }
+    //public void move(){
+    //    Grid g = algorithm.calculateMovement();
+    //}
+
+    public Actions getAction() { return algorithm.calculateAction();}
 
     public double getDirectionAngle() {return directionAngle;}
 

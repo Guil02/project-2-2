@@ -5,4 +5,5 @@ import org.group7.model.Grid;
 
 public interface Algorithm {
     public Grid calculateMovement();
+    public Actions calculateAction();
 }
