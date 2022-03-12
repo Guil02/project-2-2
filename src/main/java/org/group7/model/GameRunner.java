@@ -3,6 +3,7 @@ package org.group7.model;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import org.group7.Main;
+import org.group7.alt.model.map.Map;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.gui.ExplorationSim;
@@ -29,6 +30,9 @@ public class GameRunner extends AnimationTimer {
     double elapsedTimeSteps;
 
     public GameRunner(Scenario scenario) {
+        //Map map = new Map(scenario);
+        //System.out.println(map);
+
         this.scenario = scenario;
         this.states = new ArrayList<>();
         this.elapsedTimeSteps = 0;

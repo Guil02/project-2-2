@@ -12,8 +12,10 @@ import javafx.geometry.Point2D;
  * @param <B> Second entry in Tuple, Can be any class or object
  */
 public class Tuple<A, B> {
-    private final A a;
-    private final B b;
+    private A a;
+    private B b;
+
+    public Tuple() {}
 
     public Tuple(A a, B b) {
         this.a = a;
@@ -90,66 +92,6 @@ public class Tuple<A, B> {
 
     //any specific tuple type, where semantic meaning and constraints on the generic parameters are desired,
     //can be represented as a subclass of the Tuple class using generics, as seen above.
-
-
-//----------------------------------------------------------------------------------------------------------------------------
-
-
-    /*
-    This is just some demo code to help with the intuition for understanding how and java generics work in the context
-    of Tuples and their subclasses.
-
-    There is a trade-off between semantic intuition and flexibility. Tuples are extremely
-    flexible since there are no constraints on the class types the generic parameters A,B can represent. However, without
-    proper variable names it may be hard to infer what objects/classes the getA() and getB() method will return.
-
-    Subclasses of the Tuple class with parameter renaming and constraining, can give much more semantic meaning to what
-    any given tuple actually represents, and ensures that arbitrary tuples of that subclass type aren't created. However,
-    it can be annoying to have to create a new tuple subclass every time you want to use a specific kind tuple.
-    In that case using the Tuple superclass is preferred bc it can represent any tuple of any kind; however descriptive
-    variable names should be used to give semantic meaning to the getA() and getB() methods.
-
-     */
-    //TODO: Delete this:
-    public static void main(String[] args) {
-        double distance = 10;
-        Vector2D angle = new Vector2D(90);
-
-        //Proper variable names give semantic meaning to the parameters A, B; when using the Tuple Class
-        Tuple<Double, Vector2D> distanceAngleTuple = new Tuple<>(distance, angle);
-        System.out.println(distanceAngleTuple);
-        //We can infer that getA() will return a double representing the distance, and getB() a Vector2D representing angle
-        System.out.println("(A = "+distanceAngleTuple.getA() + ", B = " + distanceAngleTuple.getB() + ")\n\n");
-
-
-        //Using the DistanceAngle subclass we know immediately this tuple represents distances and angles. Variable name not
-        //as important for code readability
-        DistanceAngle<Double, Vector2D> distanceAngle = new DistanceAngle<>(distance, angle);
-        System.out.println(distanceAngle);
-        //The methods getDistance(), and getAngle(), give clear semantic meaning to the getA() and getB() methods they invoke
-        System.out.println("(Distance/A =  "+ distanceAngle.getDistance() + ", Angle/B =  " + distanceAngle.getAngle() + ")\n\n");
-
-
-        //both representations of the tuple are equal if they contain the same values for their two parameters
-        System.out.println(distanceAngleTuple.equals(distanceAngle));
-
-        /*
-        The additional constraints placed on the DistanceAngle Tuple subclass ensures the DistanceAngle tuple cannot represent
-        arbitrary tuples like the base Tuple class can.
-
-        The following line of code will throw a compilation error, because String does not extend from Vector2D: */
-
-        // DistanceAngle<Double, String> invalidDistAngleTuple = new DistanceAngle<>(distance, "strings are not angles!");
-
-
-        //this is fine tho: the Tuple super-class has no constraints on its parameters.
-        //Any class/object can represent parameters A and B
-        Tuple<Double, String> justATuple = new Tuple<>(distance, "ladila");
-        System.out.println(justATuple);
-
-        Tuple<String, Point2D> thisIsFineToo = new Tuple<>("random string!", new Point2D(0, 1));
-        System.out.println(thisIsFineToo);
-    }
 
 
 }
