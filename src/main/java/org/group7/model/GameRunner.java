@@ -86,6 +86,14 @@ public class GameRunner extends AnimationTimer {
                 p.turn(-0.5*Math.PI);
             }
         }
+        else if(checkCollision(p,scenario.playerComponents, distance)){
+            if(Math.random()>0.5){
+                p.turn(0.5*Math.PI);
+            }
+            else{
+                p.turn(-0.5*Math.PI);
+            }
+        }
         else if(checkTeleporterCollision(p, distance)){
             doTeleport(p, distance);
         }
@@ -153,7 +161,7 @@ public class GameRunner extends AnimationTimer {
 
     private boolean checkCollision(PlayerComponent p, List<Component> list, double distance){
         for (Component component : list) {
-            if (p.collision(component, distance)) {
+            if (p.collision(component, distance) && !component.equals(p)) {
                 return true;
             }
         }
