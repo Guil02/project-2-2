@@ -1,6 +1,6 @@
 package org.group7.enums;
 
-public enum MoveEnum {
+public enum Actions {
     STRAIGHT,
     LEFT,
     RIGHT;

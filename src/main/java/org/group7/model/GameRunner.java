@@ -61,7 +61,7 @@ public class GameRunner extends AnimationTimer {
 
         gameScreen.render(scenario);
 
-        counter++;
+        elapsedTimeSteps += timeStep;
     }
 
     private void createState() {
