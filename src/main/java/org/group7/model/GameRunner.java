@@ -119,13 +119,15 @@ public class GameRunner extends AnimationTimer {
      * @param p a player component you want to move
      * @param type_movement 0= dont turn, 1 = turn right, 2= turn left
      */
-    private void doMovementNotRandom(PlayerComponent p, int type_movement){
+    private void doMovementNotRandom(PlayerComponent p, MoveEnum type_movement){
         double distance = getSpeed(p)*scenario.getTimeStep(); //TODO: Guil fix this
         distance = 0.1;
-
-        if (type_movement == MoveEnum.RIGHT.getId()){
+        if (type_movement == MoveEnum.STRAIGHT){
+            //TODO: if straight walk one grid cell
+        }
+        if (type_movement == MoveEnum.RIGHT){
             p.turn(-Math.PI/2);
-        }else if(type_movement == MoveEnum.LEFT.getId()){
+        }else if(type_movement == MoveEnum.LEFT){
             p.turn(Math.PI/2);
         }
         if(checkWallCollision(p, distance)){
