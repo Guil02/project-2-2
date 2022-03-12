@@ -7,4 +7,6 @@ public class Config {
 
     public static final double DEFAULT_VIEW_DISTANCE = 25;
 
+    public static final double DEFAULT_SOUND_DISTANCE = 50;
+
 }

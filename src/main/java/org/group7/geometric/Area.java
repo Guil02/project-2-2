@@ -42,16 +42,29 @@ public class Area {
         return bottomRight.y-topLeft.y;
     }
 
-    /*
-            Check whether a point is in the target area
-        */
+
+    //TODO:The two isHit methods are wrong? - delete if not needed
     public boolean isHit(double x, double y) {
         return y > topLeft.getY() && y< bottomRight.getY() && x> topLeft.getX() && x< bottomRight.getX();
     }
-
-    public boolean isHit(Point point) {
+      public boolean isHit(Point point) {
         return point.y > topLeft.getY() && point.y< bottomRight.getY() && point.x> topLeft.getX() && point.x< bottomRight.getX();
     }
+
+
+    /*
+            Check whether a point is in the target area
+        */
+
+    /*
+    public boolean isHit(double x, double y) {
+        return y > bottomRight.getY() && y< topLeft.getY() && x> topLeft.getX() && x< bottomRight.getX();
+    }
+
+    public boolean isHit(Point point) {
+        return point.y > bottomRight.getY() && point.y< topLeft.getY() && point.x> topLeft.getX() && point.x< bottomRight.getX();
+    }
+    */
 
     /*
         Check whether something with a radius is in the target area
@@ -63,7 +76,7 @@ public class Area {
 
     @Override
     public String toString() {
-        return "<Area(" + topLeft + ", " + bottomRight + ")>";
+        return "<Area(" + topLeft.getX() +" "+ topLeft.getY() + ", " + bottomRight.getX() +" "+ bottomRight.getY() + ")>";
     }
 
     @Override

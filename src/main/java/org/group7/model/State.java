@@ -10,36 +10,34 @@ import java.util.List;
 
 public class State {
 
-    List<Vector2D> intruderCoords;
-    List<Vector2D> guardCoords;
+    private List<Intruder> intruders;
+    private List<Guard> guards;
 
     public State(List<Guard> guards, List<Intruder> intruders) {
-        guardCoords = new ArrayList<>();
-        for (Guard guard : guards) {
-            Vector2D v = new Vector2D(guard.getX(), guard.getY());
-            guardCoords.add(v);
+        this.guards = guards;
+        this.intruders = intruders;
+        /*for (Guard guard : guards) {
+            guards.add(guard);
         }
 
-        intruderCoords = new ArrayList<>();
         for (Intruder intruder : intruders) {
-            Vector2D v = new Vector2D(intruder.getX(), intruder.getY());
-            intruderCoords.add(v);
-        }
+            intruders.add(intruder);
+        }*/
     }
 
-    public List<Vector2D> getIntruderCoords() {
-        return intruderCoords;
+    public List<Intruder> getIntruders() {
+        return intruders;
     }
 
-    public List<Vector2D> getGuardCoords() {
-        return guardCoords;
+    public List<Guard> getGuards() {
+        return guards;
     }
 
     @Override
     public String toString() {
         return "State{" +
-                "intruderCoords=" + intruderCoords +
-                ", guardCoords=" + guardCoords +
+                "intruderCoords=" + intruders +
+                ", guardCoords=" + guards +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package org.group7.model.component.playerComponents;
 
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.geometric.Ray;
@@ -12,6 +13,8 @@ import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
 import static org.group7.model.component.playerComponents.AlgorithmEnum.A_STAR;
+
+import java.util.DoubleSummaryStatistics;
 
 /**
  * This class is made as a super class for all the possible component that can be considered player, i.e. agents and intruders.
@@ -26,6 +29,7 @@ public abstract class PlayerComponent extends Component {
     private double viewFieldLength;
     private double viewFieldAngle; //how wide the visual range is
     private Ray ray;
+    private Area movingSound;
     private AlgorithmEnum algorithmValue = A_STAR;
     private Algorithm algorithm;
 
@@ -100,6 +104,16 @@ public abstract class PlayerComponent extends Component {
         direction = new Vector2D(getDirectionAngle());
     }
 
+    //TODO: maybe one method only left or right momvement
+    public void turnLeft() {
+        setDirectionAngle(this.directionAngle-Math.toRadians(90));
+        direction = new Vector2D(getDirectionAngle());
+    }
+    public void turnRight() {
+        setDirectionAngle(this.directionAngle-Math.toRadians(-90));
+        direction = new Vector2D(getDirectionAngle());
+    }
+
     public boolean collision(Component c, double distance){
         for(int i = 0; i<distance; i++){
             double dx = Math.cos(directionAngle)*i;
@@ -120,6 +134,16 @@ public abstract class PlayerComponent extends Component {
     public Ray getRay() {
         return ray;
     }
+
+    public void setMovingSound() {
+        Area initArea = this.getArea();
+        Point topLeft = new Point((initArea.getTopLeft().x - (0.25*Config.DEFAULT_SOUND_DISTANCE)),initArea.getTopLeft().y - (0.25*Config.DEFAULT_SOUND_DISTANCE));
+        Point bottomRight = new Point(initArea.getTopLeft().x + (0.25*Config.DEFAULT_SOUND_DISTANCE),initArea.getTopLeft().y + (0.25*Config.DEFAULT_SOUND_DISTANCE));
+        this.movingSound = new Area(topLeft,bottomRight);
+    }
+
+    public Area getMovingSound() { return movingSound;}
+
 
     public void setAlgorithmValue(AlgorithmEnum algorithmValue){
         this.algorithmValue = algorithmValue;
