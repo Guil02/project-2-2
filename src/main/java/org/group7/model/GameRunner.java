@@ -9,11 +9,12 @@ import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
-import org.group7.model.enums.ComponentEnum;
+import org.group7.enums.ComponentEnum;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
-import org.group7.model.enums.MoveEnum;
+import org.group7.enums.Actions;
+import org.group7.utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,16 @@ public class GameRunner extends AnimationTimer {
     private List<State> states;
     private Scenario scenario;
     State currentState;
-    int counter = 0;
     GameScreen gameScreen;
+
+    double timeStep;
+    double elapsedTimeSteps;
 
     public GameRunner(Scenario scenario) {
         this.scenario = scenario;
         this.states = new ArrayList<>();
+        this.elapsedTimeSteps = 0;
+        this.timeStep = Config.TIME_STEP;
 
         scenario.spawnGuards();
         scenario.spawnIntruder();
@@ -45,6 +50,9 @@ public class GameRunner extends AnimationTimer {
 
     }
 
+    /**\
+     *     MAIN GAME LOOP
+     */
     @Override
     public void handle(long now) {
         //where update the game
@@ -61,7 +69,7 @@ public class GameRunner extends AnimationTimer {
     }
 
     private void updatePlayers(){
-        for(int i = 0; i< scenario.guards.size(); i++){
+        for(int i = 0; i < scenario.guards.size(); i++){
             doMovement(scenario.guards.get(i));
         }
 
@@ -104,7 +112,7 @@ public class GameRunner extends AnimationTimer {
             stop(); //TODO implement game over screen
         }
         else{
-            if(checkSoundCollision(p)) {
+            if (checkSoundCollision(p)) {
                 //Gets here if something is beeing heared - we can do something with this information in phase 2
             }
             Area a = p.getArea().clone();
@@ -117,12 +125,12 @@ public class GameRunner extends AnimationTimer {
      * //TODO: change name
      * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
      * @param p a player component you want to move
-     * @param type_movement 0= dont turn, 1 = turn right, 2= turn left
+     * @param action 0= dont turn, 1 = turn right, 2= turn left
      */
-    private void doMovementNotRandom(PlayerComponent p, MoveEnum type_movement){
+    private void doMovementNotRandom(PlayerComponent p, Actions action){
         double distance = getSpeed(p)*scenario.getTimeStep(); //TODO: Guil fix this
         distance = 0.1;
-        if (type_movement == MoveEnum.STRAIGHT){
+        if (action == Actions.STRAIGHT){
             //TODO: if straight walk one grid cell
         }
         if (type_movement == MoveEnum.RIGHT){
@@ -130,7 +138,7 @@ public class GameRunner extends AnimationTimer {
         }else if(type_movement == MoveEnum.LEFT){
             p.turn(Math.PI/2);
         }
-        if(checkWallCollision(p, distance)){
+        if (checkWallCollision(p, distance)){
             if(Math.random()>0.5){
                 p.turn(0.5*Math.PI);
             }

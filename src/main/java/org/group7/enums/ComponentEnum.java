@@ -1,4 +1,4 @@
-package org.group7.model.enums;
+package org.group7.enums;
 
 /**
  * This ENUM contains all the possible different components with a path to their texture file.

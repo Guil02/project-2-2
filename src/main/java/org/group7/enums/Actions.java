@@ -1,4 +1,4 @@
-package org.group7.model.enums;
+package org.group7.enums;
 
 public enum MoveEnum {
     STRAIGHT,
@@ -7,6 +7,4 @@ public enum MoveEnum {
     //private final int id;
     //MoveEnum(int id){this.id=id;}
     //public int getId (){return id;}
-
-
 }

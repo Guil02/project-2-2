@@ -3,7 +3,7 @@ package org.group7.model.component.staticComponents;
 import org.group7.geometric.Point;
 import org.group7.model.Scenario;
 
-import static org.group7.model.enums.ComponentEnum.INTRUDER_SPAWN_AREA;
+import static org.group7.enums.ComponentEnum.INTRUDER_SPAWN_AREA;
 
 /**
  * This class describes the area in which the intruders will spawn.

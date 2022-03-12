@@ -3,8 +3,8 @@ package org.group7.model.component.playerComponents;
 import org.group7.geometric.Point;
 import org.group7.model.Scenario;
 
-import static org.group7.model.enums.ComponentEnum.GUARD;
-import static org.group7.model.enums.AlgorithmEnum.A_STAR;
+import static org.group7.enums.ComponentEnum.GUARD;
+import static org.group7.enums.AlgorithmEnum.A_STAR;
 
 /**
  * This class represent the player in the game that is a guard.

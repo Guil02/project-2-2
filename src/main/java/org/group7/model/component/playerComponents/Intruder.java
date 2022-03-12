@@ -3,7 +3,7 @@ package org.group7.model.component.playerComponents;
 import org.group7.geometric.Point;
 import org.group7.model.Scenario;
 
-import static org.group7.model.enums.ComponentEnum.INTRUDER;
+import static org.group7.enums.ComponentEnum.INTRUDER;
 
 /**
  * This class represent the player in the game that is an intruder.

@@ -1,12 +1,13 @@
 package org.group7.model.algorithms;
 
+import org.group7.enums.Actions;
 import org.group7.model.Grid;
-import org.group7.model.enums.ComponentEnum;
+import org.group7.enums.ComponentEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AStar implements Algorithm{
+public class AStar implements Algorithm {
     private final int initialX;
     private final int initialY;
     private final Grid[][] map;
@@ -27,6 +28,13 @@ public class AStar implements Algorithm{
     @Override
     public Grid calculateMovement() {
         return null;//TODO implement
+    }
+
+
+    @Override
+    public Actions calculateAction() {
+        //actions encompass any thing an agent can do such as rotate, move, sprint, walk, yell, place marker, etc
+        return null; //TODO implement
     }
 
     //***********************************************//

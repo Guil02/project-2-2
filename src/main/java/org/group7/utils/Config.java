@@ -9,4 +9,6 @@ public class Config {
 
     public static final double DEFAULT_SOUND_DISTANCE = 50;
 
+    public static final double TIME_STEP = 0.1;
+
 }
