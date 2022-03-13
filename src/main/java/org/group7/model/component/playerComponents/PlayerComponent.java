@@ -31,9 +31,12 @@ public abstract class PlayerComponent extends Component {
     private AlgorithmEnum algorithmValue = A_STAR;
     private Algorithm algorithm;
     private List<Grid> explored;
+    private final int id;
+    private static int counter = 0;
 
     public PlayerComponent(Point point1, Point point2, double directionAngle, Scenario scenario) {
         super(point1, point2, scenario);
+        id = counter++;
         this.directionAngle = directionAngle;
         this.viewFieldLength = Config.DEFAULT_VIEW_DISTANCE;
         this.viewFieldAngle = Math.toRadians(20);
@@ -138,5 +141,9 @@ public abstract class PlayerComponent extends Component {
                 //TODO implement constructor of flood fill algorithm
             }
         }
+    }
+
+    public int getId() {
+        return id;
     }
 }

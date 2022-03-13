@@ -65,9 +65,8 @@ public class Scenario {
         System.out.println(staticComponents);
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
-                System.out.print(map[j][i]);
+                map[j][i].exploredArray = new boolean[numGuards+numIntruders];
             }
-            System.out.println();
         }
     }
 
