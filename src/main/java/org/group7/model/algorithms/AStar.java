@@ -2,6 +2,7 @@ package org.group7.model.algorithms;
 
 import org.group7.model.Grid;
 import org.group7.model.component.ComponentEnum;
+import org.group7.model.component.playerComponents.Movements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,9 @@ public class AStar implements Algorithm{
     }
 
     @Override
-    public Grid calculateMovement() {
+    public Movements calculateMovement() {
         return null;//TODO implement
+        //TODO shortest path here
     }
 
     //***********************************************//

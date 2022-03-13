@@ -1,7 +1,7 @@
 package org.group7.model.algorithms;
 
-import org.group7.model.Grid;
+import org.group7.model.component.playerComponents.Movements;
 
 public interface Algorithm {
-    public Grid calculateMovement();
+    public Movements calculateMovement();
 }

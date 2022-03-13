@@ -11,6 +11,8 @@ import org.group7.model.algorithms.Algorithm;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
+import java.util.List;
+
 import static org.group7.model.component.playerComponents.AlgorithmEnum.A_STAR;
 
 /**
@@ -28,6 +30,7 @@ public abstract class PlayerComponent extends Component {
     private Ray ray;
     private AlgorithmEnum algorithmValue = A_STAR;
     private Algorithm algorithm;
+    private List<Grid> explored;
 
     public PlayerComponent(Point point1, Point point2, double directionAngle, Scenario scenario) {
         super(point1, point2, scenario);
@@ -82,7 +85,11 @@ public abstract class PlayerComponent extends Component {
      * method that queries the algorithm for a move that it should execute.
      */
     public void move(){
-        Grid g = algorithm.calculateMovement();
+        Movements move = algorithm.calculateMovement();
+        //execute(move)
+
+        //add path finding algorithm for shortest path. //TODO ELENA shortest path call goes here
+        //TODO finish
     }
 
     public double getDirectionAngle() {return directionAngle;}
