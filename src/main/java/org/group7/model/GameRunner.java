@@ -10,6 +10,7 @@ import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
 import org.group7.model.component.ComponentEnum;
+import org.group7.model.component.playerComponents.Movements;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.utils.Methods;
 
@@ -61,6 +62,9 @@ public class GameRunner extends AnimationTimer {
     private void updatePlayers(){
         for(int i = 0; i< scenario.guards.size(); i++){
             doMovement(scenario.guards.get(i));
+//            Movements move = scenario.guards.get(i).move();
+//            executeMove(scenario.guards.get(i), move);
+            //TODO this execute method should check for validity of the move and then execute the move i.e. move the player.
         }
 
         for(int i = 0; i< scenario.intruders.size(); i++){

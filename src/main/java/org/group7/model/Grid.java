@@ -3,10 +3,13 @@ package org.group7.model;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.StaticComponent;
 
+import java.util.List;
+
 public class Grid {
     private StaticComponent staticComponent = null;
     private PlayerComponent playerComponent = null;
     public boolean explored = false;
+    boolean[] exploredArray;
     private int x;
     private int y;
 

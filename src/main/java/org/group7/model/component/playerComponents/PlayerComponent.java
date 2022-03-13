@@ -84,12 +84,8 @@ public abstract class PlayerComponent extends Component {
     /**
      * method that queries the algorithm for a move that it should execute.
      */
-    public void move(){
-        Movements move = algorithm.calculateMovement();
-        //execute(move)
-
-        //add path finding algorithm for shortest path. //TODO ELENA shortest path call goes here
-        //TODO finish
+    public Movements move(){
+        return algorithm.calculateMovement();
     }
 
     public double getDirectionAngle() {return directionAngle;}
