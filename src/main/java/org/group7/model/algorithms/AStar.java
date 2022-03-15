@@ -14,21 +14,33 @@ public class AStar implements Algorithm{
     private AStarNode current;
 
     private static final boolean TEMP = true;//TODO REMOVE HCOST METHOD AND this or just this.
+    List<Movements> movesLeft;
 
     List<AStarNode> open;
+    List<AStarNode> closed;
 
     public AStar(int initialX, int initialY, Grid[][] map) {
         this.initialX = initialX;
         this.initialY = initialY;
         open = new ArrayList<>();
+        closed = new ArrayList<>();
+        movesLeft = new ArrayList<>();
         this.map = map;
         current = new AStarNode(initialX, initialY, this);
+        open.add(current);
     }
 
     @Override
     public Movements calculateMovement() {
-        return null;//TODO implement
-        //TODO shortest path here
+        if(movesLeft.isEmpty()){
+            AStarNode target = findTarget();
+            //TODO shortest path here
+        }
+        return movesLeft.get(movesLeft.size()-1);
+    }
+
+    public AStarNode findTarget(){
+        return null;
     }
 
     //***********************************************//
@@ -38,26 +50,16 @@ public class AStar implements Algorithm{
         return Math.abs(initialX - x) + Math.abs(initialY - y);
     }
 
-    public int hCost() {
-        int explored = 0;
-        int walls = 0;
-        int total = map.length * map[0].length;
-        for (Grid[] grids : map) {
-            for (Grid grid : grids) {
-                if (grid.getStaticComponent().getComponentEnum() == ComponentEnum.WALL) {
-                    walls++;
-                } else if (grid.explored) {
-                    explored++;
-                }
-            }
-        }
-        if(TEMP){
-            return 0;
-        }
-        return ((total-walls-explored)*100) / (total - walls);
+    public int hCost(int x, int y){
+        return Math.abs(current.getX() - x) + Math.abs(current.getY() - y);
     }
 
-    public int dCost(int x, int y){
-        return Math.abs(current.getX() - x) + Math.abs(current.getY() - y);
+    public boolean contains(List<AStarNode> list, int x, int y){
+        for(AStarNode g : list){
+            if(g.getX()==x && g.getY() == y){
+                return true;
+            }
+        }
+        return false;
     }
 }

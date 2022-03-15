@@ -7,7 +7,7 @@ public class AStarNode {
 
     private int gCost = Integer.MAX_VALUE; // distance from starting position. Manhattan distance.
     private int hCost = Integer.MAX_VALUE; // heuristic cost aka distance from target.
-    private int dCost = Integer.MAX_VALUE; // (this is custom) distance from current node. I envision this as being the amount of turns needed to get to this node. (so including turns needed to turn 90 degrees)
+//    private int dCost = Integer.MAX_VALUE; // (this is custom) distance from current node. I envision this as being the amount of turns needed to get to this node. (so including turns needed to turn 90 degrees)
     private int fCost = Integer.MAX_VALUE; // total cost.
 
     public AStarNode(int x, int y, AStar aStar) {
@@ -19,7 +19,6 @@ public class AStarNode {
     public void updateCost(){
         updateGCost();
         updateHCost();
-        updateDCost();
         updateFCost();
     }
 
@@ -28,15 +27,11 @@ public class AStarNode {
     }
 
     private void updateHCost(){
-        hCost = aStar.hCost();
-    }
-
-    private void updateDCost(){
-        dCost = aStar.dCost(this.x, this.y);
+        hCost = aStar.hCost(this.x, this.y);
     }
 
     private void updateFCost(){
-        fCost = gCost+hCost+dCost;
+        fCost = gCost+hCost;
     }
 
     public int getX() {

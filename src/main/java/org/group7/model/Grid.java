@@ -76,4 +76,12 @@ public class Grid {
         g.explored = this.explored;
         return g;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
