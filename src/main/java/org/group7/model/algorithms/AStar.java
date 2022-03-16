@@ -15,6 +15,7 @@ public class AStar implements Algorithm{
     private final int initialY;
     private final Grid[][] map;
     private AStarNode current;
+    private AStarNode target;
     private PlayerComponent player;
 
     private static final boolean TEMP = true;//TODO REMOVE HCOST METHOD AND this or just this.
@@ -38,6 +39,7 @@ public class AStar implements Algorithm{
     @Override
     public Actions calculateMovement() {
         if(movesLeft.isEmpty()){
+            current = target;
             AStarNode target = findTarget();
             //TODO shortest path here
         }
