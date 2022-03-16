@@ -9,10 +9,12 @@ import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
+import org.group7.enums.ComponentEnum;
 import org.group7.model.component.ComponentEnum;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
+import org.group7.utils.Config;
 import org.group7.utils.Methods;
 import org.group7.utils.MoveEnum;
 
@@ -23,19 +25,24 @@ public class GameRunner extends AnimationTimer {
     private List<State> states;
     private Scenario scenario;
     State currentState;
-    int counter = 0;
     GameScreen gameScreen;
+
+    double timeStep;
+    double elapsedTimeStep; //total time
 
     public GameRunner(Scenario scenario) {
         this.scenario = scenario;
         this.states = new ArrayList<>();
+        this.elapsedTimeStep =0;
+        this.timeStep = Config.TIME_STEP;
+
 
         scenario.spawnGuards();
         scenario.spawnIntruder();
         currentState = new State(scenario.guards, scenario.intruders);
         states.add(currentState);
 
-//      gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+//        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
         Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
         gameScreen = new GameScreen(renderer, scenario);
         Main.stage.setScene(new Scene(gameScreen));
@@ -53,8 +60,8 @@ public class GameRunner extends AnimationTimer {
         updatePlayers();
 
         gameScreen.render(scenario);
+        elapsedTimeStep += timeStep;
 
-        counter++;
     }
 
     private void createState() {
@@ -64,6 +71,9 @@ public class GameRunner extends AnimationTimer {
     private void updatePlayers(){
         for(int i = 0; i< scenario.guards.size(); i++){
             doMovement(scenario.guards.get(i));
+//            Movements move = scenario.guards.get(i).move();
+//            executeMove(scenario.guards.get(i), move);
+            //TODO this execute method should check for validity of the move and then execute the move i.e. move the player.
         }
 
         for(int i = 0; i< scenario.intruders.size(); i++){
@@ -77,12 +87,20 @@ public class GameRunner extends AnimationTimer {
      * @param p a player component you want to move
      */
     private void doMovement(PlayerComponent p){
-        double mul = 0.3; //
+        double mul = 0.3;
         double sub = mul/2;
         double distance = getSpeed(p)*scenario.getTimeStep();
         distance = 0.1;
         p.turn(Math.random()*mul-sub);
         if(checkWallCollision(p, distance)){
+            if(Math.random()>0.5){
+                p.turn(0.5*Math.PI);
+            }
+            else{
+                p.turn(-0.5*Math.PI);
+            }
+        }
+        else if(checkCollision(p,scenario.playerComponents, distance)){
             if(Math.random()>0.5){
                 p.turn(0.5*Math.PI);
             }
@@ -198,7 +216,7 @@ public class GameRunner extends AnimationTimer {
 
     private boolean checkCollision(PlayerComponent p, List<Component> list, double distance){
         for (Component component : list) {
-            if (p.collision(component, distance)) {
+            if (p.collision(component, distance) && !component.equals(p)) {
                 return true;
             }
         }

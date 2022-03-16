@@ -65,9 +65,8 @@ public class Scenario {
         System.out.println(staticComponents);
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
-                System.out.print(map[j][i]);
+                map[j][i].exploredArray = new boolean[numGuards+numIntruders];
             }
-            System.out.println();
         }
     }
 
@@ -98,7 +97,6 @@ public class Scenario {
     }
 
     private void parseValue(String key, String value) {
-
         switch (key) {
             //simple properties:
             case "name"                 -> name = value;
@@ -118,7 +116,7 @@ public class Scenario {
             //lots of duplicate code here still, so still room for cleanup
             case "targetArea" -> {
                 Tuple<Point, Point> points = parsePoints(value);
-                TargetArea component = new TargetArea(points.getA(), points.getB());
+                TargetArea component = new TargetArea(points.getA(), points.getB(), this);
                 staticComponents.add(component);
                 targetAreas.add(component);
                 addStaticComponent(component);
@@ -126,7 +124,7 @@ public class Scenario {
 
             case "spawnAreaIntruders" -> {
                 Tuple<Point, Point> points = parsePoints(value);
-                IntruderSpawnArea component= new IntruderSpawnArea(points.getA(), points.getB());
+                IntruderSpawnArea component= new IntruderSpawnArea(points.getA(), points.getB(),this);
                 staticComponents.add(component);
                 intruderSpawnAreas.add(component);
                 addStaticComponent(component);
@@ -134,7 +132,7 @@ public class Scenario {
 
             case "spawnAreaGuards" -> {
                 Tuple<Point, Point> points = parsePoints(value);
-                GuardSpawnArea component= new GuardSpawnArea(points.getA(), points.getB());
+                GuardSpawnArea component= new GuardSpawnArea(points.getA(), points.getB(), this);
                 staticComponents.add(component);
                 guardSpawnAreas.add(component);
                 addStaticComponent(component);
@@ -142,7 +140,7 @@ public class Scenario {
 
             case "wall" -> {
                 Tuple<Point, Point> points = parsePoints(value);
-                Wall component= new Wall(points.getA(), points.getB());
+                Wall component= new Wall(points.getA(), points.getB(), this);
                 staticComponents.add(component);
                 walls.add(component);
                 addStaticComponent(component);
@@ -150,7 +148,7 @@ public class Scenario {
 
             case "shaded" -> {
                 Tuple<Point, Point> points = parsePoints(value);
-                ShadedArea component= new ShadedArea(points.getA(), points.getB());
+                ShadedArea component= new ShadedArea(points.getA(), points.getB(), this);
                 staticComponents.add(component);
                 shadedAreas.add(component);
                 addStaticComponent(component);
@@ -161,6 +159,7 @@ public class Scenario {
                 String[] coords = value.split(" ");
                 Point target = new Point(Double.parseDouble(coords[4]), Double.parseDouble(coords[5]));
                 Teleporter component = new Teleporter(points.getA(), points.getB(), target, Double.parseDouble((coords[6])));
+                //Teleporter component = new Teleporter(points.getA(), points.getB(), target, this);
                 staticComponents.add(component);
                 teleporters.add(component);
                 addStaticComponent(component);
@@ -207,7 +206,7 @@ public class Scenario {
         while (i < numGuards){
             Point point = new Point(topLeft.x + dx * Math.random(), topLeft.y + dy * Math.random());
 //            Guard player = new Guard(point, point.clone(), (int) (Math.random() * 360));
-            Guard player = new Guard(point, point.clone(), Math.random()*2*Math.PI);
+            Guard player = new Guard(point, point.clone(), Math.random()*2*Math.PI, this); //TODO modify angle
             playerComponents.add(player);
             guards.add(player);
             addPlayerComponent(player);
@@ -227,7 +226,7 @@ public class Scenario {
         while(i<numIntruders){
             Point point = new Point(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
 //            Intruder player = new Intruder(point, point.clone(), (int) (Math.random()*360));
-            Intruder player = new Intruder(point, point.clone(), Math.random()*2*Math.PI);
+            Intruder player = new Intruder(point, point.clone(), Math.random()*2*Math.PI, this); //TODO modify angle
             playerComponents.add(player);
             intruders.add(player);
             addPlayerComponent(player);
@@ -239,7 +238,7 @@ public class Scenario {
         map = new Grid[width][height];
         for(int i = 0; i<width; i++){
             for(int j = 0; j<height; j++){
-                map[i][j] = new Grid();
+                map[i][j] = new Grid(i,j);
             }
         }
     }
@@ -346,6 +345,10 @@ public class Scenario {
 
     public int getWidth() {
         return width;
+    }
+
+    public Grid[][] getMap() {
+        return map;
     }
 }
 

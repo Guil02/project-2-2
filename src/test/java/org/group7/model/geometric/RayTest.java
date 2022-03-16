@@ -22,10 +22,10 @@ public class RayTest {
     @Test
     public void isHit() {
         //agents viewFieldAngle 20 degrees
-        PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0);
+        PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0, null);
         Ray ray = new Ray(pc);
-        Component wall1 = new Wall(new Point(300,300), new Point(350,100));
-        Component wall2 = new ShadedArea(new Point(300,500), new Point(350,300));
+        Component wall1 = new Wall(new Point(300,300), new Point(350,100), null);
+        Component wall2 = new ShadedArea(new Point(300,500), new Point(350,300), null);
         ArrayList<Component> areaArray = new ArrayList<>();
         areaArray.add(wall1);
         areaArray.add(wall2);
@@ -65,10 +65,10 @@ public class RayTest {
     @Test
     //Checking if agent looks over/throw  another guard (apart from wall)
     public void isHit2() {
-        PlayerComponent pc = new Guard(new Point(50,100), new Point(50,100),0);
+        PlayerComponent pc = new Guard(new Point(50,100), new Point(50,100),0, null);
         Ray ray = new Ray(pc);
-        Component guard = new Guard(new Point(100,150), new Point(125,50), 0);
-        Component wall = new Wall(new Point(150,150), new Point(200,50));
+        Component guard = new Guard(new Point(100,150), new Point(125,50), 0, null);
+        Component wall = new Wall(new Point(150,150), new Point(200,50), null);
         ArrayList<Component> areaArray = new ArrayList<>();
         areaArray.add(guard);
         areaArray.add(wall);

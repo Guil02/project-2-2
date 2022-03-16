@@ -1,7 +1,9 @@
 package org.group7.model.component;
 
+import org.group7.enums.ComponentEnum;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
+import org.group7.model.Scenario;
 import org.group7.model.component.playerComponents.PlayerComponent;
 
 import java.util.Comparator;
@@ -13,11 +15,14 @@ import java.util.Comparator;
 public abstract class Component {
     private ComponentEnum component;
     private Area area;
+    private Scenario scenario;
+    //TODO: MELI will figure this out - if needed
     private Point topRightPoint;
     private Point bottomleftPoint;
 
-    public Component(Point point1, Point point2){
+    public Component(Point point1, Point point2, Scenario scenario){
         this.area = new Area(point1, point2);
+        this.scenario = scenario;
         //TODO: Area is defined by topLeft and bottomRight - decide on one common way!
         this.topRightPoint = point1;
         this.bottomleftPoint = point1;
@@ -55,6 +60,10 @@ public abstract class Component {
 
     public void setArea(Area area){
         this.area = area;
+    }
+
+    public Scenario getScenario() {
+        return scenario;
     }
 
     /**

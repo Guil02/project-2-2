@@ -3,12 +3,19 @@ package org.group7.model;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.StaticComponent;
 
+import java.util.List;
+
 public class Grid {
     private StaticComponent staticComponent = null;
     private PlayerComponent playerComponent = null;
-    boolean explored = false;
+    public boolean explored = false;
+    boolean[] exploredArray;
+    private int x;
+    private int y;
 
-    public Grid() {
+    public Grid(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void setStaticComponent(StaticComponent staticComponent) {
@@ -53,12 +60,28 @@ public class Grid {
                     return " ";
                 }
             }
-        }
-        else return " ";
+        } else return " ";
     }
 
     @Override
     public String toString() {
         return getStaticComp();
+    }
+
+    @Override
+    public Grid clone() {
+        Grid g = new Grid(x, y);
+        g.setPlayerComponent(this.playerComponent);
+        g.setStaticComponent(this.staticComponent);
+        g.explored = this.explored;
+        return g;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

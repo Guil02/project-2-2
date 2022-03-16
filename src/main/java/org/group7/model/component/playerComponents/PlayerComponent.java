@@ -1,12 +1,22 @@
 package org.group7.model.component.playerComponents;
 
 import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
+import org.group7.enums.AlgorithmEnum;
+import org.group7.enums.Movements;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.geometric.Ray;
 import org.group7.geometric.Vector2D;
+import org.group7.model.Grid;
+import org.group7.model.Scenario;
+import org.group7.model.algorithms.AStar;
+import org.group7.model.algorithms.Algorithm;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
+
+import java.util.List;
+
+import static org.group7.enums.AlgorithmEnum.A_STAR;
 
 import java.util.DoubleSummaryStatistics;
 
@@ -18,14 +28,21 @@ public abstract class PlayerComponent extends Component {
     public Vector2D position;
     public Vector2D direction;
     public Vector2D viewField;
+    private final Point initialPosition;
     private double directionAngle;
     private double viewFieldLength;
     private double viewFieldAngle; //how wide the visual range is
     private Ray ray;
     private Area movingSound;
+    private AlgorithmEnum algorithmValue = A_STAR;
+    private Algorithm algorithm;
+    private List<Grid> explored;
+    private final int id;
+    private static int counter = 0;
 
-    public PlayerComponent(Point point1, Point point2, double directionAngle) {
-        super(point1, point2);
+    public PlayerComponent(Point point1, Point point2, double directionAngle, Scenario scenario) {
+        super(point1, point2, scenario);
+        id = counter++;
         this.directionAngle = directionAngle;
         this.viewFieldLength = Config.DEFAULT_VIEW_DISTANCE;
         this.viewFieldAngle = Math.toRadians(20);
@@ -35,9 +52,12 @@ public abstract class PlayerComponent extends Component {
         direction = new Vector2D(this.directionAngle);
         viewField = new Vector2D(viewFieldAngle);
         this.ray = new Ray(this);
+        initialPosition = new Point(getX(),getY());
+        initializeAlgorithm();
     }
-    public PlayerComponent(Point point1, Point point2, double directionAngle, double viewFieldLength, double viewFieldAngle) {
-        this(point1, point2, directionAngle);
+
+    public PlayerComponent(Point point1, Point point2, double directionAngle,  Scenario scenario, double viewFieldLength, double viewFieldAngle) {
+        this(point1, point2, directionAngle, scenario);
         this.viewFieldLength = viewFieldLength;
         this.viewFieldAngle = viewFieldAngle;
         viewField = new Vector2D(viewFieldAngle);
@@ -67,6 +87,14 @@ public abstract class PlayerComponent extends Component {
         double dx = Math.cos(directionAngle)*distance;
         double dy = Math.sin(directionAngle)*distance;
         move(dx,dy);
+    }
+
+
+    /**
+     * method that queries the algorithm for a move that it should execute.
+     */
+    public Movements move(){
+        return algorithm.calculateMovement();
     }
 
     public double getDirectionAngle() {return directionAngle;}
@@ -113,6 +141,26 @@ public abstract class PlayerComponent extends Component {
 
     public Ray getRay() {
         return ray;
+    }
+
+    public void setAlgorithmValue(AlgorithmEnum algorithmValue){
+        this.algorithmValue = algorithmValue;
+    }
+
+    private void initializeAlgorithm() {
+        switch(algorithmValue){
+            case A_STAR -> algorithm = new AStar((int) initialPosition.x, (int) initialPosition.y, getScenario().getMap());
+            case WALL_FOLLOWING -> {
+                //TODO implement constructor of wall following algorithm
+            }
+            case FLOOD_FILL -> {
+                //TODO implement constructor of flood fill algorithm
+            }
+        }
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setMovingSound() {
