@@ -11,7 +11,7 @@ public class Grid {
     private PlayerComponent playerComponent = null;
     public boolean explored = false;
     boolean[] exploredArray;
-    List<Boolean> seen;
+    public List<Boolean> seen;
     private int x;
     private int y;
 
