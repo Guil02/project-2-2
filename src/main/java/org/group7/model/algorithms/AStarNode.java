@@ -1,5 +1,7 @@
 package org.group7.model.algorithms;
 
+import java.util.Objects;
+
 public class AStarNode {
     private final int x; // the x coordinate on our map
     private final int y; // the y coordinate on our map
@@ -44,5 +46,18 @@ public class AStarNode {
 
     public int getfCost() {
         return fCost;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AStarNode aStarNode = (AStarNode) o;
+        return x == aStarNode.x && y == aStarNode.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, aStar);
     }
 }
