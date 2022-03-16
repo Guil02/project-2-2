@@ -89,11 +89,12 @@ public class AStar implements Algorithm{
         List<AStarNode> openedNodes = new ArrayList<>();
         List<AStarNode> closedNodes = new ArrayList<>();
         openedNodes.add(current);
+        current.updateCost(ASTAR_PATH);
         while (!openedNodes.isEmpty()){
             AStarNode node = openedNodes.get(0);
             for(int i = 1; i < openedNodes.size(); i++){
                 node.updateCost(ASTAR_PATH);
-                if(openedNodes.get(i).getfCost() <= node.getfCost()){
+                if(openedNodes.get(i).getfCostPath() <= node.getfCostPath()){
                     if(openedNodes.get(i).gethCostPath() < node.gethCostPath()){
                         node = openedNodes.get(i);
                     }
@@ -106,18 +107,22 @@ public class AStar implements Algorithm{
                 return makePath();
             }
             for (AStarNode neighbor: neighbours(node)) {
-                neighbor.updateCost(ASTAR_PATH);
-                if(closedNodes.contains(neighbor)){
+                if(closedNodes.contains(neighbor)||playerMap[neighbor.getX()][neighbor.getY()]==null){
                     continue;
                 }
+//                neighbor.updateCost(ASTAR_PATH);
                 int lowestCost = node.getgCostPath()+Math.abs(node.getX() - neighbor.getX()) + Math.abs(node.getY() - neighbor.getY());
-                if(lowestCost < neighbor.getfCost() || !openedNodes.contains(neighbor)){
+                if(lowestCost < neighbor.getgCostPath() || !openedNodes.contains(neighbor)){
+                    neighbor.updateHCostPath();
                     neighbor.setgCostPath(lowestCost);
+                    neighbor.updateFCostPath();
                     neighbor.setParent(node);
                     if(!openedNodes.contains(neighbor)){
                         openedNodes.add(neighbor);
                     }
                 }
+
+
             }
         }
         return makePath();
