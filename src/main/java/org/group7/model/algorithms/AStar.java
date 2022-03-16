@@ -22,7 +22,6 @@ public class AStar implements Algorithm{
     private AStarNode target;
     private PlayerComponent player;
 
-    private static final boolean TEMP = true;//TODO REMOVE HCOST METHOD AND this or just this.
     List<Actions> movesLeft;
 
     List<AStarNode> open;
@@ -59,10 +58,7 @@ public class AStar implements Algorithm{
             for(Grid grid: grids){
                 if(grid.seen.get(player.getId())){
                     AStarNode node = new AStarNode(grid.getX(), grid.getY(), this);
-                    if(closed.contains(node)){
-                        continue;
-                    }
-                    if(grid.getStaticComponent().getComponentEnum()==WALL){
+                    if(closed.contains(node) || grid.getStaticComponent().getComponentEnum()==WALL){
                         continue;
                     }
                     open.add(node);
