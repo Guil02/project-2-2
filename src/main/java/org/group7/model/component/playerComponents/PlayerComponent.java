@@ -32,7 +32,6 @@ public abstract class PlayerComponent extends Component {
     private double directionAngle; //same as direction as double representation in radians
     private double viewFieldLength;
     private double viewFieldAngle; //how wide the visual range is
-    private Ray ray;
     public BasicVision simpleRay;
     private Area movingSound;
     private AlgorithmEnum algorithmValue = A_STAR;
@@ -43,29 +42,31 @@ public abstract class PlayerComponent extends Component {
     private Orientation orientation;
 
     private double baseSpeed;
+    private double smellingDistance;
+
 
     public PlayerComponent(Point point1, Point point2, double directionAngle, Scenario scenario) {
         super(point1, point2, scenario);
         id = counter++;
         this.directionAngle = directionAngle;
-        this.viewFieldLength = Config.DEFAULT_VIEW_DISTANCE;
-        this.viewFieldAngle = Math.toRadians(20);
+        this.orientation = Orientation.RIGHT;
+        this.viewFieldAngle = Config.DEFAULT_VIEW_FIELD_ANGLE;
 
-        //this.directionAngle = Math.toRadians(90);
         position = new Vector2D(getX(), getY());
         direction = new Vector2D(this.directionAngle);
         viewField = new Vector2D(viewFieldAngle);
-        this.ray = new Ray(this);
+        this.simpleRay = new BasicVision(scenario);
         initialPosition = new Point(getX(),getY());
         initializeAlgorithm();
     }
 
-    public PlayerComponent(Point point1, Point point2, double directionAngle,  Scenario scenario, double viewFieldLength, double viewFieldAngle) {
+    public PlayerComponent(Point point1, Point point2, double directionAngle,  Scenario scenario, double baseSpeed, double distanceViewing, double smellingDistance) {
         this(point1, point2, directionAngle, scenario);
-        this.viewFieldLength = viewFieldLength;
-        this.viewFieldAngle = viewFieldAngle;
-        viewField = new Vector2D(viewFieldAngle);
-        this.ray = new Ray(this);
+        this.viewField = new Vector2D(viewFieldAngle);
+        this.simpleRay = new BasicVision(scenario);
+        this.baseSpeed =baseSpeed;
+        this.viewFieldLength =distanceViewing;
+        this.smellingDistance =smellingDistance;
     }
 
     public Point getCoordinates(){
@@ -80,10 +81,10 @@ public abstract class PlayerComponent extends Component {
         return getArea().getTopLeft().y;
     }
 
+
     /**
      * method that queries the algorithm for a move that it should execute.
      */
-    public ActionTuple move(){
     public ActionTuple calculateMove(){
         return algorithm.calculateMovement();
     }
@@ -100,7 +101,7 @@ public abstract class PlayerComponent extends Component {
 
     public Orientation getOrientation() {return orientation;}
 
-    public void updateVision() { simpleRay.calculateAgentVision(this);}
+    public Scenario updateVision() { return simpleRay.calculateAgentVision(this);}
 
     public void turn(double angle){
         setDirectionAngle(this.directionAngle+angle);
@@ -173,9 +174,6 @@ public abstract class PlayerComponent extends Component {
 
     public void setViewFieldLength(double viewFieldLength) { this.viewFieldLength = viewFieldLength; }
 
-    public Ray getRay() {
-        return ray;
-    }
 
     public void setAlgorithmValue(AlgorithmEnum algorithmValue){
         this.algorithmValue = algorithmValue;
@@ -205,8 +203,6 @@ public abstract class PlayerComponent extends Component {
     }
 
     public Area getMovingSound() { return movingSound;}
-
-    public Orientation getOrientation() { return orientation; }
 
     public double getBaseSpeed() { return baseSpeed; }
 

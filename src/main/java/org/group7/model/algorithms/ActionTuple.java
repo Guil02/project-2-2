@@ -11,6 +11,9 @@ public class ActionTuple {
         this.distance = distance;
     }
 
+    public Actions getAction() {return action;}
+    public int getDistance() {return distance;}
+
     //base speed = 4
     //ActionTuple(MOVE_FORWARD, 2)
     //ActionTuple(TURN_DOWN, 0)

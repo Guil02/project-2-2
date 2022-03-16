@@ -359,6 +359,7 @@ public class Scenario {
     public Grid[][] getMap() {
         return map;
     }
+    public void updateMap(Grid[][] newMap) {this.map = newMap;}
 }
 
 

@@ -9,6 +9,7 @@ import org.group7.geometric.Point;
 import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
+import org.group7.model.algorithms.ActionTuple;
 import org.group7.model.component.Component;
 import org.group7.enums.ComponentEnum;
 import org.group7.model.component.playerComponents.Guard;
@@ -49,13 +50,13 @@ public class GameRunner extends AnimationTimer {
         Main.stage.centerOnScreen();
 
         renderer.res = 1.05 * Math.max(scenario.width / renderer.getViewportBounds().getWidth(), scenario.height / renderer.getViewportBounds().getHeight());
-
+        setInitialVision();
     }
 
     @Override
     public void handle(long now) {
         //where update the game
-        //createState();
+
         updatePlayers();
 
         gameScreen.render(scenario);
@@ -67,81 +68,77 @@ public class GameRunner extends AnimationTimer {
         states.add(new State(scenario.guards, scenario.intruders));
     }
 
+    private void setInitialVision(){
+        for(int i = 0; i< scenario.guards.size(); i++){
+            this.scenario = scenario.guards.get(i).updateVision();
+        }
+        for(int i = 0; i< scenario.intruders.size(); i++){
+            this.scenario = scenario.guards.get(i).updateVision();
+        }
+    }
+
     private void updatePlayers(){
         for(int i = 0; i< scenario.guards.size(); i++){
-            Actions moveAction = scenario.guards.get(i).calculateMove();
+            ActionTuple moveAction = scenario.guards.get(i).calculateMove();
             //if the action is a move forward we want to take into account our base speed and move the number of base speed units
-            if (moveAction == Actions.MOVE_FORWARD) {
-                for (int j=0; j<(int)scenario.getBaseSpeedGuards(); j++) {
-                    //TODO: check if moveAction is allowed / validity / collision
+            if (moveAction.getAction() == Actions.MOVE_FORWARD) {
+                for (int j=0; j<moveAction.getDistance(); j++) {
+                    //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
+                    this.scenario = scenario.guards.get(i).updateVision();
+                    //TODO: check for collision with walls and other agents = not possible to move.
 
-                    //TODO: update god grid representation
+                        //check collision with agent for the next move (if there is a next move) --> break loop
+
+                        //check collision with wall for the next move (if there is a next move) --> break loop
+
+                        //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
+
+                    //if no collision applyAction
+                    scenario.guards.get(i).applyAction(moveAction.getAction());
                 }
+            }else {// the agent turns
+                //apply turn
+                scenario.guards.get(i).applyAction(moveAction.getAction());
+                //if the action is only a change in direction we still have to update our god grid and the players vision
+                scenario.guards.get(i).updateVision();
             }
-            //if the action is only a change in direction we still have to update our god grid and the players vision
-            //TODO: update god grid representation
-
-            //TODO: update vision
-            scenario.guards.get(i).updateVision();
-            //if move is allowed apply it for agent representaiton
-            scenario.guards.get(i).applyAction(moveAction);
         }
 
         for(int i = 0; i< scenario.intruders.size(); i++){
-            doMovement(scenario.intruders.get(i));
+            ActionTuple moveAction = scenario.intruders.get(i).calculateMove();
+            //if the action is a move forward we want to take into account our base speed and move the number of base speed units
+            if (moveAction.getAction() == Actions.MOVE_FORWARD) {
+                for (int j=0; j<moveAction.getDistance(); j++) {
+                    //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
+                    this.scenario = scenario.intruders.get(i).updateVision();
+                    //TODO: check for collision with walls and other agents = not possible to move.
+
+                    //check collision with agent for the next move (if there is a next move) --> break loop
+
+                    //check collision with wall for the next move (if there is a next move) --> break loop
+
+                    //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
+
+                    //if no collision applyAction
+                    scenario.intruders.get(i).applyAction(moveAction.getAction());
+                }
+            }else {// the agent turns
+                //apply turn
+                scenario.intruders.get(i).applyAction(moveAction.getAction());
+                //if the action is only a change in direction we still have to update our god grid and the players vision
+                scenario.intruders.get(i).updateVision();
+            }
         }
     }
 
-    /**
-     * //TODO: delete this
-     * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
-     * @param p a player component you want to move
-     */
-    private void doMovement(PlayerComponent p){
-        double mul = 0.3;
-        double sub = mul/2;
-        double distance = getSpeed(p)*scenario.getTimeStep();
-        distance = 0.1;
-        p.turn(Math.random()*mul-sub);
-        if(checkWallCollision(p, distance)){
-            if(Math.random()>0.5){
-                p.turn(0.5*Math.PI);
-            }
-            else{
-                p.turn(-0.5*Math.PI);
-            }
-        }
-        else if(checkCollision(p,scenario.playerComponents, distance)){
-            if(Math.random()>0.5){
-                p.turn(0.5*Math.PI);
-            }
-            else{
-                p.turn(-0.5*Math.PI);
-            }
-        }
-        else if(checkTeleporterCollision(p, distance)){
-            doTeleport(p, distance);
-        }
-        else if(p.getComponentEnum() == ComponentEnum.INTRUDER && checkTargetCollision(p, distance)){
-            stop(); //TODO implement game over screen
-        }
-        else{
-            if(checkSoundCollision(p)) {
-                //Gets here if something is beeing heared - we can do something with this information in phase 2
-            }
-            Area a = p.getArea().clone();
-           // p.move(distance);
-            scenario.movePlayerMap(a, p.getArea(), p);
-        }
-    }
+
 
     /**
-     * //TODO: change name
-     * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
+     * method that does the random movement for a provided player component. Is currently random can be modified to fit to the algorithms.
      * @param p a player component you want to move
      * @param type_movement 0= dont turn, 1 = turn right, 2= turn left
      */
-    private void doMovementNotRandom(PlayerComponent p, Actions type_movement){
+    private void doRandomMovement(PlayerComponent p, Actions type_movement){
         double distance = getSpeed(p)*scenario.getTimeStep(); //TODO: Guil fix this
         distance = 0.1;
 

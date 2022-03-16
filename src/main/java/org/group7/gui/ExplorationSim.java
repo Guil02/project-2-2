@@ -93,7 +93,7 @@ public class ExplorationSim extends Renderer {
             g.setStroke(AQUA);
             drawFOV(intruder, g);
             g.setFill(ORANGE);
-            drawRay(intruder, g, scenario);
+            //drawRay(intruder, g, scenario);
         }
 
         g.setFill(BLUE);
@@ -104,10 +104,11 @@ public class ExplorationSim extends Renderer {
             g.setStroke(RED);
             drawFOV(guard, g);
             g.setFill(BLUE);
-            drawRay(guard, g, scenario);
+           // drawRay(guard, g, scenario);
         }
     }
 
+    /*
     protected void drawRay(PlayerComponent p, GraphicsContext g, Scenario scenario){
         double x = WIDTH / 2 + toCoord(p.getX()) - toCoord(mapWidth / 2);
         double y = HEIGHT / 2 + toCoord(p.getY()) - toCoord(mapHeight / 2);
@@ -133,7 +134,7 @@ public class ExplorationSim extends Renderer {
             }
             g.strokeLine(x, y, x + toCoord(dx), y + toCoord(dy));
         }
-    }
+    }*/
 
     protected void drawFOV(PlayerComponent p, GraphicsContext g) {
         double x = WIDTH / 2 + toCoord(p.getX()) - toCoord(mapWidth / 2);
