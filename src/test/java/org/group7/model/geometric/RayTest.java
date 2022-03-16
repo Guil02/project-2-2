@@ -1,12 +1,11 @@
 package org.group7.model.geometric;
 
+import org.group7.agentVision.Ray;
 import org.group7.geometric.*;
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.Guard;
-import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.ShadedArea;
-import org.group7.model.component.staticComponents.TargetArea;
 import org.group7.model.component.staticComponents.Wall;
 import org.junit.jupiter.api.Test;
 

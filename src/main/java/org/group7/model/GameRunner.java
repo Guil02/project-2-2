@@ -69,10 +69,15 @@ public class GameRunner extends AnimationTimer {
 
     private void updatePlayers(){
         for(int i = 0; i< scenario.guards.size(); i++){
-            doMovement(scenario.guards.get(i));
-//            Movements move = scenario.guards.get(i).move();
-//            executeMove(scenario.guards.get(i), move);
-            //TODO this execute method should check for validity of the move and then execute the move i.e. move the player.
+            Actions moveAction = scenario.guards.get(i).calculateMove();
+            //TODO: check if moveAction is allowed / validity / collision
+
+            //TODO: update god grid representation
+
+            //TODO: update vision
+            scenario.guards.get(i).updateVision();
+            //if move is allowed apply it for agent representaiton
+            scenario.guards.get(i).applyAction(moveAction);
         }
 
         for(int i = 0; i< scenario.intruders.size(); i++){
@@ -118,7 +123,7 @@ public class GameRunner extends AnimationTimer {
                 //Gets here if something is beeing heared - we can do something with this information in phase 2
             }
             Area a = p.getArea().clone();
-            p.move(distance);
+           // p.move(distance);
             scenario.movePlayerMap(a, p.getArea(), p);
         }
     }
@@ -154,7 +159,7 @@ public class GameRunner extends AnimationTimer {
         }
         else{
             Area a = p.getArea().clone();
-            p.move(distance);
+           // p.move(distance);
             scenario.movePlayerMap(a, p.getArea(), p);
         }
     }

@@ -1,10 +1,11 @@
 package org.group7.model.component.playerComponents;
 
+import org.group7.agentVision.BasicVision;
 import org.group7.enums.Actions;
 import org.group7.enums.AlgorithmEnum;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
-import org.group7.geometric.Ray;
+import org.group7.agentVision.Ray;
 import org.group7.geometric.Vector2D;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
@@ -26,16 +27,18 @@ public abstract class PlayerComponent extends Component {
     public Vector2D direction;
     public Vector2D viewField;
     private final Point initialPosition;
-    private double directionAngle;
+    private double directionAngle; //same as direction as double representation in radians
     private double viewFieldLength;
     private double viewFieldAngle; //how wide the visual range is
     private Ray ray;
+    public BasicVision simpleRay;
     private Area movingSound;
     private AlgorithmEnum algorithmValue = A_STAR;
     private Algorithm algorithm;
     private List<Grid> explored;
     private final int id;
     private static int counter = 0;
+    public Actions currentDirection;
 
     public PlayerComponent(Point point1, Point point2, double directionAngle, Scenario scenario) {
         super(point1, point2, scenario);
@@ -73,24 +76,10 @@ public abstract class PlayerComponent extends Component {
         return getArea().getTopLeft().y;
     }
 
-    public void move(double dx, double dy){
-        getArea().getTopLeft().x += dx;
-        getArea().getBottomRight().x += dx;
-        getArea().getTopLeft().y += dy;
-        getArea().getBottomRight().y += dy;
-    }
-
-    public void move(double distance){
-        double dx = Math.cos(directionAngle)*distance;
-        double dy = Math.sin(directionAngle)*distance;
-        move(dx,dy);
-    }
-
-
     /**
      * method that queries the algorithm for a move that it should execute.
      */
-    public Actions move(){
+    public Actions calculateMove(){
         return algorithm.calculateMovement();
     }
 
@@ -104,19 +93,58 @@ public abstract class PlayerComponent extends Component {
 
     public double getViewFieldAngle() {return viewFieldAngle;}
 
+    public void updateVision() { simpleRay.calculateAgentVision(this.getId());}
+
     public void turn(double angle){
         setDirectionAngle(this.directionAngle+angle);
         direction = new Vector2D(getDirectionAngle());
     }
 
     //TODO: maybe one method only left or right momvement
-    public void turnLeft() {
-        setDirectionAngle(this.directionAngle-Math.toRadians(90));
-        direction = new Vector2D(getDirectionAngle());
+    public void applyAction(Actions action) {
+        switch (action) {
+            case TURN_LEFT -> {
+                setDirectionAngle(Math.toRadians(180));
+                direction = new Vector2D(getDirectionAngle());
+                this.currentDirection = action;
+            }
+            case TURN_RIGHT -> {
+                setDirectionAngle(Math.toRadians(0));
+                direction = new Vector2D(getDirectionAngle());
+                this.currentDirection = action;
+            }
+            case TURN_UP -> {
+                setDirectionAngle(Math.toRadians(90));
+                direction = new Vector2D(getDirectionAngle());
+                this.currentDirection = action;
+            }
+            case TURN_DOWN -> {
+                setDirectionAngle(Math.toRadians(270));
+                direction = new Vector2D(getDirectionAngle());
+                this.currentDirection = action;
+            }
+            case MOVE_FORWARD -> {
+                moveAgentForward(action);
+            }
+        }
     }
-    public void turnRight() {
-        setDirectionAngle(this.directionAngle-Math.toRadians(-90));
-        direction = new Vector2D(getDirectionAngle());
+
+    public void moveAgentForward(Actions action){
+        if(action == Actions.MOVE_FORWARD) {
+            switch (this.currentDirection) {
+                case TURN_UP : changePositionCoordinates(0,1);
+                case TURN_DOWN: changePositionCoordinates(0,-1);
+                case TURN_LEFT: changePositionCoordinates(-1,0);
+                case TURN_RIGHT: changePositionCoordinates(1,0);
+                }
+            }
+        }
+
+    public void changePositionCoordinates(double dx, double dy){
+        getArea().getTopLeft().x += dx;
+        getArea().getBottomRight().x += dx;
+        getArea().getTopLeft().y += dy;
+        getArea().getBottomRight().y += dy;
     }
 
     public boolean collision(Component c, double distance){
@@ -170,3 +198,13 @@ public abstract class PlayerComponent extends Component {
     public Area getMovingSound() { return movingSound;}
 
 }
+
+/*    OLD MOVE METHODS
+
+
+    public void move(double distance){
+        double dx = Math.cos(directionAngle)*distance;
+        double dy = Math.sin(directionAngle)*distance;
+        move(dx,dy);
+    }
+ */

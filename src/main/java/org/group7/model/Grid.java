@@ -9,6 +9,7 @@ public class Grid {
     private StaticComponent staticComponent = null;
     private PlayerComponent playerComponent = null;
     public boolean explored = false;
+    //array of the size of guards+intruders to see if agent saw the cell
     boolean[] exploredArray;
     private int x;
     private int y;
