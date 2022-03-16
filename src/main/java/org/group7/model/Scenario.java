@@ -158,8 +158,7 @@ public class Scenario {
                 Tuple<Point, Point> points = parsePoints(value);
                 String[] coords = value.split(" ");
                 Point target = new Point(Double.parseDouble(coords[4]), Double.parseDouble(coords[5]));
-                Teleporter component = new Teleporter(points.getA(), points.getB(), target, Double.parseDouble((coords[6])));
-                //Teleporter component = new Teleporter(points.getA(), points.getB(), target, this);
+                Teleporter component = new Teleporter(points.getA(), points.getB(), target, this, Double.parseDouble((coords[6])));
                 staticComponents.add(component);
                 teleporters.add(component);
                 addStaticComponent(component);

@@ -10,7 +10,6 @@ import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
 import org.group7.enums.ComponentEnum;
-import org.group7.model.component.ComponentEnum;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
