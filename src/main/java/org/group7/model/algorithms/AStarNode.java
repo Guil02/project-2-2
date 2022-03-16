@@ -36,7 +36,7 @@ public class AStarNode {
     }
 
     private void updateHCostPath() {
-        //TODO implement
+        //TODO implement do it
     }
 
     private void updateGCost(){
