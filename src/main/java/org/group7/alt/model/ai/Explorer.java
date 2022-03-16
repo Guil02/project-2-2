@@ -1,11 +1,9 @@
 package org.group7.alt.model.ai;
 
 import org.group7.alt.enums.Cardinal;
-import org.group7.alt.enums.Component;
+import org.group7.alt.enums.Cell;
 import org.group7.alt.logic.algorithms.DefaultExploreStategy;
 import org.group7.alt.logic.algorithms.interfaces.ExplorationStrategy;
-import org.group7.alt.model.interaction.Action;
-import org.group7.alt.model.map.Map;
 import org.group7.alt.model.map.MapComponent;
 
 import java.awt.*;
@@ -17,17 +15,19 @@ public class Explorer extends MapComponent implements Agent {
     String name;
     double walkSpeed, sprintSpeed;
     protected Cardinal orientation;
-    //Point position;
+    Point localPos;
     ExplorationStrategy exploreStrategy;
 
-    public Explorer(Point pos) {
-        super(Component.EXPLORER);
-        position = pos;
+    Pose currentPose;
 
+    public Explorer(Point pos) {
+        super(Cell.EXPLORER, pos);
+        localPos = new Point(0,0);
         name = EXPLORERS[(int) (Math.random() * EXPLORERS.length)]; //just for fun
 
         //defaults
         orientation = Cardinal.SOUTH;
+        currentPose = new Pose(localPos, orientation);
         exploreStrategy = new DefaultExploreStategy();
     }
 
@@ -35,22 +35,36 @@ public class Explorer extends MapComponent implements Agent {
         this(pos);
         exploreStrategy = strat;
         orientation = direction;
+        currentPose = new Pose(localPos, orientation);
     }
 
     public Explorer(int x, int y, Cardinal orientation, ExplorationStrategy strat) {
         this(new Point(x, y), orientation, strat);
     }
 
+    public Pose update(Pose pose) {
+        currentPose = pose;
+        orientation = pose.getDirection();
+        localPos = pose.getPosition();
+        return currentPose;
+    }
+
 
     @Override
-    public Action chooseAction() {
-        return exploreStrategy.choose();
+    public Pose step() {
+        Pose nextPose = currentPose.stepFoward();
+        currentPose = nextPose;
+        localPos = currentPose.getPosition();
+        //orientation = currentPose.getDirection();
+        return nextPose;
     }
 
     @Override
-    public boolean step() {
-
-        return false;
+    public Pose rotate(Cardinal rotation) {
+        Pose next = currentPose.rotate(rotation);
+        currentPose = next;
+        orientation = next.getDirection();
+        return next;
     }
 
     @Override
@@ -63,18 +77,16 @@ public class Explorer extends MapComponent implements Agent {
         return false;
     }
 
-    @Override
-    public boolean rotate() {
-        return false;
-    }
+
 
 
     @Override
     public String toString() {
         return "Explorer{" +
-                "position=" + position +
-                ", strategy=" + exploreStrategy +
-                ", name='" + name + '\'' +
+                "name:'" + name +
+                ", local: (" + localPos.x + ", " + localPos.y + ")" +
+                ", orientation: " + currentPose.direction +
+                //", strategy: " + exploreStrategy +
                 '}';
     }
 

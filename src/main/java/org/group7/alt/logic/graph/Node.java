@@ -1,24 +1,51 @@
 package org.group7.alt.logic.graph;
 
-import org.group7.alt.enums.Component;
+import org.group7.alt.enums.Cell;
 
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Node {
 
-    List<Node> neighbourhood;
+    public List<Node> neighbourhood;
 
-    Component type;
-    Point coordinates;
+    public Cell type;
+    public Point coordinate;
 
-    boolean obstacle;
+    public long timeStepObserved;
 
-    public Node(){}
+    public boolean explored;
+    public boolean obstacle;
 
-    public Node(Component c, Point coords) {
+    public Cell occupant;
+
+    public Node() {
+        explored = false;
+        type = Cell.UNKOWN;
+        occupant = Cell.UNKOWN;
+    }
+
+    public Node(Cell c, Point coords) {
+        explored = false;
+        neighbourhood = new LinkedList<>();
         type = c;
-        coordinates = coords;
+        coordinate = coords;
+        obstacle = switch (c) {
+            case WALL, AGENT, EXPLORER, GUARD, INTRUDER -> true;
+            default -> false;
+        };
+
+    }
+
+    public Node(Cell c, Point coords, long timeStep) {
+        this(c, coords);
+        timeStepObserved = timeStep;
+
+    }
+
+    public int getDegree() {
+        return neighbourhood.size();
     }
 
 }

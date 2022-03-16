@@ -6,7 +6,7 @@ import java.util.EnumMap;
 
 import static javafx.scene.paint.Color.TAN;
 
-public enum Component {
+public enum Cell {
     EMPTY, WALL, SHADED, GUARD_SPAWN, INTRUDER_SPAWN, TELEPORTER,
     PORTO,      //Teleporter destinination
     TARGET,     //its what the intruders crave
@@ -20,7 +20,7 @@ public enum Component {
     ORIGIN,     //tile denoted as coordinate frame origin, !not sure if needed
     UNKOWN;    //component unknown by agent
 
-    private static final EnumMap<Component, Color> colorTexture;
+    private static final EnumMap<Cell, Color> colorTexture;
 
     public Color getColor() {
         return colorTexture.getOrDefault(this, TAN);
@@ -34,7 +34,7 @@ public enum Component {
     }
 
     static {
-        colorTexture = new EnumMap<>(Component.class);
+        colorTexture = new EnumMap<>(Cell.class);
         colorTexture.put(EMPTY, Color.WHITE);
         colorTexture.put(WALL, Color.BLACK);
         colorTexture.put(SHADED, Color.GRAY);

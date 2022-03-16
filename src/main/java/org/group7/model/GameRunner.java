@@ -1,8 +1,8 @@
 package org.group7.model;
 
 import javafx.animation.AnimationTimer;
-import javafx.scene.Scene;
 import org.group7.Main;
+import org.group7.alt.logic.simulation.SimController;
 import org.group7.alt.model.map.Map;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
@@ -33,6 +33,10 @@ public class GameRunner extends AnimationTimer {
         //Map map = new Map(scenario);
         //System.out.println(map);
 
+        //Canvas canvas = new Canvas(map.tileMap);
+        SimController simController = new SimController(scenario);
+        //simController.start();
+
         this.scenario = scenario;
         this.states = new ArrayList<>();
         this.elapsedTimeSteps = 0;
@@ -46,7 +50,7 @@ public class GameRunner extends AnimationTimer {
 //      gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
         Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
         gameScreen = new GameScreen(renderer, scenario);
-        Main.stage.setScene(new Scene(gameScreen));
+        //Main.stage.setScene(new Scene(gameScreen));
         //Main.stage.setFullScreen(true);
         Main.stage.centerOnScreen();
 
