@@ -3,6 +3,7 @@ package org.group7.model;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import org.group7.Main;
+import org.group7.enums.Actions;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.gui.ExplorationSim;
@@ -15,7 +16,6 @@ import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.utils.Config;
 import org.group7.utils.Methods;
-import org.group7.utils.MoveEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,13 +129,13 @@ public class GameRunner extends AnimationTimer {
      * @param p a player component you want to move
      * @param type_movement 0= dont turn, 1 = turn right, 2= turn left
      */
-    private void doMovementNotRandom(PlayerComponent p, int type_movement){
+    private void doMovementNotRandom(PlayerComponent p, Actions type_movement){
         double distance = getSpeed(p)*scenario.getTimeStep(); //TODO: Guil fix this
         distance = 0.1;
 
-        if (type_movement == MoveEnum.RIGHT.getId()){
+        if (type_movement == Actions.TURN_RIGHT){
             p.turn(-Math.PI/2);
-        }else if(type_movement == MoveEnum.LEFT.getId()){
+        }else if(type_movement == Actions.TURN_LEFT){
             p.turn(Math.PI/2);
         }
         if(checkWallCollision(p, distance)){

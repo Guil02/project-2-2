@@ -1,10 +1,9 @@
 package org.group7.enums;
 
 public enum Actions {
-    STRAIGHT,
-    LEFT,
-    RIGHT;
-    //private final int id;
-    //MoveEnum(int id){this.id=id;}
-    //public int getId (){return id;}
+    TURN_UP,
+    TURN_DOWN,
+    TURN_LEFT,
+    TURN_RIGHT,
+    MOVE_FORWARD;
 }

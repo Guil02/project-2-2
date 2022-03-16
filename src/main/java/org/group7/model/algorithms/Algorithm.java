@@ -1,7 +1,7 @@
 package org.group7.model.algorithms;
 
-import org.group7.enums.Movements;
+import org.group7.enums.Actions;
 
 public interface Algorithm {
-    public Movements calculateMovement();
+    public Actions calculateMovement();
 }

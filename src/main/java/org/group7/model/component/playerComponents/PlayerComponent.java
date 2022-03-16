@@ -1,8 +1,7 @@
 package org.group7.model.component.playerComponents;
 
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
+import org.group7.enums.Actions;
 import org.group7.enums.AlgorithmEnum;
-import org.group7.enums.Movements;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.geometric.Ray;
@@ -17,8 +16,6 @@ import org.group7.utils.Config;
 import java.util.List;
 
 import static org.group7.enums.AlgorithmEnum.A_STAR;
-
-import java.util.DoubleSummaryStatistics;
 
 /**
  * This class is made as a super class for all the possible component that can be considered player, i.e. agents and intruders.
@@ -93,7 +90,7 @@ public abstract class PlayerComponent extends Component {
     /**
      * method that queries the algorithm for a move that it should execute.
      */
-    public Movements move(){
+    public Actions move(){
         return algorithm.calculateMovement();
     }
 

@@ -1,7 +1,7 @@
 package org.group7.model.algorithms;
 
+import org.group7.enums.Actions;
 import org.group7.model.Grid;
-import org.group7.enums.Movements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class AStar implements Algorithm{
     private AStarNode current;
 
     private static final boolean TEMP = true;//TODO REMOVE HCOST METHOD AND this or just this.
-    List<Movements> movesLeft;
+    List<Actions> movesLeft;
 
     List<AStarNode> open;
     List<AStarNode> closed;
@@ -30,7 +30,7 @@ public class AStar implements Algorithm{
     }
 
     @Override
-    public Movements calculateMovement() {
+    public Actions calculateMovement() {
         if(movesLeft.isEmpty()){
             AStarNode target = findTarget();
             //TODO shortest path here
