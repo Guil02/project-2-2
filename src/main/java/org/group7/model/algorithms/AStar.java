@@ -1,8 +1,7 @@
 package org.group7.model.algorithms;
 
 import org.group7.model.Grid;
-import org.group7.model.component.ComponentEnum;
-import org.group7.model.component.playerComponents.Movements;
+import org.group7.enums.Movements;
 
 import java.util.ArrayList;
 import java.util.List;

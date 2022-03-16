@@ -3,7 +3,7 @@ package org.group7.model.component.staticComponents;
 import org.group7.geometric.Point;
 import org.group7.model.Scenario;
 
-import static org.group7.model.component.ComponentEnum.WALL;
+import static org.group7.enums.ComponentEnum.WALL;
 
 /**
  * The class that describes a wall that appears in the game. It is a wall.

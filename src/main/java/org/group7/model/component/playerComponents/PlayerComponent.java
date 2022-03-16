@@ -1,5 +1,7 @@
 package org.group7.model.component.playerComponents;
 
+import org.group7.enums.AlgorithmEnum;
+import org.group7.enums.Movements;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.geometric.Ray;
@@ -13,7 +15,7 @@ import org.group7.utils.Config;
 
 import java.util.List;
 
-import static org.group7.model.component.playerComponents.AlgorithmEnum.A_STAR;
+import static org.group7.enums.AlgorithmEnum.A_STAR;
 
 /**
  * This class is made as a super class for all the possible component that can be considered player, i.e. agents and intruders.

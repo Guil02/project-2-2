@@ -1,4 +1,4 @@
-package org.group7.model.component.playerComponents;
+package org.group7.enums;
 
 public enum Movements {
     TURN_UP,

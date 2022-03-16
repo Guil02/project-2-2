@@ -1,10 +1,9 @@
 package org.group7.model.component;
 
+import org.group7.enums.ComponentEnum;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.model.Scenario;
-
-import java.util.Comparator;
 
 /**
  * This class is meant to be the super class of all the components that will exist in the project.

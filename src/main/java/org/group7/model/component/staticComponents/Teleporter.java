@@ -3,7 +3,7 @@ package org.group7.model.component.staticComponents;
 import org.group7.geometric.Point;
 import org.group7.model.Scenario;
 
-import static org.group7.model.component.ComponentEnum.TELEPORTER;
+import static org.group7.enums.ComponentEnum.TELEPORTER;
 
 /**
  * The class that describes the teleporter in the game. It teleports a player (when they enter into it i.e. if isHit()

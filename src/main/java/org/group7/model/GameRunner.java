@@ -9,10 +9,9 @@ import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.component.Component;
-import org.group7.model.component.ComponentEnum;
-import org.group7.model.component.playerComponents.Movements;
+import org.group7.enums.ComponentEnum;
 import org.group7.model.component.playerComponents.PlayerComponent;
-import org.group7.utils.Methods;
+import org.group7.utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +20,17 @@ public class GameRunner extends AnimationTimer {
     private List<State> states;
     private Scenario scenario;
     State currentState;
-    int counter = 0;
     GameScreen gameScreen;
+
+    double timeStep;
+    double elapsedTimeStep; //total time
 
     public GameRunner(Scenario scenario) {
         this.scenario = scenario;
         this.states = new ArrayList<>();
+        this.elapsedTimeStep =0;
+        this.timeStep = Config.TIME_STEP;
+
 
         scenario.spawnGuards();
         scenario.spawnIntruder();
@@ -51,8 +55,8 @@ public class GameRunner extends AnimationTimer {
         updatePlayers();
 
         gameScreen.render(scenario);
+        elapsedTimeStep += timeStep;
 
-        counter++;
     }
 
     private void createState() {
