@@ -11,6 +11,7 @@ import org.group7.geometric.Vector2D;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
 import org.group7.model.algorithms.AStar;
+import org.group7.model.algorithms.ActionTuple;
 import org.group7.model.algorithms.Algorithm;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
@@ -39,7 +40,9 @@ public abstract class PlayerComponent extends Component {
     private List<Grid> explored;
     private final int id;
     private static int counter = 0;
-    public Actions currentDirection;
+    private Orientation orientation;
+
+    private double baseSpeed;
 
     public PlayerComponent(Point point1, Point point2, double directionAngle, Scenario scenario) {
         super(point1, point2, scenario);
@@ -80,7 +83,8 @@ public abstract class PlayerComponent extends Component {
     /**
      * method that queries the algorithm for a move that it should execute.
      */
-    public Actions calculateMove(){
+    public ActionTuple move(){
+    public ActionTuple calculateMove(){
         return algorithm.calculateMovement();
     }
 
@@ -167,6 +171,8 @@ public abstract class PlayerComponent extends Component {
         setArea(new Area(p, p.clone()));
     }
 
+    public void setViewFieldLength(double viewFieldLength) { this.viewFieldLength = viewFieldLength; }
+
     public Ray getRay() {
         return ray;
     }
@@ -199,6 +205,10 @@ public abstract class PlayerComponent extends Component {
     }
 
     public Area getMovingSound() { return movingSound;}
+
+    public Orientation getOrientation() { return orientation; }
+
+    public double getBaseSpeed() { return baseSpeed; }
 
 }
 
