@@ -68,7 +68,11 @@ public class Scenario {
         System.out.println(staticComponents);
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
-                map[j][i].seen = new ArrayList<>(numGuards+numIntruders);
+                map[j][i].seen = new ArrayList<>();
+                int totalPlayers = numGuards + numIntruders;
+                for(int k = 0; k< totalPlayers; k++){
+                    map[j][i].seen.add(k,false);
+                }
             }
         }
     }
