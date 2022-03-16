@@ -7,6 +7,7 @@ import org.group7.model.component.playerComponents.PlayerComponent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.group7.enums.AstarType.ASTAR_TARGET;
 import static org.group7.enums.ComponentEnum.WALL;
 
 public class AStar implements Algorithm{
@@ -63,7 +64,7 @@ public class AStar implements Algorithm{
         int lowestValue = Integer.MAX_VALUE;
         AStarNode currentTarget = null;
         for(AStarNode node: open){
-            node.updateCost();
+            node.updateCost(ASTAR_TARGET);
             if(node.getfCost()<lowestValue){
                 currentTarget = node;
                 lowestValue = node.getfCost();

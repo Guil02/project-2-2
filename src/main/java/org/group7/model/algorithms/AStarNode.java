@@ -1,6 +1,11 @@
 package org.group7.model.algorithms;
 
+import org.group7.enums.AstarType;
+
 import java.util.Objects;
+
+import static org.group7.enums.AstarType.ASTAR_PATH;
+import static org.group7.enums.AstarType.ASTAR_TARGET;
 
 public class AStarNode {
     private final int x; // the x coordinate on our map
@@ -18,10 +23,20 @@ public class AStarNode {
         this.aStar = aStar;
     }
 
-    public void updateCost(){
+    public void updateCost(AstarType type){
         updateGCost();
-        updateHCost();
+        if(type==ASTAR_TARGET){
+
+            updateHCost();
+        }
+        else if(type==ASTAR_PATH){
+            updateHCostPath();
+        }
         updateFCost();
+    }
+
+    private void updateHCostPath() {
+        //TODO implement
     }
 
     private void updateGCost(){
