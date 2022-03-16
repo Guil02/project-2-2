@@ -49,6 +49,7 @@ public abstract class PlayerComponent extends Component {
         super(point1, point2, scenario);
         id = counter++;
         this.directionAngle = directionAngle;
+        //TODO: make this orientation random as start
         this.orientation = Orientation.RIGHT;
         this.viewFieldAngle = Config.DEFAULT_VIEW_FIELD_ANGLE;
 
