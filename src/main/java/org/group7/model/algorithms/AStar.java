@@ -46,7 +46,8 @@ public class AStar implements Algorithm{
     @Override
     public ActionTuple calculateMovement() {
         if(movesLeft.isEmpty()){
-            current = target;
+            if(target!=null)
+                current = target;
             target = findTarget();
             movesLeft = findPath();
         }
