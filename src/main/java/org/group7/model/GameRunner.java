@@ -64,7 +64,11 @@ public class GameRunner extends AnimationTimer {
 
         gameScreen.render(scenario);
         elapsedTimeStep += timeStep;
-
+        if(elapsedTimeStep % 5 == 0) {
+            double coverage = calculateCoverage();
+            System.out.println("Total Coverage: "+coverage + " elapsed Time: "+elapsedTimeStep);
+            //TODO: ask SAM --> break break if coverage is > 80
+        }
     }
 
     private void createState() {
@@ -94,7 +98,7 @@ public class GameRunner extends AnimationTimer {
                     }
                     //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
                     if (checkCollisionTeleporter(scenario.guards.get(i))) {
-                        //TODO: move the agent to new position
+                        //TODO: ask GIO --> move the agent to new position
                         break;
                     }
                     //if no collision applyAction
@@ -121,7 +125,7 @@ public class GameRunner extends AnimationTimer {
                     }
                     //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
                     if (checkCollisionTeleporter(scenario.intruders.get(i))) {
-                        //TODO: move the agent to new position
+                        //TODO: ask GIO --> move the agent to new position
                         break;
                     }
                     //if no collision applyAction
@@ -211,6 +215,19 @@ public class GameRunner extends AnimationTimer {
                 p.setDirectionAngle(scenario.teleporters.get(i).getDirection().getAngle());
             }
         }
+    }
+
+    public double calculateCoverage() {
+        int seenGrids = 0;
+        for (int i=0; i<=scenario.getWidth();i++) {
+            for (int j=0; j<=scenario.getHeight();j++) {
+                if(scenario.map[i][j].explored) {
+                    seenGrids++;
+                }
+            }
+        }
+        int totalSize = scenario.getWidth()*scenario.getHeight();
+        return (seenGrids/totalSize)*100;
     }
 
 }

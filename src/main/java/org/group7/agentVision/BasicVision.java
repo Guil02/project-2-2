@@ -24,6 +24,7 @@ public class BasicVision {
     }
 
     //Method for Frontier-Based Algorithm
+    //TODO: talk with ROMA & XANDER
     public List<Grid> getAgentVision(PlayerComponent player) {
         calculateAgentVision(player);
         return furthestFrontierGrid;
