@@ -1,19 +1,23 @@
 package org.group7.model.algorithms;
 
 import org.group7.enums.Actions;
+import org.group7.geometric.Point;
 import org.group7.model.Grid;
 import org.group7.model.component.playerComponents.PlayerComponent;
+import org.group7.model.component.staticComponents.Teleporter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.group7.enums.AstarType.ASTAR_TARGET;
+import static org.group7.enums.ComponentEnum.TELEPORTER;
 import static org.group7.enums.ComponentEnum.WALL;
 
 public class AStar implements Algorithm{
     private final int initialX;
     private final int initialY;
     private final Grid[][] map;
+    private final Grid[][] playerMap;
     private AStarNode current;
     private AStarNode target;
     private PlayerComponent player;
@@ -34,6 +38,8 @@ public class AStar implements Algorithm{
         current = new AStarNode(initialX, initialY, this);
         open.add(current);
         this.player = player;
+        playerMap = new Grid[map.length][map[0].length];
+        playerMap[initialX][initialY]=map[initialX][initialY];
     }
 
     @Override
@@ -60,6 +66,11 @@ public class AStar implements Algorithm{
                         continue;
                     }
                     open.add(node);
+                    if(grid.getStaticComponent().getComponentEnum()==TELEPORTER){
+                        Point teleportTarget = ((Teleporter)grid.getStaticComponent()).getTarget();
+                        playerMap[grid.getX()][grid.getY()] = map[(int) teleportTarget.x][(int) teleportTarget.y];
+                    }
+                    playerMap[grid.getX()][grid.getY()]=grid;
                 }
             }
         }
