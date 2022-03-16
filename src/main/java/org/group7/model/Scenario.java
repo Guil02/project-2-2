@@ -66,9 +66,7 @@ public class Scenario {
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
 //                map[j][i].exploredArray = new boolean[numGuards+numIntruders];
-                for(int k = 0; k<numGuards+numIntruders;k++){
-                    map[j][i].seen.add(false);
-                }
+                map[j][i].seen = new ArrayList<>(numGuards+numIntruders);
             }
         }
     }
