@@ -70,8 +70,15 @@ public class GameRunner extends AnimationTimer {
     private void updatePlayers(){
         for(int i = 0; i< scenario.guards.size(); i++){
             Actions moveAction = scenario.guards.get(i).calculateMove();
-            //TODO: check if moveAction is allowed / validity / collision
+            //if the action is a move forward we want to take into account our base speed and move the number of base speed units
+            if (moveAction == Actions.MOVE_FORWARD) {
+                for (int j=0; j<(int)scenario.getBaseSpeedGuards(); j++) {
+                    //TODO: check if moveAction is allowed / validity / collision
 
+                    //TODO: update god grid representation
+                }
+            }
+            //if the action is only a change in direction we still have to update our god grid and the players vision
             //TODO: update god grid representation
 
             //TODO: update vision

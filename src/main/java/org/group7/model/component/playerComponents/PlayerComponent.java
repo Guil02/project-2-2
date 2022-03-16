@@ -3,6 +3,7 @@ package org.group7.model.component.playerComponents;
 import org.group7.agentVision.BasicVision;
 import org.group7.enums.Actions;
 import org.group7.enums.AlgorithmEnum;
+import org.group7.enums.Orientation;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.agentVision.Ray;
@@ -93,7 +94,9 @@ public abstract class PlayerComponent extends Component {
 
     public double getViewFieldAngle() {return viewFieldAngle;}
 
-    public void updateVision() { simpleRay.calculateAgentVision(this.getId());}
+    public Orientation getOrientation() {return orientation;}
+
+    public void updateVision() { simpleRay.calculateAgentVision(this);}
 
     public void turn(double angle){
         setDirectionAngle(this.directionAngle+angle);
@@ -106,22 +109,22 @@ public abstract class PlayerComponent extends Component {
             case TURN_LEFT -> {
                 setDirectionAngle(Math.toRadians(180));
                 direction = new Vector2D(getDirectionAngle());
-                this.currentDirection = action;
+                this.orientation = Orientation.LEFT;
             }
             case TURN_RIGHT -> {
                 setDirectionAngle(Math.toRadians(0));
                 direction = new Vector2D(getDirectionAngle());
-                this.currentDirection = action;
+                this.orientation = Orientation.RIGHT;
             }
             case TURN_UP -> {
                 setDirectionAngle(Math.toRadians(90));
                 direction = new Vector2D(getDirectionAngle());
-                this.currentDirection = action;
+                this.orientation = Orientation.UP;
             }
             case TURN_DOWN -> {
                 setDirectionAngle(Math.toRadians(270));
                 direction = new Vector2D(getDirectionAngle());
-                this.currentDirection = action;
+                this.orientation = Orientation.DOWN;
             }
             case MOVE_FORWARD -> {
                 moveAgentForward(action);
@@ -131,11 +134,11 @@ public abstract class PlayerComponent extends Component {
 
     public void moveAgentForward(Actions action){
         if(action == Actions.MOVE_FORWARD) {
-            switch (this.currentDirection) {
-                case TURN_UP : changePositionCoordinates(0,1);
-                case TURN_DOWN: changePositionCoordinates(0,-1);
-                case TURN_LEFT: changePositionCoordinates(-1,0);
-                case TURN_RIGHT: changePositionCoordinates(1,0);
+            switch (this.orientation) {
+                case UP : changePositionCoordinates(0,-1); //Elena said this
+                case DOWN: changePositionCoordinates(0,1); //Elena said this
+                case LEFT: changePositionCoordinates(-1,0);
+                case RIGHT: changePositionCoordinates(1,0);
                 }
             }
         }

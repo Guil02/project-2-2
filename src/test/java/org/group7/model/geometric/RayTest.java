@@ -12,13 +12,14 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.group7.enums.ComponentEnum.WALL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class RayTest {
 
-    @Test
+   /* @Test
     public void isHit() {
         //agents viewFieldAngle 20 degrees
         PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0, null);
@@ -72,6 +73,24 @@ public class RayTest {
         areaArray.add(guard);
         areaArray.add(wall);
         HashMap<Integer, ArrayList<DistanceAngleTuple<Double, Vector2D>>> test = ray.getVisualField(areaArray);
+
+    }
+*/
+    @Test
+    public void testt() {
+        for (int y = 1; y < 10; y++) { //check straight
+            //cant go higher than y=0, so if the number is positive is out of bound
+
+                System.out.println(y);
+                if (y >= 5){
+                    break;
+                }
+
+
+        }
+        for (int i = 2; i<5;i++) {
+            System.out.println("new "+i);
+        }
 
     }
 }

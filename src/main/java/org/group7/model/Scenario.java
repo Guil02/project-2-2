@@ -30,6 +30,9 @@ public class Scenario {
     protected double sprintSpeedGuard;
     protected int numGuards;
     protected int numIntruders;
+    protected int distanceViewing;
+    protected int numberMarkers;
+    protected int smellingDistance;
 
     protected String filePathString;
     protected Path filePath;
@@ -65,7 +68,6 @@ public class Scenario {
         System.out.println(staticComponents);
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
-//                map[j][i].exploredArray = new boolean[numGuards+numIntruders];
                 map[j][i].seen = new ArrayList<>(numGuards+numIntruders);
             }
         }
@@ -112,6 +114,9 @@ public class Scenario {
             case "baseSpeedGuard"       -> baseSpeedGuard = Double.parseDouble(value); // the base speed of the guard.
             case "sprintSpeedGuard"     -> sprintSpeedGuard = Double.parseDouble(value); // the sprinting speed of the intruders
             case "timeStep"             -> timeStep = Double.parseDouble(value);
+            case "distanceViewing"      -> distanceViewing = Integer.parseInt(value);
+            case "numberMarkers"        -> numberMarkers = Integer.parseInt(value);
+            case "smellingDistance"     -> smellingDistance = Integer.parseInt(value);
 
             //regions:
             //lots of duplicate code here still, so still room for cleanup
@@ -291,6 +296,8 @@ public class Scenario {
         return timeStep;
     }
 
+    public int getDistantViewing() { return distanceViewing;}
+
     /**
      * this method change the boolean variable that decides whether a print should be done for each line in the parseLine method.
      * @param printInp a boolean for whether a print should be done or not
@@ -326,6 +333,8 @@ public class Scenario {
     public List<IntruderSpawnArea> getIntruderSpawnAreas() {
         return intruderSpawnAreas;
     }
+
+    public double getBaseSpeedGuards() {return baseSpeedGuard;}
 
     public List<Guard> getGuards() {
         return guards;
