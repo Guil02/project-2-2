@@ -3,6 +3,7 @@ package org.group7.model;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.StaticComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
@@ -11,12 +12,14 @@ public class Grid {
     public boolean explored = false;
     //array of the size of guards+intruders to see if agent saw the cell
     boolean[] exploredArray;
+    public List<Boolean> seen;
     private int x;
     private int y;
 
     public Grid(int x, int y) {
         this.x = x;
         this.y = y;
+        seen = new ArrayList<>();
     }
 
     public void setStaticComponent(StaticComponent staticComponent) {
