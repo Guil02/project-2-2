@@ -36,9 +36,13 @@ public class GameRunner extends AnimationTimer {
         this.elapsedTimeStep =0;
         this.timeStep = Config.TIME_STEP;
 
+        if(scenario.numGuards>0){
+            scenario.spawnGuards();
+        }
+        if(scenario.numIntruders>0){
+            scenario.spawnIntruder();
+        }
 
-        scenario.spawnGuards();
-        scenario.spawnIntruder();
         currentState = new State(scenario.guards, scenario.intruders);
         states.add(currentState);
 

@@ -61,11 +61,11 @@ public class AStar implements Algorithm{
             for(Grid grid: grids){
                 if(grid.seen.get(player.getId())){
                     AStarNode node = new AStarNode(grid.getX(), grid.getY(), this);
-                    if(closed.contains(node) || grid.getStaticComponent().getComponentEnum()==WALL){
+                    if(closed.contains(node) || (grid.getStaticComponent()!=null && grid.getStaticComponent().getComponentEnum()==WALL)){
                         continue;
                     }
                     open.add(node);
-                    if(grid.getStaticComponent().getComponentEnum()==TELEPORTER){
+                    if((grid.getStaticComponent()!=null && grid.getStaticComponent().getComponentEnum()==TELEPORTER)){
                         Point teleportTarget = ((Teleporter)grid.getStaticComponent()).getTarget();
                         playerMap[grid.getX()][grid.getY()] = map[(int) teleportTarget.x][(int) teleportTarget.y];
                     }
