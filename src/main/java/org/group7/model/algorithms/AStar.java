@@ -58,12 +58,18 @@ public class AStar implements Algorithm{
                 movesLeft = findPath();
             }
         }
-        ActionTuple actionTuple = movesLeft.get(0);
+        ActionTuple actionTuple = new ActionTuple(NOTHING, 0);
+        try{
+            actionTuple = movesLeft.get(0);
+        }
+        catch(IndexOutOfBoundsException ignore){
+        }
         movesLeft.remove(0);
         return actionTuple;
     }
 
     public AStarNode findTarget(){
+        updateOpen();
         open.remove(current);
         if(!closed.contains(current))
             closed.add(current);
@@ -100,6 +106,25 @@ public class AStar implements Algorithm{
             }
         }
         return currentTarget;
+    }
+
+    public void updateOpen(){
+        List<AStarNode> toBeRemoved = new ArrayList<>();
+        for(AStarNode node: open){
+            List<AStarNode> neighbours = neighbours(node);
+            int count = 0;
+            for(AStarNode neighbour : neighbours){
+                if(playerMap[neighbour.getX()][neighbour.getY()]!=null){
+                    count++;
+                }
+            }
+            if(count>=4){
+                toBeRemoved.add(node);
+            }
+        }
+
+        open.removeIf(toBeRemoved::contains);
+        closed.addAll(toBeRemoved);
     }
 
     public List<ActionTuple> findPath(){
@@ -179,7 +204,8 @@ public class AStar implements Algorithm{
             nodePath.add(node);
             node = node.getParent();
         }
-        nodePath.add(node);
+        if(node!=null)
+            nodePath.add(node);
         Collections.reverse(nodePath);
         return nodePath;
     }

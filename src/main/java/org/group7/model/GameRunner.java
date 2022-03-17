@@ -10,7 +10,9 @@ import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.algorithms.ActionTuple;
+import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.PlayerComponent;
+import org.group7.model.component.staticComponents.Teleporter;
 import org.group7.utils.Config;
 import static org.group7.enums.ComponentEnum.TELEPORTER;
 
@@ -28,6 +30,7 @@ public class GameRunner extends AnimationTimer {
 
     double timeStep;
     double elapsedTimeStep; //total time
+    int count = 0;
 
     public GameRunner(Scenario scenario) {
         this.scenario = scenario;
@@ -42,8 +45,8 @@ public class GameRunner extends AnimationTimer {
             scenario.spawnIntruder();
         }
 
-        currentState = new State(scenario.guards, scenario.intruders);
-        states.add(currentState);
+//        currentState = new State(scenario.guards, scenario.intruders);
+//        states.add(currentState);
 
 //        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
         Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
@@ -64,7 +67,10 @@ public class GameRunner extends AnimationTimer {
 
         gameScreen.render(scenario);
         elapsedTimeStep += timeStep;
-        if(elapsedTimeStep % 5 == 0) {
+//        elapsedTimeStep += 1;
+//        if(elapsedTimeStep % 5 == 0) {
+        if(elapsedTimeStep>count*5){
+            count++;
             double coverage = calculateCoverage();
             System.out.println("Total Coverage: "+coverage + " elapsed Time: "+elapsedTimeStep);
             //TODO: ask SAM --> break break if coverage is > 80
@@ -86,6 +92,7 @@ public class GameRunner extends AnimationTimer {
 
     private void updatePlayers(){
         for(int i = 0; i< scenario.guards.size(); i++){
+            Point startingPoint= scenario.guards.get(i).getCoordinates().clone();
             ActionTuple moveAction = scenario.guards.get(i).calculateMove();
             //if the action is a move forward we want to take into account our base speed and move the number of base speed units
             if (moveAction.getAction() == Actions.MOVE_FORWARD) {
@@ -99,6 +106,14 @@ public class GameRunner extends AnimationTimer {
                     //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
                     if (checkCollisionTeleporter(scenario.guards.get(i))) {
                         //TODO: ask GIO --> move the agent to new position
+                        Guard player = scenario.guards.get(i);
+                        Point currentPosition = player.getCoordinates();
+                        int x = (int)currentPosition.getX();
+                        int y = (int)currentPosition.getY();
+
+                        Grid grid = scenario.map[x][y];
+                        Teleporter teleporter = (Teleporter) grid.getStaticComponent();
+                        player.teleport(teleporter.getTarget());
                         break;
                     }
                     //if no collision applyAction
@@ -110,9 +125,11 @@ public class GameRunner extends AnimationTimer {
                 //if the action is only a change in direction we still have to update our god grid and the players vision
                 scenario.guards.get(i).updateVision();
             }
+            updateGrid(startingPoint, scenario.guards.get(i).getCoordinates());
         }
 
         for(int i = 0; i< scenario.intruders.size(); i++){
+            Point startingPoint= scenario.intruders.get(i).getCoordinates().clone();
             ActionTuple moveAction = scenario.intruders.get(i).calculateMove();
             //if the action is a move forward we want to take into account our base speed and move the number of base speed units
             if (moveAction.getAction() == Actions.MOVE_FORWARD) {
@@ -137,7 +154,19 @@ public class GameRunner extends AnimationTimer {
                 //if the action is only a change in direction we still have to update our god grid and the players vision
                 scenario.intruders.get(i).updateVision();
             }
+            updateGrid(startingPoint, scenario.intruders.get(i).getCoordinates());
         }
+
+    }
+
+    private void updateGrid(Point startingPoint, Point target) {
+
+        int initialX = (int) startingPoint.x;
+        int initialY = (int) startingPoint.y;
+        int finalX = (int) target.x;
+        int finalY = (int) target.y;
+        scenario.map[finalX][finalY].setPlayerComponent(scenario.map[initialX][initialY].getPlayerComponent());
+        scenario.map[initialX][initialY].setPlayerComponent(null);
     }
 
 
@@ -219,15 +248,18 @@ public class GameRunner extends AnimationTimer {
 
     public double calculateCoverage() {
         int seenGrids = 0;
-        for (int i=0; i<=scenario.getWidth();i++) {
-            for (int j=0; j<=scenario.getHeight();j++) {
+        for (int i=0; i<scenario.getWidth();i++) {
+            for (int j=0; j<scenario.getHeight();j++) {
                 if(scenario.map[i][j].explored) {
                     seenGrids++;
                 }
             }
         }
         int totalSize = scenario.getWidth()*scenario.getHeight();
-        return (seenGrids/totalSize)*100;
+        double d1 = seenGrids;
+        double d2 = totalSize;
+//        return (seenGrids/totalSize)*100;
+        return (d1/d2)*100;
     }
 
 }

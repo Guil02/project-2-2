@@ -6,7 +6,6 @@ import org.group7.enums.AlgorithmEnum;
 import org.group7.enums.Orientation;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
-import org.group7.agentVision.Ray;
 import org.group7.geometric.Vector2D;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
@@ -142,9 +141,13 @@ public abstract class PlayerComponent extends Component {
         if(action == Actions.MOVE_FORWARD) {
             switch (this.orientation) {
                 case UP : changePositionCoordinates(0,-1); //Elena said this
+                    break;
                 case DOWN: changePositionCoordinates(0,1); //Elena said this
+                    break;
                 case LEFT: changePositionCoordinates(-1,0);
+                    break;
                 case RIGHT: changePositionCoordinates(1,0);
+                    break;
                 }
             }
         }
@@ -207,6 +210,14 @@ public abstract class PlayerComponent extends Component {
 
     public double getBaseSpeed() { return baseSpeed; }
 
+    public void teleport(Point target) {
+        double x = target.x;
+        double y = target.y;
+        getArea().getTopLeft().x = x;
+        getArea().getBottomRight().x = x;
+        getArea().getTopLeft().y = y;
+        getArea().getBottomRight().y = y;
+    }
 }
 
 /*    OLD MOVE METHODS
