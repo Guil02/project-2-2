@@ -1,6 +1,4 @@
-package org.group7.alt.logic;
-
-import org.group7.geometric.Vector2D;
+package org.group7.alt.logic.util;
 
 /**
  * Generic all-purpose Tuple class. Supports every class type or object.

@@ -27,6 +27,7 @@ public class Graph {
     }
 
     public void addNode(Point pos, Node node) {
+        //or graph.putIfAbsent(pos, node)
         if (graph.containsKey(pos)) {
             graph.replace(pos, node);
         } else {
@@ -34,8 +35,16 @@ public class Graph {
         }
     }
 
+    public void addNode(Node node) {
+        graph.putIfAbsent(node.coordinate, node);
+    }
+
     public Node getOrigin() {
         return origin;
+    }
+
+    public void setOrigin(Node node) {
+        origin = node;
     }
 
     public List<Node> getNodes() {

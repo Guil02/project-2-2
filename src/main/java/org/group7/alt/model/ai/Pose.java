@@ -35,6 +35,14 @@ public class Pose {
         return position;
     }
 
+    public int getX() {
+        return position.x;
+    }
+
+    public int getY() {
+        return position.y;
+    }
+
     public Cardinal getDirection() {
         return direction;
     }
@@ -50,7 +58,7 @@ public class Pose {
     @Override
     public String toString() {
         return "Pose{" +
-                "position=" + position +
+                "position=(" + position.x + ", " + position.y + ")" +
                 ", direction=" + direction +
                 '}';
     }

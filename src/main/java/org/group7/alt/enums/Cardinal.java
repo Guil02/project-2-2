@@ -1,5 +1,7 @@
 package org.group7.alt.enums;
 
+import org.group7.geometric.Point;
+
 public enum Cardinal {
 
     NORTH, EAST, SOUTH, WEST;
@@ -28,6 +30,15 @@ public enum Cardinal {
             case WEST -> SOUTH;
             case SOUTH -> EAST;
             case EAST -> NORTH;
+        };
+    }
+
+    public Point relativeOffset() {
+        return switch (this) {
+            case NORTH -> new Point(0, -1);
+            case WEST -> new Point(-1, 0);
+            case SOUTH -> new Point(0, 1);
+            case EAST -> new Point(1, 0);
         };
     }
 }

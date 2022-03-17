@@ -3,7 +3,6 @@ package org.group7.model;
 import javafx.animation.AnimationTimer;
 import org.group7.Main;
 import org.group7.alt.logic.simulation.SimController;
-import org.group7.alt.model.map.Map;
 import org.group7.geometric.Area;
 import org.group7.geometric.Point;
 import org.group7.gui.ExplorationSim;
