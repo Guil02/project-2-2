@@ -85,6 +85,10 @@ public class AStarNode {
 
     public int gethCostPath(){ return hCostPath; }
 
+    public int gethCost() {
+        return hCost;
+    }
+
     public AStarNode getParent(){ return parent; }
 
     public void setParent(AStarNode parent) { this.parent = parent; }

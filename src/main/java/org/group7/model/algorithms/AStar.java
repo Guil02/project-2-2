@@ -92,6 +92,12 @@ public class AStar implements Algorithm{
                 currentTarget = node;
                 lowestValue = node.getfCost();
             }
+            else if(node.getfCost()==lowestValue){
+                if(node.gethCost()< current.gethCost()){
+                    lowestValue = node.getfCost();
+                    currentTarget = node;
+                }
+            }
         }
         return currentTarget;
     }
@@ -246,7 +252,7 @@ public class AStar implements Algorithm{
     // methods for all the costs in the A* algorithm //
     //***********************************************//
     public int gCost(int x, int y) {
-        return Math.abs(initialX - x) + Math.abs(initialY - y);
+        return (Math.abs(initialX - x) + Math.abs(initialY - y));
     }
 
     public int gCostPath(int x, int y) {
@@ -254,7 +260,7 @@ public class AStar implements Algorithm{
     }
 
     public int hCost(int x, int y){
-        return Math.abs(current.getX() - x) + Math.abs(current.getY() - y);
+        return (Math.abs(current.getX() - x) + Math.abs(current.getY() - y));
     }
 
     public int hCostPath(int x, int y){
