@@ -76,14 +76,39 @@ public class Scenario {
                 }
             }
         }
+        System.out.println(walls);
     }
 
     private void addBorderWalls() {
-//        Tuple<Point, Point> points = parsePoints(value);
-//        Wall component= new Wall(points.getA(), points.getB(), this);
-//        staticComponents.add(component);
-//        walls.add(component);
-//        addStaticComponent(component);
+
+        Point topLeft = new Point(0, 0);
+        Point bottomRight = new Point(1, height-1);
+        Tuple<Point, Point> points = new Tuple<>(topLeft, bottomRight);
+        Wall component= new Wall(points.getA(), points.getB(), this);
+        staticComponents.add(component);
+        walls.add(component);
+        addStaticComponent(component);
+        topLeft = new Point(0, 0);
+        bottomRight = new Point(width-1,1);
+        points = new Tuple<>(topLeft, bottomRight);
+        component= new Wall(points.getA(), points.getB(), this);
+        staticComponents.add(component);
+        walls.add(component);
+        addStaticComponent(component);
+        topLeft = new Point(width-2, 0);
+        bottomRight = new Point(width-1, height-1);
+        points = new Tuple<>(topLeft, bottomRight);
+        component= new Wall(points.getA(), points.getB(), this);
+        staticComponents.add(component);
+        walls.add(component);
+        addStaticComponent(component);
+        topLeft = new Point(0, height-2);
+        bottomRight = new Point(width-1, height-1);
+        points = new Tuple<>(topLeft, bottomRight);
+        component= new Wall(points.getA(), points.getB(), this);
+        staticComponents.add(component);
+        walls.add(component);
+        addStaticComponent(component);
     }
 
     public Scenario() {
