@@ -7,6 +7,8 @@ import org.group7.model.Grid;
 import org.group7.model.Scenario;
 import org.group7.model.component.playerComponents.PlayerComponent;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.group7.enums.ComponentEnum.*;
@@ -15,7 +17,7 @@ public class BasicVision {
     Scenario scenario;
     Grid[][] map;
     int distanceViewing;
-    List<Grid> furthestFrontierGrid; //since our vision is containing 3 "rays" for every call this list will have three elements.
+    List<Grid> furthestFrontierGrid = new ArrayList<>(); //since our vision is containing 3 "rays" for every call this list will have three elements.
 
     public BasicVision(Scenario scenario) {
         this.scenario = scenario;
@@ -32,7 +34,9 @@ public class BasicVision {
 
     public Scenario calculateAgentVision(PlayerComponent player) {
         //clear the list otherwise it will increase like rabbits
-        furthestFrontierGrid.clear();
+        if (furthestFrontierGrid != null) {
+            furthestFrontierGrid.clear();
+        }
         //get position of agent
         int xCoordinate = (int) player.getCoordinates().getX();
         int yCoordinate = (int) player.getCoordinates().getY();
