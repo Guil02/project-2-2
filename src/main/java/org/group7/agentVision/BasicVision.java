@@ -7,12 +7,15 @@ import org.group7.model.Grid;
 import org.group7.model.Scenario;
 import org.group7.model.component.playerComponents.PlayerComponent;
 
+import java.util.List;
+
 import static org.group7.enums.ComponentEnum.*;
 
 public class BasicVision {
     Scenario scenario;
     Grid[][] map;
     int distanceViewing;
+    List<Grid> furthestFrontierGrid; //since our vision is containing 3 "rays" for every call this list will have three elements.
 
     public BasicVision(Scenario scenario) {
         this.scenario = scenario;
@@ -20,7 +23,16 @@ public class BasicVision {
         this.distanceViewing = scenario.getDistantViewing();
     }
 
+    //Method for Frontier-Based Algorithm
+    //TODO: talk with ROMA & XANDER
+    public List<Grid> getAgentVision(PlayerComponent player) {
+        calculateAgentVision(player);
+        return furthestFrontierGrid;
+    }
+
     public Scenario calculateAgentVision(PlayerComponent player) {
+        //clear the list otherwise it will increase like rabbits
+        furthestFrontierGrid.clear();
         //get position of agent
         int xCoordinate = (int) player.getCoordinates().getX();
         int yCoordinate = (int) player.getCoordinates().getY();
@@ -30,6 +42,7 @@ public class BasicVision {
         //loop through map and mark as explored - for god view and agent view
         switch (directionAngle) {
             case UP -> {
+                Grid furthestSoFar = null;
                 for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check straight
                     if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
                         map[xCoordinate][y].explore();
@@ -37,14 +50,14 @@ public class BasicVision {
                         //CHECK COLLISIONS with walls
                         if (map[xCoordinate][y].getStaticCompE() == WALL) {
                             break;
-                        } else {
-
                         }
-
+                        furthestSoFar = map[xCoordinate][y];
                     } else { //out of bound for edges of map
+                        furthestSoFar = map[xCoordinate][y + 1];
                         break;
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
                 if (xCoordinate - 1 >= 0) { //if it is possible to be one of the left without going out of bound
                     for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check one left
                         if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
@@ -54,12 +67,14 @@ public class BasicVision {
                             if (map[xCoordinate - 1][y].getStaticCompE() == WALL) {
                                 break;
                             }
-
-                        } else {
+                            furthestSoFar = map[xCoordinate - 1][y];
+                        } else { //out of bound for edges of map
+                            furthestSoFar = map[xCoordinate - 1][y + 1];
                             break;
                         }
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
                 if (xCoordinate + 1 < scenario.getHeight()) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check one right
                         if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
@@ -69,15 +84,18 @@ public class BasicVision {
                             if (map[xCoordinate + 1][y].getStaticCompE() == WALL) {
                                 break;
                             }
-
-                        } else {
+                            furthestSoFar = map[xCoordinate + 1][y];
+                        } else { //out of bound for edges of map
+                            furthestSoFar = map[xCoordinate + 1][y + 1];
                             break;
                         }
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
             }
 
             case DOWN -> {
+                Grid furthestSoFar = null;
                 for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check straight
                     if (y < scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
                         map[xCoordinate][y].explore();
@@ -86,12 +104,13 @@ public class BasicVision {
                         if (map[xCoordinate][y].getStaticCompE() == WALL) {
                             break;
                         }
-
+                        furthestSoFar = map[xCoordinate][y];
                     } else { //out of bound for edges of map
+                        furthestSoFar = map[xCoordinate][y - 1];
                         break;
                     }
                 }
-
+                furthestFrontierGrid.add(furthestSoFar);
                 if (xCoordinate - 1 >= 0) { //if it is possible to be one of the left without going out of bound
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one left
                         if (y < scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
@@ -101,13 +120,14 @@ public class BasicVision {
                             if (map[xCoordinate - 1][y].getStaticCompE() == WALL) {
                                 break;
                             }
-
-                        } else {
+                            furthestSoFar = map[xCoordinate - 1][y];
+                        } else { //out of bound for edges of map
+                            furthestSoFar = map[xCoordinate - 1][y - 1];
                             break;
                         }
                     }
                 }
-
+                furthestFrontierGrid.add(furthestSoFar);
                 if (xCoordinate + 1 < scenario.getHeight()) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one right
                         if (y < scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
@@ -117,15 +137,17 @@ public class BasicVision {
                             if (map[xCoordinate + 1][y].getStaticCompE() == WALL) {
                                 break;
                             }
-
+                            furthestSoFar = map[xCoordinate + 1][y];
                         } else {
+                            furthestSoFar = map[xCoordinate + 1][y - 1];
                             break;
                         }
                     }
                 }
-
+                furthestFrontierGrid.add(furthestSoFar);
             }
             case RIGHT -> {
+                Grid furthestSoFar = null;
                 for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) { //check straight
                     if (x < scenario.getWidth()) {
                         map[x][yCoordinate].explore();
@@ -134,10 +156,13 @@ public class BasicVision {
                         if (map[x][yCoordinate].getStaticCompE() == WALL) {
                             break;
                         }
+                        furthestSoFar = map[x][yCoordinate];
                     } else { //out of bound for edges of map
+                        furthestSoFar = map[x - 1][yCoordinate];
                         break;
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
                 if (yCoordinate - 1 >= 0) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
                         if (x < scenario.getWidth()) { //cant go higher than y=0, so if the number is positive is out of bound
@@ -147,11 +172,14 @@ public class BasicVision {
                             if (map[x][yCoordinate - 1].getStaticCompE() == WALL) {
                                 break;
                             }
+                            furthestSoFar = map[x][yCoordinate - 1];
                         } else {
+                            furthestSoFar = map[x - 1][yCoordinate - 1];
                             break;
                         }
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
                 if (yCoordinate + 1 < scenario.getHeight()) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
                         if (x < scenario.getWidth()) {
@@ -161,14 +189,17 @@ public class BasicVision {
                             if (map[x][yCoordinate + 1].getStaticCompE() == WALL) {
                                 break;
                             }
+                            furthestSoFar = map[x][yCoordinate + 1];
                         } else {
+                            furthestSoFar = map[x - 1][yCoordinate + 1];
                             break;
                         }
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
             }
-
             case LEFT -> {
+                Grid furthestSoFar = null;
                 for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) { //check straight
                     if (x >= 0) {
                         map[x][yCoordinate].explore();
@@ -177,10 +208,13 @@ public class BasicVision {
                         if (map[x][yCoordinate].getStaticCompE() == WALL) {
                             break;
                         }
+                        furthestSoFar = map[x][yCoordinate];
                     } else { //out of bound for edges of map
+                        furthestSoFar = map[x + 1][yCoordinate];
                         break;
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
                 if (yCoordinate - 1 >= 0) {
                     for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) {
                         if (x >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
@@ -190,11 +224,14 @@ public class BasicVision {
                             if (map[x][yCoordinate - 1].getStaticCompE() == WALL) {
                                 break;
                             }
+                            furthestSoFar = map[x][yCoordinate - 1];
                         } else {
+                            furthestSoFar = map[x + 1][yCoordinate - 1];
                             break;
                         }
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
                 if (yCoordinate + 1 < scenario.getHeight()) {
                     for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) {
                         if (x >= 0) {
@@ -204,11 +241,14 @@ public class BasicVision {
                             if (map[x][yCoordinate + 1].getStaticCompE() == WALL) {
                                 break;
                             }
+                            furthestSoFar = map[x][yCoordinate + 1];
                         } else {
+                            furthestSoFar = map[x + 1][yCoordinate + 1];
                             break;
                         }
                     }
                 }
+                furthestFrontierGrid.add(furthestSoFar);
             }
         }
         scenario.updateMap(map);

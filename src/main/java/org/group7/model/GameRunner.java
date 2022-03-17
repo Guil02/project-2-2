@@ -4,22 +4,21 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import org.group7.Main;
 import org.group7.enums.Actions;
-import org.group7.geometric.Area;
+import org.group7.enums.Orientation;
 import org.group7.geometric.Point;
 import org.group7.gui.ExplorationSim;
 import org.group7.gui.GameScreen;
 import org.group7.gui.Renderer;
 import org.group7.model.algorithms.ActionTuple;
-import org.group7.model.component.Component;
-import org.group7.enums.ComponentEnum;
-import org.group7.model.component.playerComponents.Guard;
-import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.utils.Config;
-import org.group7.utils.Methods;
+import static org.group7.enums.ComponentEnum.TELEPORTER;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class GameRunner extends AnimationTimer {
     private List<State> states;
@@ -65,7 +64,11 @@ public class GameRunner extends AnimationTimer {
 
         gameScreen.render(scenario);
         elapsedTimeStep += timeStep;
-
+        if(elapsedTimeStep % 5 == 0) {
+            double coverage = calculateCoverage();
+            System.out.println("Total Coverage: "+coverage + " elapsed Time: "+elapsedTimeStep);
+            //TODO: ask SAM --> break break if coverage is > 80
+        }
     }
 
     private void createState() {
@@ -89,14 +92,15 @@ public class GameRunner extends AnimationTimer {
                 for (int j=0; j<moveAction.getDistance(); j++) {
                     //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
                     this.scenario = scenario.guards.get(i).updateVision();
-                    //TODO: check for collision with walls and other agents = not possible to move.
-
-                        //check collision with agent for the next move (if there is a next move) --> break loop
-
-                        //check collision with wall for the next move (if there is a next move) --> break loop
-
-                        //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
-
+                    //check collision with agent for the next move (if there is a next move) --> break loop
+                    if (checkCollisionAgent(scenario.guards.get(i),moveAction.getDistance(),j)) {
+                        break;
+                    }
+                    //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
+                    if (checkCollisionTeleporter(scenario.guards.get(i))) {
+                        //TODO: ask GIO --> move the agent to new position
+                        break;
+                    }
                     //if no collision applyAction
                     scenario.guards.get(i).applyAction(moveAction.getAction());
                 }
@@ -115,14 +119,15 @@ public class GameRunner extends AnimationTimer {
                 for (int j=0; j<moveAction.getDistance(); j++) {
                     //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
                     this.scenario = scenario.intruders.get(i).updateVision();
-                    //TODO: check for collision with walls and other agents = not possible to move.
-
                     //check collision with agent for the next move (if there is a next move) --> break loop
-
-                    //check collision with wall for the next move (if there is a next move) --> break loop
-
+                    if (checkCollisionAgent(scenario.intruders.get(i),moveAction.getDistance(),j)) {
+                        break;
+                    }
                     //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
-
+                    if (checkCollisionTeleporter(scenario.intruders.get(i))) {
+                        //TODO: ask GIO --> move the agent to new position
+                        break;
+                    }
                     //if no collision applyAction
                     scenario.intruders.get(i).applyAction(moveAction.getAction());
                 }
@@ -136,43 +141,99 @@ public class GameRunner extends AnimationTimer {
     }
 
 
-
     /**
      * method that does the random movement for a provided player component. Is currently random can be modified to fit to the algorithms.
      * @param p a player component you want to move
      * @param type_movement 0= dont turn, 1 = turn right, 2= turn left
      */
     private void doRandomMovement(PlayerComponent p, Actions type_movement){
-        double distance = getSpeed(p)*scenario.getTimeStep(); //TODO: Guil fix this
-        distance = 0.1;
 
-        if (type_movement == Actions.TURN_RIGHT){
-            p.turn(-Math.PI/2);
-        }else if(type_movement == Actions.TURN_LEFT){
-            p.turn(Math.PI/2);
-        }
-        if(checkWallCollision(p, distance)){
-            if(Math.random()>0.5){
-                p.turn(0.5*Math.PI);
+    }
+
+    public boolean checkCollisionAgent(PlayerComponent player, int moveForwardDistance, int step) {
+        if (step+1 < moveForwardDistance) {
+            Point currentPosition = player.getCoordinates();
+            int x = (int)currentPosition.getX();
+            int y = (int)currentPosition.getY();
+            Orientation orientation = player.getOrientation();
+            switch (orientation) {
+                case UP -> {
+                    if (y-1 >= 0) {
+                        if (scenario.map[x][y-1].getPlayerComponent() != null) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                case DOWN -> {
+                    if (y+1 <= scenario.getHeight()) {
+                        if (scenario.map[x][y+1].getPlayerComponent() != null) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                case LEFT -> {
+                    if (x-1 >= 0) {
+                        if (scenario.map[x-1][y].getPlayerComponent() != null) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                case RIGHT -> {
+                    if (x+1 <= scenario.getWidth()) {
+                        if (scenario.map[x+1][y].getPlayerComponent() != null) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
             }
-            else{
-                p.turn(-0.5*Math.PI);
+        }
+        return false;
+    }
+
+    public boolean checkCollisionTeleporter(PlayerComponent player) {
+        Point currentPosition = player.getCoordinates();
+        int x = (int)currentPosition.getX();
+        int y = (int)currentPosition.getY();
+        if (scenario.map[x][y].getStaticCompE() == TELEPORTER) {
+            return true;
+        }
+        return false;
+    }
+
+
+    //TODO: can we use this for the teleportation?
+    private void doTeleport(PlayerComponent p, double distance) {
+        for(int i = 0; i<scenario.teleporters.size(); i++){
+            if(p.collision(scenario.teleporters.get(i), distance)){
+                Point target = scenario.teleporters.get(i).getTarget();
+                p.setPosition(target.clone());
+                //Change does not gets rendered although the values from get and set matches
+                p.setDirectionAngle(scenario.teleporters.get(i).getDirection().getAngle());
             }
-        }
-        else if(checkTeleporterCollision(p, distance)){
-            doTeleport(p, distance);
-        }
-        else if(p.getComponentEnum() == ComponentEnum.INTRUDER && checkTargetCollision(p, distance)){
-            stop(); //TODO implement game over screen
-        }
-        else{
-            Area a = p.getArea().clone();
-           // p.move(distance);
-            scenario.movePlayerMap(a, p.getArea(), p);
         }
     }
 
-    public double getSpeed(PlayerComponent p){
+    public double calculateCoverage() {
+        int seenGrids = 0;
+        for (int i=0; i<=scenario.getWidth();i++) {
+            for (int j=0; j<=scenario.getHeight();j++) {
+                if(scenario.map[i][j].explored) {
+                    seenGrids++;
+                }
+            }
+        }
+        int totalSize = scenario.getWidth()*scenario.getHeight();
+        return (seenGrids/totalSize)*100;
+    }
+
+}
+
+/* OLD CODE - CLEANUP
+public double getSpeed(PlayerComponent p){
         switch (p.getComponentEnum()){
             case GUARD -> {
                 return scenario.baseSpeedGuard;
@@ -187,7 +248,7 @@ public class GameRunner extends AnimationTimer {
         }
     }
 
-    private boolean checkTargetCollision(PlayerComponent p, double distance) {
+private boolean checkTargetCollision(PlayerComponent p, double distance) {
         // check if the agent collides with a wall.
         for(int i = 0; i<scenario.targetAreas.size(); i++){
             if(p.collision(scenario.targetAreas.get(i), distance)){
@@ -197,18 +258,7 @@ public class GameRunner extends AnimationTimer {
         return false;
     }
 
-    private void doTeleport(PlayerComponent p, double distance) {
-        for(int i = 0; i<scenario.teleporters.size(); i++){
-            if(p.collision(scenario.teleporters.get(i), distance)){
-                Point target = scenario.teleporters.get(i).getTarget();
-                p.setPosition(target.clone());
-                //Change does not gets rendered although the values from get and set matches
-                p.setDirectionAngle(scenario.teleporters.get(i).getDirection().getAngle());
-            }
-        }
-    }
-
-    private boolean checkTeleporterCollision(PlayerComponent p, double distance) {
+private boolean checkTeleporterCollision(PlayerComponent p, double distance) {
         for(int i = 0; i<scenario.teleporters.size(); i++){
             if(p.collision(scenario.teleporters.get(i), distance)){
                 return true;
@@ -256,4 +306,4 @@ public class GameRunner extends AnimationTimer {
         }
         return false;
     }
-}
+ */
