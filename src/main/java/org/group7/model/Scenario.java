@@ -66,6 +66,7 @@ public class Scenario {
         System.out.println("File: " + mapFile.getName());
         parseFile(mapFile);
         System.out.println(staticComponents);
+        addBorderWalls();
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
                 map[j][i].seen = new ArrayList<>();
@@ -75,6 +76,14 @@ public class Scenario {
                 }
             }
         }
+    }
+
+    private void addBorderWalls() {
+//        Tuple<Point, Point> points = parsePoints(value);
+//        Wall component= new Wall(points.getA(), points.getB(), this);
+//        staticComponents.add(component);
+//        walls.add(component);
+//        addStaticComponent(component);
     }
 
     public Scenario() {
@@ -104,6 +113,7 @@ public class Scenario {
     }
 
     private void parseValue(String key, String value) {
+        value = value.split(" //")[0];
         switch (key) {
             //simple properties:
             case "name"                 -> name = value;
