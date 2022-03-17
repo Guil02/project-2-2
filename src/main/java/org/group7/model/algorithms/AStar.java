@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.group7.enums.Actions.NOTHING;
 import static org.group7.enums.AstarType.ASTAR_PATH;
 import static org.group7.enums.AstarType.ASTAR_TARGET;
 import static org.group7.enums.ComponentEnum.TELEPORTER;
@@ -46,22 +47,32 @@ public class AStar implements Algorithm{
     @Override
     public ActionTuple calculateMovement() {
         if(movesLeft.isEmpty()){
-            if(target!=null)
+            if(target!=null) {
                 current = target;
+            }
             target = findTarget();
-            movesLeft = findPath();
+            if(target == null){
+                movesLeft.add(new ActionTuple(NOTHING,0));
+            }
+            else{
+                movesLeft = findPath();
+            }
         }
-        return movesLeft.get(movesLeft.size()-1);
+        ActionTuple actionTuple = movesLeft.get(0);
+        movesLeft.remove(0);
+        return actionTuple;
     }
 
     public AStarNode findTarget(){
         open.remove(current);
-        closed.add(current);
+        if(!closed.contains(current))
+            closed.add(current);
         for(Grid[] grids: map){
             for(Grid grid: grids){
                 if(grid.seen.get(player.getId())){
                     AStarNode node = new AStarNode(grid.getX(), grid.getY(), this);
-                    if(closed.contains(node) || (grid.getStaticComponent()!=null && grid.getStaticComponent().getComponentEnum()==WALL)){
+
+                    if(open.contains(node) || closed.contains(node) || (grid.getStaticComponent()!=null && grid.getStaticComponent().getComponentEnum()==WALL)){
                         continue;
                     }
                     open.add(node);
@@ -93,8 +104,11 @@ public class AStar implements Algorithm{
         while (!openedNodes.isEmpty()){
             AStarNode node = openedNodes.get(0);
             for(int i = 1; i < openedNodes.size(); i++){
-                node.updateCost(ASTAR_PATH);
-                if(openedNodes.get(i).getfCostPath() <= node.getfCostPath()){
+//                node.updateCost(ASTAR_PATH);
+                if(openedNodes.get(i).getfCostPath() < node.getfCostPath()) {
+                    node= openedNodes.get(i);
+                }
+                else if(openedNodes.get(i).getfCostPath()==node.getfCostPath()){
                     if(openedNodes.get(i).gethCostPath() < node.gethCostPath()){
                         node = openedNodes.get(i);
                     }
@@ -103,7 +117,8 @@ public class AStar implements Algorithm{
             openedNodes.remove(node);
             closedNodes.add(node);
 
-            if(node == target){
+            if(node.equals(target)){
+                target = node;
                 return makePath();
             }
             for (AStarNode neighbor: neighbours(node)) {
@@ -135,8 +150,9 @@ public class AStar implements Algorithm{
         for (int i = 0; i < actionPath.size(); i++) {
             if(actionPath.get(i)==Actions.MOVE_FORWARD){
                 int count = 1;
-                for (int j = i+1; j < speed; j++) {
+                for (int j = i+1; j < speed && j<actionPath.size(); j++) {
                     if(actionPath.get(j)==Actions.MOVE_FORWARD){
+                        i++;
                         count++;
                     }else{
                         break;
@@ -153,10 +169,11 @@ public class AStar implements Algorithm{
     public List<AStarNode> nodePath() {
         List<AStarNode> nodePath = new ArrayList<>();
         AStarNode node = target;
-        while (node != current) {
+        while (node!=null && !node.equals(current)) {
             nodePath.add(node);
             node = node.getParent();
         }
+        nodePath.add(node);
         Collections.reverse(nodePath);
         return nodePath;
     }

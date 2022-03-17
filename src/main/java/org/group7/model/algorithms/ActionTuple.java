@@ -14,6 +14,14 @@ public class ActionTuple {
     public Actions getAction() {return action;}
     public int getDistance() {return distance;}
 
+    @Override
+    public String toString() {
+        return "ActionTuple{" +
+                "action=" + action +
+                ", distance=" + distance +
+                '}';
+    }
+
     //base speed = 4
     //ActionTuple(MOVE_FORWARD, 2)
     //ActionTuple(TURN_DOWN, 0)

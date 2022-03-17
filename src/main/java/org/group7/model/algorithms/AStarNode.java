@@ -101,4 +101,12 @@ public class AStarNode {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    @Override
+    public String toString() {
+        return "AStarNode{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

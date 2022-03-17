@@ -5,5 +5,6 @@ public enum Actions {
     TURN_DOWN,
     TURN_LEFT,
     TURN_RIGHT,
-    MOVE_FORWARD;
+    MOVE_FORWARD,
+    NOTHING;
 }
