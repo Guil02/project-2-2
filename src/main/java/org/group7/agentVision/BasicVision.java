@@ -60,7 +60,7 @@ public class BasicVision {
                         }
                     }
                 }
-                if (xCoordinate + 1 <= scenario.getHeight()) { //if it is possible to move one step to the right
+                if (xCoordinate + 1 < scenario.getHeight()) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check one right
                         if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
                             map[xCoordinate + 1][y].explore();
@@ -79,7 +79,7 @@ public class BasicVision {
 
             case DOWN -> {
                 for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check straight
-                    if (y <= scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
+                    if (y < scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
                         map[xCoordinate][y].explore();
                         map[xCoordinate][y].exploreAgent(player.getId());
                         //CHECK COLLISIONS with walls
@@ -94,7 +94,7 @@ public class BasicVision {
 
                 if (xCoordinate - 1 >= 0) { //if it is possible to be one of the left without going out of bound
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one left
-                        if (y <= scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
+                        if (y < scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
                             map[xCoordinate - 1][y].explore();
                             map[xCoordinate - 1][y].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
@@ -110,7 +110,7 @@ public class BasicVision {
 
                 if (xCoordinate + 1 < scenario.getHeight()) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one right
-                        if (y <= scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
+                        if (y < scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
                             map[xCoordinate + 1][y].explore();
                             map[xCoordinate + 1][y].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
@@ -127,7 +127,7 @@ public class BasicVision {
             }
             case RIGHT -> {
                 for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) { //check straight
-                    if (x <= scenario.getWidth()) {
+                    if (x < scenario.getWidth()) {
                         map[x][yCoordinate].explore();
                         map[x][yCoordinate].exploreAgent(player.getId());
                         //CHECK COLLISIONS with walls
@@ -140,7 +140,7 @@ public class BasicVision {
                 }
                 if (yCoordinate - 1 >= 0) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
-                        if (x <= scenario.getWidth()) { //cant go higher than y=0, so if the number is positive is out of bound
+                        if (x < scenario.getWidth()) { //cant go higher than y=0, so if the number is positive is out of bound
                             map[x][yCoordinate - 1].explore();
                             map[x][yCoordinate - 1].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
@@ -152,9 +152,9 @@ public class BasicVision {
                         }
                     }
                 }
-                if (yCoordinate + 1 <= scenario.getHeight()) {
+                if (yCoordinate + 1 < scenario.getHeight()) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
-                        if (x <= scenario.getWidth()) {
+                        if (x < scenario.getWidth()) {
                             map[x][yCoordinate + 1].explore();
                             map[x][yCoordinate + 1].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
@@ -195,7 +195,7 @@ public class BasicVision {
                         }
                     }
                 }
-                if (yCoordinate + 1 <= scenario.getHeight()) {
+                if (yCoordinate + 1 < scenario.getHeight()) {
                     for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) {
                         if (x >= 0) {
                             map[x][yCoordinate + 1].explore();
