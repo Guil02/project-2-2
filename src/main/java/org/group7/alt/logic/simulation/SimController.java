@@ -53,7 +53,7 @@ public class SimController extends AnimationTimer {
             //view.update();
 
         for (Agent a : environment.getTileMap().getAgentList()) {
-            moveAgent(a);
+            //moveAgent(a);
         }
 
         renderer.update();

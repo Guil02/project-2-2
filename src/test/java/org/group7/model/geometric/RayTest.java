@@ -40,16 +40,16 @@ public class RayTest {
     }
     @Test
     public void sortList() {
-        PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0);
-        Ray ray = new Ray(pc);
-        Component wall1 = new Wall(new Point(1000,1000), new Point(2250,900));
-        Component wall2 = new ShadedArea(new Point(300,500), new Point(350,300));
-        ArrayList<Component> areaArray = new ArrayList<>();
-        areaArray.add(wall1);
-        areaArray.add(wall2);
-        ray.sortList(areaArray);
-        assertEquals(areaArray.get(0), wall2);
-        assertEquals(areaArray.get(1), wall1);
+//        PlayerComponent pc = new Guard(new Point(250,299), new Point(250,299),0);
+//        Ray ray = new Ray(pc);
+//        Component wall1 = new Wall(new Point(1000,1000), new Point(2250,900));
+//        Component wall2 = new ShadedArea(new Point(300,500), new Point(350,300));
+//        ArrayList<Component> areaArray = new ArrayList<>();
+//        areaArray.add(wall1);
+//        areaArray.add(wall2);
+//        ray.sortList(areaArray);
+//        assertEquals(areaArray.get(0), wall2);
+//        assertEquals(areaArray.get(1), wall1);
 
     }
 

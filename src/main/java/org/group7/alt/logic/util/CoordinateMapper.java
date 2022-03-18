@@ -34,7 +34,4 @@ public class CoordinateMapper {
         return new Point(relativeOrigin.x + local.x, relativeOrigin.y + local.y);
     }
 
-    public static Point convertLocalToGlobal(Point convertGlobalToLocal) {
-        return new Point(-1, -1);
-    }
 }

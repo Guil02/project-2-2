@@ -36,9 +36,18 @@ public enum Cardinal {
     public Point relativeOffset() {
         return switch (this) {
             case NORTH -> new Point(0, -1);
-            case WEST -> new Point(-1, 0);
-            case SOUTH -> new Point(0, 1);
             case EAST -> new Point(1, 0);
+            case SOUTH -> new Point(0, 1);
+            case WEST -> new Point(-1, 0);
+        };
+    }
+
+    public double rotation() {
+        return switch (this) {
+            case NORTH -> 0;
+            case WEST -> 90;
+            case SOUTH -> 180;
+            case EAST -> 270; // 90
         };
     }
 }
