@@ -14,6 +14,7 @@ public class PhysicsHandler {
     //spreading smell
 
     public static boolean collision(TileMap map, Agent a) {
+
         final Point global = CoordinateMapper.convertLocalToGlobal(map.getSpawn(a), a.getPose().getPosition());
         final Tile tile = map.getTile(global);
 

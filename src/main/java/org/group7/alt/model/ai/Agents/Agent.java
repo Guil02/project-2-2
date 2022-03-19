@@ -1,6 +1,9 @@
 package org.group7.alt.model.ai.Agents;
 
 import org.group7.alt.enums.Cell;
+import org.group7.alt.logic.graph.Node;
+import org.group7.alt.logic.util.ObservedTile;
+import org.group7.alt.logic.util.records.Frame;
 import org.group7.alt.model.ai.GraphModel;
 import org.group7.alt.enums.Action;
 import org.group7.alt.model.ai.Pose;
@@ -29,6 +32,14 @@ public abstract class Agent {
         trajectory = new LinkedList<>();
 
         poseHistory.add(pose);
+    }
+
+    public Agent(Pose pose, List<ObservedTile> fov) {
+        this(pose);
+        for (ObservedTile tile : fov)
+            mapModel.addNode(new Node(tile.cell(), new Point(tile.x(), tile.y())));
+
+
     }
 
     public abstract Pose update();

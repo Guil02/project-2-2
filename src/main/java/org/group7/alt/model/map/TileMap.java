@@ -1,5 +1,7 @@
 package org.group7.alt.model.map;
 
+import javafx.scene.transform.Translate;
+import org.group7.alt.logic.util.records.Frame;
 import org.group7.alt.model.ai.Agents.Agent;
 import org.group7.alt.model.ai.Agents.Explorer;
 
@@ -16,36 +18,27 @@ public class TileMap {
     int numExplored;
 
     List<Agent> agentList;
-
     Map<Agent, Point> relativeOrigins;
+    Map<Agent, Frame> localFrames;
 
     public TileMap() {
         map = new Tile[Environment.WIDTH + 1][Environment.HEIGHT + 1];
         agentList = new LinkedList<>();
         relativeOrigins = new HashMap<>(Environment.NUM_GAURDS + Environment.NUM_INTRUDERS);
+        localFrames = new HashMap<>(Environment.NUM_GAURDS + Environment.NUM_INTRUDERS);
 
         numTiles = (Environment.WIDTH + 1) * (Environment.HEIGHT + 1);
         numExplored = 0;
     }
 
-
     public Tile[][] getMap() {
         return map;
     }
 
-    public void setTile(Point pos, Tile tile) {
-        map[pos.x][pos.y] = tile;
-    }
-
-    public void setTile(int x, int y, Tile tile) {
-        map[x][y] = tile;
-    }
-
-    public Tile getTile(Point pos) {
-        return map[pos.x][pos.y];
-    }
-
     public Tile getTile(int x, int y) {
+        if (x < 0 || y < 0 || x > map.length || y > map[0].length)
+            return new Tile();
+
         return map[x][y];
     }
 
@@ -66,12 +59,37 @@ public class TileMap {
     public void addAgent(Agent agent, Point spawnPoint) {
         agentList.add(agent);
         relativeOrigins.put(agent, spawnPoint);
+        localFrames.put(agent, new Frame(new Translate(-spawnPoint.getX(), -spawnPoint.getY())));
 
         getTile(agent.getPose().getPosition()).setExplored(true);
     }
 
     public List<Agent> getAgentList() {
         return agentList;
+    }
+
+    public Point getSpawn(Agent agent) {
+        return relativeOrigins.get(agent);
+    }
+
+    public Frame getLocalFrame(Agent agent) {
+        return localFrames.get(agent);
+    }
+
+    public Tile getTile(double x, double y) {
+        return getTile((int) x, (int) y );
+    }
+
+    public Tile getTile(Point pos) {
+        return getTile(pos.x, pos.y);
+    }
+
+    public void setTile(Point pos, Tile tile) {
+        map[pos.x][pos.y] = tile;
+    }
+
+    public void setTile(int x, int y, Tile tile) {
+        map[x][y] = tile;
     }
 
     @Override
@@ -82,9 +100,5 @@ public class TileMap {
                 ", numExplored=" + numExplored +
                 ", agentList=" + agentList +
                 '}';
-    }
-
-    public Point getSpawn(Agent agent) {
-        return relativeOrigins.get(agent);
     }
 }

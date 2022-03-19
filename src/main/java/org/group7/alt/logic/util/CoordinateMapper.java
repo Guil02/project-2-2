@@ -9,7 +9,6 @@ import org.group7.alt.model.ai.Agents.Agent;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-
 public class CoordinateMapper {
 
     public static Point getLocalOriginFromGlobal(Point agentOrigin) {

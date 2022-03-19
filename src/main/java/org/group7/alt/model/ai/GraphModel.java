@@ -20,16 +20,12 @@ public class GraphModel extends Graph {
         unexplored = new LinkedList<>();
         explored = new LinkedList<>();
 
-//        Node origin = new Node(Cell.EXPLORER, agent.getPose().getPosition());
-//        setOrigin(origin);
-//        addNode(origin);
-
         Node agentOrigin = new Node(agent.getType(), agent.getPose().getPosition());
         setOrigin(agentOrigin);
-        addNode(agentOrigin);
+        //addNode(agentOrigin);
 
         currentLocation = agentOrigin;
-        currentLocation.setExplored(true);
+        //currentLocation.setExplored(true);
         explored.add(currentLocation);
     }
 
@@ -37,8 +33,15 @@ public class GraphModel extends Graph {
         //get move from algorithm
     }
 
-    public void updateGraph() {
+    public void updateGraph(Node... nodes) {
 
+    }
+
+    public void updateGraph(List<Node> nodes) {
+        for (Node n : nodes) {
+            addNode(n);
+            explored.add(n);
+        }
     }
 
 }

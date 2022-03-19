@@ -15,6 +15,7 @@ public class Node {
     public long timeStepObserved;
 
     public boolean explored;
+
     public boolean obstacle;
 
     public Cell occupant;

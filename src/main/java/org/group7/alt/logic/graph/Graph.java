@@ -20,6 +20,8 @@ public class Graph {
     public Graph(Collection<Node> nodeList, Collection<Edge> edgeList) {
         nodes = new LinkedList<>(List.copyOf(nodeList));
         edges = new LinkedList<>(List.copyOf(edgeList));
+        graph = new HashMap<>(nodes.size());
+        //nodes.forEach(node -> graph.put(node.coordinate, node));
     }
 
     public Node getNodeAt(Point pos) {
@@ -27,16 +29,20 @@ public class Graph {
     }
 
     public void addNode(Point pos, Node node) {
-        //or graph.putIfAbsent(pos, node)
-        if (graph.containsKey(pos)) {
-            graph.replace(pos, node);
-        } else {
-            graph.put(pos, node);
-        }
+        graph.putIfAbsent(pos, node);
+//        if (graph.containsKey(pos)) {
+//            graph.replace(pos, node);
+//        } else {
+//            graph.put(pos, node);
+//        }
     }
 
     public void addNode(Node node) {
-        graph.putIfAbsent(node.coordinate, node);
+        if (!graph.containsKey(node.coordinate)){
+            node.explored = true;
+            graph.put(node.coordinate, node);
+            nodes.add(node);
+        }
     }
 
     public Node getOrigin() {
@@ -45,6 +51,7 @@ public class Graph {
 
     public void setOrigin(Node node) {
         origin = node;
+        addNode(origin);
     }
 
     public List<Node> getNodes() {

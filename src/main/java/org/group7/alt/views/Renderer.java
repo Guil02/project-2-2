@@ -1,16 +1,12 @@
 package org.group7.alt.views;
 
 
-import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.transform.Affine;
-import javafx.scene.transform.Translate;
 import org.group7.Main;
 import org.group7.alt.enums.Cardinal;
 import org.group7.alt.logic.util.CoordinateMapper;
@@ -19,7 +15,6 @@ import org.group7.alt.model.map.Environment;
 import org.group7.alt.model.map.Tile;
 
 import java.awt.*;
-import java.awt.geom.Line2D;
 
 public class Renderer extends ScrollPane {
 
@@ -74,50 +69,41 @@ public class Renderer extends ScrollPane {
         g.setFill(Color.BLACK);
         g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
 
+        drawMap(g);
+        drawFOV(g);
+    }
+
+    private void drawMap(GraphicsContext g) {
         for (int y = 0; y < Environment.HEIGHT; y++){
             for(int x = 0; x < Environment.WIDTH; x++) {
-                Tile tile = environment.getTileMap().getTile(x, y);
-                g.setFill(tile.getColorTexture());
+                Tile tile = Environment.getTileMap().getTile(x, y);
+                g.setFill(tile.isExplored() ? tile.getColorTexture() : tile.getColorTexture().darker().desaturate());
                 g.fillRect(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
             }
         }
+    }
 
+    private void drawFOV(GraphicsContext g) {
         for (Agent agent : environment.getTileMap().getAgentList()) {
             g.setFill(agent.getType().getColor());
             Point p = CoordinateMapper.convertLocalToGlobal(environment.getTileMap().getSpawn(agent), agent.getPose().getPosition());
+
             g.fillRect(p.x + (p.x * TILE_SIZE), p.y + (p.y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
 
-            //g.setFill(Color.color(0.8,0.3,1, 0.5));
-            //g.fillOval(p.x + (p.x * TILE_SIZE), p.y + ((p.y * TILE_SIZE)), TILE_SIZE, TILE_SIZE);
-
-            g.setStroke(Color.TOMATO);
-
             Cardinal cardinal = agent.getPose().getDirection();
-
-            //g.setStroke(Color.YELLOW.darker());
-            //g.moveTo(p.x + (p.x * TILE_SIZE), p.y + (p.y * TILE_SIZE));
-            //g.lineTo(direction.getEndX(), direction.getEndY());
-            //g.stroke();
-
-            g.setStroke(Color.color(0.8,0.3,1, 0.5));
-            g.setLineWidth(3);
             int viewDistance = 10; //10 cells
 
-            Affine reset = g.getTransform();
             double startX = p.x + (p.x * TILE_SIZE) + TILE_SIZE / 2;
             double startY = p.y + (p.y * TILE_SIZE) + TILE_SIZE / 2;
 
             double endX = startX + (TILE_SIZE * viewDistance * cardinal.relativeOffset().x);
             double endY = startY + (TILE_SIZE * viewDistance * cardinal.relativeOffset().y);
 
-            g.rotate(cardinal.rotation());
+            g.setLineWidth(3);
+            g.setStroke(Color.TOMATO);
 
             g.strokeLine(startX, startY, endX, endY);
 
-            //g.translate(cardinal.relativeOffset().x + TILE_SIZE, cardinal.relativeOffset().y + TILE_SIZE);
-
-            //g.strokeLine(startX, startY, endX, endY);
-            g.setTransform(reset);
         }
     }
 }

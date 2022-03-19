@@ -34,6 +34,10 @@ public class Tile {
         return type.getColor();
     }
 
+    public Cell getType() {
+        return type;
+    }
+
     public void updateTile(Cell type, boolean explored) {
         this.type = type;
         this.explored = explored;

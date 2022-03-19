@@ -5,6 +5,7 @@ import org.group7.alt.enums.Action;
 import org.group7.alt.enums.Cardinal;
 import org.group7.alt.enums.GameMode;
 import org.group7.alt.logic.util.CoordinateMapper;
+import org.group7.alt.logic.util.ObservedTile;
 import org.group7.alt.model.ai.Agents.Agent;
 import org.group7.alt.model.ai.Agents.Explorer;
 import org.group7.alt.model.ai.Pose;
@@ -17,9 +18,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SimController extends AnimationTimer {
 
@@ -52,7 +51,7 @@ public class SimController extends AnimationTimer {
         //update gui
             //view.update();
 
-        for (Agent a : environment.getTileMap().getAgentList()) {
+        for (Agent a : Environment.getTileMap().getAgentList()) {
             //moveAgent(a);
         }
 
@@ -62,14 +61,15 @@ public class SimController extends AnimationTimer {
     }
 
     public void moveAgent(Agent agent) {
+
         //TODO collision Handling
-        if (PhysicsHandler.collision(environment.getTileMap(), agent)) {
+        if (PhysicsHandler.collision(Environment.getTileMap(), agent)) {
             System.out.println("COLLLIDE: " + agent + ", pose" + agent.getPose());
         }
         Pose newPose = agent.update(Action.STEP);
         Rectangle map = new Rectangle(Environment.WIDTH + 1, Environment.HEIGHT + 1);
         if (map.contains(newPose.getPosition())) {
-            if (environment.getTileMap().getTile(newPose.getPosition()).isObstacle()) {
+            if (Environment.getTileMap().getTile(newPose.getPosition()).isObstacle()) {
                 agent.update(Action.FLIP);
                 agent.update(Action.STEP);
             }
@@ -83,16 +83,6 @@ public class SimController extends AnimationTimer {
 //        agent.rotate(Cardinal.values()[(int)(Math.random() * 4)]);
     }
 
-    public Point2D convert(Point p) throws NoninvertibleTransformException {
-        AffineTransform affineTransform = new AffineTransform();
-        affineTransform.setToTranslation(p.x,p.y);
-        Point2D o2 = affineTransform.transform(new Point2D.Double(0,0), null);
-        javafx.geometry.Point2D point2D = new javafx.geometry.Point2D(0,0);
-        point2D = point2D.add(2, 4).add(3,-3);
-
-        return new Point2D.Double(point2D.getX(),point2D.getY());
-    }
-
     private void spawnAgents(GameMode gameMode) {
         switch (gameMode) {
             case EXPLORATION -> {
@@ -100,10 +90,19 @@ public class SimController extends AnimationTimer {
                     //spawn explorers in spawn area
                     Point spawnPoint = Environment.GUARD_SPAWN_GRIDS.get((int)(Math.random() * Environment.GUARD_SPAWN_GRIDS.size()));
                     //Pose initialPose = new Pose(spawnPoint, Cardinal.NORTH); //default orientation is NORTH
+
                     Pose initialPose = new Pose(new Point(0,0), Cardinal.NORTH); //default orientation is NORTH
                     Explorer agent = new Explorer(initialPose);
 
-                    environment.getTileMap().addAgent(agent, spawnPoint);
+                    Environment.getTileMap().addAgent(agent, spawnPoint);
+                    List<ObservedTile> fov = VisionHandler.getFOV(agent);
+                    System.out.println("\nAgent: (" + spawnPoint.x + ", " + spawnPoint.y + ")\n");
+                    for (int f = 0; f < fov.size(); f++) {
+                        if (f % VisionHandler.VIEW_DISTANCE == 0 && f!=0) System.out.println();
+                        System.out.print(" <" + fov.get(f).cell() + ", x=" + fov.get(f).x() + ", y="+fov.get(f).y() +">  ");
+                    }
+                    System.out.println();
+
 
                     System.out.println(agent);
                 }
@@ -121,22 +120,6 @@ public class SimController extends AnimationTimer {
                     //add to agents list
                 }
             }
-        }
-
-        try {
-            System.out.println("transformed: " + convert(new Point(2,4)));
-            Point globalOrigin = new Point(0,0);
-            Point relativeOrigin = new Point(2, 4);
-            Point pointGlobal = new Point(5, 1);
-            Point pointLocal = new Point(3, -3);
-
-            System.out.println("global origin to global agent relative: " + CoordinateMapper.getLocalOriginFromGlobal(relativeOrigin));
-            System.out.println("calculate local Origin: " + CoordinateMapper.getLocalOriginFromGlobal(pointGlobal, pointLocal));
-            System.out.println("local point to global point: " + CoordinateMapper.convertLocalToGlobal(relativeOrigin, pointLocal));
-            System.out.println("local point to global point: " + CoordinateMapper.convertGlobalToLocal(relativeOrigin, pointGlobal));
-
-        } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
         }
     }
 }
