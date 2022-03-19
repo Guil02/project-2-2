@@ -2,13 +2,16 @@ package org.group7.alt.model.ai.Agents;
 
 import org.group7.alt.enums.Cell;
 import org.group7.alt.logic.graph.Node;
-import org.group7.alt.logic.util.ObservedTile;
-import org.group7.alt.logic.util.records.Frame;
+import org.group7.alt.logic.simulation.VisionHandler;
+import org.group7.alt.logic.util.records.ObservedTile;
 import org.group7.alt.model.ai.GraphModel;
 import org.group7.alt.enums.Action;
 import org.group7.alt.model.ai.Pose;
+import org.group7.alt.model.map.Environment;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public abstract class Agent {
 
     GraphModel mapModel;
 
+    List<ObservedTile> currentFOV;
+
     public Agent(Pose pose) {
         localPose = pose;   //initial agent pose should be in the local coordinate frame
         mapModel = new GraphModel(this);
@@ -30,16 +35,21 @@ public abstract class Agent {
 
         poseHistory = new LinkedList<>();
         trajectory = new LinkedList<>();
+        currentFOV = new LinkedList<>();
 
         poseHistory.add(pose);
     }
 
     public Agent(Pose pose, List<ObservedTile> fov) {
         this(pose);
+        currentFOV = fov;
         for (ObservedTile tile : fov)
             mapModel.addNode(new Node(tile.cell(), new Point(tile.x(), tile.y())));
 
+    }
 
+    public void updateFOV(List<ObservedTile> newFOV) {
+        currentFOV = newFOV;
     }
 
     public abstract Pose update();
@@ -75,4 +85,8 @@ public abstract class Agent {
     public abstract Cell getType();
 
     public abstract Pose update(Action flip);
+
+    public List<ObservedTile> getFOV() {
+        return currentFOV;
+    }
 }

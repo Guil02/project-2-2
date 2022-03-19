@@ -32,9 +32,7 @@ public class Environment {
     public static List<Point> INTRUDER_SPAWN_GRIDS;
     public static List<Point> GUARD_SPAWN_GRIDS;
 
-    public static TileMap tileMap;
-
-    public Grid[][] recordMap;
+    public static TileMap TILE_MAP;
 
     public Environment(Scenario s) {
         parseScenario(s);
@@ -73,14 +71,11 @@ public class Environment {
     }
 
     private void initializeMap(){
-        tileMap = new TileMap();
-        recordMap = new Grid[WIDTH+1][HEIGHT+1];
+        TILE_MAP = new TileMap();
 
         for(int x = 0; x <= WIDTH; x++)
-            for (int y = 0; y <= HEIGHT; y++) {
-                tileMap.setTile(new Point(x, y), new Tile());
-                recordMap[x][y] = new Grid(Cell.EMPTY, false);
-            }
+            for (int y = 0; y <= HEIGHT; y++)
+                TILE_MAP.setTile(x, y, new Tile());
     }
 
     private void fillMap(StaticComponent c, Cell type) {
@@ -90,19 +85,16 @@ public class Environment {
                     case GUARD_SPAWN -> GUARD_SPAWN_GRIDS.add(new Point(i, j));
                     case INTRUDER_SPAWN -> INTRUDER_SPAWN_GRIDS.add(new Point(i, j));
                 }
-                recordMap[i][j] = new Grid(type, false);
-                tileMap.setTile(new Point(i, j), new Tile(type));
+
+                TILE_MAP.setTile(new Point(i, j), new Tile(type));
             }
         }
     }
 
     public static TileMap getTileMap() {
-        return tileMap;
+        return TILE_MAP;
     }
 
-//    public Grid[][] getRecordMap() {
-//        return recordMap;
-//    }
 
     @Override
     public String toString() {

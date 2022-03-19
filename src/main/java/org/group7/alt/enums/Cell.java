@@ -14,6 +14,7 @@ public enum Cell {
 
     AGENT,      //an agent, could be guard or intruder, !not sure if needed
     EXPLORER,   //for gamemode 0: guard agents = exploration agents, !not sure if needed
+
     GUARD,
     INTRUDER,
 

@@ -1,4 +1,0 @@
-package org.group7.alt.logic.algorithms.interfaces;
-
-public interface EvadeStrat extends IntruderStrategy{
-}

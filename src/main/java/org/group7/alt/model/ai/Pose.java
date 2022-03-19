@@ -17,8 +17,8 @@ public class Pose {
     public Pose stepFoward() {
         Point newLocation;
         switch (direction) {
-            case NORTH -> newLocation = new Point(position.x, position.y + 1);
-            case SOUTH -> newLocation = new Point(position.x, position.y - 1);
+            case NORTH -> newLocation = new Point(position.x, position.y - 1);
+            case SOUTH -> newLocation = new Point(position.x, position.y + 1);
             case EAST -> newLocation = new Point(position.x + 1, position.y);
             case WEST -> newLocation = new Point(position.x - 1, position.y);
             default -> newLocation = new Point(position);

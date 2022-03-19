@@ -1,16 +1,36 @@
 package org.group7.alt.enums;
 
-import org.group7.alt.model.ai.Pose;
+import org.group7.alt.logic.util.records.Range;
+import org.group7.alt.logic.util.records.XY;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public enum Cardinal {
 
-    NORTH, EAST, SOUTH, WEST;
+    NORTH(new XY(0, -1)),
+    EAST(new XY(1, 0)),
+    SOUTH(new XY(0, 1)),
+    WEST(new XY(-1, 0));
+
+    Cardinal(XY xy) {
+        unitVector = xy;
+    }
+
+    public final XY unitVector;
+
+    public boolean vertical() {
+        return switch (this) {
+            case NORTH, SOUTH -> true;
+            case EAST, WEST -> false;
+        };
+    }
+
+    public Range visualBreadth(XY pos) {
+        return switch (this) {
+            case NORTH, SOUTH -> new Range(pos.x() - 1,pos.x() + 2);
+            case EAST, WEST -> new Range(pos.y() - 1, pos.y() + 2);
+        };
+    }
 
     public Cardinal flip() {
         return switch (this) {

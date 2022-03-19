@@ -5,7 +5,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Translate;
 
-import java.util.Arrays;
 
 public record Coordinate(int x, int y, Frame frame){
     public Coordinate {

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 public class Graph {
+    //TODO: make this actually good/useful
 
     public Map<Point, Node> graph;
     public Node origin;

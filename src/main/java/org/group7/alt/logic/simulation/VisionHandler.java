@@ -1,107 +1,91 @@
 package org.group7.alt.logic.simulation;
 
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 import org.group7.alt.enums.Cardinal;
-import org.group7.alt.enums.Cell;
-import org.group7.alt.logic.util.ObservedTile;
+import org.group7.alt.logic.util.records.ObservedTile;
 import org.group7.alt.logic.util.records.Frame;
+import org.group7.alt.logic.util.records.Range;
+import org.group7.alt.logic.util.records.XY;
 import org.group7.alt.model.ai.Agents.Agent;
-import org.group7.alt.model.map.Environment;
+import org.group7.alt.model.ai.Pose;
 import org.group7.alt.model.map.Tile;
-import org.group7.alt.model.map.TileMap;
 
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.Line2D;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.group7.alt.model.map.Environment.TILE_MAP;
+
 public class VisionHandler {
 
-    static final TileMap tileMap = Environment.getTileMap();
-    static final int VIEW_DISTANCE = 10;
-
-    record Coord(int x, int y){
-        public Coord(double xd, double yd) {
-            this((int) xd, (int) yd);
-        }
-    };
+    public static final int VIEW_DISTANCE = 10;
 
     public static List<ObservedTile> getFOV(Agent agent) {
 
-        Frame frame = Environment.getTileMap().getLocalFrame(agent);
-        int x = agent.getPose().getX();
-        int y = agent.getPose().getY();
-        Point2D localPosition = new Point2D(x, y);
-        Point2D globalPosition = frame.convertLocal(localPosition);
+        Frame frame = TILE_MAP.getLocalFrame(agent);
+        Pose pose = agent.getPose();
 
-        Coord mapPos = new Coord(globalPosition.getX(), globalPosition.getY());
-
-        Tile tile = tileMap.getTile(mapPos.x, mapPos.y);
-        ObservedTile agentPosition = new ObservedTile(tile.getType(), mapPos.x, mapPos.y);
+        //convert agent position from its local coordinate frame to the global frame
+        Point2D globalPosition = frame.convertLocal(new Point2D(pose.getX(), pose.getY()));
+        XY mapPos = new XY(globalPosition.getX(), globalPosition.getY()); //its just nicer working with integers idk
 
         List<ObservedTile> observedTiles = new LinkedList<>();
 
-        List<Coord> tilesCoords = new LinkedList<>();
+        Cardinal orientation = pose.getDirection();
+        Range breadth = orientation.visualBreadth(mapPos);
 
-
-        switch (agent.getPose().getDirection()) {
+        //TODO: reduce amount of duplicate code
+        switch (orientation) {
             case NORTH -> {
-
-                Rectangle viewArea = new Rectangle(mapPos.x, mapPos.y, 3, VIEW_DISTANCE);
-                viewArea.translate(-1, -VIEW_DISTANCE);
-
-                System.out.println(viewArea);
-                System.out.println(mapPos);
-                System.out.println(VIEW_DISTANCE);
-                System.out.println(viewArea.getMinX() + " - " + viewArea.getMaxX());
-                System.out.println("(" + viewArea.getLocation().x + ", " + viewArea.getLocation().y + ")");
-                System.out.println(viewArea.getMinY() + " - " + viewArea.getMaxY());
-
-                for (int i = (int) viewArea.getMinX(); i < viewArea.getMaxX(); i++) {
-                    for (int j = (int) viewArea.getMinY() + 1; j <= viewArea.getMaxY(); j++) {
-                        Tile seen = tileMap.getTile(i, j);
-                        seen.setExplored(true);
-
-                        ObservedTile t = new ObservedTile(seen.getType(), i, j);
-                        if (t.cell() == Cell.WALL && i != mapPos.x) {
-                            observedTiles.add(t);
-                            break;
-                        }
-                        observedTiles.add(t);
+                Range depth = new Range(mapPos.y(), mapPos.y() - VIEW_DISTANCE);
+                for (int x = breadth.i(); x < breadth.j(); x++) {
+                    for (int y = depth.i(); y > depth.j(); y--) {
+                        Tile t = observe(x, y, observedTiles);
+                        if (t.isObstacle()) break;
                     }
                 }
-
-
-                //System.out.println(tilesCoords);
-
-
-//                Point left = new Point(mapPos.x - 1, mapPos.y);
-//                Point right = new Point(mapPos.x + 1, mapPos.y);
-//                Point middle = new Point(mapPos.x, mapPos.y);
-//                int maxViewDistance = mapPos.y + VIEW_DISTANCE;
-//
-//                Cell leftRayPrev = tileMap.getTile(left.x, left.y).getType();
-//
-//                while (left.y >= 0 && left.y <= maxViewDistance) {
-//                    ObservedTile o = new ObservedTile(tileMap.getTile(left.x, left.y).getType(), left.x, left.y);
-//                    observedTiles.add(o);
-//
-//                    //agent should see walls
-//                    if (o.cell() == Cell.WALL && o.cell() != leftRayPrev)
-//                        break;
-//                    y++;
-//                }
-
             }
+
+            case SOUTH -> {
+                Range depth = new Range(mapPos.y(), mapPos.y() + VIEW_DISTANCE);
+                for (int x = breadth.i(); x < breadth.j(); x++) {
+                    for (int y = depth.i(); y < depth.j(); y++) {
+                        Tile t = observe(x, y, observedTiles);
+                        if (t.isObstacle()) break;
+                    }
+                }
+            }
+
+            case EAST -> {
+                Range depth = new Range(mapPos.x(), mapPos.x() + VIEW_DISTANCE);
+                for (int y = breadth.i(); y < breadth.j(); y++) {
+                    for (int x = depth.i(); x < depth.j(); x++) {
+                        Tile t = observe(x, y, observedTiles);
+                        if (t.isObstacle()) break;
+                    }
+                }
+            }
+
+            case WEST -> {
+                Range depth = new Range(mapPos.x(), mapPos.x() - VIEW_DISTANCE);
+                for (int y = breadth.i(); y < breadth.j(); y++) {
+                    for (int x = depth.i(); x > depth.j(); x--) {
+                        Tile t = observe(x, y, observedTiles);
+                        if (t.isObstacle()) break;
+                    }
+                }
+            }
+
+            default -> throw new IllegalStateException("Unexpected value: " + orientation);
         }
 
-
-
-
-        //return List.of(agentPosition);
         return observedTiles;
     }
+
+    private static Tile observe(int x, int y, List<ObservedTile> observedTiles) {
+        Tile seen = TILE_MAP.getTile(x, y);
+        seen.setExplored(true); //TODO: move out of VisionHandler
+        observedTiles.add(new ObservedTile(seen.getType(), x, y));
+        return seen;
+    }
+
 }

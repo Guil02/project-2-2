@@ -1,6 +1,7 @@
 package org.group7.alt.views;
 
 
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,12 +10,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.group7.Main;
 import org.group7.alt.enums.Cardinal;
-import org.group7.alt.logic.util.CoordinateMapper;
+import org.group7.alt.logic.algorithms.DefaultExploreStategy;
+import org.group7.alt.logic.simulation.VisionHandler;
 import org.group7.alt.model.ai.Agents.Agent;
 import org.group7.alt.model.map.Environment;
 import org.group7.alt.model.map.Tile;
 
-import java.awt.*;
+import static org.group7.alt.enums.Cardinal.*;
+import static org.group7.alt.model.map.Environment.TILE_MAP;
 
 public class Renderer extends ScrollPane {
 
@@ -24,7 +27,6 @@ public class Renderer extends ScrollPane {
 
     public Renderer(Environment environment) {
         this.environment = environment;
-
         StackPane container = new StackPane();
         ///container.setStyle("-fx-background-color: #d0d0d0;");
 
@@ -52,6 +54,15 @@ public class Renderer extends ScrollPane {
             switch (event.getCode()) {
                 case X -> TILE_SIZE *= 0.95;
                 case Z -> TILE_SIZE *= 1.05;
+
+                case W -> TILE_MAP.getAgentList().forEach(agent -> {
+                    DefaultExploreStategy.overidePose = agent.getPose().rotate(NORTH);
+                    //agent.setPose(agent.getPose().rotate(NORTH));
+                });
+                case A -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(WEST)));
+                case S -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(SOUTH)));
+                case D -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(EAST)));
+                case M -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().stepFoward()));
             }
 
             //TODO: calculate actual ratio
@@ -76,7 +87,7 @@ public class Renderer extends ScrollPane {
     private void drawMap(GraphicsContext g) {
         for (int y = 0; y < Environment.HEIGHT; y++){
             for(int x = 0; x < Environment.WIDTH; x++) {
-                Tile tile = Environment.getTileMap().getTile(x, y);
+                Tile tile = TILE_MAP.getTile(x, y);
                 g.setFill(tile.isExplored() ? tile.getColorTexture() : tile.getColorTexture().darker().desaturate());
                 g.fillRect(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
             }
@@ -84,20 +95,24 @@ public class Renderer extends ScrollPane {
     }
 
     private void drawFOV(GraphicsContext g) {
-        for (Agent agent : environment.getTileMap().getAgentList()) {
+        for (Agent agent : TILE_MAP.getAgentList()) {
             g.setFill(agent.getType().getColor());
-            Point p = CoordinateMapper.convertLocalToGlobal(environment.getTileMap().getSpawn(agent), agent.getPose().getPosition());
 
-            g.fillRect(p.x + (p.x * TILE_SIZE), p.y + (p.y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
+            Point2D p = TILE_MAP.getLocalFrame(agent).convertLocal(new Point2D(agent.getPose().getPosition().x, agent.getPose().getPosition().y));
+            //Point p1 = CoordinateMapper.convertLocalToGlobal(Environment.getTileMap().getSpawn(agent), agent.getPose().getPosition());
+
+            int agentX = (int) p.getX();
+            int agentY = (int) p.getY();
+
+            g.fillRect(p.getX() + (agentX * TILE_SIZE), p.getY() + (agentY * TILE_SIZE), TILE_SIZE, TILE_SIZE);
 
             Cardinal cardinal = agent.getPose().getDirection();
-            int viewDistance = 10; //10 cells
 
-            double startX = p.x + (p.x * TILE_SIZE) + TILE_SIZE / 2;
-            double startY = p.y + (p.y * TILE_SIZE) + TILE_SIZE / 2;
+            double startX = p.getX() + (agentX * TILE_SIZE) + TILE_SIZE / 2;
+            double startY = p.getY() + (agentY * TILE_SIZE) + TILE_SIZE / 2;
 
-            double endX = startX + (TILE_SIZE * viewDistance * cardinal.relativeOffset().x);
-            double endY = startY + (TILE_SIZE * viewDistance * cardinal.relativeOffset().y);
+            double endX = startX + (TILE_SIZE * VisionHandler.VIEW_DISTANCE) * cardinal.relativeOffset().x;
+            double endY = startY + (TILE_SIZE * VisionHandler.VIEW_DISTANCE) * cardinal.relativeOffset().y;
 
             g.setLineWidth(3);
             g.setStroke(Color.TOMATO);

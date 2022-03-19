@@ -1,11 +1,11 @@
 package org.group7.alt.logic.simulation;
 
-import org.group7.alt.logic.util.CoordinateMapper;
+import javafx.geometry.Point2D;
 import org.group7.alt.model.ai.Agents.Agent;
+import org.group7.alt.model.ai.Pose;
 import org.group7.alt.model.map.Tile;
-import org.group7.alt.model.map.TileMap;
 
-import java.awt.*;
+import static org.group7.alt.model.map.Environment.TILE_MAP;
 
 public class PhysicsHandler {
     //collision check
@@ -13,12 +13,9 @@ public class PhysicsHandler {
     //spreading sound
     //spreading smell
 
-    public static boolean collision(TileMap map, Agent a) {
-
-        final Point global = CoordinateMapper.convertLocalToGlobal(map.getSpawn(a), a.getPose().getPosition());
-        final Tile tile = map.getTile(global);
-
-        if (tile.isObstacle()) return true;
-        return map.getAgentList().stream().anyMatch(agent -> map.getSpawn(agent).equals(map.getSpawn(a)));
+    public static boolean collision(Agent a, Pose pose) {
+        Point2D agentGlobal = TILE_MAP.getLocalFrame(a).convertLocal(pose.getX(), pose.getY());
+        Tile tile = TILE_MAP.getTile(agentGlobal.getX(), agentGlobal.getY());
+        return tile.isObstacle();
     }
 }

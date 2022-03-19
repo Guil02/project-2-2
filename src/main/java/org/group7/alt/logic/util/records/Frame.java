@@ -30,6 +30,10 @@ public record Frame(Transform frame) {
         return global;
     }
 
+    public Point2D convertLocal(int x, int y) {
+        return convertLocal(new Point2D(x, y));
+    }
+
     public List<Point2D> convertPoints(Collection<? extends Point2D> points) {
         return points.stream().map(this::convert).toList();
     }

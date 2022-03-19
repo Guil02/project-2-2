@@ -5,6 +5,7 @@ import org.group7.alt.enums.Cardinal;
 import org.group7.alt.enums.Cell;
 import org.group7.alt.logic.algorithms.DefaultExploreStategy;
 import org.group7.alt.logic.algorithms.interfaces.ExplorationStrategy;
+import org.group7.alt.logic.simulation.PhysicsHandler;
 import org.group7.alt.model.ai.Pose;
 
 import java.util.ArrayList;
@@ -12,23 +13,43 @@ import java.util.List;
 
 public class Explorer extends Agent {
 
-    static List<String> EXPLORERS = new ArrayList<>(List.of("Francis Drake", "Hermán Cortéz", "Walter Releigh", "Ferdinand Magellan","James Cook", "Francisco Pizarro"));
+    static List<String> EXPLORERS = new ArrayList<>(List.of("Francis Drake", "James Cook", "Walter Releigh", "Ferdinand Magellan", "Francisco Pizarro"));
 
     ExplorationStrategy exploreStrategy;
+    Pose prevPose;
 
     public Explorer(Pose pose) {
         super(pose);
+        prevPose = pose;
+
         name = EXPLORERS.get((int) (Math.random() * EXPLORERS.size())); //just for fun
         EXPLORERS.remove(name);
-        exploreStrategy = new DefaultExploreStategy(); //TODO add constructor with exploration strategy
+
+        exploreStrategy = new DefaultExploreStategy(this); //TODO add constructor with exploration strategy
     }
+
 
     @Override
     public Pose update() {
-        //update AgentGraph
-            //get FOV
+        //get FOV
+        //getFOV();
+
+        //update agentGraph
+
         //update pose
-        return (Math.random() > 0.35) ? (localPose = localPose.stepFoward()) : (localPose = localPose.rotate(Cardinal.values()[(int)(Math.random() * 4)]));
+        Pose newPose = exploreStrategy.getNextPose();
+
+        if (!PhysicsHandler.collision(this, newPose)) {
+            //update(prevPose);
+            setPose(newPose);
+        } else {
+            update(Action.FLIP);
+        }
+
+        //random next move
+        exploreStrategy.setNextPose((Math.random() > 0.35) ? (localPose.stepFoward()) : (localPose.rotate(Cardinal.values()[(int)(Math.random() * 4)])));
+
+        return getPose();
     }
 
     public Pose update(Cardinal direction) {
@@ -36,6 +57,7 @@ public class Explorer extends Agent {
     }
 
     public Pose update(Pose newPose) {
+        prevPose = localPose;
         return localPose = newPose;
     }
 
@@ -50,6 +72,10 @@ public class Explorer extends Agent {
             case SPRINT -> update(localPose.stepFoward().stepFoward());
             case HALT -> localPose;
         };
+    }
+
+    public void updateState() {
+
     }
 
     @Override
