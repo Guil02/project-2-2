@@ -25,12 +25,8 @@ public class BasicVision {
         this.distanceViewing = scenario.getDistantViewing() + 1;  //to fix the fact that the loop doesnt include the >= or <=;
     }
 
-    //Method for Frontier-Based Algorithm
-    //TODO: talk with ROMA & XANDER
-    public List<Grid> getAgentVision(PlayerComponent player) {
-        calculateAgentVision(player);
-        return furthestFrontierGrid;
-    }
+    //Accesser for Frontier-Based Algorithm
+    public List<Grid> getFurthestFrontierGrid() {return furthestFrontierGrid;}
 
     public Scenario calculateAgentVision(PlayerComponent player) {
         //clear the list otherwise it will increase like rabbits

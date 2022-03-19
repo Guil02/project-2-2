@@ -104,7 +104,7 @@ public class Frontier implements Algorithm {
         Orientation orientation = player.getOrientation();
         List<Grid> north_frontiers = new ArrayList<>();
         if(orientation == Orientation.UP) {
-            north_frontiers.add(BasicVision.getAgentVision(player));
+            north_frontiers.addAll(player.getAgentsCurrentVision());
         }
         return north_frontiers;
     }
@@ -113,7 +113,7 @@ public class Frontier implements Algorithm {
         Orientation orientation = player.getOrientation();
         List<Grid> south_frontiers = new ArrayList<>();
         if(orientation == Orientation.DOWN) {
-            south_frontiers.add(BasicVision.getAgentVision(player));
+            south_frontiers.addAll(player.getAgentsCurrentVision());
         }
         return south_frontiers;
     }
@@ -122,7 +122,7 @@ public class Frontier implements Algorithm {
         Orientation orientation = player.getOrientation();
         List<Grid> west_frontiers = new ArrayList<>();
         if(orientation == Orientation.LEFT) {
-            west_frontiers.add(BasicVision.getAgentVision(player));
+            west_frontiers.addAll(player.getAgentsCurrentVision());
         }
         return west_frontiers;
     }
@@ -131,7 +131,7 @@ public class Frontier implements Algorithm {
         Orientation orientation = player.getOrientation();
         List<Grid> east_frontiers = new ArrayList<>();
         if(orientation == Orientation.RIGHT) {
-            east_frontiers.add(BasicVision.getAgentVision(player));
+            east_frontiers.addAll(player.getAgentsCurrentVision());
         }
         return east_frontiers;
     }

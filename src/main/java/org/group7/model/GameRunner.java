@@ -72,7 +72,7 @@ public class GameRunner extends AnimationTimer {
         if(elapsedTimeStep>count*5){
             count++;
             double coverage = calculateCoverage();
-            System.out.println("Total Coverage: "+coverage + " elapsed Time: "+elapsedTimeStep);
+            System.out.print("\rTotal Coverage: "+coverage + " elapsed Time: "+elapsedTimeStep);
             //TODO: ask SAM --> break break if coverage is > 80
         }
     }
