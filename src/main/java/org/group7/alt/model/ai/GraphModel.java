@@ -2,7 +2,7 @@ package org.group7.alt.model.ai;
 
 import org.group7.alt.logic.graph.Graph;
 import org.group7.alt.logic.graph.Node;
-import org.group7.alt.model.ai.Agents.Agent;
+import org.group7.alt.model.ai.agents.Agent;
 
 import java.util.LinkedList;
 import java.util.List;

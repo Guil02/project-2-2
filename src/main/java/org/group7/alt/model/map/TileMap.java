@@ -2,7 +2,7 @@ package org.group7.alt.model.map;
 
 import javafx.scene.transform.Translate;
 import org.group7.alt.logic.util.records.Frame;
-import org.group7.alt.model.ai.Agents.Agent;
+import org.group7.alt.model.ai.agents.Agent;
 
 import java.awt.*;
 import java.util.HashMap;

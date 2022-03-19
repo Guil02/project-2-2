@@ -1,12 +1,10 @@
 package org.group7.alt.logic.simulation;
 
 import javafx.animation.AnimationTimer;
-import org.group7.alt.enums.Action;
 import org.group7.alt.enums.Cardinal;
 import org.group7.alt.enums.GameMode;
-import org.group7.alt.logic.util.records.ObservedTile;
-import org.group7.alt.model.ai.Agents.Agent;
-import org.group7.alt.model.ai.Agents.Explorer;
+import org.group7.alt.model.ai.agents.Agent;
+import org.group7.alt.model.ai.agents.Explorer;
 import org.group7.alt.model.ai.Pose;
 import org.group7.alt.model.map.Environment;
 import org.group7.alt.views.Renderer;
@@ -16,6 +14,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.group7.alt.enums.Cardinal.NORTH;
 import static org.group7.alt.model.map.Environment.TILE_MAP;
 
 public class SimController extends AnimationTimer {
@@ -34,7 +33,7 @@ public class SimController extends AnimationTimer {
         //or just tuple list
 
         spawnAgents(Environment.GAME_MODE);
-        renderer = new Renderer(environment);
+        renderer = new Renderer();
         start();
     }
 
@@ -49,7 +48,7 @@ public class SimController extends AnimationTimer {
         //update gui
         //view.update();
 
-        for (Agent a : Environment.getTileMap().getAgentList()) {
+        for (Agent a : TILE_MAP.getAgentList()) {
             //moveAgent(a);
             //update agent vision
             a.updateFOV(VisionHandler.getFOV(a)); //TODO map to local coordinates
@@ -70,7 +69,7 @@ public class SimController extends AnimationTimer {
                     //spawn explorers in spawn area
                     Point spawnPoint = Environment.GUARD_SPAWN_GRIDS.get((int)(Math.random() * Environment.GUARD_SPAWN_GRIDS.size()));
 
-                    Pose initialPose = new Pose(new Point(0,0), Cardinal.NORTH); //default orientation is NORTH
+                    Pose initialPose = new Pose(new Point(0,0), NORTH); //default orientation is NORTH
                     Explorer agent = new Explorer(initialPose);
 
                     TILE_MAP.addAgent(agent, spawnPoint);

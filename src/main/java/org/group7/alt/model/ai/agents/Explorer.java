@@ -1,4 +1,4 @@
-package org.group7.alt.model.ai.Agents;
+package org.group7.alt.model.ai.agents;
 
 import org.group7.alt.enums.Action;
 import org.group7.alt.enums.Cardinal;

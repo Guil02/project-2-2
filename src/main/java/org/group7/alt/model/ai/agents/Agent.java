@@ -1,17 +1,13 @@
-package org.group7.alt.model.ai.Agents;
+package org.group7.alt.model.ai.agents;
 
 import org.group7.alt.enums.Cell;
 import org.group7.alt.logic.graph.Node;
-import org.group7.alt.logic.simulation.VisionHandler;
 import org.group7.alt.logic.util.records.ObservedTile;
 import org.group7.alt.model.ai.GraphModel;
 import org.group7.alt.enums.Action;
 import org.group7.alt.model.ai.Pose;
-import org.group7.alt.model.map.Environment;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 

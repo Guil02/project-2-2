@@ -1,7 +1,7 @@
 package org.group7.alt.logic.algorithms;
 
 import org.group7.alt.logic.algorithms.interfaces.ExplorationStrategy;
-import org.group7.alt.model.ai.Agents.Agent;
+import org.group7.alt.model.ai.agents.Agent;
 import org.group7.alt.model.ai.Pose;
 
 public class DefaultExploreStategy implements ExplorationStrategy {

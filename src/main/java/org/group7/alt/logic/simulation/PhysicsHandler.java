@@ -1,7 +1,7 @@
 package org.group7.alt.logic.simulation;
 
 import javafx.geometry.Point2D;
-import org.group7.alt.model.ai.Agents.Agent;
+import org.group7.alt.model.ai.agents.Agent;
 import org.group7.alt.model.ai.Pose;
 import org.group7.alt.model.map.Tile;
 

@@ -6,7 +6,7 @@ import org.group7.alt.logic.util.records.ObservedTile;
 import org.group7.alt.logic.util.records.Frame;
 import org.group7.alt.logic.util.records.Range;
 import org.group7.alt.logic.util.records.XY;
-import org.group7.alt.model.ai.Agents.Agent;
+import org.group7.alt.model.ai.agents.Agent;
 import org.group7.alt.model.ai.Pose;
 import org.group7.alt.model.map.Tile;
 

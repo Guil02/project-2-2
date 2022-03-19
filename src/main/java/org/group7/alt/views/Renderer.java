@@ -12,7 +12,7 @@ import org.group7.Main;
 import org.group7.alt.enums.Cardinal;
 import org.group7.alt.logic.algorithms.DefaultExploreStategy;
 import org.group7.alt.logic.simulation.VisionHandler;
-import org.group7.alt.model.ai.Agents.Agent;
+import org.group7.alt.model.ai.agents.Agent;
 import org.group7.alt.model.map.Environment;
 import org.group7.alt.model.map.Tile;
 
@@ -22,13 +22,10 @@ import static org.group7.alt.model.map.Environment.TILE_MAP;
 public class Renderer extends ScrollPane {
 
     Canvas canvas;
-    Environment environment;
     double TILE_SIZE;
 
-    public Renderer(Environment environment) {
-        this.environment = environment;
+    public Renderer() {
         StackPane container = new StackPane();
-        ///container.setStyle("-fx-background-color: #d0d0d0;");
 
         TILE_SIZE = Environment.TILE_SIZE;
         canvas = new Canvas(Environment.WIDTH * (TILE_SIZE + 1), Environment.HEIGHT * (TILE_SIZE + 1));
@@ -55,10 +52,8 @@ public class Renderer extends ScrollPane {
                 case X -> TILE_SIZE *= 0.95;
                 case Z -> TILE_SIZE *= 1.05;
 
-                case W -> TILE_MAP.getAgentList().forEach(agent -> {
-                    DefaultExploreStategy.overidePose = agent.getPose().rotate(NORTH);
-                    //agent.setPose(agent.getPose().rotate(NORTH));
-                });
+                //I think this is broken now
+                case W -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(NORTH)));
                 case A -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(WEST)));
                 case S -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(SOUTH)));
                 case D -> TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(EAST)));
@@ -98,8 +93,7 @@ public class Renderer extends ScrollPane {
         for (Agent agent : TILE_MAP.getAgentList()) {
             g.setFill(agent.getType().getColor());
 
-            Point2D p = TILE_MAP.getLocalFrame(agent).convertLocal(new Point2D(agent.getPose().getPosition().x, agent.getPose().getPosition().y));
-            //Point p1 = CoordinateMapper.convertLocalToGlobal(Environment.getTileMap().getSpawn(agent), agent.getPose().getPosition());
+            Point2D p = TILE_MAP.getLocalFrame(agent).convertLocal(new Point2D(agent.getPose().getX(), agent.getPose().getY()));
 
             int agentX = (int) p.getX();
             int agentY = (int) p.getY();
@@ -111,8 +105,8 @@ public class Renderer extends ScrollPane {
             double startX = p.getX() + (agentX * TILE_SIZE) + TILE_SIZE / 2;
             double startY = p.getY() + (agentY * TILE_SIZE) + TILE_SIZE / 2;
 
-            double endX = startX + (TILE_SIZE * VisionHandler.VIEW_DISTANCE) * cardinal.relativeOffset().x;
-            double endY = startY + (TILE_SIZE * VisionHandler.VIEW_DISTANCE) * cardinal.relativeOffset().y;
+            double endX = startX + (TILE_SIZE * VisionHandler.VIEW_DISTANCE) * cardinal.unitVector.x();
+            double endY = startY + (TILE_SIZE * VisionHandler.VIEW_DISTANCE) * cardinal.unitVector.y();
 
             g.setLineWidth(3);
             g.setStroke(Color.TOMATO);
