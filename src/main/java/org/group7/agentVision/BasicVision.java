@@ -17,12 +17,12 @@ public class BasicVision {
     Scenario scenario;
     Grid[][] map;
     int distanceViewing;
-    List<Grid> furthestFrontierGrid = new ArrayList<>(); //since our vision is containing 3 "rays" for every call this list will have three elements.
+    List<Grid> furthestFrontierGrid = new ArrayList<>(); //since our vision is containing 3 "rays"(actually grids) for every call this list will have 3 elements.
 
     public BasicVision(Scenario scenario) {
         this.scenario = scenario;
         this.map = scenario.getMap();
-        this.distanceViewing = scenario.getDistantViewing();
+        this.distanceViewing = scenario.getDistantViewing() + 1;  //to fix the fact that the loop doesnt include the >= or <=;
     }
 
     //Method for Frontier-Based Algorithm
@@ -48,11 +48,12 @@ public class BasicVision {
             case UP -> {
                 Grid furthestSoFar = null;
                 for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check straight
-                    if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
+                    if (y >= 0) { //cant go lower than y=0, so if the number is negative is out of bound
                         map[xCoordinate][y].explore();
                         map[xCoordinate][y].exploreAgent(player.getId());
                         //CHECK COLLISIONS with walls
                         if (map[xCoordinate][y].getStaticCompE() == WALL) {
+                            furthestSoFar = map[xCoordinate][y]; //if the agent sees a wall, we store it as the furthest it has seen.
                             break;
                         }
                         furthestSoFar = map[xCoordinate][y];
@@ -69,6 +70,7 @@ public class BasicVision {
                             map[xCoordinate - 1][y].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[xCoordinate - 1][y].getStaticCompE() == WALL) {
+                                furthestSoFar = map[xCoordinate - 1][y]; //if the agent sees a wall, we store it as the furthest it has seen.
                                 break;
                             }
                             furthestSoFar = map[xCoordinate - 1][y];
@@ -86,6 +88,7 @@ public class BasicVision {
                             map[xCoordinate + 1][y].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[xCoordinate + 1][y].getStaticCompE() == WALL) {
+                                furthestSoFar = map[xCoordinate + 1][y]; //if the agent sees a wall, we store it as the furthest it has seen.
                                 break;
                             }
                             furthestSoFar = map[xCoordinate + 1][y];
@@ -106,6 +109,7 @@ public class BasicVision {
                         map[xCoordinate][y].exploreAgent(player.getId());
                         //CHECK COLLISIONS with walls
                         if (map[xCoordinate][y].getStaticCompE() == WALL) {
+                            furthestSoFar = map[xCoordinate][y]; //if the agent sees a wall, we store it as the furthest it has seen.
                             break;
                         }
                         furthestSoFar = map[xCoordinate][y];
@@ -122,6 +126,7 @@ public class BasicVision {
                             map[xCoordinate - 1][y].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[xCoordinate - 1][y].getStaticCompE() == WALL) {
+                                furthestSoFar = map[xCoordinate -1][y]; //if the agent sees a wall, we store it as the furthest it has seen.
                                 break;
                             }
                             furthestSoFar = map[xCoordinate - 1][y];
@@ -139,6 +144,7 @@ public class BasicVision {
                             map[xCoordinate + 1][y].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[xCoordinate + 1][y].getStaticCompE() == WALL) {
+                                furthestSoFar = map[xCoordinate +1][y]; //if the agent sees a wall, we store it as the furthest it has seen.
                                 break;
                             }
                             furthestSoFar = map[xCoordinate + 1][y];
@@ -158,6 +164,7 @@ public class BasicVision {
                         map[x][yCoordinate].exploreAgent(player.getId());
                         //CHECK COLLISIONS with walls
                         if (map[x][yCoordinate].getStaticCompE() == WALL) {
+                            furthestSoFar = map[x][yCoordinate]; //if the agent sees a wall, we store it as the furthest it has seen.
                             break;
                         }
                         furthestSoFar = map[x][yCoordinate];
@@ -174,6 +181,7 @@ public class BasicVision {
                             map[x][yCoordinate - 1].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[x][yCoordinate - 1].getStaticCompE() == WALL) {
+                                furthestSoFar = map[x][yCoordinate -1]; //if the agent sees a wall, we store it as the furthest it has seen.
                                 break;
                             }
                             furthestSoFar = map[x][yCoordinate - 1];
@@ -191,6 +199,7 @@ public class BasicVision {
                             map[x][yCoordinate + 1].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[x][yCoordinate + 1].getStaticCompE() == WALL) {
+                                furthestSoFar = map[x][yCoordinate +1]; //if the agent sees a wall, we store it as the furthest it has seen.
                                 break;
                             }
                             furthestSoFar = map[x][yCoordinate + 1];
@@ -210,6 +219,8 @@ public class BasicVision {
                         map[x][yCoordinate].exploreAgent(player.getId());
                         //CHECK COLLISIONS with walls
                         if (map[x][yCoordinate].getStaticCompE() == WALL) {
+                            furthestSoFar = map[x][yCoordinate]; //if the agent sees a wall, we store it as the furthest it has seen.
+
                             break;
                         }
                         furthestSoFar = map[x][yCoordinate];
@@ -226,6 +237,8 @@ public class BasicVision {
                             map[x][yCoordinate - 1].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[x][yCoordinate - 1].getStaticCompE() == WALL) {
+                                furthestSoFar = map[x][yCoordinate -1]; //if the agent sees a wall, we store it as the furthest it has seen.
+
                                 break;
                             }
                             furthestSoFar = map[x][yCoordinate - 1];
@@ -243,6 +256,8 @@ public class BasicVision {
                             map[x][yCoordinate + 1].exploreAgent(player.getId());
                             //CHECK COLLISIONS with walls
                             if (map[x][yCoordinate + 1].getStaticCompE() == WALL) {
+                                furthestSoFar = map[x][yCoordinate + 1]; //if the agent sees a wall, we store it as the furthest it has seen.
+
                                 break;
                             }
                             furthestSoFar = map[x][yCoordinate + 1];
