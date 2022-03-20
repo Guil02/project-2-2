@@ -97,6 +97,8 @@ public class Grid {
     }
 
     public ComponentEnum getType() {
+        if (playerComponent != null)
+            return playerComponent.getComponentEnum();
         return type;
     }
 
