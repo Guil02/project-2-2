@@ -36,7 +36,7 @@ public abstract class Component {
      * Gets middle from component (so that it can be used in the distance calculation to agent as an approximation).
      * @return
      */
-    public Point getMiddlePoint (){
+    public Point getMiddlePoint(){
        return new Point((topRightPoint.getX() + bottomleftPoint.getX())/2,(topRightPoint.getY() + bottomleftPoint.getY())/2);
     }
 

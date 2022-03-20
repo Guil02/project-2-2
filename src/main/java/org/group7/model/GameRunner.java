@@ -6,9 +6,7 @@ import org.group7.Main;
 import org.group7.enums.Actions;
 import org.group7.enums.Orientation;
 import org.group7.geometric.Point;
-import org.group7.gui.ExplorationSim;
-import org.group7.gui.GameScreen;
-import org.group7.gui.Renderer;
+import org.group7.gui.*;
 import org.group7.model.algorithms.ActionTuple;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.PlayerComponent;
@@ -18,6 +16,7 @@ import static org.group7.enums.ComponentEnum.TELEPORTER;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -28,52 +27,77 @@ public class GameRunner extends AnimationTimer {
     State currentState;
     GameScreen gameScreen;
 
+    SimulationScreen display;
+
     double timeStep;
     double elapsedTimeStep; //total time
     int count = 0;
 
     public GameRunner(Scenario scenario) {
         this.scenario = scenario;
-        this.states = new ArrayList<>();
-        this.elapsedTimeStep =0;
+        this.states = new LinkedList<>();
+        this.elapsedTimeStep = 0;
         this.timeStep = Config.TIME_STEP;
 
-        if(scenario.numGuards>0){
+        if (scenario.numGuards > 0){
             scenario.spawnGuards();
         }
-        if(scenario.numIntruders>0){
+
+        if (scenario.numIntruders > 0){
             scenario.spawnIntruder();
         }
+
+        display = new SimulationScreen();
+        Main.stage.setScene(new Scene(display));
+        Main.stage.centerOnScreen();
 
 //        currentState = new State(scenario.guards, scenario.intruders);
 //        states.add(currentState);
 
 //        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+        /*
         Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
         gameScreen = new GameScreen(renderer, scenario);
         Main.stage.setScene(new Scene(gameScreen));
-        //Main.stage.setFullScreen(true);
+
         Main.stage.centerOnScreen();
 
         renderer.res = 1.05 * Math.max(scenario.width / renderer.getViewportBounds().getWidth(), scenario.height / renderer.getViewportBounds().getHeight());
+        */
+
         setInitialVision();
+        display.render();
     }
+
+//    @Override
+//    public void handle(long now) {
+//        //where update the game
+//        updatePlayers();
+//        gameScreen.render(scenario);
+//        elapsedTimeStep += timeStep;
+////        elapsedTimeStep += 1;
+////        if(elapsedTimeStep % 5 == 0) {
+//        if (elapsedTimeStep>count*5){
+//            count++;
+//            double coverage = calculateCoverage();
+//            System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
+//            //TODO: ask SAM --> break break if coverage is > 80
+//        }
+//    }
 
     @Override
     public void handle(long now) {
         //where update the game
-
         updatePlayers();
+        display.render();
 
-        gameScreen.render(scenario);
         elapsedTimeStep += timeStep;
-//        elapsedTimeStep += 1;
-//        if(elapsedTimeStep % 5 == 0) {
-        if(elapsedTimeStep>count*5){
+
+        if (elapsedTimeStep>count*5){
             count++;
             double coverage = calculateCoverage();
-            System.out.print("\rTotal Coverage: "+coverage + " elapsed Time: "+elapsedTimeStep);
-            //TODO: ask SAM --> break break if coverage is > 80
+            //System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
+            display.updateStats(elapsedTimeStep, coverage);
         }
     }
 

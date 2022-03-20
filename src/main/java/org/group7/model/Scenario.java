@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,6 +24,8 @@ import java.util.Scanner;
 public class Scenario {
 
     private static boolean printInput = false;
+
+    private static Scenario scenario;
 
     protected double baseSpeedIntruder;
     protected double sprintSpeedIntruder;
@@ -65,26 +68,30 @@ public class Scenario {
         this();
         System.out.println("File: " + mapFile.getName());
         parseFile(mapFile);
-        System.out.println(staticComponents);
+        //System.out.println(staticComponents);
         addBorderWalls();
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
                 map[j][i].seen = new ArrayList<>();
                 int totalPlayers = numGuards + numIntruders;
-                for(int k = 0; k< totalPlayers; k++){
+                for(int k = 0; k < totalPlayers; k++){
                     map[j][i].seen.add(k,false);
                 }
             }
         }
-        System.out.println(walls);
+        //System.out.println(walls);
+        scenario = this;
+    }
+
+    public static Scenario getInstance() {
+        return scenario;
     }
 
     private void addBorderWalls() {
-
         Point topLeft = new Point(0, 0);
         Point bottomRight = new Point(1, height-1);
         Tuple<Point, Point> points = new Tuple<>(topLeft, bottomRight);
-        Wall component= new Wall(points.getA(), points.getB(), this);
+        Wall component = new Wall(points.getA(), points.getB(), this);
         staticComponents.add(component);
         walls.add(component);
         addStaticComponent(component);
@@ -121,8 +128,8 @@ public class Scenario {
         targetAreas = new ArrayList<>();
         guardSpawnAreas = new ArrayList<>();
         intruderSpawnAreas = new ArrayList<>();
-        guards = new ArrayList<>();
-        intruders = new ArrayList<>();
+        guards = new LinkedList<>();
+        intruders = new LinkedList<>();
     }
 
     public void parseFile(File map){
@@ -397,6 +404,7 @@ public class Scenario {
     public Grid[][] getMap() {
         return map;
     }
+
     public void updateMap(Grid[][] newMap) {this.map = newMap;}
 }
 

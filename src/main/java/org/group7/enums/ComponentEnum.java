@@ -1,5 +1,11 @@
 package org.group7.enums;
 
+import javafx.scene.paint.Color;
+
+import java.util.EnumMap;
+
+import static javafx.scene.paint.Color.TAN;
+
 /**
  * This ENUM contains all the possible different components with a path to their texture file.
  */
@@ -26,4 +32,33 @@ public enum ComponentEnum {
     public int getId() {
         return id;
     }
+
+    public Color getColor() {
+        return colorTexture.getOrDefault(this, TAN);
+    }
+
+    public boolean isObstacle() {
+        return switch (this) {
+            case WALL, GUARD, INTRUDER -> true;
+            default -> false;
+        };
+    }
+
+    private static final EnumMap<ComponentEnum, Color> colorTexture;
+
+    static {
+        colorTexture = new EnumMap<>(ComponentEnum.class);
+        colorTexture.put(EMPTY_SPACE, Color.WHITE);
+        colorTexture.put(WALL, Color.BLACK);
+        colorTexture.put(SHADED_AREA, Color.GRAY);
+        colorTexture.put(GUARD_SPAWN_AREA, Color.DEEPSKYBLUE);
+        colorTexture.put(INTRUDER_SPAWN_AREA, Color.CORAL);
+        colorTexture.put(TELEPORTER, Color.PURPLE);
+        //colorTexture.put(PORTO, Color.MEDIUMPURPLE);
+        colorTexture.put(TARGET_AREA, Color.GREEN);
+        //colorTexture.put(EXPLORER, Color.GOLD);
+        colorTexture.put(GUARD, Color.CORNFLOWERBLUE);
+        colorTexture.put(INTRUDER, Color.TOMATO);
+    }
+
 }

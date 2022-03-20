@@ -1,19 +1,18 @@
 package org.group7.gui;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.group7.Main;
+import org.group7.model.Scenario;
 import org.group7.utils.Methods;
 
 public class SimulationScreen extends BorderPane {
 
-    private View view;
+    private final View view;
     private boolean running;
 
     public SimulationScreen() {
@@ -25,9 +24,9 @@ public class SimulationScreen extends BorderPane {
         view.update();
     }
 
-    public void updateStats() {
-        elapsedTime.setText("");
-        explorationPercent.setText("");
+    public void updateStats(double elapsedTimeStep, double coverage) {
+        elapsedTime.setText(String.valueOf(elapsedTimeStep));
+        explorationPercent.setText(String.valueOf(coverage));
     }
 
     @FXML private Label elapsedTime;
@@ -44,6 +43,14 @@ public class SimulationScreen extends BorderPane {
         running = true;
         setCenter(view);
 
+        String gameMode = switch (Scenario.getInstance().getGameMode()) {
+            case 0 -> "Exploration";
+            case 1 -> "Intruder";
+            default -> "Unknown Game Mode";
+        };
+
+        gameModeLabel.setText(gameMode);
+
         pauseButton.setOnAction(event -> {
             //gameRunner.stop();
             pauseButton.setText(running ? "Play" : "Pause");
@@ -57,5 +64,12 @@ public class SimulationScreen extends BorderPane {
         });
 
         resetButton.setDisable(true);
+
+        setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case Z -> view.zoom(1.05);
+                case X -> view.zoom(0.95);
+            }
+        });
     }
 }

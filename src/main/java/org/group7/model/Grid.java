@@ -6,7 +6,10 @@ import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.StaticComponent;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import static org.group7.enums.ComponentEnum.EMPTY_SPACE;
 
 public class Grid {
     private StaticComponent staticComponent = null;
@@ -17,14 +20,18 @@ public class Grid {
     private int x;
     private int y;
 
+    private ComponentEnum type;
+
     public Grid(int x, int y) {
         this.x = x;
         this.y = y;
-        seen = new ArrayList<>();
+        seen = new LinkedList<>();
+        type = EMPTY_SPACE;
     }
 
     public void setStaticComponent(StaticComponent staticComponent) {
         this.staticComponent = staticComponent;
+        type = staticComponent.getComponentEnum();
     }
 
     public void setPlayerComponent(PlayerComponent playerComponent) {
@@ -61,7 +68,8 @@ public class Grid {
     public ComponentEnum getStaticCompE(){
         if(staticComponent!=null){
             //return staticComponent.getComponentEnum();
-
+            //or
+            //return type;
             switch (staticComponent.getComponentEnum()){
                 case WALL -> {
                     return ComponentEnum.WALL;
@@ -88,6 +96,18 @@ public class Grid {
         } else return null;
     }
 
+    public ComponentEnum getType() {
+        return type;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     @Override
     public String toString() {
         return getStaticComp();
@@ -102,11 +122,5 @@ public class Grid {
         return g;
     }
 
-    public int getX() {
-        return x;
-    }
 
-    public int getY() {
-        return y;
-    }
 }
