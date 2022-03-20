@@ -150,7 +150,7 @@ public class GameRunner extends AnimationTimer {
                 //if the action is only a change in direction we still have to update our god grid and the players vision
                 scenario.guards.get(i).updateVision();
             }
-            //updateGrid(startingPoint, scenario.guards.get(i).getCoordinates());
+            updateGrid(startingPoint, scenario.guards.get(i).getCoordinates());
         }
 
         for(int i = 0; i< scenario.intruders.size(); i++){
@@ -180,7 +180,7 @@ public class GameRunner extends AnimationTimer {
                 //if the action is only a change in direction we still have to update our god grid and the players vision
                 scenario.intruders.get(i).updateVision();
             }
-            //updateGrid(startingPoint, scenario.intruders.get(i).getCoordinates());
+            updateGrid(startingPoint, scenario.intruders.get(i).getCoordinates());
         }
 
     }

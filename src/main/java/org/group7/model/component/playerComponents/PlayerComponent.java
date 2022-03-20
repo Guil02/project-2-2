@@ -12,14 +12,14 @@ import org.group7.model.Scenario;
 import org.group7.model.algorithms.AStar;
 import org.group7.model.algorithms.ActionTuple;
 import org.group7.model.algorithms.Algorithm;
+import org.group7.model.algorithms.Random;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.group7.enums.AlgorithmEnum.A_STAR;
-import static org.group7.enums.AlgorithmEnum.FRONTIER;
+import static org.group7.enums.AlgorithmEnum.*;
 
 /**
  * This class is made as a super class for all the possible component that can be considered player, i.e. agents and intruders.
@@ -35,7 +35,7 @@ public abstract class PlayerComponent extends Component {
     private double viewFieldAngle; //how wide the visual range is
     public BasicVision simpleRay;
     private Area movingSound;
-    private AlgorithmEnum algorithmValue = A_STAR;
+    private AlgorithmEnum algorithmValue = RANDOM;
     private Algorithm algorithm;
     private List<Grid> agentsCurrentVision = new ArrayList<>();
     private final int id;
@@ -184,6 +184,9 @@ public abstract class PlayerComponent extends Component {
             }
             case FLOOD_FILL -> {
                 //TODO implement constructor of flood fill algorithm
+            }
+            case RANDOM -> {
+                algorithm = new Random((int) initialPosition.getX(), (int) initialPosition.getY(), getScenario().getMap(),this, 5);
             }
         }
     }
