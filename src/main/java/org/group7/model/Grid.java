@@ -47,33 +47,21 @@ public class Grid {
 
     public String getStaticComp(){
         if(staticComponent!=null){
-            switch (staticComponent.getComponentEnum()){
-                case WALL -> {
-                    return "W";
-                }
-                case TELEPORTER, TARGET_AREA -> {
-                    return "T";
-                }
-                case SHADED_AREA -> {
-                    return "S";
-                }
-                case INTRUDER_SPAWN_AREA -> {
-                    return "I";
-                }
-                case GUARD_SPAWN_AREA -> {
-                    return "G";
-                }
-                default -> {
-                    return " ";
-                }
-            }
+            return switch (staticComponent.getComponentEnum()){
+                case WALL -> "W";
+                case TELEPORTER, TARGET_AREA -> "T";
+                case SHADED_AREA -> "S";
+                case INTRUDER_SPAWN_AREA -> "I";
+                case GUARD_SPAWN_AREA -> "G";
+                default -> " ";
+            };
         } else return " ";
     }
 
-
-
     public ComponentEnum getStaticCompE(){
         if(staticComponent!=null){
+            //return staticComponent.getComponentEnum();
+
             switch (staticComponent.getComponentEnum()){
                 case WALL -> {
                     return ComponentEnum.WALL;
