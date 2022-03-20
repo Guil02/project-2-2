@@ -50,7 +50,7 @@
                         </Label>
                      </graphic>
                   </Label>
-                  <Label contentDisplay="RIGHT" text="Total Exploration:" textFill="WHITE">
+                  <Label contentDisplay="RIGHT" text="Total Coverage:" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -70,6 +70,16 @@
                      </graphic>
                   </Label>
                   <Region HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#zoomIn" onMousePressed="#zoomIn" style="-fx-background-color: #f1c40f;" text="Z+">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#zoomOut" onMousePressed="#zoomOut" style="-fx-background-color: #f1c40f;" text="Z-">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                   <Button fx:id="pauseButton" mnemonicParsing="false" style="-fx-background-color: #f1c40f;" text="Pause">
                      <cursor>
                         <Cursor fx:constant="HAND" />

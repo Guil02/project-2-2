@@ -1,6 +1,8 @@
 package org.group7.gui;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,8 +27,8 @@ public class SimulationScreen extends BorderPane {
     }
 
     public void updateStats(double elapsedTimeStep, double coverage) {
-        elapsedTime.setText(String.valueOf(elapsedTimeStep));
-        explorationPercent.setText(String.valueOf(coverage));
+        elapsedTime.setText(String.valueOf((int)(elapsedTimeStep * 100) / 100) + " units");
+        explorationPercent.setText(String.valueOf((int)(coverage * 100) / 100));
     }
 
     @FXML private Label elapsedTime;
@@ -37,6 +39,16 @@ public class SimulationScreen extends BorderPane {
     @FXML private Button pauseButton;
     @FXML private Button quitButton;
     @FXML private Button resetButton;
+
+    @FXML
+    void zoomIn(Event event) {
+        view.zoom(1.05);
+    }
+
+    @FXML
+    void zoomOut(Event event) {
+        view.zoom(0.95);
+    }
 
     @FXML
     void initialize() {
