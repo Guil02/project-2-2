@@ -35,7 +35,7 @@ public abstract class PlayerComponent extends Component {
     private double viewFieldAngle; //how wide the visual range is
     public BasicVision simpleRay;
     private Area movingSound;
-    private AlgorithmEnum algorithmValue = RANDOM;
+    private AlgorithmEnum algorithmValue = A_STAR;
     private Algorithm algorithm;
     private List<Grid> agentsCurrentVision = new ArrayList<>();
     private final int id;
