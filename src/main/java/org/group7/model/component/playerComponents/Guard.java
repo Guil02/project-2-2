@@ -21,8 +21,6 @@ public class Guard extends PlayerComponent{
 
     public Guard(Point point1, Point point2, double directionAngle,  Scenario scenario, double baseSpeed,
                  double distanceViewing,double smellingDistance) {
-
-
         super(point1,point2,  directionAngle, scenario, baseSpeed, distanceViewing, smellingDistance);
         setComponent(GUARD);
         setAlgorithmValue(A_STAR);
