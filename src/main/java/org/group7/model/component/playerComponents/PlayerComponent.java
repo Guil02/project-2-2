@@ -26,7 +26,7 @@ import static org.group7.enums.AlgorithmEnum.FRONTIER;
  * it contains the coordinates of the position of the agent.
  */
 public abstract class PlayerComponent extends Component {
-    public Vector2D position;
+    //public Vector2D position;
     public Vector2D direction;
     public Vector2D viewField;
     private final Point initialPosition;
@@ -54,7 +54,7 @@ public abstract class PlayerComponent extends Component {
         this.orientation = Orientation.LEFT;
         this.viewFieldAngle = Config.DEFAULT_VIEW_FIELD_ANGLE;
 
-        position = new Vector2D(getX(), getY());
+        //position = new Vector2D(getX(), getY());
         direction = new Vector2D(this.directionAngle);
         viewField = new Vector2D(viewFieldAngle);
         this.simpleRay = new BasicVision(scenario);
@@ -168,22 +168,6 @@ public abstract class PlayerComponent extends Component {
         getArea().getBottomRight().y += dy;
     }
 
-    public boolean collision(Component c, double distance){
-        for(int i = 0; i<distance; i++){
-            double dx = Math.cos(directionAngle)*i;
-            double dy = Math.sin(directionAngle)*i;
-            if(c.getArea().isHit(new Point(this.getArea().getTopLeft().x + dx, this.getArea().getTopLeft().y + dy))){
-                return true;
-            }
-        }
-        double dx = Math.cos(directionAngle)*distance;
-        double dy = Math.sin(directionAngle)*distance;
-        return c.getArea().isHit(new Point(this.getArea().getTopLeft().x + dx, this.getArea().getTopLeft().y + dy));
-    }
-
-    public void setPosition(Point p){
-        setArea(new Area(p, p.clone()));
-    }
 
     public void setViewFieldLength(double viewFieldLength) { this.viewFieldLength = viewFieldLength; }
 
