@@ -266,7 +266,6 @@ public class BasicVision {
                 furthestFrontierGrid.add(furthestSoFar);
             }
         }
-        scenario.updateMap(map);
         return scenario;
     }
 }

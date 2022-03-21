@@ -80,6 +80,7 @@ public class AStar implements Algorithm{
         open.remove(current);
         if(!closed.contains(current))
             closed.add(current);
+
         for(Grid[] grids: map){
             for(Grid grid: grids){
                 if(grid.seen.get(player.getId())){

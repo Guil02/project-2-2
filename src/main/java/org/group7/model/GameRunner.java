@@ -6,9 +6,7 @@ import org.group7.Main;
 import org.group7.enums.Actions;
 import org.group7.enums.Orientation;
 import org.group7.geometric.Point;
-import org.group7.gui.ExplorationSim;
-import org.group7.gui.GameScreen;
-import org.group7.gui.Renderer;
+import org.group7.gui.*;
 import org.group7.model.algorithms.ActionTuple;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.PlayerComponent;
@@ -17,7 +15,7 @@ import org.group7.utils.Config;
 import static org.group7.enums.ComponentEnum.TELEPORTER;
 
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -28,52 +26,77 @@ public class GameRunner extends AnimationTimer {
     State currentState;
     GameScreen gameScreen;
 
+    SimulationScreen display;
+
     double timeStep;
     double elapsedTimeStep; //total time
     int count = 0;
 
     public GameRunner(Scenario scenario) {
         this.scenario = scenario;
-        this.states = new ArrayList<>();
-        this.elapsedTimeStep =0;
+        this.states = new LinkedList<>();
+        this.elapsedTimeStep = 0;
         this.timeStep = Config.TIME_STEP;
 
-        if(scenario.numGuards>0){
+        if (scenario.numGuards > 0){
             scenario.spawnGuards();
         }
-        if(scenario.numIntruders>0){
+
+        if (scenario.numIntruders > 0){
             scenario.spawnIntruder();
         }
+
+        display = new SimulationScreen();
+        Main.stage.setScene(new Scene(display));
+        Main.stage.centerOnScreen();
 
 //        currentState = new State(scenario.guards, scenario.intruders);
 //        states.add(currentState);
 
 //        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
+        /*
         Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
         gameScreen = new GameScreen(renderer, scenario);
         Main.stage.setScene(new Scene(gameScreen));
-        //Main.stage.setFullScreen(true);
+
         Main.stage.centerOnScreen();
 
         renderer.res = 1.05 * Math.max(scenario.width / renderer.getViewportBounds().getWidth(), scenario.height / renderer.getViewportBounds().getHeight());
+        */
+
         setInitialVision();
+        display.render();
     }
+
+//    @Override
+//    public void handle(long now) {
+//        //where update the game
+//        updatePlayers();
+//        gameScreen.render(scenario);
+//        elapsedTimeStep += timeStep;
+////        elapsedTimeStep += 1;
+////        if(elapsedTimeStep % 5 == 0) {
+//        if (elapsedTimeStep>count*5){
+//            count++;
+//            double coverage = calculateCoverage();
+//            System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
+//            //TODO: ask SAM --> break break if coverage is > 80
+//        }
+//    }
 
     @Override
     public void handle(long now) {
         //where update the game
-
         updatePlayers();
+        display.render();
 
-        gameScreen.render(scenario);
         elapsedTimeStep += timeStep;
-//        elapsedTimeStep += 1;
-//        if(elapsedTimeStep % 5 == 0) {
-        if(elapsedTimeStep>count*5){
+
+        if (elapsedTimeStep>count*5){
             count++;
             double coverage = calculateCoverage();
-            System.out.print("\rTotal Coverage: "+coverage + " elapsed Time: "+elapsedTimeStep);
-            //TODO: ask SAM --> break break if coverage is > 80
+            //System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
+            display.updateStats(elapsedTimeStep, coverage);
         }
     }
 
@@ -100,7 +123,7 @@ public class GameRunner extends AnimationTimer {
                     //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
                     this.scenario = scenario.guards.get(i).updateVision();
                     //check collision with agent for the next move (if there is a next move) --> break loop
-                    if (checkCollisionAgent(scenario.guards.get(i),moveAction.getDistance(),j)) {
+                    if (checkCollisionAgentWall(scenario.guards.get(i),moveAction.getDistance(),j)) {
                         break;
                     }
                     //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
@@ -114,10 +137,12 @@ public class GameRunner extends AnimationTimer {
                         Grid grid = scenario.map[x][y];
                         Teleporter teleporter = (Teleporter) grid.getStaticComponent();
                         player.teleport(teleporter.getTarget());
+                        updateGrid(currentPosition,teleporter.getTarget());
                         break;
                     }
                     //if no collision applyAction
                     scenario.guards.get(i).applyAction(moveAction.getAction());
+                    updateGrid(startingPoint, scenario.guards.get(i).getCoordinates());
                 }
             }else {// the agent turns
                 //apply turn
@@ -137,7 +162,7 @@ public class GameRunner extends AnimationTimer {
                     //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
                     this.scenario = scenario.intruders.get(i).updateVision();
                     //check collision with agent for the next move (if there is a next move) --> break loop
-                    if (checkCollisionAgent(scenario.intruders.get(i),moveAction.getDistance(),j)) {
+                    if (checkCollisionAgentWall(scenario.intruders.get(i),moveAction.getDistance(),j)) {
                         break;
                     }
                     //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
@@ -147,6 +172,7 @@ public class GameRunner extends AnimationTimer {
                     }
                     //if no collision applyAction
                     scenario.intruders.get(i).applyAction(moveAction.getAction());
+                    updateGrid(startingPoint, scenario.intruders.get(i).getCoordinates());
                 }
             }else {// the agent turns
                 //apply turn
@@ -179,7 +205,7 @@ public class GameRunner extends AnimationTimer {
 
     }
 
-    public boolean checkCollisionAgent(PlayerComponent player, int moveForwardDistance, int step) {
+    public boolean checkCollisionAgentWall(PlayerComponent player, int moveForwardDistance, int step) {
         if (step+1 < moveForwardDistance) {
             Point currentPosition = player.getCoordinates();
             int x = (int)currentPosition.getX();
@@ -188,7 +214,7 @@ public class GameRunner extends AnimationTimer {
             switch (orientation) {
                 case UP -> {
                     if (y-1 >= 0) {
-                        if (scenario.map[x][y-1].getPlayerComponent() != null) {
+                        if (scenario.map[x][y-1].getPlayerComponent() != null || scenario.map[x][y-1].getType().isObstacle()) {
                             return true;
                         }
                     }
@@ -196,7 +222,7 @@ public class GameRunner extends AnimationTimer {
                 }
                 case DOWN -> {
                     if (y+1 <= scenario.getHeight()) {
-                        if (scenario.map[x][y+1].getPlayerComponent() != null) {
+                        if (scenario.map[x][y+1].getPlayerComponent() != null || scenario.map[x][y+1].getType().isObstacle()) {
                             return true;
                         }
                     }
@@ -204,7 +230,7 @@ public class GameRunner extends AnimationTimer {
                 }
                 case LEFT -> {
                     if (x-1 >= 0) {
-                        if (scenario.map[x-1][y].getPlayerComponent() != null) {
+                        if (scenario.map[x-1][y].getPlayerComponent() != null || scenario.map[x-1][y].getType().isObstacle()) {
                             return true;
                         }
                     }
@@ -212,7 +238,7 @@ public class GameRunner extends AnimationTimer {
                 }
                 case RIGHT -> {
                     if (x+1 <= scenario.getWidth()) {
-                        if (scenario.map[x+1][y].getPlayerComponent() != null) {
+                        if (scenario.map[x+1][y].getPlayerComponent() != null || scenario.map[x+1][y].getType().isObstacle()) {
                             return true;
                         }
                     }
@@ -234,17 +260,6 @@ public class GameRunner extends AnimationTimer {
     }
 
 
-    //TODO: can we use this for the teleportation?
-    private void doTeleport(PlayerComponent p, double distance) {
-        for(int i = 0; i<scenario.teleporters.size(); i++){
-            if(p.collision(scenario.teleporters.get(i), distance)){
-                Point target = scenario.teleporters.get(i).getTarget();
-                p.setPosition(target.clone());
-                //Change does not gets rendered although the values from get and set matches
-                p.setDirectionAngle(scenario.teleporters.get(i).getDirection().getAngle());
-            }
-        }
-    }
 
     public double calculateCoverage() {
         int seenGrids = 0;

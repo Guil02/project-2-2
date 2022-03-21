@@ -12,13 +12,14 @@ import org.group7.model.Scenario;
 import org.group7.model.algorithms.AStar;
 import org.group7.model.algorithms.ActionTuple;
 import org.group7.model.algorithms.Algorithm;
+import org.group7.model.algorithms.Random;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.group7.enums.AlgorithmEnum.A_STAR;
+import static org.group7.enums.AlgorithmEnum.*;
 
 /**
  * This class is made as a super class for all the possible component that can be considered player, i.e. agents and intruders.
@@ -166,22 +167,6 @@ public abstract class PlayerComponent extends Component {
         getArea().getBottomRight().y += dy;
     }
 
-    public boolean collision(Component c, double distance){
-        for(int i = 0; i<distance; i++){
-            double dx = Math.cos(directionAngle)*i;
-            double dy = Math.sin(directionAngle)*i;
-            if(c.getArea().isHit(new Point(this.getArea().getTopLeft().x + dx, this.getArea().getTopLeft().y + dy))){
-                return true;
-            }
-        }
-        double dx = Math.cos(directionAngle)*distance;
-        double dy = Math.sin(directionAngle)*distance;
-        return c.getArea().isHit(new Point(this.getArea().getTopLeft().x + dx, this.getArea().getTopLeft().y + dy));
-    }
-
-    public void setPosition(Point p){
-        setArea(new Area(p, p.clone()));
-    }
 
     public void setViewFieldLength(double viewFieldLength) { this.viewFieldLength = viewFieldLength; }
 
@@ -198,6 +183,9 @@ public abstract class PlayerComponent extends Component {
             }
             case FLOOD_FILL -> {
                 //TODO implement constructor of flood fill algorithm
+            }
+            case RANDOM -> {
+                algorithm = new Random((int) initialPosition.getX(), (int) initialPosition.getY(), getScenario().getMap(),this, 5);
             }
         }
     }
