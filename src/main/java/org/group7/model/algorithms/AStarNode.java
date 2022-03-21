@@ -5,8 +5,8 @@ import org.group7.enums.AstarType;
 import java.util.Objects;
 
 public class AStarNode {
-    private final int x; // the x coordinate on our map
-    private final int y; // the y coordinate on our map
+    private int x; // the x coordinate on our map
+    private int y; // the y coordinate on our map
     private final AStar aStar; // the instance of the A* algorithm that this node is a part of
 
     private int gCost = Integer.MAX_VALUE; // distance from starting position. Manhattan distance.
@@ -112,5 +112,13 @@ public class AStarNode {
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

@@ -46,6 +46,12 @@ public class AStar implements Algorithm{
 
     @Override
     public ActionTuple calculateMovement() {
+//        printMap();
+        if(player.isHasTeleported()){
+            movesLeft.clear();
+            player.setHasTeleported(false);
+            playerMap[current.getX()][current.getY()] = map[current.getX()][current.getY()];
+        }
         if(movesLeft.isEmpty()){
             if(target!=null) {
                 current = target;
@@ -64,7 +70,8 @@ public class AStar implements Algorithm{
         }
         catch(IndexOutOfBoundsException ignore){
         }
-        movesLeft.remove(0);
+        if(!movesLeft.isEmpty())
+            movesLeft.remove(0);
         return actionTuple;
     }
 
@@ -84,9 +91,14 @@ public class AStar implements Algorithm{
                     open.add(node);
                     if((grid.getStaticComponent()!=null && grid.getStaticComponent().getComponentEnum()==TELEPORTER)){
                         Point teleportTarget = ((Teleporter)grid.getStaticComponent()).getTarget();
-                        playerMap[grid.getX()][grid.getY()] = map[(int) teleportTarget.x][(int) teleportTarget.y];
+                        playerMap[grid.getX()][grid.getY()] = grid;
+                        playerMap[(int) teleportTarget.x][(int) teleportTarget.y] = map[(int) teleportTarget.x][(int) teleportTarget.y];
+//                        node.setX((int) teleportTarget.x);
+//                        node.setY((int) teleportTarget.y);
                     }
-                    playerMap[grid.getX()][grid.getY()]=grid;
+                    else{
+                        playerMap[grid.getX()][grid.getY()]=grid;
+                    }
                 }
             }
         }
@@ -153,7 +165,7 @@ public class AStar implements Algorithm{
                 return makePath();
             }
             for (AStarNode neighbor: neighbours(node)) {
-                if(closedNodes.contains(neighbor)||playerMap[neighbor.getX()][neighbor.getY()]==null){
+                if(closedNodes.contains(neighbor)||playerMap[neighbor.getX()][neighbor.getY()]==null||playerMap[neighbor.getX()][neighbor.getY()].getStaticCompE()==WALL){
                     continue;
                 }
 //                neighbor.updateCost(ASTAR_PATH);
@@ -209,6 +221,7 @@ public class AStar implements Algorithm{
         Collections.reverse(nodePath);
         return nodePath;
     }
+
     public List<Actions> actionsPath(List<AStarNode> nodePath){
         List<Actions> actionPath = new ArrayList<>();
         Orientation orientation = player.getOrientation();
@@ -267,20 +280,24 @@ public class AStar implements Algorithm{
         List<AStarNode> neighbours = new ArrayList<>();
         for(int i = 0; i<4; i++){
             AStarNode neighbor = new AStarNode(x+additions[i][0],y+additions[i][1],this);
-            if (playerMap[neighbor.getX()][neighbor.getY()] != null) {
+            if (!outOfBounds(neighbor.getX(), neighbor.getY()) && playerMap[neighbor.getX()][neighbor.getY()] != null) {
                 neighbours.add(neighbor);
             }
         }
         return neighbours;
     }
 
+    public boolean outOfBounds(int x, int y){
+        return x < 0 || x >= playerMap.length || y < 0 || y >= playerMap[0].length;
+    }
+
     //***********************************************//
     // methods for all the costs in the A* algorithm //
     //***********************************************//
+
     public int gCost(int x, int y) {
         return (Math.abs(initialX - x) + Math.abs(initialY - y));
     }
-
     public int gCostPath(int x, int y) {
         return Math.abs(current.getX() - x) + Math.abs(current.getY() - y);
     }
@@ -293,6 +310,17 @@ public class AStar implements Algorithm{
         return Math.abs(target.getX() - x) + Math.abs(target.getY() - y);
     }
 
-
-
+    private void printMap() {
+        for(int y = 0; y<playerMap[0].length; y++){
+            for(int x = 0; x<playerMap.length; x++){
+                if(playerMap[x][y]!=null){
+                    System.out.print(playerMap[x][y]);
+                }
+                else{
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
+    }
 }
