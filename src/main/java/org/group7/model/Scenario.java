@@ -60,7 +60,7 @@ public class Scenario {
     List<IntruderSpawnArea> intruderSpawnAreas;
 
     // all the player components stored separately and in 1 list.
-    List<Component> playerComponents;
+    List<PlayerComponent> playerComponents;
     List<Guard> guards;
     List<Intruder> intruders;
 
@@ -241,7 +241,7 @@ public class Scenario {
         return staticComponents;
     }
 
-    public List<Component> getPlayerComponents() {
+    public List<PlayerComponent> getPlayerComponents() {
         return playerComponents;
     }
 

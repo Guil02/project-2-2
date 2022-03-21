@@ -110,9 +110,21 @@ public class Grid {
         return y;
     }
 
+//    @Override
+//    public String toString() {
+//        return getStaticComp();
+//    }
+
+
     @Override
     public String toString() {
-        return getStaticComp();
+        return "Grid{" +
+                "staticComponent=" + staticComponent +
+                ", playerComponent=" + playerComponent +
+                ", x=" + x +
+                ", y=" + y +
+                ", type=" + type +
+                '}';
     }
 
     @Override
