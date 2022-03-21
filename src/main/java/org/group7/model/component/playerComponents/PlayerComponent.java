@@ -226,6 +226,7 @@ public abstract class PlayerComponent extends Component {
 
     public void setAlgorithmValue(AlgorithmEnum algorithmValue){
         this.algorithmValue = algorithmValue;
+        initializeAlgorithm();
     }
 
 }
