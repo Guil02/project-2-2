@@ -42,7 +42,7 @@ public class Scenario {
     private final static Charset ENCODING = StandardCharsets.UTF_8;
 
     protected int gameMode;
-    protected String name;
+    protected String name = "map";
     protected int height; // y
     protected int width; // x
     protected double scaling;
