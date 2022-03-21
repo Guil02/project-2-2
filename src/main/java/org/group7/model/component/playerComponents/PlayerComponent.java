@@ -93,7 +93,6 @@ public abstract class PlayerComponent extends Component {
 
     public Scenario updateVision() {
         Scenario newScenario = simpleRay.calculateAgentVision(this);
-        agentsCurrentVision.clear();
         agentsCurrentVision = simpleRay.getFurthestFrontierGrid();
         return newScenario;
     }
@@ -161,6 +160,9 @@ public abstract class PlayerComponent extends Component {
             }
             case RANDOM -> {
                 algorithm = new Random((int) initialPosition.getX(), (int) initialPosition.getY(), getScenario().getMap(),this, 5);
+            }
+            case FRONTIER -> {
+                //algorithm = new Frontier((int) initialPosition.x, (int) initialPosition.y, getScenario().getMap(),Grid[][] - not stored in here, player)
             }
         }
     }

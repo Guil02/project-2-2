@@ -22,7 +22,7 @@ public class BasicVision {
     public BasicVision(Scenario scenario) {
         this.scenario = scenario;
         this.map = scenario.getMap();
-        this.distanceViewing = scenario.getDistantViewing() + 1;  //to fix the fact that the loop doesnt include the >= or <=;
+        this.distanceViewing = scenario.getDistantViewing();  //to fix the fact that the loop doesnt include the >= or <=;
     }
 
     //Accesser for Frontier-Based Algorithm

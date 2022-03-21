@@ -1,4 +1,4 @@
-package org.group7.model.geometric;
+package org.group7.agentVision;
 
 import org.group7.agentVision.Ray;
 import org.group7.geometric.*;
