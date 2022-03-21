@@ -175,16 +175,19 @@ public class GameRunner extends AnimationTimer {
 
     public double calculateCoverage() {
         int seenGrids = 0;
-        for (int i = 0; i < scenario.getWidth(); i++) {
-            for (int j=0; j < scenario.getHeight(); j++) {
-                if(scenario.map[i][j].explored) {
-                    seenGrids++;
+        int totalGrids = 0;
+        for (int i=0; i<scenario.getWidth();i++) {
+            for (int j=0; j<scenario.getHeight();j++) {
+                if(!(scenario.map[i][j].getStaticCompE() == WALL)) {
+                    totalGrids++;
+                    if(scenario.map[i][j].explored) {
+                        seenGrids++;
+                    }
                 }
             }
         }
-        int totalSize = scenario.getWidth() * scenario.getHeight();
         double d1 = seenGrids;
-        double d2 = totalSize;
+        double d2 = totalGrids;
 //        return (seenGrids/totalSize)*100;
         return (d1/d2)*100;
     }
