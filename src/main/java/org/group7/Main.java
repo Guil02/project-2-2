@@ -21,7 +21,7 @@ public class Main extends Application {
         stage = primaryStage;
 
         //load the Main Menu
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainMenu.fxml"));
         Scene scene = new Scene(root);
 
 //        Menu menu = new Menu();

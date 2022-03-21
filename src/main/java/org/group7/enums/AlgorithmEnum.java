@@ -6,4 +6,14 @@ public enum AlgorithmEnum {
     FLOOD_FILL,
     FRONTIER,
     RANDOM;
+
+    public static AlgorithmEnum getEnum(String name) {
+        return switch (name) {
+            case "Random" -> RANDOM;
+            case "Wall Following" -> WALL_FOLLOWING;
+            case "Frontier" -> FRONTIER;
+            case "Flood Fill" -> FLOOD_FILL;
+            default -> A_STAR;
+        };
+    }
 }

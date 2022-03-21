@@ -72,11 +72,12 @@ public class GameRunner extends AnimationTimer {
             //System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
             display.updateStats(elapsedTimeStep, coverage);
 
-            //TODO: Maybe add Config setting for toggling logging or not
-            int step = ((int) (elapsedTimeStep * 100) / 100);   //in integer steps of 5
-            int cov = ((int) (coverage * 100) / 100);           //in integer percent
+            if (Config.LOG_DATA) {
+                int step = ((int) (elapsedTimeStep * 100) / 100);   //in integer steps of 5
+                int cov = ((int) (coverage * 100) / 100);           //in integer percent
 
-            Logger.log(new String[]{String.valueOf(step), String.valueOf(cov)});
+                Logger.log(new String[]{String.valueOf(step), String.valueOf(cov)});
+            }
         }
     }
 
@@ -84,13 +85,16 @@ public class GameRunner extends AnimationTimer {
         states.add(new State(scenario.guards, scenario.intruders));
     }
 
-    private void setInitialVision(){
-        for(int i = 0; i< scenario.guards.size(); i++){
-            this.scenario = scenario.guards.get(i).updateVision();
-        }
-        for(int i = 0; i< scenario.intruders.size(); i++){
-            this.scenario = scenario.guards.get(i).updateVision();
-        }
+    private void setInitialVision() {
+        scenario.playerComponents.forEach(PlayerComponent::updateVision);
+
+//        for(int i = 0; i < scenario.guards.size(); i++){
+//            this.scenario = scenario.guards.get(i).updateVision();
+//        }
+//
+//        for(int i = 0; i < scenario.intruders.size(); i++){
+//            this.scenario = scenario.intruders.get(i).updateVision();
+//        }
     }
 
     private void updatePlayers(){
@@ -101,17 +105,19 @@ public class GameRunner extends AnimationTimer {
             if(moveAction.getAction() == Actions.MOVE_FORWARD){
                 for(int i = 0; i < moveAction.getDistance(); i++){
                     Point targetPoint = startingPoint.clone();
-                    movePoint(player,targetPoint,i + 1);
+                    movePoint(player, targetPoint,i + 1);
 
                     if(i < player.getBaseSpeed() && !isOutOfBounds(targetPoint)){
-                        if(wallCollision(targetPoint)) {
+                        if (wallCollision(targetPoint) /*|| playerCollision(player, targetPoint)*/) {
                             break;
                         } else if (playerCollision(player, targetPoint)) {
+                            System.out.println("PLAYER COLLISION");
                             break;
                         } else if (teleporterCollision(targetPoint)) {
                             Teleporter teleporter = (Teleporter) scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticComponent();
-                            Point teleportTarget = teleporter.getTarget();
-                            player.teleport(teleportTarget);
+                            //Point teleportTarget = teleporter.getTarget();
+                            //player.teleport(teleportTarget);
+                            player.teleport(teleporter.getTarget());
                             player.updateVision();
                             updateGrid(startingPoint, targetPoint);
                             break;
@@ -124,7 +130,7 @@ public class GameRunner extends AnimationTimer {
                         break;
                     }
                 }
-            } else{
+            } else {
                 player.applyAction(moveAction.getAction());
                 player.updateVision();
             }
@@ -147,7 +153,7 @@ public class GameRunner extends AnimationTimer {
 
     private boolean playerCollision(PlayerComponent player, Point targetPoint) {
         PlayerComponent other = scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getPlayerComponent();
-        return other !=null && player !=other;
+        return other != null && player != other;
     }
 
     private boolean wallCollision(Point targetPoint) {

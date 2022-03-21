@@ -69,7 +69,7 @@ public class Scenario {
         System.out.println("File: " + mapFile.getName());
         parseFile(mapFile);
         //System.out.println(staticComponents);
-//        addBorderWalls();
+        //addBorderWalls();
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
                 map[j][i].seen = new ArrayList<>();

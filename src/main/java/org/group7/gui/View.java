@@ -1,5 +1,6 @@
 package org.group7.gui;
 
+import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,6 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.group7.enums.ComponentEnum;
+import org.group7.geometric.Vector2D;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
 import org.group7.model.component.playerComponents.Guard;
@@ -69,8 +71,9 @@ public class View extends ScrollPane {
         g.setFill(Color.rgb(52, 152, 219));
         for (Guard guard : scenario.getGuards()) {
             paintTile(guard.getX(), guard.getY());
+
 //            g.setFill(Color.rgb(241, 196, 15));
-//            for (Grid grid : guard.getAgentsCurrentVision()) {
+//            for (Grid grid : guard.simpleRay.getFurthestFrontierGrid()) {
 //                paintTile(grid.getX(), grid.getY());
 //                System.out.println(grid.getType());
 //            }
@@ -91,7 +94,7 @@ public class View extends ScrollPane {
 
                 paintTile(x, y);
 
-                //doesn't seem to do anything
+                //if you see any yellow tiles then the actual agent position does not match the position in the Grid matrix
                 if (tile.getPlayerComponent() != null) {
                     g.setFill(Color.YELLOW);
                     paintTile(x, y);
@@ -102,6 +105,10 @@ public class View extends ScrollPane {
 
     private void paintTile(int x, int y) {
         g.fillRect(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
+    }
+
+    private void paintLine(int x, int y, Vector2D direction) {
+        g.strokeLine(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
     }
 
     private void paintTile(double x, double y) {

@@ -17,6 +17,7 @@ import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.group7.enums.AlgorithmEnum.*;
@@ -34,10 +35,10 @@ public abstract class PlayerComponent extends Component {
     private double viewFieldAngle; //how wide the visual range is
     public BasicVision simpleRay;
     private Area movingSound;
-    private AlgorithmEnum algorithmValue = A_STAR;
+    private AlgorithmEnum algorithmValue = RANDOM;
     private Algorithm algorithm;
     private boolean hasTeleported = false;
-    private List<Grid> agentsCurrentVision = new ArrayList<>();
+    private List<Grid> agentsCurrentVision = new LinkedList<>();
     private final int id;
     private static int counter = 0;
     private Orientation orientation;
@@ -58,7 +59,7 @@ public abstract class PlayerComponent extends Component {
         direction = new Vector2D(this.directionAngle);
         viewField = new Vector2D(viewFieldAngle);
         this.simpleRay = new BasicVision(scenario);
-        initialPosition = new Point(getX(),getY());
+        initialPosition = new Point(getX(), getY());
         initializeAlgorithm();
     }
 
