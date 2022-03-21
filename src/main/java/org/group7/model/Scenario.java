@@ -69,7 +69,7 @@ public class Scenario {
         System.out.println("File: " + mapFile.getName());
         parseFile(mapFile);
         //System.out.println(staticComponents);
-        addBorderWalls();
+//        addBorderWalls();
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
                 map[j][i].seen = new ArrayList<>();
@@ -102,15 +102,15 @@ public class Scenario {
         staticComponents.add(component);
         walls.add(component);
         addStaticComponent(component);
-        topLeft = new Point(width-2, 0);
-        bottomRight = new Point(width-1, height-1);
+        topLeft = new Point(width-1, 0);
+        bottomRight = new Point(width, height);
         points = new Tuple<>(topLeft, bottomRight);
         component= new Wall(points.getA(), points.getB(), this);
         staticComponents.add(component);
         walls.add(component);
         addStaticComponent(component);
-        topLeft = new Point(0, height-2);
-        bottomRight = new Point(width-1, height-1);
+        topLeft = new Point(0, height-1);
+        bottomRight = new Point(width, height);
         points = new Tuple<>(topLeft, bottomRight);
         component= new Wall(points.getA(), points.getB(), this);
         staticComponents.add(component);
@@ -252,12 +252,17 @@ public class Scenario {
         int i = 0;
         Point topLeft = guardSpawnAreas.get(0).getTopLeft();
         Point bottomRight = guardSpawnAreas.get(0).getBottomRight();
-        double dx = bottomRight.x - topLeft.x;
-        double dy = bottomRight.y - topLeft.y;
+        int dx = (int) (bottomRight.x - topLeft.x);
+        int dy = (int) (bottomRight.y - topLeft.y);
         while (i < numGuards){
-            Point point = new Point(topLeft.x + dx * Math.random(), topLeft.y + dy * Math.random());
+            Point point = new Point(topLeft.x +(int) (dx * Math.random()), topLeft.y + (int)(dy * Math.random()));
+            if(map[(int) point.x][(int) point.y].getPlayerComponent()!=null){
+                continue;
+            }
             Guard player= new Guard(point,point.clone(),  Math.toRadians(0), this,baseSpeedGuard, distanceViewing , smellingDistance);
-
+            if(i<1 && numGuards>1){
+                player.setIgnoreTeleport(true);
+            }
             playerComponents.add(player);
             guards.add(player);
             addPlayerComponent(player);
@@ -272,11 +277,14 @@ public class Scenario {
         int i = 0;
         Point topLeft = intruderSpawnAreas.get(0).getTopLeft();
         Point bottomRight = intruderSpawnAreas.get(0).getBottomRight();
-        double dx = bottomRight.x-topLeft.x;
-        double dy = bottomRight.y-topLeft.y;
+        int dx = (int) (bottomRight.x-topLeft.x);
+        int dy = (int) (bottomRight.y-topLeft.y);
         while(i<numIntruders){
-            Point point = new Point(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+            Point point = new Point(topLeft.x +(int) (dx * Math.random()), topLeft.y + (int)(dy * Math.random()));
             Intruder player= new Intruder(point,point.clone(),  Math.random()*2*Math.PI, this,baseSpeedGuard, distanceViewing , smellingDistance);
+            if(i<1 && numIntruders>1){
+                player.setIgnoreTeleport(true);
+            }
             playerComponents.add(player);
             intruders.add(player);
             addPlayerComponent(player);
