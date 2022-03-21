@@ -1,13 +1,19 @@
 package org.group7.gui;
 
+import javafx.scene.CacheHint;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import org.group7.enums.ComponentEnum;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
 import org.group7.model.component.playerComponents.Guard;
+import org.group7.model.component.staticComponents.Wall;
+
+import static javafx.scene.paint.Color.*;
+import static org.group7.enums.ComponentEnum.WALL;
 
 public class View extends ScrollPane {
 
@@ -26,6 +32,8 @@ public class View extends ScrollPane {
         MAP_HEIGHT = scenario.getHeight();
 
         canvas = new Canvas(MAP_WIDTH * (TILE_SIZE + 1), MAP_HEIGHT * (TILE_SIZE + 1));
+        //canvas.setCache(true);
+        //canvas.setCacheHint(CacheHint.SPEED);
         g = canvas.getGraphicsContext2D();
 
         StackPane container = new StackPane();
@@ -46,7 +54,6 @@ public class View extends ScrollPane {
 
 
     public void update() {
-        g.setFill(Color.BLACK);
         g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         drawMap();
         drawAgents();
@@ -77,7 +84,11 @@ public class View extends ScrollPane {
         for (int y = 0; y < MAP_HEIGHT; y++){
             for(int x = 0; x < MAP_WIDTH; x++) {
                 Grid tile = scenario.getMap()[x][y];
-                g.setFill(tile.explored ? tile.getType().getColor() : tile.getType().getColor().darker().desaturate());
+                //g.setFill(tile.explored ? tile.getType().getColor() : tile.getType().getColor().darker().desaturate());
+                if (!tile.explored)
+                    g.setFill(tile.getType() == WALL ? Color.gray(0.4) : tile.getType().getColor().darker().desaturate());
+                else g.setFill(tile.getType().getColor());
+
                 paintTile(x, y);
 
                 //doesn't seem to do anything
