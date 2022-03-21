@@ -26,7 +26,6 @@ import static org.group7.enums.AlgorithmEnum.*;
  * it contains the coordinates of the position of the agent.
  */
 public abstract class PlayerComponent extends Component {
-    //public Vector2D position;
     public Vector2D direction;
     public Vector2D viewField;
     private final Point initialPosition;
@@ -37,6 +36,7 @@ public abstract class PlayerComponent extends Component {
     private Area movingSound;
     private AlgorithmEnum algorithmValue = A_STAR;
     private Algorithm algorithm;
+    private boolean hasTeleported = false;
     private List<Grid> agentsCurrentVision = new ArrayList<>();
     private final int id;
     private static int counter = 0;
@@ -54,7 +54,6 @@ public abstract class PlayerComponent extends Component {
         this.orientation = Orientation.LEFT;
         this.viewFieldAngle = Config.DEFAULT_VIEW_FIELD_ANGLE;
 
-        //position = new Vector2D(getX(), getY());
         direction = new Vector2D(this.directionAngle);
         viewField = new Vector2D(viewFieldAngle);
         this.simpleRay = new BasicVision(scenario);
@@ -213,6 +212,15 @@ public abstract class PlayerComponent extends Component {
         getArea().getBottomRight().x = x;
         getArea().getTopLeft().y = y;
         getArea().getBottomRight().y = y;
+        hasTeleported = true;
+    }
+
+    public boolean isHasTeleported() {
+        return hasTeleported;
+    }
+
+    public void setHasTeleported(boolean hasTeleported) {
+        this.hasTeleported = hasTeleported;
     }
 }
 

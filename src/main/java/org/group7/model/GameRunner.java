@@ -8,11 +8,11 @@ import org.group7.enums.Orientation;
 import org.group7.geometric.Point;
 import org.group7.gui.*;
 import org.group7.model.algorithms.ActionTuple;
-import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.Teleporter;
 import org.group7.utils.Config;
 import static org.group7.enums.ComponentEnum.TELEPORTER;
+import static org.group7.enums.ComponentEnum.WALL;
 
 
 import java.util.LinkedList;
@@ -114,75 +114,45 @@ public class GameRunner extends AnimationTimer {
     }
 
     private void updatePlayers(){
-        for(int i = 0; i< scenario.guards.size(); i++){
-            Point startingPoint= scenario.guards.get(i).getCoordinates().clone();
-            ActionTuple moveAction = scenario.guards.get(i).calculateMove();
+        for(PlayerComponent player : scenario.playerComponents){
+            Point startingPoint = player.getCoordinates().clone();
+            ActionTuple moveAction = player.calculateMove();
             //if the action is a move forward we want to take into account our base speed and move the number of base speed units
-            if (moveAction.getAction() == Actions.MOVE_FORWARD) {
-                for (int j=0; j<moveAction.getDistance(); j++) {
-                    //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
-                    this.scenario = scenario.guards.get(i).updateVision();
-                    //check collision with agent for the next move (if there is a next move) --> break loop
-                    if (checkCollisionAgentWall(scenario.guards.get(i),moveAction.getDistance(),j)) {
+            if(moveAction.getAction() == Actions.MOVE_FORWARD){
+                for(int i = 0; i<moveAction.getDistance(); i++){
+                    Point targetPoint = startingPoint.clone();
+                    movePoint(player,targetPoint,i+1);
+                    if(i<player.getBaseSpeed() && !isOutOfBounds(targetPoint)){
+                        if(wallCollision(targetPoint)){
+                            break;
+                        }
+                        else if(playerCollision(player, targetPoint)){
+                            break;
+                        }
+                        else if(teleporterCollision(targetPoint)){
+                            Teleporter teleporter = (Teleporter) scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticComponent();
+                            Point teleportTarget = teleporter.getTarget();
+                            player.teleport(teleportTarget);
+                            player.updateVision();
+                            updateGrid(startingPoint, targetPoint);
+                            break;
+                        }
+                        else{
+                            player.moveAgentForward(moveAction.getAction());
+                            player.updateVision();
+                            updateGrid(startingPoint, targetPoint);
+                        }
+                    }
+                    else{
                         break;
                     }
-                    //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
-                    if (checkCollisionTeleporter(scenario.guards.get(i))) {
-                        //TODO: ask GIO --> move the agent to new position
-                        Guard player = scenario.guards.get(i);
-                        Point currentPosition = player.getCoordinates();
-                        int x = (int)currentPosition.getX();
-                        int y = (int)currentPosition.getY();
-
-                        Grid grid = scenario.map[x][y];
-                        Teleporter teleporter = (Teleporter) grid.getStaticComponent();
-                        player.teleport(teleporter.getTarget());
-                        updateGrid(currentPosition,teleporter.getTarget());
-                        break;
-                    }
-                    //if no collision applyAction
-                    scenario.guards.get(i).applyAction(moveAction.getAction());
-                    updateGrid(startingPoint, scenario.guards.get(i).getCoordinates());
                 }
-            }else {// the agent turns
-                //apply turn
-                scenario.guards.get(i).applyAction(moveAction.getAction());
-                //if the action is only a change in direction we still have to update our god grid and the players vision
-                scenario.guards.get(i).updateVision();
             }
-            updateGrid(startingPoint, scenario.guards.get(i).getCoordinates());
-        }
-
-        for(int i = 0; i< scenario.intruders.size(); i++){
-            Point startingPoint= scenario.intruders.get(i).getCoordinates().clone();
-            ActionTuple moveAction = scenario.intruders.get(i).calculateMove();
-            //if the action is a move forward we want to take into account our base speed and move the number of base speed units
-            if (moveAction.getAction() == Actions.MOVE_FORWARD) {
-                for (int j=0; j<moveAction.getDistance(); j++) {
-                    //updates god grids and if agent visited grid also checks for vision validity ie.walls in the way
-                    this.scenario = scenario.intruders.get(i).updateVision();
-                    //check collision with agent for the next move (if there is a next move) --> break loop
-                    if (checkCollisionAgentWall(scenario.intruders.get(i),moveAction.getDistance(),j)) {
-                        break;
-                    }
-                    //check collision with teleporter for the current cell/grid and if so do teleportation after teleportation your turn is over --> break loop
-                    if (checkCollisionTeleporter(scenario.intruders.get(i))) {
-                        //TODO: ask GIO --> move the agent to new position
-                        break;
-                    }
-                    //if no collision applyAction
-                    scenario.intruders.get(i).applyAction(moveAction.getAction());
-                    updateGrid(startingPoint, scenario.intruders.get(i).getCoordinates());
-                }
-            }else {// the agent turns
-                //apply turn
-                scenario.intruders.get(i).applyAction(moveAction.getAction());
-                //if the action is only a change in direction we still have to update our god grid and the players vision
-                scenario.intruders.get(i).updateVision();
+            else{
+                player.applyAction(moveAction.getAction());
+                player.updateVision();
             }
-            updateGrid(startingPoint, scenario.intruders.get(i).getCoordinates());
         }
-
     }
 
     private void updateGrid(Point startingPoint, Point target) {
@@ -195,6 +165,31 @@ public class GameRunner extends AnimationTimer {
         scenario.map[initialX][initialY].setPlayerComponent(null);
     }
 
+    private boolean teleporterCollision(Point targetPoint) {
+        return scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticCompE()==TELEPORTER;
+    }
+
+    private boolean playerCollision(PlayerComponent player, Point targetPoint) {
+        PlayerComponent other = scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getPlayerComponent();
+        return other !=null && player !=other;
+    }
+
+    private boolean wallCollision(Point targetPoint) {
+        return scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticCompE() == WALL;
+    }
+
+    private boolean isOutOfBounds(Point point) {
+        return point.x < 0 || point.x >= scenario.getWidth() || point.y < 0 || point.y >= scenario.getHeight();
+    }
+
+    private void movePoint(PlayerComponent player, Point point, int distance){
+        switch (player.getOrientation()){
+            case UP -> point.y-=distance;
+            case DOWN -> point.y+=distance;
+            case LEFT -> point.x-=distance;
+            case RIGHT -> point.x+=distance;
+        }
+    }
 
     /**
      * method that does the random movement for a provided player component. Is currently random can be modified to fit to the algorithms.
