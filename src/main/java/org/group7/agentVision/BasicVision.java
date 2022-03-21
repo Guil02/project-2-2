@@ -77,7 +77,7 @@ public class BasicVision {
                     }
                 }
                 furthestFrontierGrid.add(furthestSoFar);
-                if (xCoordinate + 1 < scenario.getHeight()) { //if it is possible to move one step to the right
+                if (xCoordinate + 1 < scenario.getWidth()) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check one right
                         if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
                             map[xCoordinate + 1][y].explore();
@@ -133,7 +133,7 @@ public class BasicVision {
                     }
                 }
                 furthestFrontierGrid.add(furthestSoFar);
-                if (xCoordinate + 1 < scenario.getHeight()) { //if it is possible to move one step to the right
+                if (xCoordinate + 1 < scenario.getWidth()) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one right
                         if (y < scenario.getHeight()) { //cant go lower than y=map.height, so if the number is larger is out of bound
                             map[xCoordinate + 1][y].explore();
