@@ -120,12 +120,12 @@ public class Scenario {
 
     public Scenario() {
         // initialize all the lists
-        staticComponents = new ArrayList<>();
-        playerComponents = new ArrayList<>();
-        walls = new ArrayList<>();
-        shadedAreas = new ArrayList<>();
-        teleporters = new ArrayList<>();
-        targetAreas = new ArrayList<>();
+        staticComponents = new LinkedList<>();
+        playerComponents = new LinkedList<>();
+        walls = new LinkedList<>();
+        shadedAreas = new LinkedList<>();
+        teleporters = new LinkedList<>();
+        targetAreas = new LinkedList<>();
         guardSpawnAreas = new ArrayList<>();
         intruderSpawnAreas = new ArrayList<>();
         guards = new LinkedList<>();
@@ -277,8 +277,8 @@ public class Scenario {
         int i = 0;
         Point topLeft = intruderSpawnAreas.get(0).getTopLeft();
         Point bottomRight = intruderSpawnAreas.get(0).getBottomRight();
-        int dx = (int) (bottomRight.x-topLeft.x);
-        int dy = (int) (bottomRight.y-topLeft.y);
+        int dx = (int) (bottomRight.x - topLeft.x);
+        int dy = (int) (bottomRight.y - topLeft.y);
         while(i<numIntruders){
             Point point = new Point(topLeft.x +(int) (dx * Math.random()), topLeft.y + (int)(dy * Math.random()));
             Intruder player= new Intruder(point,point.clone(),  Math.random()*2*Math.PI, this,baseSpeedGuard, distanceViewing , smellingDistance);
