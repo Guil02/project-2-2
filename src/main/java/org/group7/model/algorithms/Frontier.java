@@ -251,7 +251,7 @@ public class Frontier implements Algorithm {
     }
 
     //List of the path from starting point to the end destination, so it doesn't evaluate new options very timestep
-    public List<ActionTuple> findPath() {
+    public List<ActionTuple> createPath() {
         List<ActionTuple> path = new ArrayList<>();
         List<Actions> actions = new ArrayList<>(); //need a list of coordinates from start to end destination
         double speed = player.getBaseSpeed();
