@@ -86,7 +86,7 @@ public class AStar implements Algorithm{
                 if(grid.seen.get(player.getId())){
                     AStarNode node = new AStarNode(grid.getX(), grid.getY(), this);
 
-                    if(open.contains(node) || closed.contains(node) || (grid.getStaticComponent()!=null && grid.getStaticComponent().getComponentEnum()==WALL)){
+                    if(open.contains(node) || closed.contains(node) || (grid.getStaticComponent()!=null && grid.getStaticComponent().getComponentEnum()==WALL) || (player.isIgnoreTeleport() && grid.getStaticCompE()==TELEPORTER)){
                         continue;
                     }
                     open.add(node);

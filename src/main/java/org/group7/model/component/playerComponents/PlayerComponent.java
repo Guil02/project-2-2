@@ -41,6 +41,7 @@ public abstract class PlayerComponent extends Component {
     private final int id;
     private static int counter = 0;
     private Orientation orientation;
+    private boolean ignoreTeleport = false;
 
     private double baseSpeed;
     private double smellingDistance;
@@ -221,6 +222,14 @@ public abstract class PlayerComponent extends Component {
 
     public void setHasTeleported(boolean hasTeleported) {
         this.hasTeleported = hasTeleported;
+    }
+
+    public boolean isIgnoreTeleport() {
+        return ignoreTeleport;
+    }
+
+    public void setIgnoreTeleport(boolean ignoreTeleport) {
+        this.ignoreTeleport = ignoreTeleport;
     }
 }
 
