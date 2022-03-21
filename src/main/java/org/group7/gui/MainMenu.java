@@ -52,6 +52,7 @@ public class MainMenu {
 
         if (!algorithm.equals("Choose Algorithm")) {
             Config.ALGORITHM = AlgorithmEnum.getEnum(algorithm);
+
             Scenario s = new Scenario(scenarioFile);
             GameRunner runner = new GameRunner(s);
             runner.start();
@@ -154,8 +155,8 @@ public class MainMenu {
 
         chosenAlgorithm.getItems().addAll(
                 "A*",
-                "Wall Following",
-                "Flood Fill",
+                //"Wall Following",
+                //"Flood Fill",
                 "Frontier",
                 "Random"
         );

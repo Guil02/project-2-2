@@ -9,10 +9,7 @@ import org.group7.geometric.Point;
 import org.group7.geometric.Vector2D;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
-import org.group7.model.algorithms.AStar;
-import org.group7.model.algorithms.ActionTuple;
-import org.group7.model.algorithms.Algorithm;
-import org.group7.model.algorithms.Random;
+import org.group7.model.algorithms.*;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
@@ -35,7 +32,7 @@ public abstract class PlayerComponent extends Component {
     private double viewFieldAngle; //how wide the visual range is
     public BasicVision simpleRay;
     private Area movingSound;
-    private AlgorithmEnum algorithmValue = RANDOM;
+    private AlgorithmEnum algorithmValue;// = Config.ALGORITHM;
     private Algorithm algorithm;
     private boolean hasTeleported = false;
     private List<Grid> agentsCurrentVision = new LinkedList<>();
@@ -60,6 +57,8 @@ public abstract class PlayerComponent extends Component {
         viewField = new Vector2D(viewFieldAngle);
         this.simpleRay = new BasicVision(scenario);
         initialPosition = new Point(getX(), getY());
+
+        algorithmValue = Config.ALGORITHM;
         initializeAlgorithm();
     }
 
@@ -163,7 +162,7 @@ public abstract class PlayerComponent extends Component {
                 algorithm = new Random((int) initialPosition.getX(), (int) initialPosition.getY(), getScenario().getMap(),this, 5);
             }
             case FRONTIER -> {
-                //algorithm = new Frontier((int) initialPosition.x, (int) initialPosition.y, getScenario().getMap(),Grid[][] - not stored in here, player)
+                algorithm = new Frontier((int) initialPosition.x, (int) initialPosition.y, getScenario().getMap(), new Grid[5][5], this);
             }
         }
     }

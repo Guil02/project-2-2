@@ -94,6 +94,8 @@ public class Frontier implements Algorithm {
 //        return true;
 //    }
 
+    //TODO: Please fix compilation errors. Do not push code to github that does not compile!!!
+    /*
     private static int pathExists(Grid[][] grids) {
 
         Node source = new Node(0, 0, 0);
@@ -137,6 +139,7 @@ public class Frontier implements Algorithm {
         }
         return list;
     }
+    */
 
     public List<Orientation> updateOrientaion(List<Orientation> temp) {
 

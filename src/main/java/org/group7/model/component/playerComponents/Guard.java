@@ -15,7 +15,7 @@ public class Guard extends PlayerComponent{
     public Guard(Point point1, Point point2, double angle, Scenario scenario) {
         super(point1, point2, angle, scenario);
         setComponent(GUARD);
-        setAlgorithmValue(A_STAR);
+        //setAlgorithmValue(A_STAR);
     }
 
 
@@ -23,9 +23,7 @@ public class Guard extends PlayerComponent{
                  double distanceViewing,double smellingDistance) {
         super(point1,point2,  directionAngle, scenario, baseSpeed, distanceViewing, smellingDistance);
         setComponent(GUARD);
-        setAlgorithmValue(A_STAR);
-
-
+        //setAlgorithmValue(A_STAR);
     }
 
 }
