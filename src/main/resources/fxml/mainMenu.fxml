@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -31,7 +32,7 @@
             </Label>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#prevMap" style="-fx-background-color: #ffffff; -fx-border-color: #d0d0d0;">
+                  <Button mnemonicParsing="false" onAction="#prevMap">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -39,13 +40,16 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
                   <ImageView fx:id="mapView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/test-map-vis.png" />
                      </image>
                   </ImageView>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#nextMap" prefHeight="27.0" prefWidth="38.0" style="-fx-background-color: #fafafa; -fx-border-color: #d0d0d0;">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#nextMap" prefHeight="27.0" prefWidth="38.0">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -53,6 +57,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
                </children>
             </HBox>
@@ -63,7 +70,11 @@
                      <children>
                         <RadioButton fx:id="existingToggle" mnemonicParsing="false" selected="true" text=" ">
                            <graphic>
-                              <Button mnemonicParsing="false" onAction="#selectExisting" text="Select Existing" />
+                              <Button mnemonicParsing="false" onAction="#selectExisting" text="Select Existing">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
                            </graphic>
                            <toggleGroup>
                               <ToggleGroup fx:id="mapChoice" />
@@ -76,7 +87,11 @@
                         </Label>
                         <RadioButton fx:id="uploadToggle" mnemonicParsing="false" text=" " toggleGroup="$mapChoice">
                            <graphic>
-                              <Button mnemonicParsing="false" onAction="#uploadMap" text="Upload Scenario" />
+                              <Button mnemonicParsing="false" onAction="#uploadMap" text="Upload Scenario">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
                            </graphic>
                         </RadioButton>
                         <ChoiceBox fx:id="chosenAlgorithm" prefWidth="150.0" />
@@ -147,6 +162,9 @@
                <font>
                   <Font size="16.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
          </children>
          <padding>
