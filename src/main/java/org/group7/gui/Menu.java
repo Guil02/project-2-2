@@ -26,19 +26,12 @@ import org.group7.utils.Config;
 public class Menu {
 
     @FXML private ImageView defaultMapView;
-
     @FXML private RadioButton defaultChoice;
-
     @FXML private RadioButton uploadChoice;
-
     @FXML private ToggleGroup mapChoice;
-
     @FXML private Label message;
-
     @FXML private Button startButton;
-
     @FXML private Label uploadFileName;
-
     @FXML private Button uploadScenarioButton;
 
     private File scenarioFile;
@@ -60,7 +53,7 @@ public class Menu {
             GameRunner runner = new GameRunner(s);
             runner.start();
 
-            message.setText("Not implemented yet :(");
+            //message.setText("Not implemented yet :(");
         }
     }
 
