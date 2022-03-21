@@ -11,6 +11,8 @@ import org.group7.model.algorithms.ActionTuple;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.Teleporter;
 import org.group7.utils.Config;
+import org.group7.utils.Logger;
+
 import static org.group7.enums.ComponentEnum.TELEPORTER;
 import static org.group7.enums.ComponentEnum.WALL;
 
@@ -53,36 +55,9 @@ public class GameRunner extends AnimationTimer {
 //        currentState = new State(scenario.guards, scenario.intruders);
 //        states.add(currentState);
 
-//        gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
-        /*
-        Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
-        gameScreen = new GameScreen(renderer, scenario);
-        Main.stage.setScene(new Scene(gameScreen));
-
-        Main.stage.centerOnScreen();
-
-        renderer.res = 1.05 * Math.max(scenario.width / renderer.getViewportBounds().getWidth(), scenario.height / renderer.getViewportBounds().getHeight());
-        */
-
         setInitialVision();
         display.render();
     }
-
-//    @Override
-//    public void handle(long now) {
-//        //where update the game
-//        updatePlayers();
-//        gameScreen.render(scenario);
-//        elapsedTimeStep += timeStep;
-////        elapsedTimeStep += 1;
-////        if(elapsedTimeStep % 5 == 0) {
-//        if (elapsedTimeStep>count*5){
-//            count++;
-//            double coverage = calculateCoverage();
-//            System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
-//            //TODO: ask SAM --> break break if coverage is > 80
-//        }
-//    }
 
     @Override
     public void handle(long now) {
@@ -97,6 +72,12 @@ public class GameRunner extends AnimationTimer {
             double coverage = calculateCoverage();
             //System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
             display.updateStats(elapsedTimeStep, coverage);
+
+            //TODO: Maybe add Config setting for toggling logging or not
+            int step = ((int) (elapsedTimeStep * 100) / 100);   //in integer steps of 5
+            int cov = ((int) (coverage * 100) / 100);           //in integer percent
+
+            Logger.log(new String[]{String.valueOf(step), String.valueOf(cov)});
         }
     }
 
@@ -273,79 +254,3 @@ public class GameRunner extends AnimationTimer {
     }
 
 }
-
-/* OLD CODE - CLEANUP
-public double getSpeed(PlayerComponent p){
-        switch (p.getComponentEnum()){
-            case GUARD -> {
-                return scenario.baseSpeedGuard;
-            }
-            case INTRUDER -> {
-                return scenario.baseSpeedIntruder;
-            }
-            default -> {
-                return 0;
-            }
-
-        }
-    }
-
-private boolean checkTargetCollision(PlayerComponent p, double distance) {
-        // check if the agent collides with a wall.
-        for(int i = 0; i<scenario.targetAreas.size(); i++){
-            if(p.collision(scenario.targetAreas.get(i), distance)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-private boolean checkTeleporterCollision(PlayerComponent p, double distance) {
-        for(int i = 0; i<scenario.teleporters.size(); i++){
-            if(p.collision(scenario.teleporters.get(i), distance)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkWallCollision(PlayerComponent p, double distance) {
-        for(int i = 0; i<scenario.walls.size(); i++){
-            if(p.collision(scenario.walls.get(i), distance)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkCollision(PlayerComponent p, List<Component> list, double distance){
-        for (Component component : list) {
-            if (p.collision(component, distance) && !component.equals(p)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkSoundCollision(PlayerComponent p) {
-        p.setMovingSound();
-        Area soundArea = p.getMovingSound();
-        for (Guard guard: currentState.getGuards()) {
-            guard.setMovingSound();
-            if (soundArea.isHit(guard.getX(), guard.getY())) {
-                //make sure agents don't go nuts when they hear themselves
-                if (p.getCoordinates() != guard.getCoordinates())
-                    return true;
-            }
-        }
-        for (Intruder intruder: currentState.getIntruders()) {
-            intruder.setMovingSound();
-            if (soundArea.isHit(intruder.getX(), intruder.getY())) {
-                //make sure agents don't go nuts when they hear themselves
-                if (p.getCoordinates() != intruder.getCoordinates())
-                    return true;
-            }
-        }
-        return false;
-    }
- */
