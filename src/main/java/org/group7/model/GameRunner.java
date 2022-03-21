@@ -106,9 +106,9 @@ public class GameRunner extends AnimationTimer {
                     if(i < player.getBaseSpeed() && !isOutOfBounds(targetPoint)){
                         if(wallCollision(targetPoint)) {
                             break;
-                        } else if(playerCollision(player, targetPoint)){
+                        } else if (playerCollision(player, targetPoint)) {
                             break;
-                        } else if(teleporterCollision(targetPoint)){
+                        } else if (teleporterCollision(targetPoint)) {
                             Teleporter teleporter = (Teleporter) scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticComponent();
                             Point teleportTarget = teleporter.getTarget();
                             player.teleport(teleportTarget);
@@ -160,10 +160,10 @@ public class GameRunner extends AnimationTimer {
 
     private void movePoint(PlayerComponent player, Point point, int distance){
         switch (player.getOrientation()){
-            case UP -> point.y-=distance;
-            case DOWN -> point.y+=distance;
-            case LEFT -> point.x-=distance;
-            case RIGHT -> point.x+=distance;
+            case UP -> point.y -= distance;
+            case DOWN -> point.y += distance;
+            case LEFT -> point.x -= distance;
+            case RIGHT -> point.x += distance;
         }
     }
 

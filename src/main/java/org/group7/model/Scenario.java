@@ -120,12 +120,12 @@ public class Scenario {
 
     public Scenario() {
         // initialize all the lists
-        staticComponents = new ArrayList<>();
-        playerComponents = new ArrayList<>();
-        walls = new ArrayList<>();
-        shadedAreas = new ArrayList<>();
-        teleporters = new ArrayList<>();
-        targetAreas = new ArrayList<>();
+        staticComponents = new LinkedList<>();
+        playerComponents = new LinkedList<>();
+        walls = new LinkedList<>();
+        shadedAreas = new LinkedList<>();
+        teleporters = new LinkedList<>();
+        targetAreas = new LinkedList<>();
         guardSpawnAreas = new ArrayList<>();
         intruderSpawnAreas = new ArrayList<>();
         guards = new LinkedList<>();
@@ -256,7 +256,7 @@ public class Scenario {
         double dy = bottomRight.y - topLeft.y;
         while (i < numGuards){
             Point point = new Point(topLeft.x + dx * Math.random(), topLeft.y + dy * Math.random());
-            Guard player= new Guard(point,point.clone(),  Math.toRadians(0), this,baseSpeedGuard, distanceViewing , smellingDistance);
+            Guard player= new Guard(point, point.clone(),  Math.toRadians(0), this, baseSpeedGuard, distanceViewing , smellingDistance);
 
             playerComponents.add(player);
             guards.add(player);
@@ -272,10 +272,10 @@ public class Scenario {
         int i = 0;
         Point topLeft = intruderSpawnAreas.get(0).getTopLeft();
         Point bottomRight = intruderSpawnAreas.get(0).getBottomRight();
-        double dx = bottomRight.x-topLeft.x;
-        double dy = bottomRight.y-topLeft.y;
-        while(i<numIntruders){
-            Point point = new Point(topLeft.x+dx*Math.random(), topLeft.y+dy*Math.random());
+        double dx = bottomRight.x - topLeft.x;
+        double dy = bottomRight.y - topLeft.y;
+        while(i < numIntruders){
+            Point point = new Point(topLeft.x + dx*Math.random(), topLeft.y + dy*Math.random());
             Intruder player= new Intruder(point,point.clone(),  Math.random()*2*Math.PI, this,baseSpeedGuard, distanceViewing , smellingDistance);
             playerComponents.add(player);
             intruders.add(player);
