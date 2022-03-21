@@ -91,20 +91,6 @@ public abstract class PlayerComponent extends Component {
         return algorithm.calculateMovement();
     }
 
-    public double getDirectionAngle() {return directionAngle;}
-
-    public Vector2D getDirection() {return direction;}
-
-    public void setDirectionAngle(double directionAngle) {this.directionAngle = directionAngle;}
-
-    public double getViewFieldLength() {return viewFieldLength;}
-
-    public double getViewFieldAngle() {return viewFieldAngle;}
-
-    public Orientation getOrientation() {return orientation;}
-
-    public List<Grid> getAgentsCurrentVision() {return agentsCurrentVision;}
-
     public Scenario updateVision() {
         Scenario newScenario = simpleRay.calculateAgentVision(this);
         agentsCurrentVision.clear();
@@ -146,34 +132,22 @@ public abstract class PlayerComponent extends Component {
         }
     }
 
-    public void moveAgentForward(Actions action){
+    public void moveAgentForward(Actions action) {
         if(action == Actions.MOVE_FORWARD) {
             switch (this.orientation) {
-                case UP : changePositionCoordinates(0,-1); //Elena said this
-                    break;
-                case DOWN: changePositionCoordinates(0,1); //Elena said this
-                    break;
-                case LEFT: changePositionCoordinates(-1,0);
-                    break;
-                case RIGHT: changePositionCoordinates(1,0);
-                    break;
-                }
+                case UP -> changePositionCoordinates(0, -1); //Elena said this
+                case DOWN -> changePositionCoordinates(0, 1); //Elena said this
+                case LEFT -> changePositionCoordinates(-1, 0);
+                case RIGHT -> changePositionCoordinates(1, 0);
             }
         }
+    }
 
     public void changePositionCoordinates(double dx, double dy){
         getArea().getTopLeft().x += dx;
         getArea().getBottomRight().x += dx;
         getArea().getTopLeft().y += dy;
         getArea().getBottomRight().y += dy;
-    }
-
-
-    public void setViewFieldLength(double viewFieldLength) { this.viewFieldLength = viewFieldLength; }
-
-
-    public void setAlgorithmValue(AlgorithmEnum algorithmValue){
-        this.algorithmValue = algorithmValue;
     }
 
     private void initializeAlgorithm() {
@@ -191,20 +165,12 @@ public abstract class PlayerComponent extends Component {
         }
     }
 
-    public int getId() {
-        return id;
-    }
-
     public void setMovingSound() {
         Area initArea = this.getArea();
         Point topLeft = new Point((initArea.getTopLeft().x - (0.25*Config.DEFAULT_SOUND_DISTANCE)),initArea.getTopLeft().y - (0.25*Config.DEFAULT_SOUND_DISTANCE));
         Point bottomRight = new Point(initArea.getTopLeft().x + (0.25*Config.DEFAULT_SOUND_DISTANCE),initArea.getTopLeft().y + (0.25*Config.DEFAULT_SOUND_DISTANCE));
         this.movingSound = new Area(topLeft,bottomRight);
     }
-
-    public Area getMovingSound() { return movingSound;}
-
-    public double getBaseSpeed() { return baseSpeed; }
 
     public void teleport(Point target) {
         double x = target.x;
@@ -231,6 +197,35 @@ public abstract class PlayerComponent extends Component {
     public void setIgnoreTeleport(boolean ignoreTeleport) {
         this.ignoreTeleport = ignoreTeleport;
     }
+
+    public double getDirectionAngle() {return directionAngle;}
+
+    public Vector2D getDirection() {return direction;}
+
+    public void setDirectionAngle(double directionAngle) {this.directionAngle = directionAngle;}
+
+    public double getViewFieldLength() {return viewFieldLength;}
+
+    public double getViewFieldAngle() {return viewFieldAngle;}
+
+    public Orientation getOrientation() {return orientation;}
+
+    public List<Grid> getAgentsCurrentVision() {return agentsCurrentVision;}
+
+    public Area getMovingSound() { return movingSound;}
+
+    public double getBaseSpeed() { return baseSpeed; }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setViewFieldLength(double viewFieldLength) { this.viewFieldLength = viewFieldLength; }
+
+    public void setAlgorithmValue(AlgorithmEnum algorithmValue){
+        this.algorithmValue = algorithmValue;
+    }
+
 }
 
 /*    OLD MOVE METHODS
