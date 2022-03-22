@@ -8,111 +8,257 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
-<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.group7.gui.MainMenu">
+<HBox alignment="TOP_CENTER" minHeight="540.0" minWidth="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.group7.gui.MainMenu">
    <children>
-      <VBox alignment="TOP_CENTER" spacing="5.0" style="-fx-background-color: #fafafa;" HBox.hgrow="ALWAYS">
+      <VBox alignment="TOP_CENTER" spacing="15.0" style="-fx-background-color: #dcdde1;" HBox.hgrow="ALWAYS">
          <children>
-            <Label text="Surveillance">
-               <font>
-                  <Font size="36.0" />
-               </font>
-            </Label>
-            <Label text="Browse Map Library">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+            <VBox alignment="TOP_CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#prevMap">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../img/left-arrow.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <ImageView fx:id="mapView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/test-map-vis.png" />
-                     </image>
-                  </ImageView>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#nextMap" prefHeight="27.0" prefWidth="38.0">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../img/left-arrow.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
+                  <Label style="-fx-background-color: #f5f6fa; -fx-background-radius: 5px;" text="Surveillance">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="6.0" left="30.0" right="30.0" top="6.0" />
+                     </padding>
+                     <effect>
+                        <DropShadow height="25.0" radius="12.0" width="25.0">
+                           <color>
+                              <Color red="0.27368420362472534" green="0.27368420362472534" blue="0.27368420362472534" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </Label>
                </children>
-            </HBox>
-            <HBox>
+            </VBox>
+            <VBox alignment="CENTER" spacing="6.0" style="-fx-background-color: #f5f6fa; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="Browse Map Library">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </padding>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#prevMap" style="-fx-background-color: white; -fx-background-radius: 30;">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/left-arrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <padding>
+                              <Insets bottom="5.0" left="6.0" right="5.0" top="5.0" />
+                           </padding>
+                           <effect>
+                              <DropShadow blurType="GAUSSIAN">
+                                 <color>
+                                    <Color opacity="0.5" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                        </Button>
+                        <ImageView fx:id="mapView" fitHeight="240.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="SOMETIMES">
+                           <image>
+                              <Image url="@../img/test-map-vis.png" />
+                           </image>
+                        </ImageView>
+                        <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#nextMap" style="-fx-background-radius: 30; -fx-background-color: white;">
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/left-arrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="6.0" top="5.0" />
+                           </padding>
+                           <effect>
+                              <DropShadow blurType="GAUSSIAN">
+                                 <color>
+                                    <Color opacity="0.5" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="30.0" />
+               </padding>
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" radius="11.0" width="25.0">
+                     <color>
+                        <Color red="0.4941176474094391" green="0.4941176474094391" blue="0.4941176474094391" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </VBox>
+            <HBox alignment="CENTER" style="-fx-background-color: #f5f6fa; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
                <children>
                   <Region HBox.hgrow="ALWAYS" />
-                  <VBox spacing="10.0">
+                  <VBox alignment="CENTER" spacing="14.0">
                      <children>
-                        <RadioButton fx:id="existingToggle" mnemonicParsing="false" selected="true" text=" ">
-                           <graphic>
-                              <Button mnemonicParsing="false" onAction="#selectExisting" text="Select Existing">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                           </graphic>
-                           <toggleGroup>
-                              <ToggleGroup fx:id="mapChoice" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <Label text="Or">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Label>
-                        <RadioButton fx:id="uploadToggle" mnemonicParsing="false" text=" " toggleGroup="$mapChoice">
-                           <graphic>
-                              <Button mnemonicParsing="false" onAction="#uploadMap" text="Upload Scenario">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                           </graphic>
-                        </RadioButton>
-                        <ChoiceBox fx:id="chosenAlgorithm" prefWidth="150.0" />
-                        <CheckBox fx:id="logDataChoice" mnemonicParsing="false" text="Log Simulation Data" />
+                        <VBox style="-fx-background-color: #f5f6fa;">
+                           <children>
+                              <RadioButton fx:id="existingToggle" maxHeight="1.7976931348623157E308" mnemonicParsing="false" selected="true" text=" ">
+                                 <graphic>
+                                    <Button mnemonicParsing="false" onAction="#selectExisting" style="-fx-background-color: #487eb0;" text="Select Existing" textFill="WHITE">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                 </graphic>
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="mapChoice" />
+                                 </toggleGroup>
+                                 <padding>
+                                    <Insets bottom="6.0" left="10.0" right="4.0" top="6.0" />
+                                 </padding>
+                              </RadioButton>
+                           </children>
+                           <effect>
+                              <DropShadow blurType="GAUSSIAN">
+                                 <color>
+                                    <Color opacity="0.25" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </padding>
+                        </VBox>
+                        <VBox style="-fx-background-color: #f5f6fa;">
+                           <children>
+                              <ChoiceBox fx:id="chosenAlgorithm" prefWidth="170.0" style="-fx-background-color: #f5f6fa;">
+                                 <padding>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </padding>
+                              </ChoiceBox>
+                           </children>
+                           <effect>
+                              <DropShadow blurType="GAUSSIAN">
+                                 <color>
+                                    <Color opacity="0.25" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <Region maxWidth="60.0" HBox.hgrow="ALWAYS" />
+                  <VBox alignment="CENTER" spacing="14.0">
+                     <children>
+                        <VBox style="-fx-background-color: #f5f6fa;">
+                           <children>
+                              <RadioButton fx:id="uploadToggle" mnemonicParsing="false" text=" " toggleGroup="$mapChoice">
+                                 <graphic>
+                                    <Button mnemonicParsing="false" onAction="#uploadMap" style="-fx-background-color: #487eb0;" text="Upload Scenario" textFill="WHITE">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                 </graphic>
+                                 <padding>
+                                    <Insets bottom="6.0" left="10.0" right="4.0" top="6.0" />
+                                 </padding>
+                              </RadioButton>
+                           </children>
+                           <effect>
+                              <DropShadow blurType="GAUSSIAN">
+                                 <color>
+                                    <Color opacity="0.25" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </padding>
+                        </VBox>
+                        <VBox style="-fx-background-color: #f5f6fa;">
+                           <children>
+                              <CheckBox fx:id="logDataChoice" mnemonicParsing="false" text="Log Simulation Data">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="6.0" left="10.0" right="6.0" top="6.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                           <effect>
+                              <DropShadow blurType="GAUSSIAN">
+                                 <color>
+                                    <Color opacity="0.25" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                           <padding>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </padding>
+                        </VBox>
                      </children>
                   </VBox>
                   <Region HBox.hgrow="ALWAYS" />
                </children>
+               <padding>
+                  <Insets bottom="20.0" top="15.0" />
+               </padding>
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" radius="11.0" width="25.0">
+                     <color>
+                        <Color red="0.4941176474094391" green="0.4941176474094391" blue="0.4941176474094391" />
+                     </color>
+                  </DropShadow>
+               </effect>
             </HBox>
-            <Region />
-            <Label fx:id="messageLabel" text="Messsage" textFill="#d35400">
+            <Label fx:id="messageLabel" text="Messsage" textFill="#8c2008">
                <font>
-                  <Font name="System Italic" size="13.0" />
+                  <Font name="System Italic" size="16.0" />
                </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </Label>
          </children>
          <padding>
-            <Insets top="10.0" />
+            <Insets left="40.0" right="40.0" top="20.0" />
          </padding>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
       </VBox>
-      <VBox alignment="TOP_CENTER" minWidth="160.0" spacing="10.0" style="-fx-background-color: #2c3e50;" HBox.hgrow="SOMETIMES">
+      <VBox alignment="TOP_CENTER" minWidth="180.0" spacing="10.0" style="-fx-background-color: #2c3e50;" HBox.hgrow="SOMETIMES">
          <children>
             <Label text="Info" textFill="WHITE">
                <font>
@@ -125,12 +271,29 @@
                      <children>
                         <Label text="Selected Map:" textFill="WHITE">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
                         <Label fx:id="mapNameLabel" text="Default Map" textFill="WHITE">
                            <font>
-                              <Font name="System Italic" size="13.0" />
+                              <Font name="System Italic" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </padding>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="83.0" spacing="4.0" style="-fx-background-color: #34495e;">
+                     <children>
+                        <Label text="Game Mode:" textFill="WHITE">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="gameModeLabel1" text="Exploration" textFill="WHITE">
+                           <font>
+                              <Font name="System Italic" size="14.0" />
                            </font>
                         </Label>
                      </children>
@@ -140,14 +303,14 @@
                   </VBox>
                   <VBox spacing="4.0" style="-fx-background-color: #34495e;">
                      <children>
-                        <Label text="Game Mode:" textFill="WHITE">
+                        <Label text="Algorithm:" textFill="WHITE">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="gameModeLabel" text="Exploration" textFill="WHITE">
+                        <Label fx:id="algorithmLabel" text="A-Star" textFill="WHITE">
                            <font>
-                              <Font name="System Italic" size="13.0" />
+                              <Font name="System Italic" size="14.0" />
                            </font>
                         </Label>
                      </children>

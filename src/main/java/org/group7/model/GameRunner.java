@@ -87,14 +87,6 @@ public class GameRunner extends AnimationTimer {
 
     private void setInitialVision() {
         scenario.playerComponents.forEach(PlayerComponent::updateVision);
-
-//        for(int i = 0; i < scenario.guards.size(); i++){
-//            this.scenario = scenario.guards.get(i).updateVision();
-//        }
-//
-//        for(int i = 0; i < scenario.intruders.size(); i++){
-//            this.scenario = scenario.intruders.get(i).updateVision();
-//        }
     }
 
     private void updatePlayers(){
@@ -108,10 +100,7 @@ public class GameRunner extends AnimationTimer {
                     movePoint(player, targetPoint,i + 1);
 
                     if(i < player.getBaseSpeed() && !isOutOfBounds(targetPoint)){
-                        if (wallCollision(targetPoint) /*|| playerCollision(player, targetPoint)*/) {
-                            break;
-                        } else if (playerCollision(player, targetPoint)) {
-                            System.out.println("PLAYER COLLISION");
+                        if (wallCollision(targetPoint) || playerCollision(player, targetPoint)) {
                             break;
                         } else if (teleporterCollision(targetPoint)) {
                             Teleporter teleporter = (Teleporter) scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticComponent();

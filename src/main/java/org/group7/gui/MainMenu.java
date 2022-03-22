@@ -1,6 +1,8 @@
 package org.group7.gui;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.*;
@@ -8,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import org.group7.Main;
 import org.group7.enums.AlgorithmEnum;
 import org.group7.model.GameRunner;
@@ -24,25 +27,18 @@ import java.util.Map;
 public class MainMenu {
 
     @FXML private ChoiceBox<String> chosenAlgorithm;
-
     @FXML private Label gameModeLabel;
-
     @FXML private CheckBox logDataChoice;
-
     @FXML private ToggleGroup mapChoice;
-
     @FXML private Label mapNameLabel;
-
     @FXML private ImageView mapView;
-
     @FXML private Label messageLabel;
-
+    @FXML private Label algorithmLabel;
     @FXML private Button startButton;
     @FXML private RadioButton uploadToggle;
     @FXML private RadioButton existingToggle;
 
     private File scenarioFile;
-
     private Map<String, Image> mapLibrary;
 
     @FXML
@@ -77,14 +73,15 @@ public class MainMenu {
             mapNameLabel.setText(scenarioFile.getName().split("\\.")[0]);
             startButton.setDisable(false);
             if (mapLibrary.containsKey(scenarioFile.getName())) mapView.setImage(mapLibrary.get(scenarioFile.getName()));
-            else mapView.setEffect(new Shadow(25, Color.LIGHTGRAY));
+            else mapView.setEffect(new ColorAdjust(0,0,0.5,0.0));
         } else {
             messageLabel.setText("No file chosen!");
         }
     }
 
-    private int count = 0;
+    private int count = 1;
     private final List<String> maps = new ArrayList<>();
+    FadeTransition fade;
 
     @FXML
     void nextMap(ActionEvent event) {
@@ -106,8 +103,10 @@ public class MainMenu {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
         mapView.setImage(mapLibrary.get(mapFile));
-        mapView.setFitWidth(200);
+        fade.play();
+
         selectExisting(new ActionEvent());
     }
 
@@ -137,7 +136,6 @@ public class MainMenu {
         try {
             //initialize scenarioFile to default
             scenarioFile = new File(getClass().getResource(Config.DEFAULT_MAP_PATH).toURI());
-            mapView.setFitWidth(200);
             mapView.setImage(mapLibrary.get(scenarioFile.getName()));
 
         } catch (URISyntaxException e) {
@@ -145,13 +143,6 @@ public class MainMenu {
         }
 
         mapNameLabel.setText(scenarioFile.getName().split("\\.")[0]);
-
-        startButton.setOnMouseEntered(event -> startButton.setStyle("-fx-background-color: #27ae60;"));
-        startButton.setOnMouseExited(event -> startButton.setStyle("-fx-background-color: #2ecc71;"));
-
-        //define simple on-click events for the radio buttons
-        uploadToggle.setOnMouseClicked(event -> uploadMap(new ActionEvent()));     //open file chooser
-        existingToggle.setOnMouseClicked(event -> selectExisting(new ActionEvent())); //clear message text
 
         chosenAlgorithm.getItems().addAll(
                 "A*",
@@ -162,6 +153,20 @@ public class MainMenu {
         );
 
         chosenAlgorithm.setValue("Choose Algorithm");
+        chosenAlgorithm.setOnHidden(event -> algorithmLabel.setText(chosenAlgorithm.getValue()));
+        chosenAlgorithm.setStyle("-fx-font-size: 16; -fx-background-color: #f5f6fa;");
+
+        startButton.setOnMouseEntered(event -> startButton.setStyle("-fx-background-color: #27ae60;"));
+        startButton.setOnMouseExited(event -> startButton.setStyle("-fx-background-color: #2ecc71;"));
+
+        uploadToggle.setOnMouseClicked(event -> uploadMap(new ActionEvent()));     //open file chooser
+        existingToggle.setOnMouseClicked(event -> selectExisting(new ActionEvent())); //clear message text
+
+        fade = new FadeTransition(Duration.millis(200), mapView);
+        fade.setFromValue(0.1);
+        fade.setToValue(1);
+        fade.setRate(0.2);
+
     }
 
 }
