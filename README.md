@@ -1,4 +1,4 @@
-# Group09_2022
+# Group07_2022
 
 ## Multi-Agent Surveillance!
 
@@ -19,4 +19,9 @@
 2. GameMode - for this phase the GameMode is by default ``Exploration``. Come back at the end of phase two for an update.
 3. Algorithm - choose an algorithm for the exploration of the map/scenario.
 4. Track stats - in case you want to get a ``csv file`` choose ```Log Simulation Data```.
-5. Enjoy - in the bottom you can find the elapsed time and the current total coverage. "Follow" different agents by clicking on their associated icon. Make sure to zoom in/out to see the whole map. 
+5. Enjoy - in the bottom you can find the elapsed time and the current total coverage. "Follow" different agents by clicking on their associated icon. Make sure to zoom in/out to see the whole map.
+
+### Known bugs:
+* the simulation keeps slowing down for no reason.
+* frontier based algorithm keeps looping.
+* 
