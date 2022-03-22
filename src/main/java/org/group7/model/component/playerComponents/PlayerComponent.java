@@ -90,7 +90,6 @@ public abstract class PlayerComponent extends Component {
 
     public Scenario updateVision() {
         Scenario newScenario = simpleRay.calculateAgentVision(this);
-        agentsCurrentVision.clear();
         agentsCurrentVision = simpleRay.getFurthestFrontierGrid();
         return newScenario;
     }
