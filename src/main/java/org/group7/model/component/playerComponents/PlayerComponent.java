@@ -162,7 +162,7 @@ public abstract class PlayerComponent extends Component {
                 algorithm = new Random((int) initialPosition.getX(), (int) initialPosition.getY(), getScenario().getMap(),this, 5);
             }
             case FRONTIER -> {
-                algorithm = new Frontier((int) initialPosition.x, (int) initialPosition.y, getScenario().getMap(), new Grid[5][5], this);
+                algorithm = new Frontier((int) initialPosition.x, (int) initialPosition.y, getScenario().getMap(), this);
             }
         }
     }

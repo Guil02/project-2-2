@@ -7,139 +7,203 @@ import org.group7.model.Grid;
 import org.group7.model.component.playerComponents.PlayerComponent;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
+import java.util.Map;
+
+class Node {
+    private int x;
+    private int y;
+    private Grid value;
+
+    public Node(int x, int y, Grid value) {
+        this.x = x;
+        this.y = y;
+        this.value = value;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Grid getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "(x: " + x + " y: " + y + ")";
+    }
+
+    @Override
+    public int hashCode() {
+        return x * y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (this.getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return x == node.x && y == node.y;
+    }
+}
+
 
 public class Frontier implements Algorithm {
-    static final int ROW = 4;
-    static final int COL = 4;
-//    static int dRow[] = {-1, 0, 1, 0};
-//    static int dCol[] = {0, 1, 0, -1};
     private static Grid centroid = null;
+    private static boolean firstTime = true;
+    private static Grid tempGrid = null;
+    private static Grid previousGrid = null;
+    private static List<Actions> actionPath = new ArrayList<>();
+    private static Grid currentGrid = null;
+    private static List<Orientation> listOfOrientations = new ArrayList<>();
+    private static boolean firstEntry = true;
+    //private final Grid[][] playerMap;
     private final int initialX;
     private final int initialY;
     private final PlayerComponent player;
-    private final List<Grid> leftOverFrontiers = new ArrayList<>();
-    private final List<Grid> furthestFrontierGrid = new ArrayList<>();
     private final Grid[][] map;
-    private final Grid[][] playerMap;
-    List<ActionTuple> movesLeft;
-    private boolean firstTime = true;
-    private Grid tempGrid = null;
-    private Grid previousGrid = null;
-    private List<Actions> actionPath = new ArrayList<>();
+    private List<Grid> leftOverFrontiers = new ArrayList<>();
+    private List<Grid> furthestFrontierGrid = new ArrayList<>();
     private int temp = 0;
 
-    public Frontier(int initialX, int initialY, Grid[][] map, Grid[][] playerMap, PlayerComponent player) {
+    public Frontier(int initialX, int initialY, Grid[][] map, PlayerComponent player) {
         this.initialX = initialX;
 
         this.initialY = initialY;
         this.map = map;
-        this.playerMap = playerMap;
         this.player = player;
     }
 
-    // Function to perform the BFS traversal
-//    static void BFS(int grid[][], boolean vis[][],
-//                    int row, int col) {
-//
-//        // Stores indices of the matrix cells
-//        Queue<pair> q = new LinkedList<>();
-//
-//        // Mark the starting cell as visited
-//        // and push it into the queue
-//        q.add(new pair(row, col));
-//        vis[row][col] = true;
-//
-//        // Iterate while the queue
-//        // is not empty
-//        while (!q.isEmpty()) {
-//            pair cell = q.peek();
-//            int x = cell.first;
-//            int y = cell.second;
-//
-//            System.out.print(grid[x][y] + " ");
-//
-//            q.remove();
-//
-//            // Go to the adjacent cells
-//            for (int i = 0; i < 4; i++) {
-//                int adjx = x + dRow[i];
-//                int adjy = y + dCol[i];
-//
-//                if (isValid(vis, adjx, adjy)) {
-//                    q.add(new pair(adjx, adjy));
-//                    vis[adjx][adjy] = true;
-//                }
-//            }
-//        }
-//
-//    }
-//
-//    // Function to check if a cell
-//// is be visited or not
-//    public static boolean isValid(boolean vis[][], int row, int col) {
-//
-//        // If cell lies out of bounds
-//        if (row < 0 || col < 0 ||
-//                row >= ROW || col >= COL)
-//            return false;
-//
-//        // If cell is already visited
-//        if (vis[row][col])
-//            return false;
-//
-//        // Otherwise
-//        return true;
-//    }
+    public List<Node> shortestPath() {
+        // key node, value parent
+        Map<Node, Node> parents = new HashMap<Node, Node>();
+        Node start = null;
+        Node end = null;
 
-    //TODO: Please fix compilation errors. Do not push code to github that does not compile!!!
-    /*
-    private static int pathExists(Grid[][] grids) {
+        // find the start node
+        for (int row = 0; row < map.length; row++) {
+            for (int column = 0; column < map[row].length; column++) {
+                if (map[row][column] == map[(int) player.getX()][(int) player.getY()]) {
+                    start = new Node(row, column, map[row][column]);
+                    break;
+                }
+            }
+            if (start != null) {
+                break;
+            }
+        }
 
-        Node source = new Node(0, 0, 0);
-        Queue<Node> queue = new LinkedList<Node>();
+        if (start == null) {
+            throw new RuntimeException("can't find start node");
+        }
 
-        queue.add(source);
+        // traverse every node using breadth first search until reaching the destination
+        List<Node> temp = new ArrayList<Node>();
+        temp.add(start);
+        parents.put(start, null);
 
-        while (!queue.isEmpty()) {
-            Node poped = queue.poll();
+        boolean reachDestination = false;
+        while (temp.size() > 0 && !reachDestination) {
+            Node currentNode = temp.remove(0);
+            List<Node> children = getChildren(currentNode);
+            for (Node child : children) {
+                // Node can only be visited once
+                if (!parents.containsKey(child)) {
+                    parents.put(child, currentNode);
 
-            Grid centroid = Frontier.centroid;
-            if (grids[poped.x][poped.y].equals(centroid)) {
-                return poped.distanceFromSource;
-            } else {
-
-                if (grids[poped.x - 1][poped.y].getStaticCompE() == ComponentEnum.WALL || grids[poped.x - 1][poped.y].seen=true)) {
-
-                    List<Node> neighbourList = addNeighbours(poped, grids);
-                    queue.addAll(neighbourList);
+                    Grid value = child.getValue();
+                    if (value.getStaticCompE() != ComponentEnum.WALL && value.explored) { //seen and not wall
+                        temp.add(child);
+                    } else if (value.equals(centroid)) { //destination
+                        temp.add(child);
+                        reachDestination = true;
+                        end = child;
+                        break;
+                    }
                 }
             }
         }
-        return -1;
+
+        if (end == null) {
+            throw new RuntimeException("can't find end node");
+        }
+
+        // get the shortest path
+        Node node = end;
+        List<Node> path = new ArrayList<Node>();
+        while (node != null) {
+            path.add(0, node);
+            node = parents.get(node);
+        }
+        printPath(path);
+        return path;
     }
 
-    private static List<Node> addNeighbours(Node poped, Grid[][] matrix) {
-
-        List<Node> list = new LinkedList<Node>();
-
-        if ((poped.x - 1 >= 0 && poped.x - 1 < matrix.length) && (!(matrix[poped.x - 1][poped.y].getStaticCompE() == ComponentEnum.WALL) || !matrix[poped.x - 1][poped.y].seen)) { //
-            list.add(new Node(poped.x - 1, poped.y, poped.distanceFromSource + 1));
+    private List<Node> getChildren(Node parent) {
+        List<Node> children = new ArrayList<Node>();
+        int x = parent.getX();
+        int y = parent.getY();
+        if (x - 1 >= 0) {
+            Node child = new Node(x - 1, y, map[x - 1][y]);
+            children.add(child);
         }
-        if ((poped.x + 1 >= 0 && poped.x + 1 < matrix.length) && (!(matrix[poped.x - 1][poped.y].getStaticCompE() == ComponentEnum.WALL) || !matrix[poped.x - 1][poped.y].seen)) {
-            list.add(new Node(poped.x + 1, poped.y, poped.distanceFromSource + 1));
+        if (y - 1 >= 0) {
+            Node child = new Node(x, y - 1, map[x][y - 1]);
+            children.add(child);
         }
-        if ((poped.y - 1 >= 0 && poped.y - 1 < matrix.length) && (!(matrix[poped.x - 1][poped.y].getStaticCompE() == ComponentEnum.WALL) || !matrix[poped.x - 1][poped.y].seen)) {
-            list.add(new Node(poped.x, poped.y - 1, poped.distanceFromSource + 1));
+        if (x + 1 < map.length) {
+            Node child = new Node(x + 1, y, map[x + 1][y]);
+            children.add(child);
         }
-        if ((poped.y + 1 >= 0 && poped.y + 1 < matrix.length) && (!(matrix[poped.x - 1][poped.y].getStaticCompE() == ComponentEnum.WALL) || !matrix[poped.x - 1][poped.y].seen)) {
-            list.add(new Node(poped.x, poped.y + 1, poped.distanceFromSource + 1));
+        if (y + 1 < map[0].length) {
+            Node child = new Node(x, y + 1, map[x][y + 1]);
+            children.add(child);
         }
-        return list;
+        return children;
     }
-    */
+
+    private void printPath(List<Node> path) {
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_RED = "\u001B[31m";
+
+        for (int row = 0; row < map.length; row++) {
+            for (int column = 0; column < map[row].length; column++) {
+                String value = map[row][column] + "";
+
+                // mark path with red X
+                for (int i = 1; i < path.size() - 1; i++) {
+                    Node node = path.get(i);
+                    if (node.getX() == row && node.getY() == column) {
+                        value = ANSI_RED + "X" + ANSI_RESET;
+                        break;
+                    }
+                }
+                if (column == map[row].length - 1) {
+                    System.out.println(value);
+                } else {
+                    System.out.print(value + ".....");
+                }
+            }
+
+            if (row < map.length - 1) {
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < map[row].length - 1; j++) {
+                        System.out.print(".     ");
+                    }
+                    System.out.println(".     ");
+                }
+            }
+        }
+        System.out.println();
+        System.out.println("Path: " + path);
+    }
 
     public List<Orientation> updateOrientaion(List<Orientation> temp) {
 
@@ -151,255 +215,201 @@ public class Frontier implements Algorithm {
         return temp;
     }
 
-    public List<Grid> getNorthFrontiers() {
-        Orientation orientation = player.getOrientation();
-        List<Grid> north_frontiers = new ArrayList<>();
-        if (orientation == Orientation.UP) {
-            north_frontiers.addAll(player.getAgentsCurrentVision());
-        }
-        return north_frontiers;
-    }
-
-    public List<Grid> getSouthFrontiers() {
-        Orientation orientation = player.getOrientation();
-        List<Grid> south_frontiers = new ArrayList<>();
-        if (orientation == Orientation.DOWN) {
-            south_frontiers.addAll(player.getAgentsCurrentVision());
-        }
-        return south_frontiers;
-    }
-
-    public List<Grid> getWestFrontiers() {
-        Orientation orientation = player.getOrientation();
-        List<Grid> west_frontiers = new ArrayList<>();
-        if (orientation == Orientation.LEFT) {
-            west_frontiers.addAll(player.getAgentsCurrentVision());
-        }
-        return west_frontiers;
-    }
-
-    public List<Grid> getEastFrontiers() {
-        Orientation orientation = player.getOrientation();
-        List<Grid> east_frontiers = new ArrayList<>();
-        if (orientation == Orientation.RIGHT) {
-            east_frontiers.addAll(player.getAgentsCurrentVision());
-        }
-        return east_frontiers;
-    }
-
     @Override
     public ActionTuple calculateMovement() {
 
-        if (actionPath.isEmpty()) {
 
+        //List<Actions> actionPath = new ArrayList<>();
+        Orientation orientation = player.getOrientation();
 
-            //List<Actions> actionPath = new ArrayList<>();
-            Orientation orientation = player.getOrientation();
-            List<Orientation> listOfOrientations = new ArrayList<>();
+        if (firstTime) {
+            firstTime = false;
+            listOfOrientations = updateOrientaion(listOfOrientations);
+        }
 
-            if (firstTime) {
-                firstTime = false;
-                listOfOrientations = updateOrientaion(listOfOrientations);
+        if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.RIGHT) {  // ---->>>
+
+            if (player.getAgentsCurrentVision().size() == 2) {
+                Grid g = new Grid(0, 0);
+                g.setTypeWall();
+                furthestFrontierGrid.add(g);
             }
 
-            if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.RIGHT) {  // ---->>>
+            List<Grid> gridss = player.getAgentsCurrentVision();
+            furthestFrontierGrid.addAll(gridss);
+            listOfOrientations.remove(Orientation.RIGHT);
 
-                if (player.getAgentsCurrentVision().size() == 2) {
-                    furthestFrontierGrid.add(null);
-                }
+            return new ActionTuple(Actions.TURN_DOWN, 0);
 
-                furthestFrontierGrid.addAll(player.getAgentsCurrentVision());
-                listOfOrientations.remove(Orientation.RIGHT);
+        } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.DOWN) {
 
-                return new ActionTuple(Actions.TURN_DOWN, 0);
+            if (player.getAgentsCurrentVision().size() != 3) {
+                Grid g = new Grid(0, 0);
+                g.setTypeWall();
+                furthestFrontierGrid.add(g);
+            }
+            List<Grid> gridss = player.getAgentsCurrentVision();
+            for (Grid grid : gridss) {
+                furthestFrontierGrid.add(grid);
+            }
+            listOfOrientations.remove(Orientation.DOWN);
 
-            } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.DOWN) {
+            return new ActionTuple(Actions.TURN_LEFT, 0);
 
-                if (player.getAgentsCurrentVision().size() == 2) {
-                    furthestFrontierGrid.add(null);
-                }
-                furthestFrontierGrid.addAll(player.getAgentsCurrentVision());
-                listOfOrientations.remove(Orientation.DOWN);
+        } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.LEFT) {
 
-                return new ActionTuple(Actions.TURN_LEFT, 0);
-
-            } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.LEFT) {
-
-                if (player.getAgentsCurrentVision().size() == 2) {
-                    furthestFrontierGrid.add(null);
-                }
-                furthestFrontierGrid.addAll(player.getAgentsCurrentVision());
-
-                return new ActionTuple(Actions.TURN_UP, 0);
-
-            } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.UP) {
-
-                if (player.getAgentsCurrentVision().size() == 2) {
-                    furthestFrontierGrid.add(null);
-                }
-                furthestFrontierGrid.addAll(player.getAgentsCurrentVision());
-                listOfOrientations.remove(Orientation.UP);
-
-                return new ActionTuple(Actions.TURN_RIGHT, 0);
+            if (player.getAgentsCurrentVision().size() != 3) {
+                Grid g = new Grid(0, 0);
+                g.setTypeWall();
+                furthestFrontierGrid.add(g);
+            }
+            List<Grid> gridss = player.getAgentsCurrentVision();
+            for (Grid grid : gridss) {
+                furthestFrontierGrid.add(grid);
             }
 
-            if (listOfOrientations.isEmpty()) {
+            listOfOrientations.remove(Orientation.LEFT);
 
-                boolean firstEntry = true;
+            return new ActionTuple(Actions.TURN_UP, 0);
 
-                int count = 0;
+        } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.UP) {
 
-                for (Grid grid : furthestFrontierGrid) {//loop through list of the furthest grid arrays
+            if (player.getAgentsCurrentVision().size() != 3) {
+                Grid g = new Grid(0, 0);
+                g.setTypeWall();
+                furthestFrontierGrid.add(g);
+            }
+            List<Grid> gridss = player.getAgentsCurrentVision();
+            for (Grid grid : gridss) {
+                furthestFrontierGrid.add(grid);
+            }
+            listOfOrientations.remove(Orientation.UP);
 
-                    if (count != 3) {
+            return new ActionTuple(Actions.TURN_RIGHT, 0);
+        }
 
-                        if (grid.getStaticComponent() == null && firstEntry) { //checks for frontiers
-                            firstEntry = false;
 
-                            count++;
+        int count = 0;
 
-                            tempGrid = grid;
+        for (Grid grid : furthestFrontierGrid) {//loop through list of the furthest grid arrays
+            while (count != 3) {
+                if (grid.getStaticComponent() == null && firstEntry) { //checks for frontiers
+                    firstEntry = false;
 
-                            if (count == 3) {
-                                leftOverFrontiers.add(tempGrid);
-                            }
-                            // adds frontier to the frontier array
-                            //looks through the biggest first frontier
-                            //goes towards it,delete it from the leftOverList
-                        } else if (grid.getStaticCompE() == ComponentEnum.WALL && !firstEntry) { //checks for frontiers
-                            if (count == 1 || count == 2) {
-                                if (tempGrid == null) {
-                                    count++;
-                                } else if (count == 2) {
-                                    firstEntry = true;
-                                    count++;
+                    count++;
 
-                                    leftOverFrontiers.add(tempGrid);
-                                }
-                            }
-                            //end the array/create a new one
+                    tempGrid = grid;
 
-                        } else if (grid.getStaticCompE() == null && !firstEntry) {
-                            count++;
-                            if (count == 3) {
-                                leftOverFrontiers.add(tempGrid);
-                            }
-                            tempGrid = grid;
-
-                        } else if (grid.getStaticCompE() == ComponentEnum.WALL && firstEntry) {
-                            count++;
-                            //end the array/create a new one
-
-                        }
-                    } else {
-
+                    if (count == 3) {
+                        leftOverFrontiers.add(tempGrid);
                         firstEntry = true;
                         count = 0;
                         tempGrid = null;
-
                     }
+                    // adds frontier to the frontier array
+                    //looks through the biggest first frontier
+                    //goes towards it,delete it from the leftOverList
+                } else if (grid.getStaticCompE() == ComponentEnum.WALL && !firstEntry) { //checks for frontiers
 
 
-                }
-// {list of potential centroids to use...n-1, n }
-                //we are choosing the last entry
-
-                furthestFrontierGrid.clear();
-
-                if (previousGrid.getX() == leftOverFrontiers.get(leftOverFrontiers.size() - 1).getX() && previousGrid.getY() == leftOverFrontiers.get(leftOverFrontiers.size() - 1).getY()) {
-                    centroid = leftOverFrontiers.get(leftOverFrontiers.size() - 2);
-                    leftOverFrontiers.remove(leftOverFrontiers.size() - 2);
-                } else {
-                    centroid = leftOverFrontiers.get(leftOverFrontiers.size() - 1);
-                    leftOverFrontiers.remove(leftOverFrontiers.size() - 1);
-                }
-                previousGrid = new Grid((int) (player.getX()), (int) (player.getY()));
-
-                //TODO: CENTROID->GO TO IT
-                //TODO:map for every player
-                int centroidX = centroid.getX();
-                int centroidY = centroid.getY();
-
-                player.getCoordinates().getX();
-                player.getCoordinates().getY();
-
-                int xDif = (int) (centroidX - player.getX());
-                int yDif = (int) (centroidY - player.getY());
-
-
-                //TODO: use that map to go towards centroid
-                //TODO: return ActionTuple or list of ActionTuple idk
-                //actionPath = findPath(centroid);
-
-                firstTime = true;
-                leftOverFrontiers.remove(leftOverFrontiers.size() - 1);
-
-
-            }
-
-
-        } else {
-            for (Actions action : actionPath) {
-                //store action\
-                //execute it
-                // remove that action
-                actionPath.remove(action);
-            }
-        }
-
-        ActionTuple actionTuple = new ActionTuple(Actions.MOVE_FORWARD, 0);
-        return actionTuple;
-    }
-
-    //List of the path from starting point to the end destination, so it doesn't evaluate new options very timestep
-    public List<ActionTuple> findPath() {
-        List<ActionTuple> path = new ArrayList<>();
-        List<Actions> actions = new ArrayList<>(); //need a list of coordinates from start to end destination
-        double speed = player.getBaseSpeed();
-
-        for (int x = 0; x < actions.size(); x++) {
-            if (actions.get(x) == Actions.MOVE_FORWARD) {
-                int count = 1;
-                for (int y = x + 1; y < actions.size() && y < speed; y++) {
-                    if (actions.get(y) == Actions.MOVE_FORWARD) {
-                        x++;
+                    if (count == 2 || count == 1) {
+                        leftOverFrontiers.add(tempGrid);
+                        firstEntry = true;
+                        tempGrid = null;
                         count++;
-                    } else {
-                        break;
+                    } else if (count == 3) {
+                        leftOverFrontiers.add(tempGrid);
+                        firstEntry = true;
+                        count = 0;
+                        tempGrid = null;
                     }
+
+                } else if (grid.getStaticCompE() == null && !firstEntry) {
+                    count++;
+                    if (count == 3) {
+                        leftOverFrontiers.add(tempGrid);
+                    }
+                    tempGrid = grid;
+
+                } else if (grid.getStaticCompE() == ComponentEnum.WALL && firstEntry) {
+                    count++;
+                    //end the array/create a new one
+
                 }
-                path.add(new ActionTuple(actions.get(x), count));
-            } else {
-                path.add(new ActionTuple(actions.get(x), 0));
             }
+            //end the array/create a new one
+
         }
-        return path;
+
+
+        furthestFrontierGrid.clear();
+
+//                if (previousGrid.getX() == leftOverFrontiers.get(leftOverFrontiers.size() - 1).getX() && previousGrid.getY() == leftOverFrontiers.get(leftOverFrontiers.size() - 1).getY()) {
+//                    centroid = leftOverFrontiers.get(leftOverFrontiers.size() - 2);
+//                    leftOverFrontiers.remove(leftOverFrontiers.size() - 2);
+//                } else {
+//                    centroid = leftOverFrontiers.get(leftOverFrontiers.size() - 1);
+//                    leftOverFrontiers.remove(leftOverFrontiers.size() - 1);
+//                }
+
+        //System.out.println(leftOverFrontiers.get(leftOverFrontiers.size() - 1));
+        centroid = leftOverFrontiers.get(leftOverFrontiers.size() - 1);
+        leftOverFrontiers.remove(leftOverFrontiers.size() - 1);
+        previousGrid = new Grid((int) (player.getX()), (int) (player.getY()));
+
+        //TODO: CENTROID->GO TO IT
+        //TODO:map for every player
+
+
+        //Grid[][] currentGrid = new Grid[(int) player.getCoordinates().getX()][(int) player.getCoordinates().getY()];
+        List<Node> nodePath = shortestPath();
+
+        for (Node node :
+                nodePath) {
+
+
+            if (node.getX() - player.getCoordinates().getX() > 0) {//right
+
+                if (player.getOrientation() != Orientation.RIGHT) {
+
+                    return new ActionTuple(Actions.TURN_RIGHT, 0);
+                } else if (player.getOrientation() == Orientation.RIGHT) {
+                    return new ActionTuple(Actions.MOVE_FORWARD, 1);
+                }
+            }
+            if (node.getX() - player.getCoordinates().getX() < 0) {//left
+                if (player.getOrientation() != Orientation.LEFT) {
+
+                    return new ActionTuple(Actions.TURN_LEFT, 0);
+                } else if (player.getOrientation() == Orientation.LEFT) {
+                    return new ActionTuple(Actions.MOVE_FORWARD, 1);
+                }
+            }
+
+
+            if (node.getY() - player.getCoordinates().getY() > 0) {//down
+                if (player.getOrientation() != Orientation.DOWN) {
+                    return new ActionTuple(Actions.TURN_DOWN, 0);
+                } else if (player.getOrientation() == Orientation.DOWN) {
+                    return new ActionTuple(Actions.MOVE_FORWARD, 1);
+                }
+            } else if (node.getY() - player.getCoordinates().getY() < 0) {//up
+                if (player.getOrientation() != Orientation.UP) {
+
+                    return new ActionTuple(Actions.TURN_UP, 0);
+                } else if (player.getOrientation() == Orientation.UP) {
+                    return new ActionTuple(Actions.MOVE_FORWARD, 1);
+                }
+            }
+
+        }
+
+
+        return null;
     }
 
-    static class pair {
-        int first, second;
-
-        public pair(int first, int second) {
-            this.first = first;
-            this.second = second;
-        }
-    }
 }
 
-class Node {
-    int x;
-    int y;
-    int distanceFromSource;
 
-    Node(int x, int y, int dis) {
-        this.x = x;
-        this.y = y;
-        this.distanceFromSource = dis;
-    }
-
-    //maybe useful for u Roman
-
-
-}
 
 

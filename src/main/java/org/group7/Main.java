@@ -4,17 +4,18 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.group7.gui.Menu;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main extends Application {
 
     public static Stage stage;  //so we can access the stage easily from other (GUI) classes
 
-    public static void main(String[] args) {launch();}
+    public static void main(String[] args) {
+        launch();
+    }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
