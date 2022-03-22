@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.group7.enums.ComponentEnum.EMPTY_SPACE;
+import static org.group7.enums.ComponentEnum.WALL;
 
 public class Grid {
     private StaticComponent staticComponent = null;
@@ -110,6 +111,7 @@ public class Grid {
         return y;
     }
 
+
 //    @Override
 //    public String toString() {
 //        return getStaticComp();
@@ -137,4 +139,7 @@ public class Grid {
     }
 
 
+    public void setTypeWall(){
+        this.type = WALL;
+    }
 }
