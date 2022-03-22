@@ -1,7 +1,6 @@
 package org.group7.gui;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,10 +11,13 @@ import org.group7.Main;
 import org.group7.model.Scenario;
 import org.group7.utils.Methods;
 
+import java.util.List;
+
 public class SimulationScreen extends BorderPane {
 
     private final View view;
     private boolean running;
+    private List<GuardUI> guardsVis;
 
     public SimulationScreen() {
         view = new View();
@@ -24,6 +26,7 @@ public class SimulationScreen extends BorderPane {
 
     public void render() {
         view.update();
+        guardsVis.forEach(GuardUI::update);
     }
 
     public void updateStats(double elapsedTimeStep, double coverage) {
@@ -62,6 +65,15 @@ public class SimulationScreen extends BorderPane {
         };
 
         gameModeLabel.setText(gameMode);
+
+        guardsVis = Scenario.getInstance().getGuards().stream()
+                        .map(GuardUI::new)
+                        .toList();
+
+        guardsVis.forEach(g -> {
+            guardsList.getChildren().add(g);
+            g.setOnMouseClicked(e -> g.select());
+        });
 
         pauseButton.setOnAction(event -> {
             //gameRunner.stop();

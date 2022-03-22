@@ -52,6 +52,7 @@ public class MainMenu {
             Scenario s = new Scenario(scenarioFile);
             GameRunner runner = new GameRunner(s);
             runner.start();
+
         } else {
             messageLabel.setText("Please Select an Algorithm");
         }

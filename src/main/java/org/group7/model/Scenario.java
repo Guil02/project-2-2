@@ -72,8 +72,9 @@ public class Scenario {
         //addBorderWalls();
         for(int i = 0; i<height; i++){
             for(int j = 0; j<width; j++){
-                map[j][i].seen = new ArrayList<>();
                 int totalPlayers = numGuards + numIntruders;
+                map[j][i].seen = new ArrayList<>(totalPlayers);
+                Grid.numGridsSeenBy = new int[totalPlayers];
                 for(int k = 0; k < totalPlayers; k++){
                     map[j][i].seen.add(k,false);
                 }
@@ -296,7 +297,7 @@ public class Scenario {
         map = new Grid[width][height];
         for(int i = 0; i<width; i++){
             for(int j = 0; j<height; j++){
-                map[i][j] = new Grid(i,j);
+                map[i][j] = new Grid(i, j);
             }
         }
     }

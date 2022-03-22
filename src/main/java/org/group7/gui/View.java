@@ -71,15 +71,14 @@ public class View extends ScrollPane {
         g.setFill(Color.rgb(52, 152, 219));
         for (Guard guard : scenario.getGuards()) {
             paintTile(guard.getX(), guard.getY());
-
-//            g.setFill(Color.rgb(241, 196, 15));
-//            for (Grid grid : guard.simpleRay.getFurthestFrontierGrid()) {
-//                paintTile(grid.getX(), grid.getY());
-//                System.out.println(grid.getType());
-//            }
         }
 
-        g.setFill(Color.rgb(230, 126, 34));
+        if (GuardUI.selected != 0) {
+            g.setFill(Color.rgb(225, 177, 44));
+            paintTile(GuardUI.selectedGuard.guard.getX(), GuardUI.selectedGuard.guard.getY());
+        }
+
+        g.setFill(Color.rgb(192, 57, 43));
         scenario.getIntruders().forEach(intr -> paintTile(intr.getX(), intr.getY()));
     }
 
@@ -95,10 +94,12 @@ public class View extends ScrollPane {
                 paintTile(x, y);
 
                 //if you see any yellow tiles then the actual agent position does not match the position in the Grid matrix
+                /* (uncomment for debugging)
                 if (tile.getPlayerComponent() != null) {
                     g.setFill(Color.YELLOW);
                     paintTile(x, y);
                 }
+                 */
             }
         }
     }

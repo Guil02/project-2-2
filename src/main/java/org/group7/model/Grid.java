@@ -1,7 +1,6 @@
 package org.group7.model;
 
 import org.group7.enums.ComponentEnum;
-import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.StaticComponent;
 
@@ -12,6 +11,8 @@ import java.util.List;
 import static org.group7.enums.ComponentEnum.EMPTY_SPACE;
 
 public class Grid {
+    public static int[] numGridsSeenBy;
+
     private StaticComponent staticComponent = null;
     private PlayerComponent playerComponent = null;
     public boolean explored = false;
@@ -50,7 +51,11 @@ public class Grid {
         this.explored = true;
     }
 
-    public void exploreAgent(int id) {seen.set(id,Boolean.TRUE);}
+    public void exploreAgent(int id) {
+        if (!seen.get(id)) numGridsSeenBy[id]++;
+
+        seen.set(id,Boolean.TRUE);
+    }
 
     public String getStaticComp(){
         if(staticComponent!=null){
