@@ -24,13 +24,8 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainMenu.fxml"));
         Scene scene = new Scene(root);
 
-//        Menu menu = new Menu();
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/promotionPane.fxml"));
-//        loader.setController(menu);
-//        loader.setRoot(menu);
-//        loader.load();
         //if we want an icon for the application:
-        //stage.getIcons().add(new Image("/img/icon.png"));
+        stage.getIcons().add(new Image("/img/icon.png"));
 
         stage.setTitle("Surveillance System");
         stage.setScene(scene);

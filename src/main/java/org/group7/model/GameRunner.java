@@ -27,9 +27,9 @@ public class GameRunner extends AnimationTimer {
     private Scenario scenario;
     State currentState;
 
-    SimulationScreen display;
+    private final SimulationScreen display;
 
-    double timeStep;
+    private final double timeStep;
     double elapsedTimeStep; //total time
     int count = 0;
 
@@ -51,11 +51,11 @@ public class GameRunner extends AnimationTimer {
         Main.stage.setScene(new Scene(display));
         Main.stage.centerOnScreen();
 
-//        currentState = new State(scenario.guards, scenario.intruders);
-//        states.add(currentState);
-
         setInitialVision();
         display.render();
+
+        //currentState = new State(scenario.guards, scenario.intruders);
+        //states.add(currentState);
     }
 
     @Override
@@ -94,34 +94,41 @@ public class GameRunner extends AnimationTimer {
             Point startingPoint = player.getCoordinates().clone();
             ActionTuple moveAction = player.calculateMove();
             //if the action is a move forward we want to take into account our base speed and move the number of base speed units
-            if(moveAction.getAction() == Actions.MOVE_FORWARD){
-                for(int i = 0; i < moveAction.getDistance(); i++){
-                    Point targetPoint = startingPoint.clone();
-                    movePoint(player, targetPoint,i + 1);
+            switch (moveAction.getAction()) {
+                /*
+                replaced if with switch for easier readibility and also in the future we will probably add other
+                actions, such as PLACE_MARKER or stuff like that idk
+                 */
+                case MOVE_FORWARD -> {
+                    for (int i = 0; i < moveAction.getDistance(); i++) {
+                        Point targetPoint = startingPoint.clone();
+                        movePoint(player, targetPoint, i + 1);
 
-                    if(i < player.getBaseSpeed() && !isOutOfBounds(targetPoint)){
-                        if (wallCollision(targetPoint) || playerCollision(player, targetPoint)) {
-                            break;
-                        } else if (teleporterCollision(targetPoint)) {
-                            Teleporter teleporter = (Teleporter) scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticComponent();
-                            //Point teleportTarget = teleporter.getTarget();
-                            //player.teleport(teleportTarget);
-                            player.teleport(teleporter.getTarget());
-                            player.updateVision();
-                            updateGrid(startingPoint, targetPoint);
-                            break;
+                        if (i < player.getBaseSpeed() && !isOutOfBounds(targetPoint)) {
+                            if (wallCollision(targetPoint) || playerCollision(player, targetPoint)) {
+                                break;
+                            } else if (teleporterCollision(targetPoint)) {
+                                Teleporter teleporter = (Teleporter) scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticComponent();
+                                player.teleport(teleporter.getTarget());
+                                player.updateVision();
+                                updateGrid(startingPoint, targetPoint);
+                                break;
+                            } else {
+                                player.moveAgentForward(moveAction.getAction());
+                                player.updateVision();
+                                updateGrid(startingPoint, targetPoint);
+                            }
                         } else {
-                            player.moveAgentForward(moveAction.getAction());
-                            player.updateVision();
-                            updateGrid(startingPoint, targetPoint);
+                            break;
                         }
-                    } else {
-                        break;
                     }
                 }
-            } else {
-                player.applyAction(moveAction.getAction());
-                player.updateVision();
+
+                default -> {
+                    //all the rotations
+                    player.applyAction(moveAction.getAction());
+                    player.updateVision();
+                }
             }
         }
     }
