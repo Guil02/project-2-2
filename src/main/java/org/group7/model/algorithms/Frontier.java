@@ -222,70 +222,66 @@ public class Frontier implements Algorithm {
         //List<Actions> actionPath = new ArrayList<>();
         Orientation orientation = player.getOrientation();
 
+
         if (firstTime) {
             firstTime = false;
             listOfOrientations = updateOrientaion(listOfOrientations);
         }
+        while (!listOfOrientations.isEmpty()) {
+            if (!firstTime && orientation == Orientation.RIGHT) {  // ---->>>
 
-        if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.RIGHT) {  // ---->>>
+//            if (player.getAgentsCurrentVision().size() == 2) {
+//                Grid g = new Grid(0, 0);
+//                g.setTypeWall();
+//                furthestFrontierGrid.add(g);
+//            }
 
-            if (player.getAgentsCurrentVision().size() == 2) {
-                Grid g = new Grid(0, 0);
-                g.setTypeWall();
-                furthestFrontierGrid.add(g);
+                List<Grid> gridss = player.getAgentsCurrentVision();
+                furthestFrontierGrid.addAll(gridss);
+                listOfOrientations.remove(Orientation.RIGHT);
+
+                return new ActionTuple(Actions.TURN_DOWN, 0);
+
+            } else if (!firstTime && orientation == Orientation.DOWN) {
+
+//            if (player.getAgentsCurrentVision().size() != 3) {
+//                Grid g = new Grid(0, 0);
+//                g.setTypeWall();
+//                furthestFrontierGrid.add(g);
+//            }
+                List<Grid> gridss = player.getAgentsCurrentVision();
+                furthestFrontierGrid.addAll(gridss);
+                listOfOrientations.remove(Orientation.DOWN);
+
+                return new ActionTuple(Actions.TURN_LEFT, 0);
+
+            } else if (!firstTime && orientation == Orientation.LEFT) {
+
+//            if (player.getAgentsCurrentVision().size() != 3) {
+//                Grid g = new Grid(0, 0);
+//                g.setTypeWall();
+//                furthestFrontierGrid.add(g);
+//            }
+                List<Grid> gridss = player.getAgentsCurrentVision();
+                furthestFrontierGrid.addAll(gridss);
+                listOfOrientations.remove(Orientation.LEFT);
+
+                return new ActionTuple(Actions.TURN_UP, 0);
+
+            } else if (!firstTime && orientation == Orientation.UP) {
+
+//            if (player.getAgentsCurrentVision().size() != 3) {
+//                Grid g = new Grid(0, 0);
+//                g.setTypeWall();
+//                furthestFrontierGrid.add(g);
+//            }
+                List<Grid> gridss = player.getAgentsCurrentVision();
+                furthestFrontierGrid.addAll(gridss);
+                listOfOrientations.remove(Orientation.UP);
+
+                return new ActionTuple(Actions.TURN_RIGHT, 0);
             }
 
-            List<Grid> gridss = player.getAgentsCurrentVision();
-            furthestFrontierGrid.addAll(gridss);
-            listOfOrientations.remove(Orientation.RIGHT);
-
-            return new ActionTuple(Actions.TURN_DOWN, 0);
-
-        } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.DOWN) {
-
-            if (player.getAgentsCurrentVision().size() != 3) {
-                Grid g = new Grid(0, 0);
-                g.setTypeWall();
-                furthestFrontierGrid.add(g);
-            }
-            List<Grid> gridss = player.getAgentsCurrentVision();
-            for (Grid grid : gridss) {
-                furthestFrontierGrid.add(grid);
-            }
-            listOfOrientations.remove(Orientation.DOWN);
-
-            return new ActionTuple(Actions.TURN_LEFT, 0);
-
-        } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.LEFT) {
-
-            if (player.getAgentsCurrentVision().size() != 3) {
-                Grid g = new Grid(0, 0);
-                g.setTypeWall();
-                furthestFrontierGrid.add(g);
-            }
-            List<Grid> gridss = player.getAgentsCurrentVision();
-            for (Grid grid : gridss) {
-                furthestFrontierGrid.add(grid);
-            }
-
-            listOfOrientations.remove(Orientation.LEFT);
-
-            return new ActionTuple(Actions.TURN_UP, 0);
-
-        } else if (!listOfOrientations.isEmpty() && !firstTime && orientation == Orientation.UP) {
-
-            if (player.getAgentsCurrentVision().size() != 3) {
-                Grid g = new Grid(0, 0);
-                g.setTypeWall();
-                furthestFrontierGrid.add(g);
-            }
-            List<Grid> gridss = player.getAgentsCurrentVision();
-            for (Grid grid : gridss) {
-                furthestFrontierGrid.add(grid);
-            }
-            listOfOrientations.remove(Orientation.UP);
-
-            return new ActionTuple(Actions.TURN_RIGHT, 0);
         }
 
 
