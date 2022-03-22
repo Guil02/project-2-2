@@ -13,6 +13,8 @@ import org.group7.utils.Methods;
 
 import java.util.List;
 
+import static org.group7.model.GameRunner.gameRunner;
+
 public class SimulationScreen extends BorderPane {
 
     private final View view;
@@ -57,6 +59,7 @@ public class SimulationScreen extends BorderPane {
     void initialize() {
         running = true;
         setCenter(view);
+        pauseButton.setText(!running ? "Play" : "Pause");
 
         String gameMode = switch (Scenario.getInstance().getGameMode()) {
             case 0 -> "Exploration";
@@ -76,7 +79,9 @@ public class SimulationScreen extends BorderPane {
         });
 
         pauseButton.setOnAction(event -> {
-            //gameRunner.stop();
+            if (running) gameRunner.stop();
+            else gameRunner.start();
+
             pauseButton.setText(running ? "Play" : "Pause");
             running = !running;
         });

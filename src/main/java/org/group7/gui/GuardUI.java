@@ -24,12 +24,12 @@ public class GuardUI extends AnchorPane {
         this.guard = guard;
         ID = guard.getId();
         mapSize = Scenario.getInstance().getWidth() * Scenario.getInstance().getHeight();
-        Methods.loadFXML(this, "/fxml/guard.fxml");
+        Methods.loadFXML(this, "/fxml/guardAlt.fxml");
     }
 
     protected void update() {
         coverage.setText((int)((Grid.numGridsSeenBy[ID] / mapSize) * 100) + "%");
-        orientation.setText(guard.getOrientation().toString());
+        //orientation.setText(guard.getOrientation().toString());
     }
 
     @FXML void initialize() {

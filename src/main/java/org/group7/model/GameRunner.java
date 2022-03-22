@@ -23,6 +23,7 @@ import java.util.List;
 
 
 public class GameRunner extends AnimationTimer {
+    public static GameRunner gameRunner;
     private List<State> states;
     private Scenario scenario;
     State currentState;
@@ -46,6 +47,8 @@ public class GameRunner extends AnimationTimer {
         if (scenario.numIntruders > 0){
             scenario.spawnIntruder();
         }
+
+        gameRunner = this;
 
         display = new SimulationScreen();
         Main.stage.setScene(new Scene(display));
