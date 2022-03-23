@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SoundTest {
 
-    @Test
+   /* @Test
     public void createSoundArea() {
 //        PlayerComponent pc = new Guard(new Point(45,45), new Point(45,45),0);
 //        PlayerComponent pc2 = new Intruder(new Point(40,40), new Point(40,40),0);
@@ -60,4 +60,6 @@ public class SoundTest {
         System.out.println(test.isHit(15,20));
         System.out.println(test.isHit(new Point(15,15)));
     }
+
+    */
 }

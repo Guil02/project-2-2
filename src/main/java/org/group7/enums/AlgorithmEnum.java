@@ -3,5 +3,17 @@ package org.group7.enums;
 public enum AlgorithmEnum {
     A_STAR,
     WALL_FOLLOWING,
-    FLOOD_FILL
+    FLOOD_FILL,
+    FRONTIER,
+    RANDOM;
+
+    public static AlgorithmEnum getEnum(String name) {
+        return switch (name) {
+            case "Random" -> RANDOM;
+            case "Wall Following" -> WALL_FOLLOWING;
+            case "Frontier" -> FRONTIER;
+            case "Flood Fill" -> FLOOD_FILL;
+            default -> A_STAR;
+        };
+    }
 }

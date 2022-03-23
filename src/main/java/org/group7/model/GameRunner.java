@@ -1,253 +1,194 @@
 package org.group7.model;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.Scene;
 import org.group7.Main;
-import org.group7.alt.logic.simulation.SimController;
-import org.group7.geometric.Area;
-import org.group7.geometric.Point;
-import org.group7.gui.ExplorationSim;
-import org.group7.gui.GameScreen;
-import org.group7.gui.Renderer;
-import org.group7.model.component.Component;
-import org.group7.enums.ComponentEnum;
-import org.group7.model.component.playerComponents.Guard;
-import org.group7.model.component.playerComponents.Intruder;
-import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.enums.Actions;
+import org.group7.enums.Orientation;
+import org.group7.geometric.Point;
+import org.group7.gui.*;
+import org.group7.model.algorithms.ActionTuple;
+import org.group7.model.component.playerComponents.PlayerComponent;
+import org.group7.model.component.staticComponents.Teleporter;
 import org.group7.utils.Config;
+import org.group7.utils.Logger;
 
-import java.util.ArrayList;
+import static org.group7.enums.ComponentEnum.TELEPORTER;
+import static org.group7.enums.ComponentEnum.WALL;
+
+
+import java.util.LinkedList;
 import java.util.List;
 
+
+
 public class GameRunner extends AnimationTimer {
+    public static GameRunner gameRunner;
     private List<State> states;
     private Scenario scenario;
     State currentState;
-    GameScreen gameScreen;
 
-    double timeStep;
-    double elapsedTimeSteps;
+    private final SimulationScreen display;
+
+    private final double timeStep;
+    double elapsedTimeStep; //total time
+    int count = 0;
 
     public GameRunner(Scenario scenario) {
-        //Map map = new Map(scenario);
-        //System.out.println(map);
-
-        //Canvas canvas = new Canvas(map.tileMap);
-        SimController simController = new SimController(scenario);
-        //simController.start();
-
         this.scenario = scenario;
-        this.states = new ArrayList<>();
-        this.elapsedTimeSteps = 0;
+        this.states = new LinkedList<>();
+        this.elapsedTimeStep = 0;
         this.timeStep = Config.TIME_STEP;
 
-        scenario.spawnGuards();
-        scenario.spawnIntruder();
-        currentState = new State(scenario.guards, scenario.intruders);
-        states.add(currentState);
+        if (scenario.numGuards > 0){
+            scenario.spawnGuards();
+        }
 
-//      gameScreen = new GameScreen(new Canvas(scenario.width, scenario.height));
-        Renderer renderer = new ExplorationSim(scenario.width, scenario.height);
-        gameScreen = new GameScreen(renderer, scenario);
-        //Main.stage.setScene(new Scene(gameScreen));
-        //Main.stage.setFullScreen(true);
+        if (scenario.numIntruders > 0){
+            scenario.spawnIntruder();
+        }
+
+        gameRunner = this;
+
+        display = new SimulationScreen();
+        Main.stage.setScene(new Scene(display));
         Main.stage.centerOnScreen();
 
-        renderer.res = 1.05 * Math.max(scenario.width / renderer.getViewportBounds().getWidth(), scenario.height / renderer.getViewportBounds().getHeight());
+        setInitialVision();
+        display.render();
 
+        //currentState = new State(scenario.guards, scenario.intruders);
+        //states.add(currentState);
     }
 
-    /**\
-     *     MAIN GAME LOOP
-     */
     @Override
     public void handle(long now) {
         //where update the game
-        //createState();
         updatePlayers();
+        display.render();
 
-        gameScreen.render(scenario);
+        elapsedTimeStep += timeStep;
 
-        elapsedTimeSteps += timeStep;
+        if (elapsedTimeStep>count*5){
+            count++;
+            double coverage = calculateCoverage();
+            //System.out.print("\rTotal Coverage: " + coverage + " elapsed Time: " + elapsedTimeStep);
+            display.updateStats(elapsedTimeStep, coverage);
+
+            if (Config.LOG_DATA) {
+                int step = ((int) (elapsedTimeStep * 100) / 100);   //in integer steps of 5
+                int cov = ((int) (coverage * 100) / 100);           //in integer percent
+
+                Logger.log(new String[]{String.valueOf(step), String.valueOf(cov)});
+            }
+        }
     }
 
     private void createState() {
         states.add(new State(scenario.guards, scenario.intruders));
     }
 
+    private void setInitialVision() {
+        scenario.playerComponents.forEach(PlayerComponent::updateVision);
+    }
+
     private void updatePlayers(){
-        for(int i = 0; i < scenario.guards.size(); i++){
-            doMovement(scenario.guards.get(i));
-        }
+        for(PlayerComponent player : scenario.playerComponents){
+            Point startingPoint = player.getCoordinates().clone();
+            ActionTuple moveAction = player.calculateMove();
+            //if the action is a move forward we want to take into account our base speed and move the number of base speed units
+            switch (moveAction.getAction()) {
+                /*
+                replaced if with switch for easier readibility and also in the future we will probably add other
+                actions, such as PLACE_MARKER or stuff like that idk
+                 */
+                case MOVE_FORWARD -> {
+                    for (int i = 0; i < moveAction.getDistance(); i++) {
+                        Point targetPoint = startingPoint.clone();
+                        movePoint(player, targetPoint, i + 1);
 
-        for(int i = 0; i< scenario.intruders.size(); i++){
-            doMovement(scenario.intruders.get(i));
-        }
-    }
+                        if (i < player.getBaseSpeed() && !isOutOfBounds(targetPoint)) {
+                            if (wallCollision(targetPoint) || playerCollision(player, targetPoint)) {
+                                break;
+                            } else if (teleporterCollision(targetPoint)) {
+                                Teleporter teleporter = (Teleporter) scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticComponent();
+                                player.teleport(teleporter.getTarget());
+                                player.updateVision();
+                                updateGrid(startingPoint, targetPoint);
+                                break;
+                            } else {
+                                player.moveAgentForward(moveAction.getAction());
+                                player.updateVision();
+                                updateGrid(startingPoint, targetPoint);
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                }
 
-    /**
-     * //TODO: delete this
-     * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
-     * @param p a player component you want to move
-     */
-    private void doMovement(PlayerComponent p){
-        double mul = 0.3; //
-        double sub = mul/2;
-        double distance = getSpeed(p)*scenario.getTimeStep();
-        distance = 0.1;
-        p.turn(Math.random()*mul-sub);
-        if(checkWallCollision(p, distance)){
-            if(Math.random()>0.5){
-                p.turn(0.5*Math.PI);
-            }
-            else{
-                p.turn(-0.5*Math.PI);
-            }
-        }
-        else if(checkCollision(p,scenario.playerComponents, distance)){
-            if(Math.random()>0.5){
-                p.turn(0.5*Math.PI);
-            }
-            else{
-                p.turn(-0.5*Math.PI);
-            }
-        }
-        else if(checkTeleporterCollision(p, distance)){
-            doTeleport(p, distance);
-        }
-        else if(p.getComponentEnum() == ComponentEnum.INTRUDER && checkTargetCollision(p, distance)){
-            stop(); //TODO implement game over screen
-        }
-        else{
-            if (checkSoundCollision(p)) {
-                //Gets here if something is beeing heared - we can do something with this information in phase 2
-            }
-            Area a = p.getArea().clone();
-            p.move(distance);
-            scenario.movePlayerMap(a, p.getArea(), p);
-        }
-    }
-
-    /**
-     * //TODO: change name
-     * method that does the movement for a provided player component. Is currently random can be modified to fit to the algorithms.
-     * @param p a player component you want to move
-     * @param action 0= dont turn, 1 = turn right, 2= turn left
-     */
-    private void doMovementNotRandom(PlayerComponent p, Actions action){
-        double distance = getSpeed(p)*scenario.getTimeStep(); //TODO: Guil fix this
-        distance = 0.1;
-        if (action == Actions.STRAIGHT){
-            //TODO: if straight walk one grid cell
-        }
-        if (action == Actions.RIGHT){
-            p.turn(-Math.PI/2);
-        }else if(action == Actions.LEFT){
-            p.turn(Math.PI/2);
-        }
-        if (checkWallCollision(p, distance)){
-            if(Math.random()>0.5){
-                p.turn(0.5*Math.PI);
-            }
-            else{
-                p.turn(-0.5*Math.PI);
-            }
-        }
-        else if(checkTeleporterCollision(p, distance)){
-            doTeleport(p, distance);
-        }
-        else if(p.getComponentEnum() == ComponentEnum.INTRUDER && checkTargetCollision(p, distance)){
-            stop(); //TODO implement game over screen
-        }
-        else{
-            Area a = p.getArea().clone();
-            p.move(distance);
-            scenario.movePlayerMap(a, p.getArea(), p);
-        }
-    }
-
-    public double getSpeed(PlayerComponent p){
-        switch (p.getComponentEnum()){
-            case GUARD -> {
-                return scenario.baseSpeedGuard;
-            }
-            case INTRUDER -> {
-                return scenario.baseSpeedIntruder;
-            }
-            default -> {
-                return 0;
-            }
-
-        }
-    }
-
-    private boolean checkTargetCollision(PlayerComponent p, double distance) {
-        // check if the agent collides with a wall.
-        for(int i = 0; i<scenario.targetAreas.size(); i++){
-            if(p.collision(scenario.targetAreas.get(i), distance)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void doTeleport(PlayerComponent p, double distance) {
-        for(int i = 0; i<scenario.teleporters.size(); i++){
-            if(p.collision(scenario.teleporters.get(i), distance)){
-                Point target = scenario.teleporters.get(i).getTarget();
-                p.setPosition(target.clone());
-                //Change does not gets rendered although the values from get and set matches
-                p.setDirectionAngle(scenario.teleporters.get(i).getDirection().getAngle());
+                default -> {
+                    //all the rotations
+                    player.applyAction(moveAction.getAction());
+                    player.updateVision();
+                }
             }
         }
     }
 
-    private boolean checkTeleporterCollision(PlayerComponent p, double distance) {
-        for(int i = 0; i<scenario.teleporters.size(); i++){
-            if(p.collision(scenario.teleporters.get(i), distance)){
-                return true;
-            }
-        }
-        return false;
+    private void updateGrid(Point startingPoint, Point target) {
+
+        int initialX = (int) startingPoint.x;
+        int initialY = (int) startingPoint.y;
+        int finalX = (int) target.x;
+        int finalY = (int) target.y;
+        scenario.map[finalX][finalY].setPlayerComponent(scenario.map[initialX][initialY].getPlayerComponent());
+        scenario.map[initialX][initialY].setPlayerComponent(null);
     }
 
-    private boolean checkWallCollision(PlayerComponent p, double distance) {
-        for(int i = 0; i<scenario.walls.size(); i++){
-            if(p.collision(scenario.walls.get(i), distance)){
-                return true;
-            }
-        }
-        return false;
+    private boolean teleporterCollision(Point targetPoint) {
+        return scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticCompE()==TELEPORTER;
     }
 
-    private boolean checkCollision(PlayerComponent p, List<Component> list, double distance){
-        for (Component component : list) {
-            if (p.collision(component, distance) && !component.equals(p)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean playerCollision(PlayerComponent player, Point targetPoint) {
+        PlayerComponent other = scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getPlayerComponent();
+        return other != null && player != other;
     }
 
-    private boolean checkSoundCollision(PlayerComponent p) {
-        p.setMovingSound();
-        Area soundArea = p.getMovingSound();
-        for (Guard guard: currentState.getGuards()) {
-            guard.setMovingSound();
-            if (soundArea.isHit(guard.getX(), guard.getY())) {
-                //make sure agents don't go nuts when they hear themselves
-                if (p.getCoordinates() != guard.getCoordinates())
-                    return true;
-            }
-        }
-        for (Intruder intruder: currentState.getIntruders()) {
-            intruder.setMovingSound();
-            if (soundArea.isHit(intruder.getX(), intruder.getY())) {
-                //make sure agents don't go nuts when they hear themselves
-                if (p.getCoordinates() != intruder.getCoordinates())
-                    return true;
-            }
-        }
-        return false;
+    private boolean wallCollision(Point targetPoint) {
+        return scenario.map[(int) targetPoint.getX()][(int) targetPoint.getY()].getStaticCompE() == WALL;
     }
+
+    private boolean isOutOfBounds(Point point) {
+        return point.x < 0 || point.x >= scenario.getWidth() || point.y < 0 || point.y >= scenario.getHeight();
+    }
+
+    private void movePoint(PlayerComponent player, Point point, int distance){
+        switch (player.getOrientation()){
+            case UP -> point.y -= distance;
+            case DOWN -> point.y += distance;
+            case LEFT -> point.x -= distance;
+            case RIGHT -> point.x += distance;
+        }
+    }
+
+    public double calculateCoverage() {
+        int seenGrids = 0;
+        int totalGrids = 0;
+        for (int i = 0; i < scenario.getWidth(); i++) {
+            for (int j = 0; j < scenario.getHeight(); j++) {
+                if(!(scenario.map[i][j].getStaticCompE() == WALL)) {
+                    totalGrids++;
+                    if(scenario.map[i][j].explored) {
+                        seenGrids++;
+                    }
+                }
+            }
+        }
+        double d1 = seenGrids;
+        double d2 = totalGrids;
+//        return (seenGrids/totalSize)*100;
+        return (d1/d2)*100;
+    }
+
 }

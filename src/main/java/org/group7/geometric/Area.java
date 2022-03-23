@@ -6,24 +6,9 @@ public class Area {
     private Point topLeft;
     private Point bottomRight;
 
-
     public Area(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
-        //TODO: Meli and Mischa debugged this and it gave us an error by assigning the boundaries
-    //    if ((topLeft.getX() <= bottomRight.getX()) && (topLeft.getY() > bottomRight.getY())) {
-    //        double temp = topLeft.y;
-    //        topLeft.y = bottomRight.y;
-    //        bottomRight.y = temp;
-    //    } else if ((topLeft.getX() > bottomRight.getX()) && (topLeft.getY() <= bottomRight.getY())) {
-    //        double temp = topLeft.x;
-    //        topLeft.x = bottomRight.x;
-    //        bottomRight.x = temp;
-    //    } else if ((topLeft.getX() > bottomRight.getX()) && (topLeft.getY() > bottomRight.getY())) {
-    //        this.topLeft = bottomRight;
-    //        this.bottomRight = topLeft;
-    //    }
-
     }
 
     public Point getTopLeft() {
@@ -35,20 +20,21 @@ public class Area {
     }
 
     public double getWidth() {
-        return bottomRight.x-topLeft.x;
+        return bottomRight.x - topLeft.x;
     }
 
     public double getHeight() {
-        return bottomRight.y-topLeft.y;
+        return bottomRight.y - topLeft.y;
     }
-
 
     //TODO:The two isHit methods are wrong? - delete if not needed
     public boolean isHit(double x, double y) {
-        return y > topLeft.getY() && y< bottomRight.getY() && x> topLeft.getX() && x< bottomRight.getX();
+        return y > topLeft.getY() && y < bottomRight.getY() && x > topLeft.getX() && x < bottomRight.getX();
     }
-      public boolean isHit(Point point) {
-        return point.y > topLeft.getY() && point.y< bottomRight.getY() && point.x> topLeft.getX() && point.x< bottomRight.getX();
+
+    public boolean isHit(Point point) {
+        return isHit(point.x, point.y);
+        //return point.y > topLeft.getY() && point.y < bottomRight.getY() && point.x> topLeft.getX() && point.x< bottomRight.getX();
     }
 
 
