@@ -8,7 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Logger {
+
     private static final String[] HEADER = {"TIME_STEP", "COVERAGE"};
+
 
     public static void log(String[] input) {
         try {
