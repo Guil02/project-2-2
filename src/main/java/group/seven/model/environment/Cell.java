@@ -18,6 +18,7 @@ public class Cell {
     public boolean explored;
 
     public Records.Seen[] seenBy;
+
     List<Marker> markers;
 
     public Cell(int x, int y) {
