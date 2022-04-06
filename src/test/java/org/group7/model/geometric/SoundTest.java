@@ -18,17 +18,17 @@ public class SoundTest {
 
    /* @Test
     public void createSoundArea() {
-        PlayerComponent pc = new Guard(new Point(45,45), new Point(45,45),0);
-        PlayerComponent pc2 = new Intruder(new Point(40,40), new Point(40,40),0);
-        List<Guard> guard = new ArrayList<>();
-        List<Intruder> intruder = new ArrayList<>();
-        intruder.add((Intruder) pc2);
-        guard.add((Guard) pc);
-
-        State currentState = new State(guard,intruder);
-
-        boolean check = checkSoundCollision(pc, currentState);
-        assertTrue(check);
+//        PlayerComponent pc = new Guard(new Point(45,45), new Point(45,45),0);
+//        PlayerComponent pc2 = new Intruder(new Point(40,40), new Point(40,40),0);
+//        List<Guard> guard = new ArrayList<>();
+//        List<Intruder> intruder = new ArrayList<>();
+//        intruder.add((Intruder) pc2);
+//        guard.add((Guard) pc);
+//
+//        State currentState = new State(guard,intruder);
+//
+//        boolean check = checkSoundCollision(pc, currentState);
+//        assertTrue(check);
     }
 
     private boolean checkSoundCollision(PlayerComponent p, State currentState) {
