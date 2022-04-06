@@ -47,7 +47,7 @@ public class Scenario {
     public static int height; // y "rows"
     public static int width; // x "columns"
 
-    protected Cell[][] map;
+    public static Cell[][] map;
 
     protected double scaling;
     protected double timeStep;
@@ -75,7 +75,7 @@ public class Scenario {
                 map[j][i].seenBy = new Records.Seen[totalPlayers];
                 Grid.numGridsSeenBy = new int[totalPlayers];
                 for(int k = 0; k < totalPlayers; k++){
-                    map[j][i].seen.add(k,false);
+                    map[j][i].seenBy[k] = new Records.Seen(null, 0, false);
                 }
             }
         }
@@ -127,45 +127,45 @@ public class Scenario {
 
             //regions:
             //lots of duplicate code here still, so still room for cleanup
-            case "targetArea" -> {
-                Tuple<Point, Point> points = parsePoints(value);
-                targetAreas.add(component);
-                addStaticComponent(component);
-            }
-
-            case "spawnAreaIntruders" -> {
-                Tuple<Point, Point> points = parsePoints(value);
-                intruderSpawnAreas.add(component);
-                addStaticComponent(component);
-            }
-
-            case "spawnAreaGuards" -> {
-                Tuple<Point, Point> points = parsePoints(value);
-                guardSpawnAreas.add(component);
-                addStaticComponent(component);
-            }
-
-            case "wall" -> {
-                Tuple<Point, Point> points = parsePoints(value);
-                walls.add(component);
-                addStaticComponent(component);
-            }
-
-            case "shaded" -> {
-                Tuple<Point, Point> points = parsePoints(value);
-                shadedAreas.add(component);
-                addStaticComponent(component);
-            }
-
-            case "teleport" -> {
-                Tuple<Point, Point> points = parsePoints(value);
-                String[] coords = value.split(" ");
-                Point target = new Point(Double.parseDouble(coords[4]), Double.parseDouble(coords[5]));
-                Teleporter component = new Teleporter(points.getA(), points.getB(), target, this, Double.parseDouble((coords[6])));
-                staticComponents.add(component);
-                teleporters.add(component);
-                addStaticComponent(component);
-            }
+//            case "targetArea" -> {
+//                Tuple<Point, Point> points = parsePoints(value);
+//                targetAreas.add(component);
+//                addStaticComponent(component);
+//            }
+//
+//            case "spawnAreaIntruders" -> {
+//                Tuple<Point, Point> points = parsePoints(value);
+//                intruderSpawnAreas.add(component);
+//                addStaticComponent(component);
+//            }
+//
+//            case "spawnAreaGuards" -> {
+//                Tuple<Point, Point> points = parsePoints(value);
+//                guardSpawnAreas.add(component);
+//                addStaticComponent(component);
+//            }
+//
+//            case "wall" -> {
+//                Tuple<Point, Point> points = parsePoints(value);
+//                walls.add(component);
+//                addStaticComponent(component);
+//            }
+//
+//            case "shaded" -> {
+//                Tuple<Point, Point> points = parsePoints(value);
+//                shadedAreas.add(component);
+//                addStaticComponent(component);
+//            }
+//
+//            case "teleport" -> {
+//                Tuple<Point, Point> points = parsePoints(value);
+//                String[] coords = value.split(" ");
+//                Point target = new Point(Double.parseDouble(coords[4]), Double.parseDouble(coords[5]));
+//                Teleporter component = new Teleporter(points.getA(), points.getB(), target, this, Double.parseDouble((coords[6])));
+//                staticComponents.add(component);
+//                teleporters.add(component);
+//                addStaticComponent(component);
+//            }
 
             case "texture" -> {
                 //TODO
@@ -197,60 +197,60 @@ public class Scenario {
         }
     }
 
-    public void addStaticComponent(StaticComponent c){
-        for(int i = (int) c.getTopLeft().x; i < c.getBottomRight().x; i++){
-            for(int j = (int) c.getTopLeft().y; j < c.getBottomRight().y; j++){
-                map[i][j].setStaticComponent(c);
-            }
-        }
-    }
-
-    /**
-     * a method that spawns guards on random positions inside their spawn area. The guards are then added to the player components list.
-     */
-    public void spawnGuards(){
-        int i = 0;
-        Point topLeft = guardSpawnAreas.get(0).getTopLeft();
-        Point bottomRight = guardSpawnAreas.get(0).getBottomRight();
-        int dx = (int) (bottomRight.x - topLeft.x);
-        int dy = (int) (bottomRight.y - topLeft.y);
-        while (i < numGuards){
-            Point point = new Point(topLeft.x +(int) (dx * Math.random()), topLeft.y + (int)(dy * Math.random()));
-            if(map[(int) point.x][(int) point.y].getPlayerComponent()!=null){
-                continue;
-            }
-            Guard player= new Guard(point,point.clone(),  Math.toRadians(0), this,baseSpeedGuard, distanceViewing , smellingDistance);
-            if(i<1 && numGuards>1){
-                player.setIgnoreTeleport(true);
-            }
-            playerComponents.add(player);
-            guards.add(player);
-            addPlayerComponent(player);
-            i++;
-        }
-    }
-
-    /**
-     * a method that spawns intruders on random positions inside their spawn area. The intruders are then added to the player components list.
-     */
-    public void spawnIntruder(){
-        int i = 0;
-        Point topLeft = intruderSpawnAreas.get(0).getTopLeft();
-        Point bottomRight = intruderSpawnAreas.get(0).getBottomRight();
-        int dx = (int) (bottomRight.x - topLeft.x);
-        int dy = (int) (bottomRight.y - topLeft.y);
-        while(i<numIntruders){
-            Point point = new Point(topLeft.x +(int) (dx * Math.random()), topLeft.y + (int)(dy * Math.random()));
-            Agent player = new Intruder(point,point.clone(),  Math.random()*2*Math.PI, this,baseSpeedGuard, distanceViewing , smellingDistance);
-            if(i<1 && numIntruders>1){
-                player.setIgnoreTeleport(true);
-            }
-            agents.add(player);
-            intruders.add(player);
-            addPlayerComponent(player);
-            i++;
-        }
-    }
+//    public void addStaticComponent(StaticComponent c){
+//        for(int i = (int) c.getTopLeft().x; i < c.getBottomRight().x; i++){
+//            for(int j = (int) c.getTopLeft().y; j < c.getBottomRight().y; j++){
+//                map[i][j].setStaticComponent(c);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * a method that spawns guards on random positions inside their spawn area. The guards are then added to the player components list.
+//     */
+//    public void spawnGuards(){
+//        int i = 0;
+//        Point topLeft = guardSpawnAreas.get(0).getTopLeft();
+//        Point bottomRight = guardSpawnAreas.get(0).getBottomRight();
+//        int dx = (int) (bottomRight.x - topLeft.x);
+//        int dy = (int) (bottomRight.y - topLeft.y);
+//        while (i < numGuards){
+//            Point point = new Point(topLeft.x +(int) (dx * Math.random()), topLeft.y + (int)(dy * Math.random()));
+//            if(map[(int) point.x][(int) point.y].getPlayerComponent()!=null){
+//                continue;
+//            }
+//            Guard player= new Guard(point,point.clone(),  Math.toRadians(0), this,baseSpeedGuard, distanceViewing , smellingDistance);
+//            if(i<1 && numGuards>1){
+//                player.setIgnoreTeleport(true);
+//            }
+//            playerComponents.add(player);
+//            guards.add(player);
+//            addPlayerComponent(player);
+//            i++;
+//        }
+//    }
+//
+//    /**
+//     * a method that spawns intruders on random positions inside their spawn area. The intruders are then added to the player components list.
+//     */
+//    public void spawnIntruder(){
+//        int i = 0;
+//        Point topLeft = intruderSpawnAreas.get(0).getTopLeft();
+//        Point bottomRight = intruderSpawnAreas.get(0).getBottomRight();
+//        int dx = (int) (bottomRight.x - topLeft.x);
+//        int dy = (int) (bottomRight.y - topLeft.y);
+//        while(i<numIntruders){
+//            Point point = new Point(topLeft.x +(int) (dx * Math.random()), topLeft.y + (int)(dy * Math.random()));
+//            Agent player = new Intruder(point,point.clone(),  Math.random()*2*Math.PI, this,baseSpeedGuard, distanceViewing , smellingDistance);
+//            if(i<1 && numIntruders>1){
+//                player.setIgnoreTeleport(true);
+//            }
+//            agents.add(player);
+//            intruders.add(player);
+//            addPlayerComponent(player);
+//            i++;
+//        }
+//    }
 
     public static List<Agent.Guard> getGuards() {
         return agents.stream()
