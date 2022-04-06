@@ -1,0 +1,15 @@
+package group.seven.enums;
+
+public enum Heuristic {
+    WALL_FOLLOW,
+    CLOSEST_PATH,
+    MAX_COVERAGE_PER_TIMESTEP,
+    MAX_INFO_GAIN,
+    REPEL_KIN_COVERAGE,
+    PARALLEL_KIN_COVERAGE,
+    MAP_PARTITION,
+    HIERARCHAL_STRUCTURE,
+    ROLE_ASSIGNMENT,
+
+
+}

@@ -19,15 +19,15 @@ public class Grid {
     public boolean explored = false;
     //array of the size of guards+intruders to see if agent saw the cell
     public List<Boolean> seen;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     private ComponentEnum type;
 
     public Grid(int x, int y) {
         this.x = x;
         this.y = y;
-        seen = new LinkedList<>();
+        seen = new ArrayList<>(10);
         type = EMPTY_SPACE;
     }
 
@@ -58,48 +58,8 @@ public class Grid {
         seen.set(id,Boolean.TRUE);
     }
 
-    public String getStaticComp(){
-        if(staticComponent!=null){
-            return switch (staticComponent.getComponentEnum()){
-                case WALL -> "W";
-                case TELEPORTER, TARGET_AREA -> "T";
-                case SHADED_AREA -> "S";
-                case INTRUDER_SPAWN_AREA -> "I";
-                case GUARD_SPAWN_AREA -> "G";
-                default -> " ";
-            };
-        } else return " ";
-    }
-
     public ComponentEnum getStaticCompE(){
-        if(staticComponent!=null){
-            //return staticComponent.getComponentEnum();
-            //or
-            //return type;
-            switch (staticComponent.getComponentEnum()){
-                case WALL -> {
-                    return ComponentEnum.WALL;
-                }
-                case TELEPORTER -> {
-                    return ComponentEnum.TELEPORTER;
-                }
-                case TARGET_AREA -> {
-                    return ComponentEnum.TARGET_AREA;
-                }
-                case SHADED_AREA -> {
-                    return ComponentEnum.SHADED_AREA;
-                }
-                case INTRUDER_SPAWN_AREA -> {
-                    return ComponentEnum.INTRUDER_SPAWN_AREA;
-                }
-                case GUARD_SPAWN_AREA -> {
-                    return ComponentEnum.GUARD_SPAWN_AREA;
-                }
-                default -> {
-                    return null;
-                }
-            }
-        } else return null;
+        return getType();
     }
 
     public ComponentEnum getType() {
@@ -115,12 +75,6 @@ public class Grid {
     public int getY() {
         return y;
     }
-
-
-//    @Override
-//    public String toString() {
-//        return getStaticComp();
-//    }
 
 
     @Override
@@ -141,10 +95,5 @@ public class Grid {
         g.setStaticComponent(this.staticComponent);
         g.explored = this.explored;
         return g;
-    }
-
-
-    public void setTypeWall(){
-        this.type = WALL;
     }
 }
