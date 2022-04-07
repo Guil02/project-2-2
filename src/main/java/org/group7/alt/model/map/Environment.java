@@ -60,10 +60,10 @@ public class Environment {
         NAME = s.getName();
         WIDTH = s.getWidth();
         HEIGHT = s.getHeight();
-        INTRUDER_BASE_SPEED = s.getBaseSpeedIntruder();
-        INTRUDER_SPRINT_SPEED = s.getSprintSpeedIntruder();
-        GUARD_BASE_SPEED = s.getBaseSpeedGuard();
-        GUARD_SPRINT_SPEED = s.getSprintSpeedGuard();
+        INTRUDER_BASE_SPEED = s.getBaseSpeedGuards();
+        INTRUDER_SPRINT_SPEED = s.getBaseSpeedGuards();
+        GUARD_BASE_SPEED = s.getBaseSpeedGuards();
+        GUARD_SPRINT_SPEED = s.getBaseSpeedGuards();
         NUM_GAURDS = s.getNumGuards();
         NUM_INTRUDERS = s.getNumIntruders();
         SCALING = s.getScaling();

@@ -20,8 +20,6 @@ import static org.group7.enums.ComponentEnum.WALL;
 import java.util.LinkedList;
 import java.util.List;
 
-
-
 public class GameRunner extends AnimationTimer {
     public static GameRunner gameRunner;
     private List<State> states;
@@ -68,6 +66,7 @@ public class GameRunner extends AnimationTimer {
         display.render();
 
         elapsedTimeStep += timeStep;
+
 
         if (elapsedTimeStep>count*5){
             count++;
