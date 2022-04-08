@@ -1,6 +1,8 @@
 package org.group7.geometric;
 
 
+import javafx.geometry.Point2D;
+
 //inspired by: https://gist.github.com/gunvirranu/6816d65c0231981787ebefd3bdb61f98
 public class Vector2D {
 
@@ -90,6 +92,7 @@ public class Vector2D {
 
     @Override
     public boolean equals(Object obj) {
+
         if (obj == this) {
             return true;
         }

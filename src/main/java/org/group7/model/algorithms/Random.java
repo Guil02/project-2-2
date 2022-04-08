@@ -27,23 +27,19 @@ public class Random implements Algorithm {
 
     @Override
     public ActionTuple calculateMovement() {
-        int random = (int) (Math.random()*6);
+        ActionTuple result;
+        int random = (int) (Math.random() * 6);
         //System.out.println("action "+random);
-        if (random == 0) {
-            return new ActionTuple(Actions.TURN_UP,0);
+        switch (random) {
+            case 0 -> result = new ActionTuple(Actions.TURN_UP, 0);
+            case 1 -> result = new ActionTuple(Actions.TURN_RIGHT, 0);
+            case 2 -> result = new ActionTuple(Actions.TURN_LEFT, 0);
+            case 3 -> result = new ActionTuple(Actions.TURN_DOWN, 0);
+            default -> {
+                int distance = (int) (Math.random() * maxDistance);
+                result = new ActionTuple(Actions.MOVE_FORWARD, distance);
+            }
         }
-        if (random == 1) {
-            return new ActionTuple(Actions.TURN_RIGHT,0);
-        }
-        if (random == 2) {
-            return new ActionTuple(Actions.TURN_LEFT,0);
-        }
-        if (random == 3) {
-            return new ActionTuple(Actions.TURN_DOWN,0);
-        }
-        else {
-            int distance = (int) (Math.random()*maxDistance);
-            return new ActionTuple(Actions.MOVE_FORWARD,distance);
-        }
+        return result;
     }
 }

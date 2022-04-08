@@ -10,8 +10,11 @@ import org.group7.alt.model.ai.Pose;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Explorer extends Agent {
+
+    static Random random = new Random();
 
     static List<String> EXPLORERS = new ArrayList<>(List.of("Francis Drake", "James Cook", "Walter Releigh", "Ferdinand Magellan", "Francisco Pizarro"));
 
@@ -47,7 +50,7 @@ public class Explorer extends Agent {
         }
 
         //random next move
-        exploreStrategy.setNextPose((Math.random() > 0.35) ? (localPose.stepFoward()) : (localPose.rotate(Cardinal.values()[(int)(Math.random() * 4)])));
+        exploreStrategy.setNextPose(Math.random() > 0.35 ? localPose.stepFoward() : localPose.rotate(Cardinal.values()[random.nextInt(4)]));
 
         return getPose();
     }
