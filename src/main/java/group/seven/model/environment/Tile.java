@@ -7,15 +7,16 @@ import javafx.beans.value.ObservableBooleanValue;
 
 import static group.seven.enums.TileType.EMPTY;
 
+//TODO: hate this class, want to use a builder or factory pattern instead
 public class Tile {
     //Type
     TileType type;
-    XY xy;
+    XY xy; //or Point2D, or int x, y
 
     //Graph
     Tile[] adjacent;
 
-    protected Tile() {
+    public Tile() {
         type = EMPTY;
     }
 
@@ -50,6 +51,10 @@ public class Tile {
         this.adjacent = adjacent;
     }
 
+    //Exploration Status, also not sure about this
+    //boolean explored for guard and agent for calculating coverage
+    private final ObservableBooleanValue exploredGuard = new SimpleBooleanProperty(false);
+    private final ObservableBooleanValue exploredAgent = new SimpleBooleanProperty(false);
     public ObservableBooleanValue exploredGuardProperty() {
         return exploredGuard;
     }
@@ -62,8 +67,6 @@ public class Tile {
     public boolean getExploredAgent() {
         return exploredAgent.get();
     }
-    //Exploration Status, also not sure about this
-    //boolean explored for guard and agent for calculating coverage
-    private final ObservableBooleanValue exploredGuard = new SimpleBooleanProperty(false);
-    private final ObservableBooleanValue exploredAgent = new SimpleBooleanProperty(false);
+
+
 }

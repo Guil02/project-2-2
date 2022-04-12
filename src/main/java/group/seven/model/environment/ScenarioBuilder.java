@@ -12,18 +12,13 @@ import java.util.Scanner;
 
 import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.GameMode.EXPLORATION;
-import static group.seven.enums.GameMode.SURVEILLANCE;
+import static group.seven.enums.GameMode.SINGLE_INTRUDER;
 import static group.seven.enums.TileType.*;
 import static group.seven.utils.Methods.print;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
 public class ScenarioBuilder implements Builder<Scenario> {
-
-    //private record MetaProperties(GameMode gameMode, String mapName, int width, int height){}
-    //private record GuardProperties(int baseSpeed, int maxSpeed, int amount, int numMarkers){}
-    //private record IntruderProperties(int baseSpeed, int maxSpeed, int amount){}
-    //private record EnvironmentProperties(int viewDistance, int soundDistance, int smellDistance){}
 
     private final File mapFile;
 
@@ -71,7 +66,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
         switch (property) {
             //simple properties:
             case "name"                 -> s.NAME                   = value;
-            case "gameMode"             -> s.GAME_MODE              = parseInt(value) == 1 ? SURVEILLANCE : EXPLORATION;
+            case "gameMode"             -> s.GAME_MODE              = parseInt(value) == 1 ? SINGLE_INTRUDER : EXPLORATION;
             case "height"               -> s.HEIGHT                 = parseInt(value);    // the height of the map
             case "width"                -> s.WIDTH                  = parseInt(value);    // the width of the map
             case "numGuards"            -> s.NUM_GUARDS             = parseInt(value);    // the amount of guards
@@ -106,6 +101,8 @@ public class ScenarioBuilder implements Builder<Scenario> {
 
             default -> print("Unrecognized Property: " + property);
         }
+
+        s.NUM_AGENTS = s.NUM_GUARDS + s.NUM_INTRUDERS;
     }
 
     /**
@@ -132,6 +129,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
         s.TILE_MAP = tileMap;
     }
 
+    //TODO: needs to be remade to consider portals and such
     private void fillMap(Scenario s) {
         s.getStaticAreas().forEach(a -> {
             for(int x = a.area().x; x < a.area().getMaxX(); x++){
@@ -141,5 +139,10 @@ public class ScenarioBuilder implements Builder<Scenario> {
             }
         });
     }
+
+    //private record MetaProperties(GameMode gameMode, String mapName, int width, int height){}
+    //private record GuardProperties(int baseSpeed, int maxSpeed, int amount, int numMarkers){}
+    //private record IntruderProperties(int baseSpeed, int maxSpeed, int amount){}
+    //private record EnvironmentProperties(int viewDistance, int soundDistance, int smellDistance){}
 
 }

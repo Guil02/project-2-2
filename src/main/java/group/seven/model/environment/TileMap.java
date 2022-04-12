@@ -11,13 +11,9 @@ public class TileMap {
     public TileMap(Scenario scenario) {
         //not sure if TileMap needs a reference to the scenario, or if builder can take care of all that
         //alternatively scenario fields could be static
+
         map = new Tile[scenario.WIDTH + 1][scenario.HEIGHT + 1];
         agents = new Agent[scenario.NUM_GUARDS + scenario.NUM_INTRUDERS];
-        //relativeOrigins = new HashMap<>(Environment.NUM_GAURDS + Environment.NUM_INTRUDERS);
-        //localFrames = new HashMap<>(Environment.NUM_GAURDS + Environment.NUM_INTRUDERS);
-        //numTiles = (Environment.WIDTH + 1) * (Environment.HEIGHT + 1);
-        //numExplored = 0;
-
     }
 
     //update
@@ -38,5 +34,9 @@ public class TileMap {
 
     public void setType(int x, int y, TileType type) {
         map[x][y].type = type;
+    }
+
+    public void addAgent(Agent agent) {
+
     }
 }

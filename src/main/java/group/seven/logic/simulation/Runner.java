@@ -1,25 +1,29 @@
 package group.seven.logic.simulation;
 
+import group.seven.enums.GameMode;
 import group.seven.gui.TempView;
+import group.seven.model.agents.Guard;
 import group.seven.model.environment.Scenario;
 import javafx.animation.AnimationTimer;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 
+import java.util.Random;
+
 public class Runner extends AnimationTimer {
     Scenario scenario;
-    Timeline timeline;
+    //Timeline timeline;
     TempView view;
 
     public Runner(Scenario scenario) {
         this.scenario = scenario;
+        view = new TempView(scenario);
 
         //timeline = new Timeline(new KeyFrame(Duration.millis(1000), this::render));
         //timeline.setCycleCount(Animation.INDEFINITE);
-        view = new TempView(scenario);
-        prev = System.nanoTime();
         //timeline.play();
+
+        prev = System.nanoTime();
         start();
     }
 
@@ -31,19 +35,51 @@ public class Runner extends AnimationTimer {
 
     int count = 0;
     long prev;
+
     @Override
     public void handle(long now) {
         long previous = prev;
-        Platform.runLater(() -> view.update((int) (now - previous) / 1000000));
-        if (count > 100000) stop();
+        System.out.print("\r fps: " +  (now - previous) / 1_000_000_000.0);
         count++;
+        Platform.runLater(() -> view.update((int) (now - previous) / 1000000));
+        //view.update((int) (now - previous) / 1000000);
+
+        if (count > 100000) stop();
         prev = System.nanoTime();
     }
 
-    //step
-    //updateModel
-    //updateGUI
-    //gameOver
+    private void spawnAgents(GameMode gameMode) {
+        switch (gameMode) {
+            case EXPLORATION -> {
+                for (int i = 0; i < scenario.NUM_GUARDS; i++) {
+                    //spawn explorers in spawn area
+                    Random r = new Random();
+                    r.nextInt(scenario.guardSpawnArea.area().width);
+                    //int x = scenario.guardSpawnArea.area().getWidth();
+
+                    //XY spawnPoint = Environment.GUARD_SPAWN_GRIDS.get((int) (Math.random() * Environment.GUARD_SPAWN_GRIDS.size()));
+
+                    Guard agent = new Guard();
+
+                    scenario.TILE_MAP.addAgent(agent);
+                }
+            }
+
+            case SINGLE_INTRUDER, MULTI_INTRUDER -> {
+                for (int i = 0; i < scenario.NUM_GUARDS; i++) {
+                    //spawn guards in spawn area
+                    //add to agents list
+
+                }
+
+                for (int i = 0; i < scenario.NUM_INTRUDERS; i++) {
+                    //spawn intruders in spawn area
+                    //add to agents list
+                }
+            }
+        }
+
+
 //    Task<Boolean> simulator;
 //    public void start() {
 //        simulator = new Task<>() {
@@ -78,4 +114,5 @@ public class Runner extends AnimationTimer {
 //            timeline.stop();
 //        }
     }
+}
 

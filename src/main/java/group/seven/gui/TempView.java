@@ -46,6 +46,7 @@ public class TempView extends ScrollPane {
                 case Z -> zoom(1.05);
             }
         });
+
         label = new Label("Not started");
         label.setFont(Font.font(120));
         update();

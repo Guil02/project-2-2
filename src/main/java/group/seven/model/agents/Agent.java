@@ -5,22 +5,25 @@ import group.seven.enums.TileType;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class Agent {
+//TODO the agent structure very much work in progress
+public abstract class Agent{
 
     //Pose
-    protected int x, y;
+    //protected int x, y;
     protected Cardinal direction;
-    private IntegerProperty xProp = new SimpleIntegerProperty();
-    private IntegerProperty yProp = new SimpleIntegerProperty();
+    private final IntegerProperty xProp = new SimpleIntegerProperty();
+    private final IntegerProperty yProp = new SimpleIntegerProperty();
 
     //Type
-    private TileType type;
+    private TileType agentType;
 
     //FOV
 
     //Frontier
     //Current Speed
     //Strategy
+
+    public abstract void updateVision();
 
     public int getX() {
         //convert with frame
@@ -44,6 +47,8 @@ public class Agent {
     }
 
     public TileType getType() {
-        return type;
+        return agentType;
     }
+
+
 }

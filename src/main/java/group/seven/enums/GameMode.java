@@ -2,6 +2,6 @@ package group.seven.enums;
 
 public enum GameMode {
     EXPLORATION,
-    SURVEILLANCE,
-    //MULTI_INTRUDER
+    SINGLE_INTRUDER,
+    MULTI_INTRUDER
 }

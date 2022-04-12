@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static group.seven.enums.GameMode.SURVEILLANCE;
+import static group.seven.enums.GameMode.SINGLE_INTRUDER;
 import static group.seven.enums.TileType.*;
 
 public class Scenario {
 
-    public GameMode GAME_MODE = SURVEILLANCE;
+    public GameMode GAME_MODE = SINGLE_INTRUDER;
     public String NAME = "untitled map";
     public int WIDTH;
     public int HEIGHT;

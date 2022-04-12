@@ -6,6 +6,7 @@ import javafx.geometry.Point2D;
 
 import static group.seven.enums.TileType.UNKNOWN;
 
+//TODO: determine if this class is needed. Potentially if using graph implementation idk
 public class TileNode extends Tile {
 
     //from agent's perspective

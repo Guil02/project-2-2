@@ -7,6 +7,10 @@ import javafx.scene.transform.Transform;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Handles coordinate conversions
+ * @param frame local agent's coordinate frame Transform
+ */
 public record Frame(Transform frame) {
 
     //converts to local
@@ -22,9 +26,8 @@ public record Frame(Transform frame) {
     //converts local points to global
     public Point2D convertToGlobal(Point2D localPoint) {
         Point2D global = Point2D.ZERO;
-        try {
-            global = frame.inverseTransform(localPoint);
-        } catch (NonInvertibleTransformException e) {e.printStackTrace();}
+        try { global = frame.inverseTransform(localPoint); }
+        catch (NonInvertibleTransformException e) { e.printStackTrace(); }
 
         return global;
     }

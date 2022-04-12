@@ -1,6 +1,6 @@
 package group.seven.gui;
 
-import group.seven.enums.AlgorithmEnum;
+import group.seven.enums.AlgorithmType;
 import group.seven.logic.simulation.Runner;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.ScenarioBuilder;
@@ -46,7 +46,7 @@ public class MainMenu {
         String algorithm = chosenAlgorithm.getValue();
 
         if (!algorithm.equals("Choose Algorithm")) {
-            Config.ALGORITHM = AlgorithmEnum.getEnum(algorithm);
+            Config.ALGORITHM = AlgorithmType.getEnum(algorithm);
             Scenario scenario = new ScenarioBuilder(scenarioFile).build();
             //Runner runner =
             new Runner(scenario);
