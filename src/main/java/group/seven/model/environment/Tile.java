@@ -10,12 +10,7 @@ import static group.seven.enums.TileType.EMPTY;
 public class Tile {
     //Type
     TileType type;
-    XY xy; //prolly better to just store them as ints, idk;
-
-    //Exploration Status, also not sure about this
-    //boolean explored for guard and agent for calculating coverage
-    ObservableBooleanValue exploredGuard = new SimpleBooleanProperty(false);
-    ObservableBooleanValue exploredAgent = new SimpleBooleanProperty(false);
+    XY xy;
 
     //Graph
     Tile[] adjacent;
@@ -55,16 +50,20 @@ public class Tile {
         this.adjacent = adjacent;
     }
 
-    public boolean getExploredGuard() {
-        return exploredGuard.get();
-    }
     public ObservableBooleanValue exploredGuardProperty() {
         return exploredGuard;
-    }
-    public boolean getExploredAgent() {
-        return exploredAgent.get();
     }
     public ObservableBooleanValue exploredAgentProperty() {
         return exploredAgent;
     }
+    public boolean getExploredGuard() {
+        return exploredGuard.get();
+    }
+    public boolean getExploredAgent() {
+        return exploredAgent.get();
+    }
+    //Exploration Status, also not sure about this
+    //boolean explored for guard and agent for calculating coverage
+    private final ObservableBooleanValue exploredGuard = new SimpleBooleanProperty(false);
+    private final ObservableBooleanValue exploredAgent = new SimpleBooleanProperty(false);
 }

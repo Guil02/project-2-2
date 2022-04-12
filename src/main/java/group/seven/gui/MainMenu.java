@@ -48,7 +48,8 @@ public class MainMenu {
         if (!algorithm.equals("Choose Algorithm")) {
             Config.ALGORITHM = AlgorithmEnum.getEnum(algorithm);
             Scenario scenario = new ScenarioBuilder(scenarioFile).build();
-            Runner runner = new Runner(scenario);
+            //Runner runner =
+            new Runner(scenario);
             //runner.start();
 
         } else {

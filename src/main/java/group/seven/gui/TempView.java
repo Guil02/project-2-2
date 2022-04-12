@@ -7,13 +7,17 @@ import group.seven.model.environment.Tile;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+
+import static javafx.scene.paint.Color.BLACK;
 
 
 public class TempView extends ScrollPane {
 
+    private final Label label;
     Canvas canvas;
     double TILE_SIZE;
     Scenario s;
@@ -30,6 +34,7 @@ public class TempView extends ScrollPane {
         container.maxWidthProperty().bind(canvas.widthProperty());
         container.maxHeightProperty().bind(canvas.heightProperty());
 
+
         container.getChildren().add(canvas);
         setContent(container);
         layout();
@@ -39,26 +44,27 @@ public class TempView extends ScrollPane {
             switch (event.getCode()) {
                 case X -> zoom(0.95);
                 case Z -> zoom(1.05);
-                //I think this is broken now
-//                case W -> s.TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(NORTH)));
-//                case A -> s.TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(WEST)));
-//                case S -> s.TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(SOUTH)));
-//                case D -> s.TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().rotate(EAST)));
-//                case M -> s.TILE_MAP.getAgentList().forEach(agent -> agent.setPose(agent.getPose().stepFoward()));
             }
         });
-
+        label = new Label("Not started");
+        label.setFont(Font.font(120));
         update();
 
+        container.getChildren().add(label);
         Main.stage.setScene(new Scene(this, 1080, 640));
 
     }
 
+    int c = 0;
+
     public void update() {
+        //print("Value.." + c);
+        label.setText(c++ + " ");
         GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setFill(Color.BLACK);
+        g.setFill(BLACK);
         g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
 
+        g.setStroke(BLACK);
         drawMap(g);
         drawFOV(g);
     }
@@ -107,6 +113,11 @@ public class TempView extends ScrollPane {
         TILE_SIZE = Math.max(Math.min(TILE_SIZE, 20), 4.5); //TODO: calculate actual ratio for min/max tile size
         canvas.setWidth(s.WIDTH * (TILE_SIZE + 1));
         canvas.setHeight(s.HEIGHT * (TILE_SIZE + 1));
+        update();
+    }
+
+    public void update(int count) {
+        c = count;
         update();
     }
 }

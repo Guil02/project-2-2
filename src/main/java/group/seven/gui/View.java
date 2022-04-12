@@ -7,6 +7,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+import static group.seven.utils.Methods.print;
+
 public class View extends ScrollPane {
 
     private final GraphicsContext g;

@@ -42,12 +42,12 @@ public class ScenarioBuilder implements Builder<Scenario> {
 
     /**
      * This method must be called in order to actually assemble the Scenario object
-     * //TODO: provide support for configuring file-based scenarios
-     * //TODO: provide support for building custom scenarios not based on map files
      * @return a new Scenario object with all its fields populated by the map file
      */
     @Override
     public Scenario build() {
+        //TODO: provide support for configuring file-based scenarios
+        //TODO: provide support for building custom scenarios not based on map files
         Scenario scenario = new Scenario();
         parseFile(mapFile, scenario);
         initMap(scenario);
