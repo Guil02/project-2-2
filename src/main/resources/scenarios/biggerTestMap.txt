@@ -1,5 +1,5 @@
 name = bigger test scenario
-gameMode = 0
+gameMode = 1
 height = 150
 width = 200
 scaling = 0.1

@@ -5,7 +5,12 @@ import java.util.*;
 //Undirected Simple Graph. Works I think, but I don't like the inheritance structure
 public abstract class AbstractGraph<V> implements GraphAPI<V>{
     //tester Node representation object, will delete
-    record Node(String label, int x, int y) {}
+    record Node(String label, int x, int y) {
+        @Override
+        public String toString() {
+            return label + ": ("+x + ", " + y + ")";
+        }
+    }
 
     private static final int EDGE_CAPACITY = 5;     //I think this is technically true? portals have 5 edges
 

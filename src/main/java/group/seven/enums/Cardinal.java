@@ -18,4 +18,13 @@ public enum Cardinal {
     public static void main(String[] args) {
         print(UP.unitVector);
     }
+
+    public Cardinal flip() {
+        return switch (this) {
+            case NORTH, UP -> SOUTH;
+            case SOUTH, DOWN -> NORTH;
+            case EAST, LEFT -> WEST;
+            case WEST, RIGHT -> EAST;
+        };
+    }
 }

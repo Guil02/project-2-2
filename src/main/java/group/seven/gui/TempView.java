@@ -10,9 +10,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 
-import static javafx.scene.paint.Color.BLACK;
+import java.util.Arrays;
+
+import static group.seven.logic.simulation.VisionHandler.VIEW_DISTANCE;
+import static javafx.scene.paint.Color.*;
 
 
 public class TempView extends ScrollPane {
@@ -21,13 +25,14 @@ public class TempView extends ScrollPane {
     Canvas canvas;
     double TILE_SIZE;
     Scenario s;
+    GraphicsContext g;
 
     public TempView(Scenario s) {
         this.s = s;
         StackPane container = new StackPane();
         TILE_SIZE = s.TILE_SIZE;
         canvas = new Canvas(s.WIDTH * (TILE_SIZE + 1), s.HEIGHT * (TILE_SIZE + 1));
-
+        g = canvas.getGraphicsContext2D();
         //container at least as big as ScollPane and maximally as big as canvas
         container.minWidthProperty().bind(widthProperty());
         container.minHeightProperty().bind(heightProperty());
@@ -61,16 +66,17 @@ public class TempView extends ScrollPane {
     public void update() {
         //print("Value.." + c);
         label.setText(c++ + " ");
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setFill(BLACK);
+        g.setFill(BLUE);
         g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
 
         g.setStroke(BLACK);
-        drawMap(g);
-        drawFOV(g);
+        drawMap();
+        drawDirection();
+        drawAgents();
+        drawFOV();
     }
 
-    private void drawMap(GraphicsContext g) {
+    private void drawMap() {
         for (int y = 0; y < s.HEIGHT; y++){
             for(int x = 0; x < s.WIDTH; x++) {
                 Tile tile = s.TILE_MAP.getTile(x, y);
@@ -81,7 +87,43 @@ public class TempView extends ScrollPane {
         }
     }
 
-    private void drawFOV(GraphicsContext g) {
+    private void drawAgents() {
+        Arrays.stream(Scenario.get().TILE_MAP.agents)
+                .forEach(a -> {
+                    g.setFill(a.getType().getColor());
+                    paintTile(a.getX(), a.getY());
+                });
+
+        g.setFill(BLACK);
+
+        //g.setFill(Color.rgb(52, 152, 219));
+//        for (Guard guard : scenario.getGuards()) {
+//            paintTile(guard.getX(), guard.getY());
+//        }
+
+//        if (GuardUI.selected != 0) {
+//            g.setFill(Color.rgb(225, 177, 44));
+//            paintTile(GuardUI.selectedGuard.guard.getX(), GuardUI.selectedGuard.guard.getY());
+//        }
+
+//        g.setFill(Color.rgb(192, 57, 43));
+//        Scenario.get().TILE_MAP.getIntruders().forEach(intr -> paintTile(intr.getX(), intr.getY()));
+    }
+
+    private void drawDirection() {
+        Arrays.stream(Scenario.get().TILE_MAP.agents)
+                .forEach(a -> {
+                    Line l = switch (a.getDirection()) {
+                        case NORTH, UP -> new Line(a.getX(), a.getY() - 1, a.getX(), a.getY() + VIEW_DISTANCE);
+                        case SOUTH, DOWN -> new Line(a.getX(), a.getY() + 1, a.getX(), a.getY() - VIEW_DISTANCE);
+                        default -> new Line();
+                    };
+                    g.setFill(CORAL);
+                    paintLine(a.getX(), a.getY(), (int) l.getStartX(), (int) l.getStartY());
+                });
+    }
+
+    private void drawFOV() {
 //        for (Agent agent : s.TILE_MAP.getAgentList()) {
 //            g.setFill(agent.getType().getColor());
 //
@@ -106,6 +148,14 @@ public class TempView extends ScrollPane {
 //            g.strokeLine(startX, startY, endX, endY);
 //
 //        }
+    }
+
+    private void paintTile(int x, int y) {
+        g.fillRect(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
+    }
+
+    private void paintLine(int x, int y, int endX, int endY) {
+        g.fillRect(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE + (endY*TILE_SIZE));
     }
 
     protected void zoom(double factor) {

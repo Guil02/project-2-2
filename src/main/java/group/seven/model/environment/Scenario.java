@@ -11,6 +11,10 @@ import static group.seven.enums.GameMode.SINGLE_INTRUDER;
 import static group.seven.enums.TileType.*;
 
 public class Scenario {
+    private static Scenario SCENARIO;
+    public static Scenario get() {
+        return SCENARIO;
+    }
 
     public GameMode GAME_MODE = SINGLE_INTRUDER;
     public String NAME = "untitled map";
@@ -65,6 +69,7 @@ public class Scenario {
     }
 
     public Scenario() {
+         SCENARIO = this;
         //empty constructor used by ScenarioBuilder
     }
 

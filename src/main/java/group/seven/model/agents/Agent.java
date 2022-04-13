@@ -6,7 +6,9 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 //TODO the agent structure very much work in progress
-public abstract class Agent{
+public abstract class Agent {
+
+    private static int IDs = 0;
 
     //Pose
     //protected int x, y;
@@ -15,15 +17,20 @@ public abstract class Agent{
     private final IntegerProperty yProp = new SimpleIntegerProperty();
 
     //Type
-    private TileType agentType;
+    public TileType agentType;
 
     //FOV
-
     //Frontier
     //Current Speed
     //Strategy
 
     public abstract void updateVision();
+    public abstract Move calculateMove();
+    public abstract int getID();
+
+    protected int newID() {
+        return IDs++;
+    }
 
     public int getX() {
         //convert with frame
@@ -33,6 +40,16 @@ public abstract class Agent{
     public int getY() {
         //convert with frame
         return yProp.get();
+    }
+
+    public void setX(int x) {
+        //convert with frame
+        this.xProp.set(x);
+    }
+
+    public void setY(int y) {
+        //convert with frame
+        this.yProp.set(y);
     }
 
     public IntegerProperty xProperty() {
@@ -46,9 +63,12 @@ public abstract class Agent{
         return direction;
     }
 
+    public void setDirection(Cardinal d) {
+        direction = d;
+    }
+
     public TileType getType() {
         return agentType;
     }
-
 
 }

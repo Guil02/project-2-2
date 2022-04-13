@@ -8,12 +8,11 @@ public class TileMap {
     public Tile[][] map; //observable?
     public Agent[] agents; //observable?
 
-    public TileMap(Scenario scenario) {
+    public TileMap(Scenario s) {
         //not sure if TileMap needs a reference to the scenario, or if builder can take care of all that
         //alternatively scenario fields could be static
-
-        map = new Tile[scenario.WIDTH + 1][scenario.HEIGHT + 1];
-        agents = new Agent[scenario.NUM_GUARDS + scenario.NUM_INTRUDERS];
+        map = new Tile[s.WIDTH + 1][s.HEIGHT + 1];
+        agents = new Agent[s.NUM_AGENTS];
     }
 
     //update
@@ -32,11 +31,15 @@ public class TileMap {
         return map;
     }
 
-    public void setType(int x, int y, TileType type) {
+    protected void setType(int x, int y, TileType type) {
         map[x][y].type = type;
     }
 
-    public void addAgent(Agent agent) {
+    public TileType getType(int x, int y) {
+        return map[x][y].type;
+    }
 
+    public void addAgent(Agent agent) {
+        agents[agent.getID()] = agent;
     }
 }

@@ -1,23 +1,33 @@
 package group.seven.model.agents;
 
-import group.seven.enums.Action;
+
 import group.seven.enums.Cardinal;
 import group.seven.enums.TileType;
-import group.seven.model.environment.Tile;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import group.seven.logic.algorithms.Algorithm;
+import group.seven.logic.algorithms.RandomMoves;
+import group.seven.model.environment.Scenario;
 
-public class Intruder implements Entity {
+public class Intruder extends Agent {
 
-    protected Cardinal direction;
-    private final IntegerProperty xProp = new SimpleIntegerProperty();
-    private final IntegerProperty yProp = new SimpleIntegerProperty();
+    private final int ID;
+    int currentSpeed;
+    private final int maxSpeed = (int) Scenario.get().INTRUDER_SPRINT_SPEED;;
 
-    private TileType agentType;
+    Algorithm algorithm;
 
-    @Override
-    public Move calculateMove() {
-        return new Move(Action.STEP, 3, direction, new Tile());
+    public Intruder(int x, int y, Algorithm algorithm) {
+        this(x, y);
+        this.algorithm = algorithm;
+    }
+
+    public Intruder(int x, int y) {
+        ID = newID();
+        setX(x);
+        setY(y);
+        currentSpeed = 0;
+        agentType = TileType.INTRUDER;
+        direction = Cardinal.SOUTH; //DEFAULT
+        algorithm = new RandomMoves(this); //DEFAULT
     }
 
     @Override
@@ -26,22 +36,12 @@ public class Intruder implements Entity {
     }
 
     @Override
-    public int getX() {
-        return xProp.get();
+    public Move calculateMove() {
+        return algorithm.getNext();
     }
 
     @Override
-    public int getY() {
-        return yProp.get();
-    }
-
-    @Override
-    public Cardinal getDirection() {
-        return direction;
-    }
-
-    @Override
-    public TileType getType() {
-        return agentType;
+    public int getID() {
+        return ID;
     }
 }

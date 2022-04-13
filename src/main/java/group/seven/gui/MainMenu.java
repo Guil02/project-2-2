@@ -1,7 +1,7 @@
 package group.seven.gui;
 
 import group.seven.enums.AlgorithmType;
-import group.seven.logic.simulation.Runner;
+import group.seven.logic.simulation.Simulator;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.ScenarioBuilder;
 import group.seven.utils.Config;
@@ -49,7 +49,7 @@ public class MainMenu {
             Config.ALGORITHM = AlgorithmType.getEnum(algorithm);
             Scenario scenario = new ScenarioBuilder(scenarioFile).build();
             //Runner runner =
-            new Runner(scenario);
+            new Simulator(scenario);
             //runner.start();
 
         } else {

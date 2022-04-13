@@ -60,7 +60,8 @@ public class MapGraph<V> extends AbstractGraph<V>{
     public static void main(String[] args) {
         MapGraph<String> g = new MapGraph<>("Origin");
         g.addAll("A","B","C","E","F","G","O");
-        System.out.println(g.print());
+        System.out.println("Initial Graph 1:\n"+g.print());
+
         g.addEdge("Origin", "O");
         g.addEdge("A", "B");
         g.addEdge("A", "B");
@@ -68,22 +69,21 @@ public class MapGraph<V> extends AbstractGraph<V>{
         g.addEdge("B", "D");
         g.addEdge("B", "B");
 
-        System.out.println(g.print());
-        System.out.println(g.print());
+        System.out.println("Graph 1:\n"+g.print());
         System.out.println(g.isAdjacent("Foo", "Origin"));
-        System.out.println(g.neighbors("A"));
+        System.out.println("Neighbors of A:\n" +g.neighbors("A"));
 
         Node o = new Node("Origin", 0, 0);
         MapGraph<Node> g1 = new MapGraph<>(o);
         //g1.addAll(new Node("Left", -1, 0, true), new Node("Right", 1, 0, true), new Node("Up", 0, 1, true), new Node("Down", 0, 0, false));
 
-        System.out.println(g1.print());
+        System.out.println("Initial Graph 2:\n" +g1.print());
         g1.addEdge(o, new Node("Left", -1, 0));
         g1.addEdge(o, new Node("Right", 1, 0));
-        g1.addEdge(o, new Node("Up", 0, 1));
+        g1.addEdge(o, new Node("Up", 0, -1));
         g1.addEdge(o, new Node("Down", 0, 1));
-        System.out.println(g1.print());
-        System.out.println(g1.neighbors(o));
+        System.out.println("Graph 2:\n"+g1.print());
+        System.out.println("Neighbors of " + o + " :\n" + g1.neighbors(o));
     }
 
 }
