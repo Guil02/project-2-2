@@ -10,13 +10,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 
 import java.util.Arrays;
 
-import static group.seven.logic.simulation.VisionHandler.VIEW_DISTANCE;
-import static javafx.scene.paint.Color.*;
+import static javafx.scene.paint.Color.BLACK;
+import static javafx.scene.paint.Color.BLUE;
 
 
 public class TempView extends ScrollPane {
@@ -95,31 +94,12 @@ public class TempView extends ScrollPane {
                 });
 
         g.setFill(BLACK);
-
-        //g.setFill(Color.rgb(52, 152, 219));
-//        for (Guard guard : scenario.getGuards()) {
-//            paintTile(guard.getX(), guard.getY());
-//        }
-
-//        if (GuardUI.selected != 0) {
-//            g.setFill(Color.rgb(225, 177, 44));
-//            paintTile(GuardUI.selectedGuard.guard.getX(), GuardUI.selectedGuard.guard.getY());
-//        }
-
-//        g.setFill(Color.rgb(192, 57, 43));
-//        Scenario.get().TILE_MAP.getIntruders().forEach(intr -> paintTile(intr.getX(), intr.getY()));
     }
 
     private void drawDirection() {
         Arrays.stream(Scenario.get().TILE_MAP.agents)
                 .forEach(a -> {
-                    Line l = switch (a.getDirection()) {
-                        case NORTH, UP -> new Line(a.getX(), a.getY() - 1, a.getX(), a.getY() + VIEW_DISTANCE);
-                        case SOUTH, DOWN -> new Line(a.getX(), a.getY() + 1, a.getX(), a.getY() - VIEW_DISTANCE);
-                        default -> new Line();
-                    };
-                    g.setFill(CORAL);
-                    paintLine(a.getX(), a.getY(), (int) l.getStartX(), (int) l.getStartY());
+                    //TODO
                 });
     }
 

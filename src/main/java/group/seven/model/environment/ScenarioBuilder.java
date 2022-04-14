@@ -1,10 +1,10 @@
 package group.seven.model.environment;
 
+import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
 import group.seven.utils.Config;
 import javafx.util.Builder;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -82,7 +82,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
             // not sure if these should be included
             case "tileSize"             -> s.TILE_SIZE              = parseInt(value);
             case "scaling"              -> s.SCALING                = parseDouble(value);
-            case "timeStep"             -> s.timeStep               = parseDouble(value);
+            case "timeStep"             -> s.TIME_STEP = parseDouble(value);
 
             //regions:
             case "targetArea"           -> s.targetArea             = new Component(parsePoints(value), TARGET);
@@ -107,10 +107,9 @@ public class ScenarioBuilder implements Builder<Scenario> {
 
     /**
      * Converts the string of four corners that define area
-     * into a java.awt.Rectangle
-     *   !   Not sure if this is the best representation for it
+     * into our Rectangle class which returns ints instead of doubles
      * @param value String of corner points ([0] = x1, [1] = y1, [2] = x2, [3] = y2)
-     * @return java.awt.Rectangle enclosing the area
+     * @return Rectangle enclosing the area
      */
     private Rectangle parsePoints(String value) {
         int[] points = Arrays.stream(value.split(" "))
@@ -132,8 +131,8 @@ public class ScenarioBuilder implements Builder<Scenario> {
     //TODO: needs to be remade to consider portals and such
     private void fillMap(Scenario s) {
         s.getStaticAreas().forEach(a -> {
-            for(int x = a.area().x; x < a.area().getMaxX(); x++){
-                for(int y = a.area().y; y < a.area().getMaxY(); y++) {
+            for(int x = a.area().getX(); x < a.area().getMaxIntX(); x++){
+                for(int y = a.area().getY(); y < a.area().getMaxIntY(); y++) {
                     s.TILE_MAP.setType(x, y, a.type());
                 }
             }

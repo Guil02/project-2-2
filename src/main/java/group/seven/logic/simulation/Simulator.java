@@ -27,11 +27,6 @@ public class Simulator extends AnimationTimer {
         this.scenario = scenario;
         spawnAgents(scenario.GAME_MODE);
         view = new TempView(scenario);
-
-        //timeline = new Timeline(new KeyFrame(Duration.millis(100), this::render));
-        //timeline.setCycleCount(Animation.INDEFINITE);
-        //timeline.play();
-
         prev = System.nanoTime();
         start();
     }
@@ -98,40 +93,5 @@ public class Simulator extends AnimationTimer {
         }
         print(Arrays.stream(scenario.TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
     }
-
-
-//    Task<Boolean> simulator;
-//    public void start() {
-//        simulator = new Task<>() {
-//            boolean simulating = true;
-//            int count = 0;
-//            @Override
-//            protected Boolean call() {
-//                int i = 0; int j = 0;
-//                while (simulating) {
-//                    int x = i++;
-//                    int y = j;
-////                    for (int x = i; x < scenario.WIDTH; x++) {
-////                        for (int y = j; y < scenario.HEIGHT; y++) {
-//                            scenario.TILE_MAP.setType(x, y, TileType.WALL);
-////                        }
-////                    }
-//
-//                    j = y + 1;
-//                    //update model
-//                    //int finalCount = count;
-//                    //Platform.runLater(() -> view.update(finalCount));
-//                    if (count > 100000) simulating = false;
-//                    count++;
-//                }
-//                return true;
-//            }
-//        };
-//        timeline.play();
-//        new Thread(simulator).start();
-//        if (simulator.isDone()) {
-//            boolean caughtIntruder = simulator.getValue();
-//            timeline.stop();
-//        }
 }
 

@@ -1,8 +1,8 @@
 package group.seven.model.environment;
 
 import group.seven.enums.GameMode;
+import group.seven.logic.geometric.Rectangle;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,29 +12,22 @@ import static group.seven.enums.TileType.*;
 
 public class Scenario {
     private static Scenario SCENARIO;
+    //singleton
     public static Scenario get() {
         return SCENARIO;
     }
 
     public GameMode GAME_MODE = SINGLE_INTRUDER;
     public String NAME = "untitled map";
-    public int WIDTH;
-    public int HEIGHT;
+    public int WIDTH, HEIGHT;
     public int TILE_SIZE = 10;
-
-    public double INTRUDER_BASE_SPEED;
-    public double INTRUDER_SPRINT_SPEED;
-    public double GUARD_BASE_SPEED;
-    public double GUARD_SPRINT_SPEED;
-    public int NUM_GUARDS;
-    public int NUM_INTRUDERS;
-    public int NUM_AGENTS;
-    public int VIEW_DISTANCE;
+    public double INTRUDER_BASE_SPEED, INTRUDER_SPRINT_SPEED;
+    public double GUARD_BASE_SPEED, GUARD_SPRINT_SPEED;
+    public int NUM_GUARDS, NUM_INTRUDERS, NUM_AGENTS;
+    public int VIEW_DISTANCE; //TODO could differ per agent?
     public int NUM_MARKERS;
     public int SMELL_DISTANCE;
-    public double timeStep;
-    public double SCALING;
-
+    public double TIME_STEP, SCALING;
     public Component targetArea;// = new Rectangle(0,0,0,0);
     public Component intruderSpawnArea;// = new Rectangle(0,0,0,0);
     public Component guardSpawnArea;// = new Rectangle(0,0,0,0);

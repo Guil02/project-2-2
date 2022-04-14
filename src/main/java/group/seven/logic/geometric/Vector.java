@@ -3,6 +3,7 @@ package group.seven.logic.geometric;
 import javafx.geometry.Point2D;
 
 //honestly not even sure If I should include
+//TODO probably should not use this class
 public class Vector extends Point2D implements VectorPoint {
     //Orientation orientation;
 

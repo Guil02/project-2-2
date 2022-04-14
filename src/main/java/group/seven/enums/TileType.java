@@ -1,8 +1,10 @@
 package group.seven.enums;
 
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
+/**
+ * Represents the type of the tile
+ */
 public enum TileType {
     EMPTY, WALL, SHADED,
     PORTAL, EXIT_PORTAL,
@@ -18,7 +20,7 @@ public enum TileType {
     }
 
     //TODO: make these properties of the enums or store in hashmap
-    public Paint getColor() {
+    public Color getColor() {
         return switch (this) {
             case WALL-> Color.BLACK;
             case EMPTY -> Color.WHITE;

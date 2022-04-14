@@ -7,7 +7,6 @@ import javafx.beans.value.ObservableBooleanValue;
 
 import static group.seven.enums.TileType.EMPTY;
 
-//TODO: hate this class, want to use a builder or factory pattern instead
 public class Tile {
     //Type
     TileType type;

@@ -11,7 +11,7 @@ public abstract class Agent {
     private static int IDs = 0;
 
     //Pose
-    //protected int x, y;
+    protected int x, y; //You can use this if the property stuff confuses
     protected Cardinal direction;
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
