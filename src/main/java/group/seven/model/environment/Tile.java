@@ -13,7 +13,8 @@ public class Tile {
     XY xy; //or Point2D, or int x, y
 
     //Graph
-    Tile[] adjacent;
+    //Tile[] adjacent; // added Adjacent record --> can we delete this & old setAdjacent method? (Mischa)
+    Adjacent adjacent;
 
     public Tile() {
         type = EMPTY;
@@ -46,9 +47,8 @@ public class Tile {
         this.type = type;
     }
 
-    public void setAdjacent(Tile[] adjacent) {
-        this.adjacent = adjacent;
-    }
+    //public void setAdjacent(Tile[] adjacent) { this.adjacent = adjacent;}
+    public void setAdjacent(Tile north, Tile east, Tile south, Tile west, Tile target) {this.adjacent = new Adjacent(north,east,south,west,target);}
 
     //Exploration Status, also not sure about this
     //boolean explored for guard and agent for calculating coverage
