@@ -1,6 +1,6 @@
 package org.group7.model.component.markerComponent;
 
-import org.group7.geometric.Point;
+import org.group7.gui.geometric.Point;
 import org.group7.model.Scenario;
 
 public class CrossMarkerComponent extends MarkerComponent{

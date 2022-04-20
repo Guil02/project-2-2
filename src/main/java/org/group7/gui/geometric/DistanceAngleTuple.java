@@ -1,4 +1,4 @@
-package org.group7.geometric;
+package org.group7.gui.geometric;
 
 //TODO: why is this a parameterized class?
 //<Double, Vector2D> are generic types here; they can represent any class, the names are generic, so any object of any

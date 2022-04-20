@@ -2,7 +2,7 @@ package org.group7.model.algorithms;
 
 import org.group7.enums.Actions;
 import org.group7.enums.Orientation;
-import org.group7.geometric.Point;
+import org.group7.gui.geometric.Point;
 import org.group7.model.Grid;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.Teleporter;

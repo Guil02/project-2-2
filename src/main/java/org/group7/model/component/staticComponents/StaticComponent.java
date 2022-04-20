@@ -1,9 +1,8 @@
 package org.group7.model.component.staticComponents;
 
-import org.group7.geometric.Area;
 import org.group7.model.Scenario;
 import org.group7.model.component.Component;
-import org.group7.geometric.Point;
+import org.group7.gui.geometric.Point;
 
 /**
  * A general class for all the static components in the game. With static component it is meant to be components that

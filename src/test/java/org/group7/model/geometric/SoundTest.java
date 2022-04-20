@@ -1,16 +1,5 @@
 package org.group7.model.geometric;
 
-import org.group7.geometric.Area;
-import org.group7.geometric.Point;
-import org.group7.model.State;
-import org.group7.model.component.playerComponents.Guard;
-import org.group7.model.component.playerComponents.Intruder;
-import org.group7.model.component.playerComponents.PlayerComponent;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

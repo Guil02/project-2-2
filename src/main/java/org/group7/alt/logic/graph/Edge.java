@@ -1,6 +1,6 @@
 package org.group7.alt.logic.graph;
 
-import org.group7.geometric.Tuple;
+import org.group7.gui.geometric.Tuple;
 
 public class Edge extends Tuple<Node, Node> {
 

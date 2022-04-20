@@ -4,20 +4,17 @@ import org.group7.agentVision.BasicVision;
 import org.group7.enums.Actions;
 import org.group7.enums.AlgorithmEnum;
 import org.group7.enums.Orientation;
-import org.group7.geometric.Area;
-import org.group7.geometric.Point;
-import org.group7.geometric.Vector2D;
+import org.group7.gui.geometric.Area;
+import org.group7.gui.geometric.Point;
+import org.group7.gui.geometric.Vector2D;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
 import org.group7.model.algorithms.*;
 import org.group7.model.component.Component;
 import org.group7.utils.Config;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static org.group7.enums.AlgorithmEnum.*;
 
 /**
  * This class is made as a super class for all the possible component that can be considered player, i.e. agents and intruders.

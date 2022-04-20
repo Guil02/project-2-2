@@ -1,10 +1,9 @@
 package org.group7.model.component.playerComponents;
 
-import org.group7.geometric.Point;
+import org.group7.gui.geometric.Point;
 import org.group7.model.Scenario;
 
 import static org.group7.enums.AlgorithmEnum.A_STAR;
-import static org.group7.enums.ComponentEnum.GUARD;
 import static org.group7.enums.ComponentEnum.INTRUDER;
 
 /**

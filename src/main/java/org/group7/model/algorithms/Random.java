@@ -17,7 +17,7 @@ public class Random implements Algorithm {
     private int maxDistance;
 
 
-    public Random(int initialX, int initialY, Grid[][] map, PlayerComponent player,double maxDistance) {
+    public Random(int initialX, int initialY, Grid[][] map, PlayerComponent player, double maxDistance) {
         this.initialX = initialX;
         this.initialY = initialY;
         this.map = map;

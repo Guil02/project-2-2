@@ -1,6 +1,4 @@
-package org.group7.geometric;
-
-import javafx.geometry.Point2D;
+package org.group7.gui.geometric;
 
 /**
  * Generic all-purpose Tuple class. Supports every class type or object.

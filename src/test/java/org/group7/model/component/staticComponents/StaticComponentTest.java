@@ -1,6 +1,6 @@
 package org.group7.model.component.staticComponents;
 
-import org.group7.geometric.Point;
+import org.group7.gui.geometric.Point;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -10,9 +10,9 @@ public abstract class AbstractGraph<V> implements GraphAPI<V>{
     Map<V, Set<V>> graph; //adjacency set
     V origin;
 
-    public AbstractGraph() {
-        graph = new LinkedHashMap<>();
-    }
+//    public AbstractGraph() {
+//        graph = new LinkedHashMap<>();
+//    }
 
     public AbstractGraph(V root) {
         origin = root;

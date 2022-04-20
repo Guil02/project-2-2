@@ -1,13 +1,13 @@
 package org.group7.model;
 
-import org.group7.geometric.Area;
-import org.group7.geometric.Tuple;
+import org.group7.gui.geometric.Area;
+import org.group7.gui.geometric.Tuple;
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
 import org.group7.model.component.playerComponents.PlayerComponent;
 import org.group7.model.component.staticComponents.*;
-import org.group7.geometric.Point;
+import org.group7.gui.geometric.Point;
 
 import java.io.*;
 import java.nio.charset.Charset;

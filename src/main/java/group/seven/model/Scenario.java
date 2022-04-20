@@ -5,15 +5,9 @@ import group.seven.logic.records.Records;
 import group.seven.logic.records.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.environment.Cell;
-import org.group7.geometric.Area;
-import org.group7.geometric.Point;
-import org.group7.geometric.Tuple;
+import org.group7.gui.geometric.Point;
+import org.group7.gui.geometric.Tuple;
 import org.group7.model.Grid;
-import org.group7.model.component.Component;
-import org.group7.model.component.playerComponents.Guard;
-import org.group7.model.component.playerComponents.Intruder;
-import org.group7.model.component.playerComponents.PlayerComponent;
-import org.group7.model.component.staticComponents.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,7 +1,5 @@
-package org.group7.geometric;
+package org.group7.gui.geometric;
 
-
-import javafx.geometry.Point2D;
 
 //inspired by: https://gist.github.com/gunvirranu/6816d65c0231981787ebefd3bdb61f98
 public class Vector2D {

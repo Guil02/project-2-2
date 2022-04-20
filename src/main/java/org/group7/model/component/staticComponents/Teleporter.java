@@ -1,7 +1,7 @@
 package org.group7.model.component.staticComponents;
 
-import org.group7.geometric.Point;
-import org.group7.geometric.Vector2D;
+import org.group7.gui.geometric.Point;
+import org.group7.gui.geometric.Vector2D;
 import org.group7.model.Scenario;
 
 import static org.group7.enums.ComponentEnum.TELEPORTER;

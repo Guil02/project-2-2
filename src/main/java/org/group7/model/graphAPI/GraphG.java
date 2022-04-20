@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GraphG<V> extends AbstractGraph<V>{
+
     public GraphG(V origin) {
         super(origin);
     }

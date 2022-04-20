@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+import static org.group7.utils.Methods.print;
+
 public class Main extends Application {
 
     public static Stage stage;  //so we can access the stage easily from other (GUI) classes

@@ -1,9 +1,9 @@
 package org.group7.agentVision;
 
-import org.group7.geometric.Area;
-import org.group7.geometric.DistanceAngleTuple;
-import org.group7.geometric.Point;
-import org.group7.geometric.Vector2D;
+import org.group7.gui.geometric.Area;
+import org.group7.gui.geometric.DistanceAngleTuple;
+import org.group7.gui.geometric.Point;
+import org.group7.gui.geometric.Vector2D;
 import org.group7.model.component.Component;
 import org.group7.model.component.playerComponents.PlayerComponent;
 

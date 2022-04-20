@@ -22,7 +22,7 @@ public class Agent {
     double speed;
     Orientation direction;
 
-    private Agent(Tile t, XY o, Orientation rotation) {
+    public Agent(Tile t, XY o, Orientation rotation) {
         type = t;
         origin = o;
         direction = rotation;

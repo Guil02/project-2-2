@@ -1,6 +1,6 @@
 package org.group7.model.geometric;
 
-import org.group7.geometric.Vector2D;
+import org.group7.gui.geometric.Vector2D;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

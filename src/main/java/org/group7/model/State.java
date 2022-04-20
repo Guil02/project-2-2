@@ -1,11 +1,8 @@
 package org.group7.model;
 
-import org.group7.geometric.Vector2D;
-import org.group7.model.component.markerComponent.MarkerComponent;
 import org.group7.model.component.playerComponents.Guard;
 import org.group7.model.component.playerComponents.Intruder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class State {

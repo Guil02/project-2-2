@@ -1,20 +1,15 @@
 package org.group7.gui;
 
-import javafx.geometry.Point2D;
-import javafx.scene.CacheHint;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import org.group7.enums.ComponentEnum;
-import org.group7.geometric.Vector2D;
+import org.group7.gui.geometric.Vector2D;
 import org.group7.model.Grid;
 import org.group7.model.Scenario;
 import org.group7.model.component.playerComponents.Guard;
-import org.group7.model.component.staticComponents.Wall;
 
-import static javafx.scene.paint.Color.*;
 import static org.group7.enums.ComponentEnum.WALL;
 
 public class View extends ScrollPane {

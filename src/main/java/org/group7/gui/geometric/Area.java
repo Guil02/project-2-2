@@ -1,4 +1,4 @@
-package org.group7.geometric;
+package org.group7.gui.geometric;
 
 
 public class Area {
