@@ -2,6 +2,7 @@ package group.seven.model.environment;
 
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
+import group.seven.model.agents.Agent;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 
