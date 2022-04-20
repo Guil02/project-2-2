@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<fx:root cache="true" cacheHint="SPEED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="82.0" prefWidth="82.0" style="-fx-background-color: #34495e; -fx-background-radius: 20;" type="AnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="TOP_CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" spacing="2.0" style="-fx-background-color: #4f6f8f; -fx-background-radius: 100;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="agentID" text="#1" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="-2.0" />
+               </VBox.margin>
+            </Label>
+            <Label cache="true" cacheHint="SPEED" contentDisplay="RIGHT" text="Explored" textFill="WHITE">
+               <graphic>
+                  <Label fx:id="coverage" text="32%" textFill="WHITE" />
+               </graphic>
+            </Label>
+            <Label fx:id="orientation" cache="true" cacheHint="SPEED" text="NORTH" textFill="WHITE" />
+         </children>
+         <padding>
+            <Insets left="2.5" right="2.5" top="5.0" />
+         </padding>
+      </VBox>
+   </children>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
+   <padding>
+      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+   </padding>
+</fx:root>
