@@ -6,12 +6,22 @@ import group.seven.model.agents.Agent;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import static group.seven.enums.TileType.EMPTY;
 
 public class Tile {
     //Type
     TileType type;
     XY xy; //or Point2D, or int x, y
+    Boolean exploredByGuard = false;
+    Boolean exploredByIntruder = false;
+    // Lists keep track of which intruder has seen the tile . TODO: maybe change for fancier data structure
+    List<Boolean> seenByGuard;
+    List<Boolean> seenByIntruder;
+
+
 
     //Graph
     //Tile[] adjacent; // added Adjacent record --> can we delete this & old setAdjacent method? (Mischa)
@@ -19,6 +29,8 @@ public class Tile {
 
     public Tile() {
         type = EMPTY;
+        seenByGuard = new LinkedList<>();
+        seenByIntruder = new LinkedList<>();
     }
 
     public Tile(int x, int y) {
@@ -66,6 +78,18 @@ public class Tile {
     }
     public boolean getExploredAgent() {
         return exploredAgent.get();
+    }
+
+
+    // A tile can be explored by either a guard or a intruder
+    public void setExplored(Agent agent){
+        if (agent.getType() == TileType.GUARD) { // TODO: check how to get rid of tileType
+            exploredByGuard = true;
+            seenByGuard.set(agent.getID(),Boolean.TRUE);
+        }else if (agent.getType() == TileType.INTRUDER){
+            exploredByIntruder = true;
+            seenByIntruder.set(agent.getID(),Boolean.TRUE);
+        }
     }
 
 
