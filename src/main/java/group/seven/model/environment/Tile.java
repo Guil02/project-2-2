@@ -15,9 +15,10 @@ public class Tile {
     //Type
     TileType type;
     XY xy; //or Point2D, or int x, y
+
     Boolean exploredByGuard = false;
     Boolean exploredByIntruder = false;
-    // Lists keep track of which intruder has seen the tile . TODO: maybe change for fancier data structure
+    // Lists keep track of which intruder has seen the tile
     List<Boolean> seenByGuard;
     List<Boolean> seenByIntruder;
 
@@ -81,9 +82,13 @@ public class Tile {
     }
 
 
-    // A tile can be explored by either a guard or a intruder
+    /**
+     * //TODO: check if theres a fancier way to store this information or more efficient data structure
+     * Sets a tile as explored and adds to the list, either of guards or intruders, the ID of the agent that saw it
+     * @param agent
+     */
     public void setExplored(Agent agent){
-        if (agent.getType() == TileType.GUARD) { // TODO: check how to get rid of tileType
+        if (agent.getType() == TileType.GUARD) { //
             exploredByGuard = true;
             seenByGuard.set(agent.getID(),Boolean.TRUE);
         }else if (agent.getType() == TileType.INTRUDER){

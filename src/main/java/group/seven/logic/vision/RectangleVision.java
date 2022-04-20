@@ -7,53 +7,62 @@ import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 import group.seven.model.environment.TileMap;
 
+import java.util.LinkedList;
+import java.util.List;
 
+/**
+ * Class implements a rectangular vision for agent of  size [3 x distanceViewing]
+ */
 public class RectangleVision implements Vision {
     Scenario scenario;
-    TileMap map; // TileMap = Map , and Grid = Tile
+    TileMap map;
     int distanceViewing;
 
+    /**
+     * Constructor (initializing the map and distanceViewing just because they are used a lot)
+     * @param scenario
+     */
     public RectangleVision(Scenario scenario) {
         this.scenario = scenario;
         this.map = scenario.get().TILE_MAP;
         this.distanceViewing = scenario.get().VIEW_DISTANCE;
     }
 
-    //Given a player, it returns the observed Tiles
 
+    @Override
+    public void observe(int x, int y, List<Tile> observedTile, Agent agent){
+        map.getTile(x,y).setExplored(agent);
+        observedTile.add(map.getTile(x,y));
+    }
 
-    // Given a player, the map is updated based on what it saw
-    public void updateVisionMap (Agent player) {
-
+    @Override
+    public List<Tile> updateAndGetVisionAgent (Agent agent) {
+        List<Tile> observedTiles = new LinkedList<>(); // list contains all the tiles seen by agent
         //get position of agent
-        int xCoordinate = player.getX();
-        int yCoordinate = player.getY();
-        Tile furthestSoFar = null;
-
-        Cardinal directionAgent = player.getDirection(); //up,down,etc.
+        int xCoordinate = agent.getX();
+        int yCoordinate = agent.getY();
+        Cardinal directionAgent = agent.getDirection(); //get direction of agent
 
         switch (directionAgent) {
             case NORTH -> {
                 for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check straight
                     if (y >= 0) { //can't go lower than y=0, so if the number is negative is out of bound
                         // set that the player saw the tile
-                        map.getTile(xCoordinate,y).setExplored(player);
-                        furthestSoFar = map.getTile(xCoordinate,y);
+                        observe(xCoordinate,y, observedTiles, agent);
                         //CHECK COLLISIONS with walls
-                        if (map.getTile(xCoordinate,y).getType() == TileType.WALL) { //TODO: check how to get rid of TileType.
+                        if (map.getTile(xCoordinate,y).getType() == TileType.WALL) {
                             //if the agent sees a wall, we break as it cant see any further
                             break;
                         }
                     } else { //out of bound for edges of map
-                        furthestSoFar = map.getTile(xCoordinate,y+1);
+                        observe(xCoordinate,y+1, observedTiles, agent);
                         break;
                     }
                 }
                 if (xCoordinate - 1 >= 0) { //if it is possible to be one of the left without going out of bound
                     for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check one left
                         if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
-                            map.getTile(xCoordinate - 1,y).setExplored(player);
-                            furthestSoFar = map.getTile(xCoordinate - 1,y);
+                            observe(xCoordinate-1,y, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
                             if (map.getTile(xCoordinate - 1,y).getType() == TileType.WALL) { // TODO: check this
@@ -61,7 +70,8 @@ public class RectangleVision implements Vision {
                                 break;
                             }
                         } else { //out of bound for edges of map
-                            furthestSoFar = map.getTile(xCoordinate - 1,y + 1);
+                            observe(xCoordinate-1,y+1, observedTiles, agent);
+
                             break;
                         }
                     }
@@ -69,15 +79,14 @@ public class RectangleVision implements Vision {
                 if (xCoordinate + 1 < scenario.get().WIDTH) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check one right
                         if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
+                            observe(xCoordinate+1,y, observedTiles, agent);
 
-                            map.getTile(xCoordinate + 1,y).setExplored(player);
-                            furthestSoFar = map.getTile(xCoordinate + 1,y);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(xCoordinate + 1,y).getType() == TileType.WALL) {
                                 break;
                             }
                         } else { //out of bound for edges of map
-                            furthestSoFar =map.getTile(xCoordinate + 1,y + 1);
+                            observe(xCoordinate+1,y+1, observedTiles, agent);
                             break;
                         }
                     }
@@ -87,30 +96,30 @@ public class RectangleVision implements Vision {
             case SOUTH -> {
                 for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check straight
                     if (y < scenario.get().HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
-                        map.getTile(xCoordinate,y).setExplored(player);
-                        furthestSoFar = map.getTile(xCoordinate,y);
+                        observe(xCoordinate,y, observedTiles, agent);
 
                         //CHECK COLLISIONS with walls
                         if (map.getTile(xCoordinate,y).getType() == TileType.WALL) {
                             break;
                         }
                     } else { //out of bound for edges of map
-                        furthestSoFar = map.getTile(xCoordinate,y-1);
+                        observe(xCoordinate,y-1, observedTiles, agent);
+
                         break;
                     }
                 }
                 if (xCoordinate - 1 >= 0) { //if it is possible to be one of the left without going out of bound
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one left
                         if (y < scenario.get().HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
-                            map.getTile(xCoordinate-1,y).setExplored(player);
-                            furthestSoFar = map.getTile(xCoordinate-1,y);
+                            observe(xCoordinate-1,y, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
                             if (map.getTile(xCoordinate-1,y).getType() == TileType.WALL) {
                                 break;
                             }
                         } else { //out of bound for edges of map
-                            furthestSoFar = map.getTile(xCoordinate-1,y-1);
+                            observe(xCoordinate-1,y-1, observedTiles, agent);
+
                             break;
                         }
                     }
@@ -118,47 +127,43 @@ public class RectangleVision implements Vision {
                 if (xCoordinate + 1 < scenario.get().WIDTH) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one right
                         if (y < scenario.get().HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
-                            map.getTile(xCoordinate+1,y).setExplored(player);
-                            furthestSoFar = map.getTile(xCoordinate-1,y);
-
+                            observe(xCoordinate+1,y, observedTiles, agent);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(xCoordinate+1,y).getType() == TileType.WALL) {
                                 break;
                             }
                         } else {
-                            furthestSoFar = map.getTile(xCoordinate+1,y-1);
+                            observe(xCoordinate+1,y-1, observedTiles, agent);
                             break;
                         }
                     }
                 }
             }
-            case RIGHT -> {
+            case EAST -> {
                 for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) { //check straight
                     if (x < scenario.get().WIDTH) {
-                        map.getTile(x,yCoordinate).setExplored(player);
-                        furthestSoFar = map.getTile(x,yCoordinate);
+                        observe(x,yCoordinate, observedTiles, agent);
 
                         //CHECK COLLISIONS with walls
                         if (map.getTile(x,yCoordinate).getType() == TileType.WALL) {
                             break;
                         }
                     } else { //out of bound for edges of map
-                        furthestSoFar = map.getTile(x-1,yCoordinate);
+                        observe(x-1,yCoordinate, observedTiles, agent);
+
                         break;
                     }
                 }
                 if (yCoordinate - 1 >= 0) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
                         if (x < scenario.get().WIDTH) { //cant go higher than y=0, so if the number is positive is out of bound
-                            map.getTile(x,yCoordinate-1).setExplored(player);
-                            furthestSoFar = map.getTile(x,yCoordinate-1);
-
+                            observe(x,yCoordinate-1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(x,yCoordinate-1).getType() == TileType.WALL) {
                                 break;
                             }
                         } else {
-                            furthestSoFar = map.getTile(x-1,yCoordinate-1);
+                            observe(x-1,yCoordinate-1, observedTiles, agent);
                             break;
                         }
                     }
@@ -166,47 +171,43 @@ public class RectangleVision implements Vision {
                 if (yCoordinate + 1 < scenario.get().HEIGHT) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
                         if (x < scenario.get().WIDTH) {
-                            map.getTile(x,yCoordinate+1).setExplored(player);
-                            furthestSoFar = map.getTile(x,yCoordinate+1);
-
+                            observe(x,yCoordinate+1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(x,yCoordinate+1).getType() == TileType.WALL) {
                                 break;
                             }
                         } else {
-                            furthestSoFar = map.getTile(x-1,yCoordinate+1);
+                            observe(x-1,yCoordinate+1, observedTiles, agent);
                             break;
                         }
                     }
                 }
             }
-            case LEFT -> {
+            case WEST -> {
                 for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) { //check straight
                     if (x >= 0) {
-                        map.getTile(x,yCoordinate).setExplored(player);
-                        furthestSoFar = map.getTile(x,yCoordinate);
+                        observe(x,yCoordinate, observedTiles, agent);
+
                         //CHECK COLLISIONS with walls
                         if (map.getTile(x,yCoordinate).getType() == TileType.WALL) {
-
                             break;
                         }
                     } else { //out of bound for edges of map
-                        furthestSoFar = map.getTile(x+1,yCoordinate);
+                        observe(x+1,yCoordinate, observedTiles, agent);
+
                         break;
                     }
                 }
                 if (yCoordinate - 1 >= 0) {
                     for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) {
                         if (x >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
-                            map.getTile(x,yCoordinate-1).setExplored(player);
-                            furthestSoFar = map.getTile(x,yCoordinate-1);
-
+                            observe(x,yCoordinate-1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(x,yCoordinate-1).getType() == TileType.WALL) {
                                 break;
                             }
                         } else {
-                            furthestSoFar = map.getTile(x+1,yCoordinate-1);
+                            observe(x+1,yCoordinate-1, observedTiles, agent);
                             break;
                         }
                     }
@@ -214,23 +215,21 @@ public class RectangleVision implements Vision {
                 if (yCoordinate + 1 < scenario.get().HEIGHT) {
                     for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) {
                         if (x >= 0) {
-                            map.getTile(x,yCoordinate+1).setExplored(player);
-                            furthestSoFar = map.getTile(x,yCoordinate+1);
+                            observe(x,yCoordinate+1, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
                             if (map.getTile(x,yCoordinate+1).getType() == TileType.WALL) {
                                 break;
                             }
                         } else {
-                            furthestSoFar = map.getTile(x+1,yCoordinate+1);
+                            observe(x+1,yCoordinate+1, observedTiles, agent);
                             break;
                         }
                     }
                 }
             }
         }
+        return observedTiles;
     }
-
-
 
 }
