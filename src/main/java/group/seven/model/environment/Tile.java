@@ -19,8 +19,8 @@ public class Tile {
     Boolean exploredByGuard = false;
     Boolean exploredByIntruder = false;
     // Lists keep track of which intruder has seen the tile
-    List<Boolean> seenByGuard;
-    List<Boolean> seenByIntruder;
+    List<Boolean> seen;
+
 
 
 
@@ -30,8 +30,7 @@ public class Tile {
 
     public Tile() {
         type = EMPTY;
-        seenByGuard = new LinkedList<>();
-        seenByIntruder = new LinkedList<>();
+        seen = new LinkedList<>();
     }
 
     public Tile(int x, int y) {
@@ -90,12 +89,12 @@ public class Tile {
     public void setExplored(Agent agent){
         if (agent.getType() == TileType.GUARD) { //
             exploredByGuard = true;
-            seenByGuard.set(agent.getID(),Boolean.TRUE);
         }else if (agent.getType() == TileType.INTRUDER){
             exploredByIntruder = true;
-            seenByIntruder.set(agent.getID(),Boolean.TRUE);
         }
-    }
+        // Because the int is static it just increases and guards and intruders don't share it, therefore we just save it
+        seen.set(agent.getID(),Boolean.TRUE);
 
+    }
 
 }
