@@ -3,34 +3,31 @@ package group.seven.model.environment;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.TileType.EMPTY;
+import static group.seven.model.environment.Scenario.NUM_AGENTS;
 
 public class Tile {
     //Type
     TileType type;
     XY xy; //or Point2D, or int x, y
 
-    Boolean exploredByGuard = false;
-    Boolean exploredByIntruder = false;
+    boolean exploredByGuard = false;
+    boolean exploredByIntruder = false;
     // Lists keep track of which intruder has seen the tile
     List<Boolean> seen;
 
-
-
-
     //Graph
-    //Tile[] adjacent; // added Adjacent record --> can we delete this & old setAdjacent method? (Mischa)
     Adjacent adjacent;
 
     public Tile() {
         type = EMPTY;
-        seen = new LinkedList<>();
+        seen = new ArrayList<>(NUM_AGENTS);
     }
 
     public Tile(int x, int y) {
@@ -52,32 +49,35 @@ public class Tile {
 
     //Actionable
     // void doAction() {}
+
     public TileType getType() {
         return type;
     }
-
     public void setType(TileType type) {
         this.type = type;
     }
 
     //public void setAdjacent(Tile[] adjacent) { this.adjacent = adjacent;}
-    public void setAdjacent(Tile north, Tile east, Tile south, Tile west, Tile target) {this.adjacent = new Adjacent(north,east,south,west,target);}
+    public void setAdjacent(Tile north, Tile east, Tile south, Tile west, Tile target) {
+        this.adjacent = new Adjacent(north,east,south,west,target);
+    }
 
     //Exploration Status, also not sure about this
     //boolean explored for guard and agent for calculating coverage
-    private final ObservableBooleanValue exploredGuard = new SimpleBooleanProperty(false);
-    private final ObservableBooleanValue exploredAgent = new SimpleBooleanProperty(false);
-    public ObservableBooleanValue exploredGuardProperty() {
-        return exploredGuard;
+    private final BooleanProperty exploredGuardProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty exploredIntruderProperty = new SimpleBooleanProperty(false);
+
+    public BooleanProperty exploredGuardProperty() {
+        return exploredGuardProperty;
     }
-    public ObservableBooleanValue exploredAgentProperty() {
-        return exploredAgent;
+    public BooleanProperty exploredIntruderProperty() {
+        return exploredIntruderProperty;
     }
     public boolean getExploredGuard() {
-        return exploredGuard.get();
+        return exploredGuardProperty.get();
     }
-    public boolean getExploredAgent() {
-        return exploredAgent.get();
+    public boolean getExploredIntruder() {
+        return exploredIntruderProperty.get();
     }
 
 
@@ -89,12 +89,13 @@ public class Tile {
     public void setExplored(Agent agent){
         if (agent.getType() == TileType.GUARD) { //
             exploredByGuard = true;
+            exploredGuardProperty.set(true);
         }else if (agent.getType() == TileType.INTRUDER){
             exploredByIntruder = true;
+            exploredIntruderProperty.set(true);
         }
         // Because the int is static it just increases and guards and intruders don't share it, therefore we just save it
-        seen.set(agent.getID(),Boolean.TRUE);
-
+        seen.set(agent.getID(), true);
     }
 
 }

@@ -1,6 +1,7 @@
 package group.seven.gui;
 
 import group.seven.Main;
+import group.seven.logic.simulation.Simulator;
 import group.seven.model.environment.Scenario;
 import group.seven.utils.Methods;
 import javafx.application.Platform;
@@ -17,8 +18,8 @@ public class SimulationScreen extends BorderPane {
     private boolean running;
     //private List<GuardUI> guardsVis;
 
-    public SimulationScreen(Scenario s) {
-        view = new View(s);
+    public SimulationScreen() {
+        view = new View();
         Methods.loadFXML(this, "/fxml/simulationScreen.fxml");
     }
 
@@ -28,7 +29,7 @@ public class SimulationScreen extends BorderPane {
     }
 
     public void updateStats(double elapsedTimeStep, double coverage) {
-        elapsedTime.setText(String.valueOf((int)(elapsedTimeStep * 100) / 100) + " units");
+        elapsedTime.setText(((int)(elapsedTimeStep * 100) / 100) + " units");
         explorationPercent.setText(String.valueOf((int)(coverage * 100) / 100));
     }
 
@@ -57,13 +58,13 @@ public class SimulationScreen extends BorderPane {
         setCenter(view);
         pauseButton.setText(!running ? "Play" : "Pause");
 
-//        String gameMode = switch (Scenario.getInstance().getGameMode()) {
-//            case 0 -> "Exploration";
-//            case 1 -> "Intruder";
-//            default -> "Unknown Game Mode";
-//        };
+        String gameMode = switch (Scenario.GAME_MODE) {
+            case EXPLORATION -> "Exploration";
+            case SINGLE_INTRUDER -> "Intruder";
+            case MULTI_INTRUDER -> "Multi Intruder";
+        };
 
-        //gameModeLabel.setText(gameMode);
+        gameModeLabel.setText(gameMode);
 
 //        guardsVis = Scenario.getInstance().getGuards().stream()
 //                        .map(GuardUI::new)
@@ -74,13 +75,13 @@ public class SimulationScreen extends BorderPane {
 //            g.setOnMouseClicked(e -> g.select());
 //        });
 //
-//        pauseButton.setOnAction(event -> {
-//            if (running) GameRunner.gameRunner.stop();
-//            else GameRunner.gameRunner.start();
-//
-//            pauseButton.setText(running ? "Play" : "Pause");
-//            running = !running;
-//        });
+        pauseButton.setOnAction(event -> {
+            if (running) Simulator.pause();
+            else Simulator.sim.start();
+
+            pauseButton.setText(running ? "Play" : "Pause");
+            running = !running;
+        });
 
         quitButton.setOnAction(event -> {
             Main.stage.close();
@@ -89,7 +90,6 @@ public class SimulationScreen extends BorderPane {
         });
 
         resetButton.setDisable(true);
-
 
         setOnKeyPressed(event -> {
             switch (event.getCode()) {

@@ -5,5 +5,4 @@ public record Tuple<A, B>(A a, B b) {
     public String toString() {
         return getClass().getSimpleName() + "(" + a + ", " + b + ')';
     }
-
 }

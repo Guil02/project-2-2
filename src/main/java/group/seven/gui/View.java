@@ -1,13 +1,17 @@
 package group.seven.gui;
 
 import group.seven.model.environment.Scenario;
+import group.seven.model.environment.Tile;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
-import static group.seven.utils.Methods.print;
+import java.util.Arrays;
+
+import static group.seven.model.environment.Scenario.TILE_MAP;
+import static javafx.scene.paint.Color.BLACK;
 
 public class View extends ScrollPane {
 
@@ -18,10 +22,7 @@ public class View extends ScrollPane {
     protected int MAP_WIDTH;
     protected int MAP_HEIGHT;
 
-    Scenario scenario;
-
-    public View(Scenario s) {
-        scenario = s;
+    public View() {
         MAP_WIDTH = Scenario.WIDTH;
         MAP_HEIGHT = Scenario.HEIGHT;
 
@@ -51,7 +52,7 @@ public class View extends ScrollPane {
         g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         drawMap();
         drawAgents();
-        drawPortal();
+        //drawPortal();
     }
 
     private void drawPortal() {
@@ -72,28 +73,29 @@ public class View extends ScrollPane {
 //
 //        g.setFill(Color.rgb(192, 57, 43));
 //        scenario.getIntruders().forEach(intr -> paintTile(intr.getX(), intr.getY()));
+        Arrays.stream(Scenario.TILE_MAP.agents)
+                .forEach(a -> {
+                    g.setFill(a.getType().getColor());
+                    paintTile(a.getX(), a.getY());
+                });
+
+        g.setFill(BLACK);
     }
 
     private void drawMap() {
-//        for (int y = 0; y < MAP_HEIGHT; y++){
-//            for(int x = 0; x < MAP_WIDTH; x++) {
-//                Grid tile = scenario.getMap()[x][y];
-//                //g.setFill(tile.explored ? tile.getType().getColor() : tile.getType().getColor().darker().desaturate());
-//                if (!tile.explored)
-//                    g.setFill(tile.getType() == ComponentEnum.WALL ? Color.gray(0.4) : tile.getType().getColor().darker().desaturate());
-//                else g.setFill(tile.getType().getColor());
-//
-//                paintTile(x, y);
+        for (int y = 0; y < MAP_HEIGHT; y++){
+            for(int x = 0; x < MAP_WIDTH; x++) {
+                Tile tile = TILE_MAP.getMap()[x][y];
+                //g.setFill(tile.explored ? tile.getType().getColor() : tile.getType().getColor().darker().desaturate());
 
-                //if you see any yellow tiles then the actual agent position does not match the position in the Grid matrix
-                /* (uncomment for debugging)
-                if (tile.getPlayerComponent() != null) {
-                    g.setFill(Color.YELLOW);
-                    paintTile(x, y);
-                }
-                 */
-//            }
-//        }
+                //if (!tile.getExploredGuard())
+                //    g.setFill(tile.getType() == TileType.WALL ? Color.gray(0.4) : tile.getType().getColor().darker().desaturate());
+                //else
+                    g.setFill(tile.getType().getColor());
+
+                paintTile(x, y);
+            }
+        }
     }
 
     private void paintTile(int x, int y) {
