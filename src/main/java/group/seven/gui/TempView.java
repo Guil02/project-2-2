@@ -29,8 +29,8 @@ public class TempView extends ScrollPane {
     public TempView(Scenario s) {
         this.s = s;
         StackPane container = new StackPane();
-        TILE_SIZE = s.TILE_SIZE;
-        canvas = new Canvas(s.WIDTH * (TILE_SIZE + 1), s.HEIGHT * (TILE_SIZE + 1));
+        TILE_SIZE = Scenario.TILE_SIZE;
+        canvas = new Canvas(Scenario.WIDTH * (TILE_SIZE + 1), Scenario.HEIGHT * (TILE_SIZE + 1));
         g = canvas.getGraphicsContext2D();
         //container at least as big as ScollPane and maximally as big as canvas
         container.minWidthProperty().bind(widthProperty());
@@ -76,9 +76,9 @@ public class TempView extends ScrollPane {
     }
 
     private void drawMap() {
-        for (int y = 0; y < s.HEIGHT; y++){
-            for(int x = 0; x < s.WIDTH; x++) {
-                Tile tile = s.TILE_MAP.getTile(x, y);
+        for (int y = 0; y < Scenario.HEIGHT; y++){
+            for(int x = 0; x < Scenario.WIDTH; x++) {
+                Tile tile = Scenario.TILE_MAP.getTile(x, y);
                 //g.setFill(tile.isExplored() ? tile.getColorTexture() : tile.getColorTexture().darker().desaturate());
                 g.setFill(tile.getType().getColor());
                 g.fillRect(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
@@ -87,7 +87,7 @@ public class TempView extends ScrollPane {
     }
 
     private void drawAgents() {
-        Arrays.stream(Scenario.get().TILE_MAP.agents)
+        Arrays.stream(Scenario.TILE_MAP.agents)
                 .forEach(a -> {
                     g.setFill(a.getType().getColor());
                     paintTile(a.getX(), a.getY());
@@ -97,7 +97,7 @@ public class TempView extends ScrollPane {
     }
 
     private void drawDirection() {
-        Arrays.stream(Scenario.get().TILE_MAP.agents)
+        Arrays.stream(Scenario.TILE_MAP.agents)
                 .forEach(a -> {
                     //TODO
                 });
@@ -142,8 +142,8 @@ public class TempView extends ScrollPane {
         TILE_SIZE *= factor;
 
         TILE_SIZE = Math.max(Math.min(TILE_SIZE, 20), 4.5); //TODO: calculate actual ratio for min/max tile size
-        canvas.setWidth(s.WIDTH * (TILE_SIZE + 1));
-        canvas.setHeight(s.HEIGHT * (TILE_SIZE + 1));
+        canvas.setWidth(Scenario.WIDTH * (TILE_SIZE + 1));
+        canvas.setHeight(Scenario.HEIGHT * (TILE_SIZE + 1));
         update();
     }
 

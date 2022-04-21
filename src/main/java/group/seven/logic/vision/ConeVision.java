@@ -5,7 +5,7 @@ import group.seven.model.environment.Tile;
 
 import java.util.List;
 
-public class ConeVision implements Vision{
+public class ConeVision implements Vision {
 
     @Override
     public void observe(int x, int y, List<Tile> observedTile, Agent agent) {

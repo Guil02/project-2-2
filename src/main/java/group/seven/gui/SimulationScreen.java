@@ -90,6 +90,7 @@ public class SimulationScreen extends BorderPane {
 
         resetButton.setDisable(true);
 
+
         setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case Z -> view.zoom(1.05);

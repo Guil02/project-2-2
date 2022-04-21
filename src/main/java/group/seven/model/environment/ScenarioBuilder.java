@@ -31,6 +31,10 @@ public class ScenarioBuilder implements Builder<Scenario> {
         this.mapFile = mapFile;
     }
 
+    /**
+     * Initializes the Scenario with the contents from the default mapFile as defined
+     * in the Config class
+     */
     public ScenarioBuilder(){
         this(new File(Config.DEFAULT_MAP_PATH));
     }
@@ -45,7 +49,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
         //TODO: provide support for building custom scenarios not based on map files
         Scenario scenario = new Scenario();
         parseFile(mapFile, scenario);
-        initMap(scenario);
+        initMap();
         fillMap(scenario);
         return scenario;
     }
@@ -65,29 +69,29 @@ public class ScenarioBuilder implements Builder<Scenario> {
     private void parseValue(String property, String value, Scenario s) {
         switch (property) {
             //simple properties:
-            case "name"                 -> s.NAME                   = value;
-            case "gameMode"             -> s.GAME_MODE              = parseInt(value) == 1 ? SINGLE_INTRUDER : EXPLORATION;
-            case "height"               -> s.HEIGHT                 = parseInt(value);    // the height of the map
-            case "width"                -> s.WIDTH                  = parseInt(value);    // the width of the map
-            case "numGuards"            -> s.NUM_GUARDS             = parseInt(value);    // the amount of guards
-            case "numIntruders"         -> s.NUM_INTRUDERS          = parseInt(value);    // the amount of intruders
-            case "baseSpeedIntruder"    -> s.INTRUDER_BASE_SPEED    = parseDouble(value); // the walking speed of intruders
-            case "sprintSpeedIntruder"  -> s.INTRUDER_SPRINT_SPEED  = parseDouble(value); // the sprinting speed of the intruders
-            case "baseSpeedGuard"       -> s.GUARD_BASE_SPEED       = parseDouble(value); // the base speed of the guard.
-            case "sprintSpeedGuard"     -> s.GUARD_SPRINT_SPEED     = parseDouble(value); // the sprinting speed of the intruders
-            case "distanceViewing"      -> s.VIEW_DISTANCE          = parseInt(value);
-            case "numberMarkers"        -> s.NUM_MARKERS            = parseInt(value);
-            case "smellingDistance"     -> s.SMELL_DISTANCE         = parseInt(value);
+            case "name"                 -> Scenario.NAME = value;
+            case "gameMode"             -> Scenario.GAME_MODE = parseInt(value) == 1 ? SINGLE_INTRUDER : EXPLORATION;
+            case "height"               -> Scenario.HEIGHT = parseInt(value);    // the height of the map
+            case "width"                -> Scenario.WIDTH = parseInt(value);    // the width of the map
+            case "numGuards"            -> Scenario.NUM_GUARDS = parseInt(value);    // the amount of guards
+            case "numIntruders"         -> Scenario.NUM_INTRUDERS = parseInt(value);    // the amount of intruders
+            case "baseSpeedIntruder"    -> Scenario.INTRUDER_BASE_SPEED = parseDouble(value); // the walking speed of intruders
+            case "sprintSpeedIntruder"  -> Scenario.INTRUDER_SPRINT_SPEED = parseDouble(value); // the sprinting speed of the intruders
+            case "baseSpeedGuard"       -> Scenario.GUARD_BASE_SPEED = parseDouble(value); // the base speed of the guard.
+            case "sprintSpeedGuard"     -> Scenario.GUARD_SPRINT_SPEED = parseDouble(value); // the sprinting speed of the intruders
+            case "distanceViewing"      -> Scenario.VIEW_DISTANCE = parseInt(value);
+            case "numberMarkers"        -> Scenario.NUM_MARKERS = parseInt(value);
+            case "smellingDistance"     -> Scenario.SMELL_DISTANCE = parseInt(value);
 
             // not sure if these should be included
-            case "tileSize"             -> s.TILE_SIZE              = parseInt(value);
-            case "scaling"              -> s.SCALING                = parseDouble(value);
-            case "timeStep"             -> s.TIME_STEP = parseDouble(value);
+            case "tileSize"             -> Scenario.TILE_SIZE = parseInt(value);
+            case "scaling"              -> Scenario.SCALING = parseDouble(value);
+            case "timeStep"             -> Scenario.TIME_STEP = parseDouble(value);
 
             //regions:
-            case "targetArea"           -> s.targetArea             = new Component(parsePoints(value), TARGET);
-            case "spawnAreaIntruders"   -> s.intruderSpawnArea      = new Component(parsePoints(value), INTRUDER_SPAWN);
-            case "spawnAreaGuards"      -> s.guardSpawnArea         = new Component(parsePoints(value), GUARD_SPAWN);
+            case "targetArea"           -> Scenario.targetArea = new Component(parsePoints(value), TARGET);
+            case "spawnAreaIntruders"   -> Scenario.intruderSpawnArea = new Component(parsePoints(value), INTRUDER_SPAWN);
+            case "spawnAreaGuards"      -> Scenario.guardSpawnArea = new Component(parsePoints(value), GUARD_SPAWN);
 
             case "wall"                 -> s.addWall(parsePoints(value));
             case "shaded"               -> s.addShaded(parsePoints(value));
@@ -102,7 +106,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
             default -> print("Unrecognized Property: " + property);
         }
 
-        s.NUM_AGENTS = s.NUM_GUARDS + s.NUM_INTRUDERS;
+        Scenario.NUM_AGENTS = Scenario.NUM_GUARDS + Scenario.NUM_INTRUDERS;
     }
 
     /**
@@ -119,13 +123,13 @@ public class ScenarioBuilder implements Builder<Scenario> {
         return new Rectangle(points[0], points[1], width, height);
     }
 
-    private void initMap(Scenario s) {
-        TileMap tileMap = new TileMap(s);
-        for(int x = 0; x <= s.WIDTH; x++)
-            for (int y = 0; y <= s.HEIGHT; y++)
+    private void initMap() {
+        TileMap tileMap = new TileMap();
+        for(int x = 0; x <= Scenario.WIDTH; x++)
+            for (int y = 0; y <= Scenario.HEIGHT; y++)
                 tileMap.setTile(x, y, new Tile(x, y));
 
-        s.TILE_MAP = tileMap;
+        Scenario.TILE_MAP = tileMap;
     }
 
     //TODO: needs to be remade to consider portals and such
@@ -133,7 +137,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
         s.getStaticAreas().forEach(a -> {
             for(int x = a.area().getX(); x < a.area().getMaxIntX(); x++){
                 for(int y = a.area().getY(); y < a.area().getMaxIntY(); y++) {
-                    s.TILE_MAP.setType(x, y, a.type());
+                    Scenario.TILE_MAP.setType(x, y, a.type());
                 }
             }
         });

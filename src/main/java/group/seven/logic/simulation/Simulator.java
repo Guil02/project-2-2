@@ -1,6 +1,5 @@
 package group.seven.logic.simulation;
 
-import group.seven.enums.Action;
 import group.seven.enums.GameMode;
 import group.seven.gui.TempView;
 import group.seven.model.agents.Agent;
@@ -9,89 +8,102 @@ import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
 import group.seven.model.environment.Scenario;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import static group.seven.enums.Action.MOVE_FORWARD;
+import static group.seven.model.environment.Scenario.*;
 import static group.seven.utils.Methods.print;
 
 public class Simulator extends AnimationTimer {
-    Scenario scenario;
-    //Timeline timeline;
-    TempView view;
+
+    private TempView view;
+    private int count = 0;
+    private long prev; //used for frame-rate calculation (eventually)
+    double elapsedTimeSteps;
+    final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
 
     public Simulator(Scenario scenario) {
-        this.scenario = scenario;
-        spawnAgents(scenario.GAME_MODE);
+        spawnAgents(GAME_MODE);
+        elapsedTimeSteps = 0;
+
         view = new TempView(scenario);
+
         prev = System.nanoTime();
         start();
     }
 
-    protected void render(ActionEvent actionEvent) {
-        //Platform.runLater(view::update);
-        //view.update(count);
-        //view.update();
-    }
-
-    int count = 0;
-    long prev;
-
+    /**
+     * Main Simulation Loop. Executed every "timeStep"
+     * First we update the model by calculating and applying all the agent's moves (if legal),
+     * Then update the GUI to reflect the state of the model after the timeStep.
+     * @param now current time in nanoseconds. Can be used for frame-rate calculation
+     */
     @Override
     public void handle(long now) {
-//        long previous = prev;
-//        System.out.print("\r fps: " +  (now - previous) / 1_000_000_000.0);
         count++;
-        update();
-        Platform.runLater(() -> view.update());
-        view.update();
+
+        update();       //update model
+        view.update();  //update GUI
+        elapsedTimeSteps += timeStep; //update elapsed time steps
+
+
+        //TODO: implement GameOver condition checking
         if (count > 100000) stop();
         prev = System.nanoTime();
     }
 
+    /**
+     * Called every timeStep to update the model.
+     * Collects each agent's moves, resolves collisions, updates their vision and applies to the model.
+     */
     protected void update() {
-        for (Agent agent : scenario.TILE_MAP.agents) {
-            if (agent != null) {
-                Move move = agent.calculateMove();
-                agent.setDirection(move.action() == Action.FLIP ? move.direction().flip() : move.direction());
-                agent.setDirection(agent.getDirection().flip());
+        //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
+        //Creates a list of Moves for each agent's calculatedMove.
+        //First filters out null agents, then map agents to their calculatedMoves, and then collect these Moves into a List
+        List<Move> allMoves = Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull)
+                .map(Agent::calculateMove)
+                .toList();
 
-                //print(move);
-            }
-        }
-//        Arrays.stream(scenario.TILE_MAP.agents).forEach(Agent::calculateMove);
+        //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
+        List<Move> positionChangeMoves = allMoves.stream()
+                .filter(move -> move.action() == MOVE_FORWARD).toList();
+
+        //TODO: pass list of positionChangeMoves to collision handler
+        //TODO: update vision of (rotation) agents
+        //TODO: determine where to apply the moves to updated the model and the agent's internal model
     }
 
     private void spawnAgents(GameMode gameMode) {
         print(gameMode);
         switch (gameMode) {
             case EXPLORATION -> {
-                for (int i = 0; i < scenario.NUM_GUARDS; i++) {
+                for (int i = 0; i < NUM_GUARDS; i++) {
                     Guard agent = new Guard(5, 10);
-                    scenario.TILE_MAP.addAgent(agent);
+                    TILE_MAP.addAgent(agent);
                 }
             }
 
             case SINGLE_INTRUDER, MULTI_INTRUDER -> {
                 Random rand = new Random();
-                for (int i = 0; i < scenario.NUM_GUARDS; i++) {
+                for (int i = 0; i < NUM_GUARDS; i++) {
                     Guard agent = new Guard(5 + rand.nextInt(10), 10 + rand.nextInt(10));
-                    scenario.TILE_MAP.addAgent(agent);
+                    TILE_MAP.addAgent(agent);
                     print("added guard : " + agent.getID());
                 }
 
-                for (int i = 0; i < scenario.NUM_INTRUDERS; i++) {
+                for (int i = 0; i < NUM_INTRUDERS; i++) {
                     Intruder agent = new Intruder(10, 30);
-                    scenario.TILE_MAP.addAgent(agent);
+                    TILE_MAP.addAgent(agent);
                     print("added intruder : " + agent.getID());
                 }
             }
 
         }
-        print(Arrays.stream(scenario.TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
+        print(Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
     }
 }
 

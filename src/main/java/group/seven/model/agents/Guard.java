@@ -10,14 +10,15 @@ import group.seven.model.environment.Scenario;
 public class Guard extends Agent {
 
     private final int ID;
-    int currentSpeed;
-    private final int maxSpeed = (int) Scenario.get().GUARD_SPRINT_SPEED;
+    public int currentSpeed;
+    private final int maxSpeed = (int) Scenario.GUARD_SPRINT_SPEED;
 
     Algorithm algorithm;
 
-    public Guard(int x, int y, Algorithm algorithm) {
+    public Guard(int x, int y, Algorithm algorithm, int startSpeed) {
         this(x, y);
         this.algorithm = algorithm;
+        this.currentSpeed = startSpeed;
     }
 
     public Guard(int x, int y) {
@@ -43,5 +44,10 @@ public class Guard extends Agent {
     @Override
     public int getID() {
         return ID;
+    }
+
+    @Override
+    public int getCurrentSpeed() {
+        return currentSpeed;
     }
 }

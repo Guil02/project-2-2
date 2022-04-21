@@ -13,6 +13,8 @@ public class RandomMoves implements Algorithm {
 
     @Override
     public Move getNext() {
-        return new Move(Action.FLIP, 0, agent.getDirection(), null);
+        //TODO: implement a random moves agent
+
+        return new Move(Action.FLIP, 0, agent);
     }
 }

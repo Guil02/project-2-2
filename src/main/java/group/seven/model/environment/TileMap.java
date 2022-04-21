@@ -8,11 +8,11 @@ public class TileMap {
     public Tile[][] map; //observable?
     public Agent[] agents; //observable?
 
-    public TileMap(Scenario s) {
+    public TileMap() {
         //not sure if TileMap needs a reference to the scenario, or if builder can take care of all that
         //alternatively scenario fields could be static
-        map = new Tile[s.WIDTH + 1][s.HEIGHT + 1];
-        agents = new Agent[s.NUM_AGENTS];
+        map = new Tile[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
+        agents = new Agent[Scenario.NUM_AGENTS];
     }
 
     //update

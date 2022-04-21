@@ -17,26 +17,26 @@ public class Scenario {
         return SCENARIO;
     }
 
-    public GameMode GAME_MODE = SINGLE_INTRUDER;
-    public String NAME = "untitled map";
-    public int WIDTH, HEIGHT;
-    public int TILE_SIZE = 10;
-    public double INTRUDER_BASE_SPEED, INTRUDER_SPRINT_SPEED;
-    public double GUARD_BASE_SPEED, GUARD_SPRINT_SPEED;
-    public int NUM_GUARDS, NUM_INTRUDERS, NUM_AGENTS;
-    public int VIEW_DISTANCE; //TODO could differ per agent?
-    public int NUM_MARKERS;
-    public int SMELL_DISTANCE;
-    public double TIME_STEP, SCALING;
-    public Component targetArea;// = new Rectangle(0,0,0,0);
-    public Component intruderSpawnArea;// = new Rectangle(0,0,0,0);
-    public Component guardSpawnArea;// = new Rectangle(0,0,0,0);
+    public static GameMode GAME_MODE = SINGLE_INTRUDER;
+    public static String NAME = "untitled map";
+    public static int WIDTH, HEIGHT;
+    public static int TILE_SIZE = 10;
+    public static double INTRUDER_BASE_SPEED, INTRUDER_SPRINT_SPEED;
+    public static double GUARD_BASE_SPEED, GUARD_SPRINT_SPEED;
+    public static int NUM_GUARDS, NUM_INTRUDERS, NUM_AGENTS;
+    public static int VIEW_DISTANCE; //TODO could differ per agent?
+    public static int NUM_MARKERS;
+    public static int SMELL_DISTANCE;
+    public static double TIME_STEP, SCALING;
+    public static Component targetArea;// = new Rectangle(0,0,0,0);
+    public static Component intruderSpawnArea;// = new Rectangle(0,0,0,0);
+    public static Component guardSpawnArea;// = new Rectangle(0,0,0,0);
 
-    private final List<Component> walls = new ArrayList<>(20);
-    private final List<Component> shadedAreas = new ArrayList<>(5);
-    private final List<Portal> portals = new ArrayList<>(5);
+    private static final List<Component> walls = new ArrayList<>(20);
+    private static final List<Component> shadedAreas = new ArrayList<>(5);
+    private static final List<Portal> portals = new ArrayList<>(5);
 
-    public TileMap TILE_MAP;
+    public static TileMap TILE_MAP;
 
     //maybe should be a field if accessed often. Otherwise this lazy approach might be better
     public List<Component> getStaticAreas() {

@@ -10,8 +10,8 @@ import group.seven.model.environment.Scenario;
 public class Intruder extends Agent {
 
     private final int ID;
-    int currentSpeed;
-    private final int maxSpeed = (int) Scenario.get().INTRUDER_SPRINT_SPEED;;
+    protected int currentSpeed;
+    private final int maxSpeed = (int) Scenario.INTRUDER_SPRINT_SPEED;;
 
     Algorithm algorithm;
 
@@ -24,9 +24,9 @@ public class Intruder extends Agent {
         ID = newID();
         setX(x);
         setY(y);
-        currentSpeed = 0;
+        currentSpeed = 0;                       //DEFAULT
         agentType = TileType.INTRUDER;
-        direction = Cardinal.SOUTH; //DEFAULT
+        direction = Cardinal.SOUTH;             //DEFAULT
         algorithm = new RandomMoves(this); //DEFAULT
     }
 
@@ -43,5 +43,10 @@ public class Intruder extends Agent {
     @Override
     public int getID() {
         return ID;
+    }
+
+    @Override
+    public int getCurrentSpeed() {
+        return currentSpeed;
     }
 }

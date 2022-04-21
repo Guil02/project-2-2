@@ -24,8 +24,8 @@ public class RectangleVision implements Vision {
      */
     public RectangleVision(Scenario scenario) {
         this.scenario = scenario;
-        this.map = scenario.get().TILE_MAP;
-        this.distanceViewing = scenario.get().VIEW_DISTANCE;
+        this.map = Scenario.TILE_MAP;
+        this.distanceViewing = Scenario.VIEW_DISTANCE;
     }
 
 
@@ -36,7 +36,7 @@ public class RectangleVision implements Vision {
     }
 
     @Override
-    public List<Tile> updateAndGetVisionAgent (Agent agent) {
+    public List<Tile> updateAndGetVisionAgent(Agent agent) {
         List<Tile> observedTiles = new LinkedList<>(); // list contains all the tiles seen by agent
         //get position of agent
         int xCoordinate = agent.getX();
@@ -76,7 +76,7 @@ public class RectangleVision implements Vision {
                         }
                     }
                 }
-                if (xCoordinate + 1 < scenario.get().WIDTH) { //if it is possible to move one step to the right
+                if (xCoordinate + 1 < Scenario.WIDTH) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y > yCoordinate - distanceViewing; y--) { //check one right
                         if (y >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
                             observe(xCoordinate+1,y, observedTiles, agent);
@@ -95,7 +95,7 @@ public class RectangleVision implements Vision {
 
             case SOUTH -> {
                 for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check straight
-                    if (y < scenario.get().HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
+                    if (y < Scenario.HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
                         observe(xCoordinate,y, observedTiles, agent);
 
                         //CHECK COLLISIONS with walls
@@ -110,7 +110,7 @@ public class RectangleVision implements Vision {
                 }
                 if (xCoordinate - 1 >= 0) { //if it is possible to be one of the left without going out of bound
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one left
-                        if (y < scenario.get().HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
+                        if (y < Scenario.HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
                             observe(xCoordinate-1,y, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
@@ -124,9 +124,9 @@ public class RectangleVision implements Vision {
                         }
                     }
                 }
-                if (xCoordinate + 1 < scenario.get().WIDTH) { //if it is possible to move one step to the right
+                if (xCoordinate + 1 < Scenario.WIDTH) { //if it is possible to move one step to the right
                     for (int y = yCoordinate; y < yCoordinate + distanceViewing; y++) { //check one right
-                        if (y < scenario.get().HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
+                        if (y < Scenario.HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
                             observe(xCoordinate+1,y, observedTiles, agent);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(xCoordinate+1,y).getType() == TileType.WALL) {
@@ -141,7 +141,7 @@ public class RectangleVision implements Vision {
             }
             case EAST -> {
                 for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) { //check straight
-                    if (x < scenario.get().WIDTH) {
+                    if (x < Scenario.WIDTH) {
                         observe(x,yCoordinate, observedTiles, agent);
 
                         //CHECK COLLISIONS with walls
@@ -156,7 +156,7 @@ public class RectangleVision implements Vision {
                 }
                 if (yCoordinate - 1 >= 0) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
-                        if (x < scenario.get().WIDTH) { //cant go higher than y=0, so if the number is positive is out of bound
+                        if (x < Scenario.WIDTH) { //cant go higher than y=0, so if the number is positive is out of bound
                             observe(x,yCoordinate-1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(x,yCoordinate-1).getType() == TileType.WALL) {
@@ -168,9 +168,9 @@ public class RectangleVision implements Vision {
                         }
                     }
                 }
-                if (yCoordinate + 1 < scenario.get().HEIGHT) {
+                if (yCoordinate + 1 < Scenario.HEIGHT) {
                     for (int x = xCoordinate; x < xCoordinate + distanceViewing; x++) {
-                        if (x < scenario.get().WIDTH) {
+                        if (x < Scenario.WIDTH) {
                             observe(x,yCoordinate+1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
                             if (map.getTile(x,yCoordinate+1).getType() == TileType.WALL) {
@@ -212,7 +212,7 @@ public class RectangleVision implements Vision {
                         }
                     }
                 }
-                if (yCoordinate + 1 < scenario.get().HEIGHT) {
+                if (yCoordinate + 1 < Scenario.HEIGHT) {
                     for (int x = xCoordinate; x > xCoordinate - distanceViewing; x--) {
                         if (x >= 0) {
                             observe(x,yCoordinate+1, observedTiles, agent);

@@ -22,8 +22,8 @@ public class View extends ScrollPane {
 
     public View(Scenario s) {
         scenario = s;
-        MAP_WIDTH = scenario.WIDTH;
-        MAP_HEIGHT = scenario.HEIGHT;
+        MAP_WIDTH = Scenario.WIDTH;
+        MAP_HEIGHT = Scenario.HEIGHT;
 
         canvas = new Canvas(MAP_WIDTH * (TILE_SIZE + 1), MAP_HEIGHT * (TILE_SIZE + 1));
         //canvas.setCache(true);
