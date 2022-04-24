@@ -85,9 +85,9 @@ public class ScenarioBuilder implements Builder<Scenario> {
             case "timeStep"             -> s.TIME_STEP = parseDouble(value);
 
             //regions:
-            case "targetArea"           -> s.targetArea             = new Component(parsePoints(value), TARGET);
-            case "spawnAreaIntruders"   -> s.intruderSpawnArea      = new Component(parsePoints(value), INTRUDER_SPAWN);
-            case "spawnAreaGuards"      -> s.guardSpawnArea         = new Component(parsePoints(value), GUARD_SPAWN);
+            case "targetArea"           -> s.targetArea             = new Component(parsePoints(value), TARGET, null, null);
+            case "spawnAreaIntruders"   -> s.intruderSpawnArea      = new Component(parsePoints(value), INTRUDER_SPAWN,null, null);
+            case "spawnAreaGuards"      -> s.guardSpawnArea         = new Component(parsePoints(value), GUARD_SPAWN,null, null);
 
             case "wall"                 -> s.addWall(parsePoints(value));
             case "shaded"               -> s.addShaded(parsePoints(value));
@@ -96,7 +96,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
             case "teleport" -> {
                 String[] coords = value.split(" ");
                 XY target = new XY(parseInt(coords[4]), parseInt(coords[5]));
-                s.addPortals(new Portal(parsePoints(value), target, NORTH)); //TODO: randomly change their orientation
+                s.addPortals(new Component(parsePoints(value), PORTAL, target, NORTH)); //TODO: randomly change their orientation
             }
 
             default -> print("Unrecognized Property: " + property);
