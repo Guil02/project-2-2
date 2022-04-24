@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 //TODO the agent structure very much work in progress
 public abstract class Agent {
-
     private static int IDs = 0;
 
     //Pose
@@ -27,6 +26,7 @@ public abstract class Agent {
     public abstract void updateVision();
     public abstract Move calculateMove();
     public abstract int getID();
+    public abstract int getCurrentSpeed();
 
     protected int newID() {
         return IDs++;

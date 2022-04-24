@@ -5,8 +5,9 @@ public enum Action {
     TURN_DOWN,
     TURN_LEFT,
     TURN_RIGHT,
+    FLIP,
     MOVE_FORWARD,
     NOTHING,
 
-    STEP, SPRINT, HALT, FLIP,
+//    STEP, SPRINT, HALT,
 }
