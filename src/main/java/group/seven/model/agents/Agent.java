@@ -28,6 +28,11 @@ public abstract class Agent {
     public abstract int getID();
     public abstract int getCurrentSpeed();
 
+    public void executeMove(int distance){
+        x = x+direction.getUnitVector().x()*distance;
+        y = y+direction.getUnitVector().y()*distance;
+    }
+
     protected int newID() {
         return IDs++;
     }

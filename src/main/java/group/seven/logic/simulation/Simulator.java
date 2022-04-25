@@ -1,9 +1,11 @@
 package group.seven.logic.simulation;
 
 import group.seven.Main;
+import group.seven.enums.Action;
 import group.seven.enums.GameMode;
 import group.seven.gui.SimulationScreen;
 import group.seven.gui.TempView;
+import group.seven.logic.geometric.Vector;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
 import group.seven.model.agents.Intruder;
@@ -13,6 +15,7 @@ import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -89,15 +92,12 @@ public class Simulator extends AnimationTimer {
         //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
         //Creates a list of Moves for each agent's calculatedMove.
         //First filters out null agents, then map agents to their calculatedMoves, and then collect these Moves into a List
-        List<Move> allMoves = Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull)
-                .map(Agent::calculateMove)
-                .toList();
+        List<Move> allMoves = Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::calculateMove).toList();
 
         //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
-        List<Move> positionChangeMoves = allMoves.stream()
-                .filter(move -> move.action() == MOVE_FORWARD).toList();
-
-        //CollisionHandler.handle(positionChangedMoves) or something like that idk
+        List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
+        List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
+        CollisionHandler.handle(positionChangeMoves);
 
         //TODO: pass list of positionChangeMoves to collision handler
         //TODO: update vision of (rotation) agents
@@ -105,6 +105,17 @@ public class Simulator extends AnimationTimer {
     }
 
     //TODO: actually make agents spawn in their spawn location
+    private void movePoint(Agent agent, Vector point, int distance){
+        double y = point.getY();
+        double x = point.getX();
+        switch (agent.getDirection()){
+            case NORTH -> y -= distance;
+            case SOUTH -> y += distance;
+            case WEST -> x -= distance;
+            case EAST -> x += distance;
+        }
+    }
+
     private void spawnAgents(GameMode gameMode) {
         print(gameMode);
         switch (gameMode) {

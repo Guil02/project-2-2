@@ -24,4 +24,8 @@ public enum Cardinal {
             case WEST -> EAST;
         };
     }
+
+    public XY getUnitVector() {
+        return unitVector;
+    }
 }
