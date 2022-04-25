@@ -98,6 +98,9 @@ public class Simulator extends AnimationTimer {
         List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
         List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
         CollisionHandler.handle(positionChangeMoves);
+        for(Move move : rotationChangeMoves){
+            move.agent().executeTurn(move);
+        }
 
         //TODO: pass list of positionChangeMoves to collision handler
         //TODO: update vision of (rotation) agents

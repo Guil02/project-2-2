@@ -6,6 +6,8 @@ import group.seven.logic.geometric.XY;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
+import static group.seven.enums.Cardinal.*;
+
 //TODO the agent structure very much work in progress
 public abstract class Agent {
     private static int IDs = 0;
@@ -37,6 +39,23 @@ public abstract class Agent {
     public void moveTo(XY pos){
         this.x = pos.x();
         this.y = pos.y();
+    }
+
+    public void executeTurn(Move move){
+        switch(move.action()){
+            case TURN_UP -> {
+                direction = NORTH;
+            }
+            case TURN_DOWN -> {
+                direction = SOUTH;
+            }
+            case TURN_LEFT -> {
+                direction = WEST;
+            }
+            case TURN_RIGHT -> {
+                direction = EAST;
+            }
+        }
     }
 
     protected int newID() {
