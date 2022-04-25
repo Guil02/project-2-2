@@ -108,17 +108,6 @@ public class Simulator extends AnimationTimer {
     }
 
     //TODO: actually make agents spawn in their spawn location
-    private void movePoint(Agent agent, Vector point, int distance){
-        double y = point.getY();
-        double x = point.getX();
-        switch (agent.getDirection()){
-            case NORTH -> y -= distance;
-            case SOUTH -> y += distance;
-            case WEST -> x -= distance;
-            case EAST -> x += distance;
-        }
-    }
-
     private void spawnAgents(GameMode gameMode) {
         print(gameMode);
         switch (gameMode) {
