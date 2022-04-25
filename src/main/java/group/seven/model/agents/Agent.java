@@ -3,8 +3,12 @@ package group.seven.model.agents;
 import group.seven.enums.Cardinal;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
+import group.seven.logic.vision.Vision;
+import group.seven.model.environment.Tile;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+
+import java.util.List;
 
 import static group.seven.enums.Cardinal.*;
 
@@ -17,7 +21,8 @@ public abstract class Agent {
     protected Cardinal direction;
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
-
+    private List<Tile> seenTiles;
+    private Vision vision;
     //Type
     public TileType agentType;
 
@@ -26,7 +31,7 @@ public abstract class Agent {
     //Current Speed
     //Strategy
 
-    public abstract void updateVision();
+
     public abstract Move calculateMove();
     public abstract int getID();
     public abstract int getCurrentSpeed();
@@ -103,6 +108,16 @@ public abstract class Agent {
 
     public TileType getType() {
         return agentType;
+    }
+
+    public void updateVision(){
+        for (Tile tile : vision.updateAndGetVisionAgent(this)){
+            seenTiles.add(tile);
+        }
+    }
+
+    public void clearVision(){
+        seenTiles.clear();
     }
 
 }

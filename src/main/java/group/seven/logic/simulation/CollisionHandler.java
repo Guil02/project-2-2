@@ -18,6 +18,7 @@ public class CollisionHandler {
     public static void handle(List<Move> moves){
         for (Move move : moves){
             Agent agent = move.agent();
+            agent.clearVision();
             for (int i = 0; i < move.distance(); i++){
                 int x = agent.getX();
                 int y = agent.getY();
@@ -34,10 +35,12 @@ public class CollisionHandler {
                 } else if (check(TileType.PORTAL,targetPos)){
                     Component portal = getComponent(targetPos, TileType.PORTAL);
                     agent.moveTo(portal.exit());
+                    agent.updateVision();
                     break;
                 }
                 else{
                     move.agent().executeMove(1);
+                    agent.updateVision();
                 }
             }
         }
