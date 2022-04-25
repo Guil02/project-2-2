@@ -34,7 +34,7 @@ public class Scenario {
 
     private static final List<Component> walls = new ArrayList<>(20);
     private static final List<Component> shadedAreas = new ArrayList<>(5);
-    private static final List<Portal> portals = new ArrayList<>(5);
+    private static final List<Component> portals = new ArrayList<>(5);
 
     public static TileMap TILE_MAP;
 
@@ -43,21 +43,23 @@ public class Scenario {
         List<Component> areas = new LinkedList<>(List.of(targetArea, intruderSpawnArea, guardSpawnArea));
         areas.addAll(walls);
         areas.addAll(shadedAreas);
+        areas.addAll(portals);
         //not sure how to handle portals, since they are not Component records
 
-        for (Portal p : portals) {
-            //hacky solution for portals, the Component record is just a wrapper for static areas and otherwise has
-            //no implement functionality. Eg, the following Components aren't linked in any way.
-            //Whereas the Portal record links the portal are to its exit
-            Component portalArea = new Component(p.area(), PORTAL);
-            Component exitTile = new Component(new Rectangle(p.exit().x(), p.exit().y(), 1, 1), EXIT_PORTAL);
-            areas.add(portalArea);
-            areas.add(exitTile);
-        }
+//        for (Component p : portals) {
+//            //hacky solution for portals, the Component record is just a wrapper for static areas and otherwise has
+//            //no implement functionality. Eg, the following Components aren't linked in any way.
+//            //Whereas the Portal record links the portal are to its exit
+//
+//            Component portalArea = new Component(p.area(), PORTAL);
+//            Component exitTile = new Component(new Rectangle(p.exit().x(), p.exit().y(), 1, 1), EXIT_PORTAL);
+//            areas.add(portalArea);
+//            areas.add(exitTile);
+//        }
         return areas;
     }
 
-    public List<Portal> getPortals() {
+    public List<Component> getPortals() {
         return portals;
     }
 
@@ -67,14 +69,14 @@ public class Scenario {
     }
 
     public void addWall(Rectangle wall) {
-        walls.add(new Component(wall, WALL));
+        walls.add(new Component(wall, WALL, null, null));
     }
 
     public void addShaded(Rectangle shaded) {
-        shadedAreas.add(new Component(shaded, SHADED));
+        shadedAreas.add(new Component(shaded, SHADED,null, null));
     }
 
-    public void addPortals(Portal tp) {
+    public void addPortals(Component tp) {
         portals.add(tp);
     }
 
