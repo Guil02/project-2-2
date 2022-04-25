@@ -32,9 +32,9 @@ public class Scenario {
     public static Component intruderSpawnArea;// = new Rectangle(0,0,0,0);
     public static Component guardSpawnArea;// = new Rectangle(0,0,0,0);
 
-    private static final List<Component> walls = new ArrayList<>(20);
-    private static final List<Component> shadedAreas = new ArrayList<>(5);
-    private static final List<Component> portals = new ArrayList<>(5);
+    public static final List<Component> walls = new ArrayList<>(20);
+    public static final List<Component> shadedAreas = new ArrayList<>(5);
+    public static final List<Component> portals = new ArrayList<>(5);
 
     public static TileMap TILE_MAP;
 

@@ -2,6 +2,7 @@ package group.seven.model.agents;
 
 import group.seven.enums.Cardinal;
 import group.seven.enums.TileType;
+import group.seven.logic.geometric.XY;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -33,6 +34,11 @@ public abstract class Agent {
         y = y+direction.getUnitVector().y()*distance;
     }
 
+    public void moveTo(XY pos){
+        this.x = pos.x();
+        this.y = pos.y();
+    }
+
     protected int newID() {
         return IDs++;
     }
@@ -50,6 +56,10 @@ public abstract class Agent {
     public void setX(int x) {
         //convert with frame
         this.xProp.set(x);
+    }
+
+    public XY getXY(){
+        return new XY(x,y);
     }
 
     public void setY(int y) {
