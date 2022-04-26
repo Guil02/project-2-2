@@ -1,16 +1,19 @@
 package group.seven.logic.simulation;
 
+import group.seven.enums.Cardinal;
 import group.seven.enums.TileType;
-import group.seven.logic.geometric.Vector;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
 import group.seven.model.environment.Component;
 import group.seven.model.environment.Scenario;
-import group.seven.model.environment.TileMap;
+import javafx.geometry.Point2D;
 
 import java.util.List;
 
+import static group.seven.enums.TileType.PORTAL;
+import static group.seven.enums.TileType.WALL;
+import static group.seven.utils.Methods.print;
 
 
 public class CollisionHandler {
@@ -24,21 +27,22 @@ public class CollisionHandler {
                 int y = agent.getY();
                 XY targetPos = new XY(x,y);
                 targetPos = targetPos.add(agent.getDirection().unitVector.x(), agent.getDirection().unitVector.y());
+
                 if(!(i < move.agent().getCurrentSpeed())){/*is out of bounds*/
                     break;
                 }
                 if(isOutOfBounds(targetPos)){
                     break;
                 }
-                if (check(TileType.WALL, targetPos)){
+                if (check(WALL, targetPos)){
                     break;
-                } else if (check(TileType.PORTAL,targetPos)){
-                    Component portal = getComponent(targetPos, TileType.PORTAL);
+                } else if (check(PORTAL, targetPos)){
+                    Component portal = getComponent(targetPos, PORTAL);
+                    print(agent.getID() + " just whooshed");
                     agent.moveTo(portal.exit());
                     agent.updateVision();
                     break;
-                }
-                else{
+                } else{
                     move.agent().executeMove(1);
                     agent.updateVision();
                 }
@@ -60,15 +64,29 @@ public class CollisionHandler {
             case PORTAL -> {return getComponentFromList(pos,Scenario.portals);}
             case WALL -> {return getComponentFromList(pos,Scenario.walls);}
         }
-        return null;
+        print("Could not get :( returning default");
+        return new Component(null, null, pos, Cardinal.NORTH);
     }
 
     public static Component getComponentFromList(XY pos, List<Component> components){
+        //You can use JavaFX Rectangle and Point2D
+        Point2D agentPos = new Point2D(pos.x(), pos.y());
+        for (Component component : components)
+            if (component.area().contains(agentPos))
+                return component;
+
+        /*
+        Here the issue was that only the top left corner of the Rectangle was being
+        compared against the agent's position, rather than every coordinate in 2d shape
+
         for(Component portal: components){
-            if(portal.area().getX()==pos.x()&&portal.area().getY()==pos.y()){
+            if(portal.area().getX()==pos.x() && portal.area().getY()==pos.y()){
                 return portal;
             }
         }
+        */
+
+        print("not found");
         return null;
     }
 

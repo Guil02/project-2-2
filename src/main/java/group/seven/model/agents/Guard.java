@@ -1,20 +1,22 @@
 package group.seven.model.agents;
 
 
-import group.seven.enums.Cardinal;
-import group.seven.enums.TileType;
 import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.algorithms.RandomMoves;
+import group.seven.logic.algorithms.RandomTest;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
+
+import static group.seven.enums.Cardinal.NORTH;
+import static group.seven.enums.TileType.GUARD;
 
 public class Guard extends Agent {
 
     private final int ID;
     public int currentSpeed;
     private final int maxSpeed = (int) Scenario.GUARD_SPRINT_SPEED;
-    Vision vision;
+    private Vision vision;
     Algorithm algorithm;
 
     public Guard(int x, int y, Algorithm algorithm, int startSpeed, Vision vision) {
@@ -28,16 +30,20 @@ public class Guard extends Agent {
         ID = newID();
         setX(x);
         setY(y);
-        currentSpeed = 0;
-        agentType = TileType.GUARD;
-        direction = Cardinal.NORTH; //DEFAULT
+        agentType = GUARD;
+        currentSpeed = 0; //DEFAULT
+        direction = NORTH; //DEFAULT
         algorithm = new RandomMoves(this); //DEFAULT
-        vision = new RectangleVision(); //DEFAULT
+        vision = new RectangleVision(this); //DEFAULT
+
+        algorithm = new RandomTest(this);
+        currentSpeed = 1;
     }
 
     @Override
     public void updateVision() {
-
+        seenTiles.addAll(vision.updateAndGetVisionAgent(this));
+        //print(seenTiles);
     }
 
     @Override
@@ -53,5 +59,17 @@ public class Guard extends Agent {
     @Override
     public int getCurrentSpeed() {
         return currentSpeed;
+    }
+
+    @Override
+    public String toString() {
+        return "Guard{" +
+                "ID=" + ID +
+                ", x=" + x +
+                ", y=" + y +
+                ", direction=" + direction +
+                ", speed=" + currentSpeed +
+                ", algorithm=" + algorithm.getType() +
+                '}';
     }
 }

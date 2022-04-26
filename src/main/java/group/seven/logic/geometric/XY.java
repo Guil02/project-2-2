@@ -8,7 +8,7 @@ package group.seven.logic.geometric;
  * @param y int y coordinate
  */
 public record XY(int x, int y) {
-    public XY add(int x, int y){
-        return new XY(x()+x, y()+y);
+    public XY add(int X, int Y){
+        return new XY(x() + X, y() + Y);
     }
 }
