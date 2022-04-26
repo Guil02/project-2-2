@@ -135,7 +135,7 @@ public class Simulator extends AnimationTimer {
                 point = new XY(intruderSpawnArea.area().getX(), intruderSpawnArea.area().getY());
                 dx = intruderSpawnArea.area().getIntWidth();
                 dy = intruderSpawnArea.area().getIntHeight();
-                number = NUM_AGENTS;
+                number = NUM_INTRUDERS;
             }
             default -> {
                 point = new XY(0, 0);
@@ -162,7 +162,7 @@ public class Simulator extends AnimationTimer {
                 }
             }
             TILE_MAP.addAgent(agent);
-            print("added guard : " + agent.getID());
+            print("added "+agentType.name()+" : " + agent.getID());
             i++;
         }
 
