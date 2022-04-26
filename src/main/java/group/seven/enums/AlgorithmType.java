@@ -5,6 +5,7 @@ public enum AlgorithmType {
     WALL_FOLLOWING,
     FLOOD_FILL,
     FRONTIER,
+    BRICK_AND_MORTAR,
     RANDOM;
 
     public static AlgorithmType getEnum(String name) {

@@ -128,34 +128,35 @@ public class Simulator extends AnimationTimer {
             }
 
             case SINGLE_INTRUDER, MULTI_INTRUDER -> {
-                Random rand = new Random();
-                for (int i = 0; i < NUM_GUARDS; i++) {
-                    XY point = new XY(Scenario.guardSpawnArea.area().getX(), Scenario.guardSpawnArea.area().getY());
-                    int dx = Scenario.guardSpawnArea.area().getIntWidth();
-                    int dy = Scenario.guardSpawnArea.area().getIntHeight();
-
-                    while (i < NUM_GUARDS){
-                        XY pointSpawn = new XY(point.x() +(int) (dx * Math.random()), point.y() + (int)(dy * Math.random()));
-                        Guard agent = new Guard(pointSpawn.x(), pointSpawn.y());
-                        TILE_MAP.addAgent(agent);
-                        print("added guard : " + agent.getID());
-
-                    }
+                XY point = new XY(Scenario.guardSpawnArea.area().getX(), Scenario.guardSpawnArea.area().getY());
+                int dx_guard = Scenario.guardSpawnArea.area().getIntWidth();
+                int dy_guard = Scenario.guardSpawnArea.area().getIntHeight();
+                int i = 0;
+                while(i<NUM_GUARDS){
+                    int x = point.x() + (int) (dx_guard*Math.random());
+                    int y = point.y() + (int) (dy_guard*Math.random());
+                    XY spawnPoint = new XY(x,y);
+                    Guard agent = new Guard(spawnPoint.x(), spawnPoint.y());
+                    TILE_MAP.addAgent(agent);
+                    print("added guard : " + agent.getID());
+                    i++;
                 }
 
-                for (int i = 0; i < NUM_INTRUDERS; i++) {
-                    XY point = new XY(Scenario.intruderSpawnArea.area().getX(), Scenario.intruderSpawnArea.area().getY());
-                    int dx = Scenario.intruderSpawnArea.area().getIntWidth();
-                    int dy = Scenario.intruderSpawnArea.area().getIntHeight();
-
-                    while (i < NUM_GUARDS){
-                        XY pointSpawn = new XY(point.x() +(int) (dx * Math.random()), point.y() + (int)(dy * Math.random()));
-                        Guard agent = new Guard(pointSpawn.x(), pointSpawn.y());
-                        TILE_MAP.addAgent(agent);
-                        print("added guard : " + agent.getID());
-                    }
-
+                point = new XY(Scenario.intruderSpawnArea.area().getX(), Scenario.intruderSpawnArea.area().getY());
+                int dx_intruder = Scenario.guardSpawnArea.area().getIntWidth();
+                int dy_intruder = Scenario.intruderSpawnArea.area().getIntHeight();
+                i = 0;
+                while(i<NUM_INTRUDERS){
+                    int x = point.x() + (int) (dx_intruder*Math.random());
+                    int y = point.y() + (int) (dy_intruder*Math.random());
+                    XY spawnPoint = new XY(x,y);
+                    Intruder agent = new Intruder(spawnPoint.x(), spawnPoint.y());
+                    TILE_MAP.addAgent(agent);
+                    print("added intruder : " + agent.getID());
+                    i++;
                 }
+
+
             }
 
         }
