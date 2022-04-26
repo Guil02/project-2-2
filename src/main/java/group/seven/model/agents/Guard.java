@@ -36,7 +36,7 @@ public class Guard extends Agent {
         algorithm = new RandomMoves(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
-        algorithm = new RandomTest(this);
+        //algorithm = new RandomTest(this);
         currentSpeed = 1;
     }
 
