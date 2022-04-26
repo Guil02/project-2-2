@@ -58,6 +58,13 @@ public class MapGraph<V> extends AbstractGraph<V>{
 
     //Example functionality/usage. TODO: delete
     public static void main(String[] args) {
+        //tester Node representation object, will delete
+        record Node(String label, int x, int y) {
+            @Override public String toString() {
+                return label + ": ("+x + ", " + y + ")";
+            }
+        }
+
         MapGraph<String> g = new MapGraph<>("Origin");
         g.addAll("A","B","C","E","F","G","O");
         System.out.println("Initial Graph 1:\n"+g.print());

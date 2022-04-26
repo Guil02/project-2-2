@@ -1,12 +1,11 @@
 package group.seven.logic.simulation;
 
 import group.seven.Main;
-import group.seven.enums.Action;
+import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
 import group.seven.gui.SimulationScreen;
-import group.seven.gui.TempView;
-import group.seven.logic.geometric.Vector;
 import group.seven.logic.geometric.XY;
+import group.seven.logic.vision.Vision;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
 import group.seven.model.agents.Intruder;
@@ -16,21 +15,21 @@ import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 import static group.seven.enums.Action.MOVE_FORWARD;
+import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.TileType.WALL;
 import static group.seven.model.environment.Scenario.*;
 import static group.seven.utils.Methods.print;
 
 public class Simulator extends AnimationTimer {
     public static Simulator sim;
+    public static Random rand = new Random();
     private final SimulationScreen display;
-    private TempView view;
     private int count = 0;
     private long prev; //used for frame-rate calculation (eventually)
     double elapsedTimeSteps;
@@ -42,15 +41,12 @@ public class Simulator extends AnimationTimer {
         elapsedTimeSteps = 0;
 
         display = new SimulationScreen();
-
         Main.stage.setScene(new Scene(display));
         Main.stage.centerOnScreen();
 
-        //setInitialVision();
+        //Either there's a bug in my GUI or in the Vision or in the way agents vision is tracked/stored
+        Arrays.stream(TILE_MAP.agents).forEach(Agent::updateVision);
         display.render();
-
-
-        //view = new TempView(scenario);
 
         prev = System.nanoTime();
         start();
@@ -92,23 +88,23 @@ public class Simulator extends AnimationTimer {
     protected void update() {
         //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
         //Creates a list of Moves for each agent's calculatedMove.
-        //First filters out null agents, then map agents to their calculatedMoves, and then collect these Moves into a List
+        //First filters out null agents, then maps agents to their calculatedMoves, and then collects these Moves into a List
         List<Move> allMoves = Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::calculateMove).toList();
 
         //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
         List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
         List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
+
         CollisionHandler.handle(positionChangeMoves);
-        for(Move move : rotationChangeMoves){
+        for (Move move : rotationChangeMoves){
             move.agent().executeTurn(move);
         }
 
-        //TODO: pass list of positionChangeMoves to collision handler
-        //TODO: update vision of (rotation) agents
         //TODO: determine where to apply the moves to updated the model and the agent's internal model
     }
 
-    //TODO: actually make agents spawn in their spawn location
+    //TODO: clean up code. I refactored some stuff based on intellij but don't necessarily think its the best way
+    //  also I experimented with a different way of spawning agents using a creational pattern, but it's not final
     private void spawnAgents(GameMode gameMode) {
         print(gameMode);
         switch (gameMode) {
@@ -117,13 +113,8 @@ public class Simulator extends AnimationTimer {
                     XY point = new XY(Scenario.guardSpawnArea.area().getX(), Scenario.guardSpawnArea.area().getY());
                     int dx = Scenario.guardSpawnArea.area().getIntWidth();
                     int dy = Scenario.guardSpawnArea.area().getIntHeight();
-
-                    while (i < NUM_GUARDS) {
-                        XY pointSpawn = new XY(point.x() + (int) (dx * Math.random()), point.y() + (int) (dy * Math.random()));
-                        Guard agent = new Guard(pointSpawn.x(), pointSpawn.y());
-                        TILE_MAP.addAgent(agent);
-                        print("added guard : " + agent.getID());
-                    }
+                    Guard guard = spawnGuard(point, dx, dy);
+                    TILE_MAP.addAgent(guard);
                 }
             }
 
@@ -165,8 +156,7 @@ public class Simulator extends AnimationTimer {
 
     //we don't really need to calculate the total grids every time
     //ideally we just update the coverage when new tiles are explored
-    //and we loop through the map matrix in several locations per timesteo which is
-    //kinda expensive to do so prolly there's a better way.
+    //and we loop through the map matrix in several locations per timestep which is kinda expensive to do so prolly there's a better way.
     //also now we have intruder and guard coverages, but not even sure
     //if necessary to calculate them for this phase (although would be interesting for RQs/experiments)
     public Tuple<Double, Double> calculateCoverage() {
@@ -191,9 +181,6 @@ public class Simulator extends AnimationTimer {
         }
 
         return new Tuple<>((guardSeenGrids / totalGrids)*100, (intruderSeenGrids/totalGrids)*100);
-
-//        return (seenGrids/totalSize)*100;
-//        return (d1/d2)*100;
     }
 }
 

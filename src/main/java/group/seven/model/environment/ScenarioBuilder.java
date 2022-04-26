@@ -7,13 +7,13 @@ import javafx.util.Builder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.GameMode.EXPLORATION;
 import static group.seven.enums.GameMode.SINGLE_INTRUDER;
 import static group.seven.enums.TileType.*;
+import static group.seven.model.environment.Scenario.*;
 import static group.seven.utils.Methods.print;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -48,25 +48,26 @@ public class ScenarioBuilder implements Builder<Scenario> {
         //TODO: provide support for configuring file-based scenarios
         //TODO: provide support for building custom scenarios not based on map files
         Scenario scenario = new Scenario();
-        parseFile(mapFile, scenario);
+        parseFile(mapFile);
+        compileComponents();
         initMap();
-        fillMap(scenario);
+        fillMap();
         return scenario;
     }
 
-    private void parseFile(File map, Scenario scenario) {
+    private void parseFile(File map) {
         try (Scanner sc = new Scanner(map)) {
             while (sc.hasNextLine()) {
                 String[] property = sc.nextLine()                                //get next line in file
                         .replaceAll("([\\s]*(//)+)+(.)*", "")   //remove any comments in file line
                         .split(" = ");      //split line into its (key, value) pair as a String array
 
-                parseValue(property[0], property[1], scenario); // key, value
+                parseValue(property[0], property[1]); // key, value
             }
         } catch (FileNotFoundException e) {e.printStackTrace();}
     }
 
-    private void parseValue(String property, String value, Scenario s) {
+    private void parseValue(String property, String value) {
         switch (property) {
             //simple properties:
             case "name"                 -> Scenario.NAME = value;
@@ -89,18 +90,18 @@ public class ScenarioBuilder implements Builder<Scenario> {
             case "timeStep"             -> Scenario.TIME_STEP = parseDouble(value);
 
             //regions:
-            case "targetArea"           -> Scenario.targetArea             = new Component(parsePoints(value), TARGET, null, null);
-            case "spawnAreaIntruders"   -> Scenario.intruderSpawnArea      = new Component(parsePoints(value), INTRUDER_SPAWN,null, null);
-            case "spawnAreaGuards"      -> Scenario.guardSpawnArea         = new Component(parsePoints(value), GUARD_SPAWN,null, null);
+            case "targetArea"           -> targetArea             = new Component(parsePoints(value), TARGET, null, null);
+            case "spawnAreaIntruders"   -> intruderSpawnArea      = new Component(parsePoints(value), INTRUDER_SPAWN,null, null);
+            case "spawnAreaGuards"      -> guardSpawnArea         = new Component(parsePoints(value), GUARD_SPAWN,null, null);
 
-            case "wall"                 -> s.addWall(parsePoints(value));
-            case "shaded"               -> s.addShaded(parsePoints(value));
+            case "wall"                 -> Scenario.addWall(parsePoints(value));
+            case "shaded"               -> Scenario.addShaded(parsePoints(value));
             case "texture"              -> print("Texture not implemented yet");
 
             case "teleport" -> {
                 String[] coords = value.split(" ");
                 XY target = new XY(parseInt(coords[4]), parseInt(coords[5]));
-                s.addPortals(new Component(parsePoints(value), PORTAL, target, NORTH)); //TODO: randomly change their orientation
+                Scenario.addPortals(new Component(parsePoints(value), PORTAL, target, NORTH));
             }
 
             default -> print("Unrecognized Property: " + property);
@@ -123,6 +124,13 @@ public class ScenarioBuilder implements Builder<Scenario> {
         return new Rectangle(points[0], points[1], width, height);
     }
 
+    private void compileComponents() {
+        COMPONENTS.addAll(List.of(targetArea, intruderSpawnArea, guardSpawnArea));
+        COMPONENTS.addAll(walls);
+        COMPONENTS.addAll(shadedAreas);
+        COMPONENTS.addAll(portals);
+    }
+
     private void initMap() {
         TileMap tileMap = new TileMap();
         for(int x = 0; x <= Scenario.WIDTH; x++)
@@ -132,15 +140,16 @@ public class ScenarioBuilder implements Builder<Scenario> {
         Scenario.TILE_MAP = tileMap;
     }
 
-    //TODO: needs to be remade to consider portals and such
-    private void fillMap(Scenario s) {
-        s.getStaticAreas().forEach(a -> {
-            for(int x = a.area().getX(); x < a.area().getMaxIntX(); x++){
-                for(int y = a.area().getY(); y < a.area().getMaxIntY(); y++) {
-                    Scenario.TILE_MAP.setType(x, y, a.type());
+    private void fillMap() {
+        COMPONENTS.forEach(c -> {
+            for(int x = c.area().getX(); x < c.area().getMaxIntX(); x++){
+                for(int y = c.area().getY(); y < c.area().getMaxIntY(); y++) {
+                    Scenario.TILE_MAP.setType(x, y, c.type());
                 }
             }
         });
+
+        Scenario.portals.forEach(p -> Scenario.TILE_MAP.setType(p.exit().x(), p.exit().y(), EXIT_PORTAL));
     }
 
     //private record MetaProperties(GameMode gameMode, String mapName, int width, int height){}

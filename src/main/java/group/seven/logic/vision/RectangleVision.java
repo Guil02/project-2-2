@@ -1,24 +1,37 @@
 package group.seven.logic.vision;
 
 import group.seven.enums.Cardinal;
-import group.seven.enums.TileType;
 import group.seven.model.agents.Agent;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
-import group.seven.model.environment.TileMap;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static group.seven.enums.TileType.WALL;
+import static group.seven.logic.vision.Vision.Type.RECTANGULAR;
+import static group.seven.model.environment.Scenario.TILE_MAP;
 
 /**
  * Class implements a rectangular vision for agent of  size [3 x distanceViewing]
  */
 public class RectangleVision implements Vision {
 
+    private Agent agent;
+    public final Type type = RECTANGULAR;
+
+    public RectangleVision() {
+
+    }
+
+    public RectangleVision(Agent agent) {
+        this.agent = agent;
+    }
+
     @Override
     public void observe(int x, int y, List<Tile> observedTile, Agent agent){
-        Scenario.TILE_MAP.getTile(x,y).setExplored(agent);
-        observedTile.add(Scenario.TILE_MAP.getTile(x,y));
+        TILE_MAP.getTile(x,y).setExplored(agent);
+        observedTile.add(TILE_MAP.getTile(x,y));
     }
 
     @Override
@@ -34,14 +47,14 @@ public class RectangleVision implements Vision {
                 for (int y = yCoordinate; y > yCoordinate - Scenario.VIEW_DISTANCE; y--) { //check straight
                     if (y >= 0) { //can't go lower than y=0, so if the number is negative is out of bound
                         // set that the player saw the tile
-                        observe(xCoordinate,y, observedTiles, agent);
+                        observe(xCoordinate, y, observedTiles, agent);
                         //CHECK COLLISIONS with walls
-                        if (Scenario.TILE_MAP.getTile(xCoordinate,y).getType() == TileType.WALL) {
+                        if (TILE_MAP.getTile(xCoordinate,y).getType() == WALL) {
                             //if the agent sees a wall, we break as it cant see any further
                             break;
                         }
                     } else { //out of bound for edges of map
-                        observe(xCoordinate,y+1, observedTiles, agent);
+                        observe(xCoordinate,y + 1, observedTiles, agent);
                         break;
                     }
                 }
@@ -51,7 +64,7 @@ public class RectangleVision implements Vision {
                             observe(xCoordinate-1,y, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(xCoordinate - 1,y).getType() == TileType.WALL) { // TODO: check this
+                            if (TILE_MAP.getTile(xCoordinate - 1, y).getType() == WALL) { // TODO: check this
                                 //if the agent sees a wall, we break as it cant see any further
                                 break;
                             }
@@ -68,7 +81,7 @@ public class RectangleVision implements Vision {
                             observe(xCoordinate+1,y, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(xCoordinate + 1,y).getType() == TileType.WALL) {
+                            if (TILE_MAP.getTile(xCoordinate + 1,y).getType() == WALL) {
                                 break;
                             }
                         } else { //out of bound for edges of map
@@ -85,7 +98,7 @@ public class RectangleVision implements Vision {
                         observe(xCoordinate,y, observedTiles, agent);
 
                         //CHECK COLLISIONS with walls
-                        if (Scenario.TILE_MAP.getTile(xCoordinate,y).getType() == TileType.WALL) {
+                        if (TILE_MAP.getTile(xCoordinate,y).getType() == WALL) {
                             break;
                         }
                     } else { //out of bound for edges of map
@@ -100,12 +113,11 @@ public class RectangleVision implements Vision {
                             observe(xCoordinate-1,y, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(xCoordinate-1,y).getType() == TileType.WALL) {
+                            if (TILE_MAP.getTile(xCoordinate-1,y).getType() == WALL) {
                                 break;
                             }
                         } else { //out of bound for edges of map
                             observe(xCoordinate-1,y-1, observedTiles, agent);
-
                             break;
                         }
                     }
@@ -115,7 +127,7 @@ public class RectangleVision implements Vision {
                         if (y < Scenario.HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
                             observe(xCoordinate+1,y, observedTiles, agent);
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(xCoordinate+1,y).getType() == TileType.WALL) {
+                            if (TILE_MAP.getTile(xCoordinate+1,y).getType() == WALL) {
                                 break;
                             }
                         } else {
@@ -131,12 +143,11 @@ public class RectangleVision implements Vision {
                         observe(x,yCoordinate, observedTiles, agent);
 
                         //CHECK COLLISIONS with walls
-                        if (Scenario.TILE_MAP.getTile(x,yCoordinate).getType() == TileType.WALL) {
+                        if (TILE_MAP.getTile(x,yCoordinate).getType() == WALL) {
                             break;
                         }
                     } else { //out of bound for edges of map
                         observe(x-1,yCoordinate, observedTiles, agent);
-
                         break;
                     }
                 }
@@ -145,7 +156,7 @@ public class RectangleVision implements Vision {
                         if (x < Scenario.WIDTH) { //cant go higher than y=0, so if the number is positive is out of bound
                             observe(x,yCoordinate-1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(x,yCoordinate-1).getType() == TileType.WALL) {
+                            if (TILE_MAP.getTile(x,yCoordinate-1).getType() == WALL) {
                                 break;
                             }
                         } else {
@@ -159,7 +170,7 @@ public class RectangleVision implements Vision {
                         if (x < Scenario.WIDTH) {
                             observe(x,yCoordinate+1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(x,yCoordinate+1).getType() == TileType.WALL) {
+                            if (TILE_MAP.getTile(x,yCoordinate+1).getType() == WALL) {
                                 break;
                             }
                         } else {
@@ -175,12 +186,11 @@ public class RectangleVision implements Vision {
                         observe(x,yCoordinate, observedTiles, agent);
 
                         //CHECK COLLISIONS with walls
-                        if (Scenario.TILE_MAP.getTile(x,yCoordinate).getType() == TileType.WALL) {
+                        if (TILE_MAP.getTile(x,yCoordinate).getType() == WALL) {
                             break;
                         }
                     } else { //out of bound for edges of map
                         observe(x+1,yCoordinate, observedTiles, agent);
-
                         break;
                     }
                 }
@@ -189,7 +199,7 @@ public class RectangleVision implements Vision {
                         if (x >= 0) { //cant go higher than y=0, so if the number is positive is out of bound
                             observe(x,yCoordinate-1, observedTiles, agent);
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(x,yCoordinate-1).getType() == TileType.WALL) {
+                            if (TILE_MAP.getTile(x,yCoordinate-1).getType() == WALL) {
                                 break;
                             }
                         } else {
@@ -204,7 +214,7 @@ public class RectangleVision implements Vision {
                             observe(x,yCoordinate+1, observedTiles, agent);
 
                             //CHECK COLLISIONS with walls
-                            if (Scenario.TILE_MAP.getTile(x,yCoordinate+1).getType() == TileType.WALL) {
+                            if (TILE_MAP.getTile(x,yCoordinate+1).getType() == WALL) {
                                 break;
                             }
                         } else {
@@ -216,6 +226,16 @@ public class RectangleVision implements Vision {
             }
         }
         return observedTiles;
+    }
+
+    @Override
+    public List<Tile> updateAndGetVisionAgent() {
+        return updateAndGetVisionAgent(agent);
+    }
+
+    @Override
+    public Type getType() {
+        return type;
     }
 
 }

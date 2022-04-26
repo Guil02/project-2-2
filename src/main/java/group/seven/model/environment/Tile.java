@@ -19,7 +19,7 @@ public class Tile {
 
     boolean exploredByGuard = false;
     boolean exploredByIntruder = false;
-    // Lists keep track of which intruder has seen the tile
+    // Lists keep track of which agent has seen the tile
     List<Boolean> seen;
 
     //Graph
@@ -28,6 +28,8 @@ public class Tile {
     public Tile() {
         type = EMPTY;
         seen = new ArrayList<>(NUM_AGENTS);
+        for (int i = 0; i < NUM_AGENTS; i++)
+            seen.add(false);
     }
 
     public Tile(int x, int y) {

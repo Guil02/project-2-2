@@ -27,7 +27,7 @@ public enum TileType {
             case GUARD -> Color.BLUE;
             case INTRUDER -> Color.ORANGE;
             case PORTAL -> Color.PURPLE;
-            case EXIT_PORTAL -> Color.MEDIUMPURPLE;
+            case EXIT_PORTAL -> Color.VIOLET;
             case GUARD_SPAWN -> Color.AQUA;
             case INTRUDER_SPAWN -> Color.TOMATO;
             case SHADED -> Color.SLATEGREY;

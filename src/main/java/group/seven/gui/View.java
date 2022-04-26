@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 
+import static group.seven.enums.TileType.WALL;
 import static group.seven.model.environment.Scenario.TILE_MAP;
 import static javafx.scene.paint.Color.BLACK;
 
@@ -88,9 +89,9 @@ public class View extends ScrollPane {
                 Tile tile = TILE_MAP.getMap()[x][y];
                 //g.setFill(tile.explored ? tile.getType().getColor() : tile.getType().getColor().darker().desaturate());
 
-                //if (!tile.getExploredGuard())
-                //    g.setFill(tile.getType() == TileType.WALL ? Color.gray(0.4) : tile.getType().getColor().darker().desaturate());
-                //else
+                if (!tile.getExploredGuard() || !tile.getExploredIntruder())
+                    g.setFill(tile.getType() == WALL ? Color.gray(0.4) : tile.getType().getColor().darker().desaturate());
+                else
                     g.setFill(tile.getType().getColor());
 
                 paintTile(x, y);

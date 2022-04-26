@@ -25,7 +25,7 @@ public enum Cardinal {
         };
     }
 
-    public XY getUnitVector() {
+    public XY unitVector() {
         return unitVector;
     }
 }
