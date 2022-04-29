@@ -11,8 +11,7 @@ import javafx.geometry.Point2D;
 
 import java.util.List;
 
-import static group.seven.enums.TileType.PORTAL;
-import static group.seven.enums.TileType.WALL;
+import static group.seven.enums.TileType.*;
 import static group.seven.utils.Methods.print;
 
 
@@ -31,18 +30,18 @@ public class CollisionHandler {
                 if(!(i < move.agent().getCurrentSpeed())){/*is out of bounds*/
                     break;
                 }
-                if(isOutOfBounds(targetPos)){
+                if (isOutOfBounds(targetPos)) {
                     break;
                 }
-                if (check(WALL, targetPos)){
+                if (check(WALL, targetPos) || check(INTRUDER, targetPos) || check(GUARD, targetPos)) {
                     break;
-                } else if (check(PORTAL, targetPos)){
+                } else if (check(PORTAL, targetPos)) {
                     Component portal = getComponent(targetPos, PORTAL);
                     print(agent.getID() + " just whooshed");
                     agent.moveTo(portal.exit());
                     agent.updateVision();
                     break;
-                } else{
+                } else {
                     move.agent().executeMove(1);
                     agent.updateVision();
                 }
