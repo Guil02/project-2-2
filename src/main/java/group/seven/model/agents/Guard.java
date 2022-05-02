@@ -3,27 +3,34 @@ package group.seven.model.agents;
 
 import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.algorithms.RandomMoves;
-import group.seven.logic.algorithms.RandomTest;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
+import group.seven.model.environment.Marker;
+import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
+
+import java.util.ArrayList;
 
 import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.TileType.GUARD;
 
 public class Guard extends Agent {
 
+    public final int PHEROMONELIFETIME = 20;
     private final int ID;
-    public int currentSpeed;
     private final int maxSpeed = (int) Scenario.GUARD_SPRINT_SPEED;
-    private Vision vision;
+    public int currentSpeed;
     Algorithm algorithm;
+    private Vision vision;
+    private ArrayList<Marker> markers = new ArrayList<>();
+    private ArrayList<Pheromone> pheromones = new ArrayList<>();
 
-    public Guard(int x, int y, Algorithm algorithm, int startSpeed, Vision vision) {
+    public Guard(int x, int y, Algorithm algorithm, int startSpeed, Vision vision, ArrayList<Marker> markers) {
         this(x, y);
         this.algorithm = algorithm;
         this.currentSpeed = startSpeed;
         this.vision = vision;
+        this.markers = markers;
     }
 
     public Guard(int x, int y) {
@@ -38,6 +45,25 @@ public class Guard extends Agent {
 
         //algorithm = new RandomTest(this);
         currentSpeed = 1;
+    }
+
+    public void addMarker(int type) {
+
+        if (type == 1) { //TODO depending on what our agent wants add some properties to the markers in the future
+            Marker marker = new Marker(this.getX(), this.getY(), type);
+            markers.add(marker);
+        }
+
+
+    }
+
+    public void addPheromone(int type) {
+
+        if (type == 1) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
+            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
+            pheromones.add(pheromone);
+        }
+
     }
 
     @Override
@@ -60,6 +86,7 @@ public class Guard extends Agent {
     public int getCurrentSpeed() {
         return currentSpeed;
     }
+
 
     @Override
     public String toString() {
