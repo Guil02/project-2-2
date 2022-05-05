@@ -66,6 +66,10 @@ public abstract class Agent {
         seenTiles.clear();
     }
 
+    public List<Tile> getSeenTiles() {
+        return seenTiles;
+    }
+
     protected int newID() {
         return IDs++;
     }
@@ -150,4 +154,15 @@ public abstract class Agent {
         update();
     }
 
+    @Override
+    public String toString() {
+        return "Agent{" +
+                "x=" + x +
+                ", y=" + y +
+                ", direction=" + direction +
+                ", xProp=" + xProp +
+                ", yProp=" + yProp +
+                ", agentType=" + agentType +
+                '}';
+    }
 }

@@ -100,4 +100,10 @@ public class Tile {
         seen.set(agent.getID(), true);
     }
 
+    @Override
+    public String toString() {
+        return "Tile{" +
+                "xy=" + xy +
+                '}';
+    }
 }

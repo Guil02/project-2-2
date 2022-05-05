@@ -21,6 +21,7 @@ public class CollisionHandler {
         for (Move move : moves){
             Agent agent = move.agent();
             agent.clearVision();
+            agent.updateVision();
             for (int i = 0; i < move.distance(); i++){
                 int x = agent.getX();
                 int y = agent.getY();

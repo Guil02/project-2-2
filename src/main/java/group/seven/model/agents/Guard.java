@@ -37,7 +37,7 @@ public class Guard extends Agent {
         vision = new RectangleVision(this); //DEFAULT
 
         //algorithm = new RandomTest(this);
-        currentSpeed = 1;
+        currentSpeed = 3;
     }
 
     @Override
