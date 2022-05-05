@@ -1,5 +1,6 @@
 package group.seven.model.environment;
 
+import group.seven.enums.Cardinal;
 import group.seven.enums.MarkerType;
 
 public class Marker {
@@ -8,7 +9,7 @@ public class Marker {
     private final int xCoordinate;
     private final int yCoordinate;
 
-    public Marker(int xCoordinate, int yCoordinate, MarkerType markerType) {
+    public Marker(int xCoordinate, int yCoordinate, MarkerType markerType, int Id, Cardinal cardinal) {
 
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;

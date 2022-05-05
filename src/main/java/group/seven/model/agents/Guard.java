@@ -50,25 +50,6 @@ public class Guard extends Agent {
         currentSpeed = 3;
     }
 
-    public void addMarker(MarkerType type) {
-
-        if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
-            Marker marker = new Marker(this.getX(), this.getY(), type);
-            markers.add(marker);
-        }
-
-
-    }
-
-    public void addPheromone(PheromoneType type) {
-
-        if (type == PheromoneType.TEST) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
-            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
-            pheromones.add(pheromone);
-        }
-
-    }
-
     @Override
     public void updateVision() {
         seenTiles.addAll(vision.updateAndGetVisionAgent(this));
