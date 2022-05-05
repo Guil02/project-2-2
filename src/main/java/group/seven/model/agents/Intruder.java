@@ -29,6 +29,7 @@ public class Intruder extends Agent {
     }
 
     public Intruder(int x, int y) {
+        super(x,y);
         ID = newID();
         setX(x);
         setY(y);

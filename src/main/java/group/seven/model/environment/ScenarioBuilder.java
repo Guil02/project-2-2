@@ -52,6 +52,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
         compileComponents();
         initMap();
         fillMap();
+        setAdjacent();
         return scenario;
     }
 
@@ -138,6 +139,51 @@ public class ScenarioBuilder implements Builder<Scenario> {
                 tileMap.setTile(x, y, new Tile(x, y));
 
         Scenario.TILE_MAP = tileMap;
+    }
+
+    private void setAdjacent(){
+        TileMap t = TILE_MAP;
+        for(int x = 0; x <= Scenario.WIDTH; x++){
+            for (int y = 0; y <= Scenario.HEIGHT; y++) {
+                if(t.getTile(x,y)!=null){
+                    t.getTile(x,y).adjacent = createAdjacent(t,x,y);
+                }
+            }
+        }
+    }
+
+    private Adjacent createAdjacent(TileMap t, int x, int y) {
+        Tile NORTH = null, EAST = null, SOUTH = null, WEST = null, TARGET = null;
+        if(y>0){
+            NORTH = t.getTile(x,y-1);
+        }
+
+        if(x< WIDTH){
+            EAST = t.getTile(x+1,y);
+        }
+
+        if(x< HEIGHT){
+            SOUTH = t.getTile(x,y+1);
+        }
+
+        if(x>0){
+            WEST = t.getTile(x-1,y);
+        }
+
+        if(t.getType(x,y)==PORTAL){
+            Component portal = null;
+            for (Component component : Scenario.portals) {
+                if (component.getX() == x && component.getY() == y) {
+                    portal = component;
+                    break;
+                }
+            }
+            if(portal != null){
+                XY exit = portal.exit();
+                TARGET = t.getTile(exit.x(),exit.y());
+            }
+        }
+        return new Adjacent(NORTH,EAST,SOUTH,WEST,TARGET);
     }
 
     private void fillMap() {

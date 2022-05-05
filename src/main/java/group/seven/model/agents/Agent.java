@@ -4,6 +4,7 @@ import group.seven.enums.Action;
 import group.seven.enums.Cardinal;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
+import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -24,11 +25,18 @@ public abstract class Agent {
     private final IntegerProperty yProp = new SimpleIntegerProperty();
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
+    //Internal map
+    private TileNode[][] map;
     //Type
     public TileType agentType;
+    public final XY initialPosition;
 
     //Current Speed
     //Strategy
+
+    public Agent(int x, int y){
+        initialPosition = new XY(x,y);
+    }
 
     public abstract Move calculateMove();
     public abstract int getID();
@@ -132,6 +140,7 @@ public abstract class Agent {
     //perhaps this method overloading could be an approach to update the agent
     public void update() {
         updateVision(); //default thing that always gets updated. Like when agent is not moving
+        updateMap(); //updates the map with the content of seen list.
     }
 
     //update just the direction of agent (and the default, which is updating vision)
@@ -165,4 +174,27 @@ public abstract class Agent {
                 ", agentType=" + agentType +
                 '}';
     }
+//
+    public void initializeMap(){
+        map = new TileNode[Scenario.WIDTH+1][Scenario.HEIGHT+1];
+    }
+
+    public void updateMap(){
+        for(Tile tile: seenTiles){
+            map[tile.getX()][tile.getY()]=new TileNode(tile);
+        }
+    }
+
+    public TileNode getMapPosition(int x, int y){
+        return map[x][y];
+    }
+
+    public TileNode[][] getMap() {
+        return map;
+    }
+
+    public XY getLocalCoordinate(int x, int y){
+        return new XY(x- initialPosition.x(),y- initialPosition.y());
+    }
+
 }
