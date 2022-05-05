@@ -9,6 +9,7 @@ import javafx.geometry.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import static group.seven.enums.TileType.PORTAL;
 import static group.seven.enums.TileType.UNKNOWN;
 
 public class TileNode {
@@ -55,5 +56,23 @@ public class TileNode {
                 markers.add(marker);
             }
         }
+        int ID = 0;
+        Agent cur;
+        if(adjacent.size()<4 && type!=PORTAL || adjacent.size()>=5) {
+            //check if in adj list and not null in the map
+            //Something like this? not sure if what I'm doing is correct - Gio help!
+            Tile north = Scenario.TILE_MAP.getTile(x-1,y);
+            Tile east = Scenario.TILE_MAP.getTile(x,y+1);
+            Tile south = Scenario.TILE_MAP.getTile(x+1,y);
+            Tile west = Scenario.TILE_MAP.getTile(x,y-1);
+            if (north != null && east != null && south != null && west != null) {
+                if (!(adjacent.contains(north))){
+                    //adjacent.add(north)
+                }
+            }
+            //check for north, south, etc. in tile node map
+
+        }
+
     }
 }
