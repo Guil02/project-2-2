@@ -33,7 +33,7 @@ public class Intruder extends Agent {
         setX(x);
         setY(y);
         agentType = INTRUDER;
-        currentSpeed = 0;       //DEFAULT
+        currentSpeed = 1;       //DEFAULT
         direction = SOUTH;      //DEFAULT
         algorithm = new RandomMoves(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT

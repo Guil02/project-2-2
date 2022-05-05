@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Handles coordinate conversions
+ * To create this record: new Frame(new Translate(-spawnPoint.getX(), -spawnPoint.getY()))
  * @param frame local agent's coordinate frame Transform
  */
 public record Frame(Transform frame) {
