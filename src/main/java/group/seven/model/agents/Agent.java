@@ -1,9 +1,6 @@
 package group.seven.model.agents;
 
-import group.seven.enums.Action;
-import group.seven.enums.Cardinal;
-import group.seven.enums.MarkerType;
-import group.seven.enums.TileType;
+import group.seven.enums.*;
 import group.seven.logic.geometric.XY;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Pheromone;
@@ -21,6 +18,8 @@ import static group.seven.enums.Cardinal.*;
 public abstract class Agent {
     private static int IDs = 0;
     public final int PHEROMONELIFETIME = 20;
+    //Type
+    public final XY initialPosition;
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
     //Pose
@@ -35,14 +34,12 @@ public abstract class Agent {
     private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
     private TileNode[][] map;
-    //Type
-    public final XY initialPosition;
 
     //Current Speed
     //Strategy
 
-    public Agent(int x, int y){
-        initialPosition = new XY(x,y);
+    public Agent(int x, int y) {
+        initialPosition = new XY(x, y);
     }
 
     public abstract Move calculateMove();
@@ -97,16 +94,16 @@ public abstract class Agent {
         return x;
     }
 
-    public int getY() {
-        //convert with frame
-//        return yProp.get();
-        return y;
-    }
-
     public void setX(int x) {
         //convert with frame
         this.x = x;
         xProp.set(x);
+    }
+
+    public int getY() {
+        //convert with frame
+//        return yProp.get();
+        return y;
     }
 
     public void setY(int y) {
@@ -186,19 +183,6 @@ public abstract class Agent {
         update();
     }
 
-    public void addMarker(MarkerType type) {
-
-        if (type == MarkerType.VISITED) {                                   //TODO depending on what our agent wants add some properties to the markers in the future
-            Marker marker = new Marker(this.getX(), this.getY(), type);
-            markers.add(marker);
-        }
-
-    }
-
-    public void addPheromone(MarkerType type) {
-
-
-    }
 
     @Override
     public String toString() {
@@ -211,21 +195,21 @@ public abstract class Agent {
                 ", agentType=" + agentType +
                 '}';
     }
-//
-    public void initializeMap(){
-        map = new TileNode[Scenario.WIDTH+1][Scenario.HEIGHT+1];
+
+    //
+    public void initializeMap() {
+        map = new TileNode[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
     }
 
-    public void updateMap(){
-        for(Tile tile: seenTiles){
-            if(map[tile.getX()][tile.getY()]!=null){
+    public void updateMap() {
+        for (Tile tile : seenTiles) {
+            if (map[tile.getX()][tile.getY()] != null) {
                 map[tile.getX()][tile.getY()].update();
-            }
-            else map[tile.getX()][tile.getY()]=new TileNode(tile);
+            } else map[tile.getX()][tile.getY()] = new TileNode(tile);
         }
     }
 
-    public TileNode getMapPosition(int x, int y){
+    public TileNode getMapPosition(int x, int y) {
         return map[x][y];
     }
 
@@ -233,8 +217,27 @@ public abstract class Agent {
         return map;
     }
 
-    public XY getLocalCoordinate(int x, int y){
-        return new XY(x- initialPosition.x(),y- initialPosition.y());
+    public XY getLocalCoordinate(int x, int y) {
+        return new XY(x - initialPosition.x(), y - initialPosition.y());
+    }
+
+    public void addMarker(MarkerType type) {
+
+        if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
+            Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection());
+            markers.add(marker);
+        }
+
+
+    }
+
+    public void addPheromone(PheromoneType type) {
+
+        if (type == PheromoneType.TEST) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
+            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
+            pheromones.add(pheromone);
+        }
+
     }
 
 }
