@@ -2,8 +2,11 @@ package group.seven.model.agents;
 
 import group.seven.enums.Action;
 import group.seven.enums.Cardinal;
+import group.seven.enums.MarkerType;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
+import group.seven.model.environment.Marker;
+import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 import javafx.beans.property.IntegerProperty;
@@ -17,14 +20,19 @@ import static group.seven.enums.Cardinal.*;
 //TODO the agent structure very much work in progress
 public abstract class Agent {
     private static int IDs = 0;
-
-    //Pose
-    public int x, y; //You can use this if the property stuff confuses
-    protected Cardinal direction;
+    public final int PHEROMONELIFETIME = 20;
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
+    //Pose
+    public int x, y; //You can use this if the property stuff confuses
+    //Type
+    public TileType agentType;
+    protected Cardinal direction;
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
+    //Marker and Pheromone
+    private ArrayList<Marker> markers = new ArrayList<>();
+    private ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
     private TileNode[][] map;
     //Type
@@ -39,7 +47,9 @@ public abstract class Agent {
     }
 
     public abstract Move calculateMove();
+
     public abstract int getID();
+
     public abstract int getCurrentSpeed();
 
     //is the distance parameter required here? Seems like it's always 1 based oon CollisionHandler line 46
@@ -48,13 +58,13 @@ public abstract class Agent {
         y += direction.unitVector().y() * distance;
     }
 
-    public void moveTo(XY pos){
+    public void moveTo(XY pos) {
         this.x = pos.x();
         this.y = pos.y();
     }
 
-    public void executeTurn(Move move){
-        switch(move.action()){
+    public void executeTurn(Move move) {
+        switch (move.action()) {
             case TURN_UP -> direction = NORTH;
             case TURN_DOWN -> direction = SOUTH;
             case TURN_LEFT -> direction = WEST;
@@ -70,7 +80,7 @@ public abstract class Agent {
 //        }
 //    }
 
-    public void clearVision(){
+    public void clearVision() {
         seenTiles.clear();
     }
 
@@ -106,14 +116,15 @@ public abstract class Agent {
         yProp.set(y);
     }
 
-    public XY getXY(){
-        return new XY(x,y);
+    public XY getXY() {
+        return new XY(x, y);
     }
 
 
     public IntegerProperty xProperty() {
         return xProp;
     }
+
     public IntegerProperty yProperty() {
         return yProp;
     }
@@ -145,7 +156,7 @@ public abstract class Agent {
 
     //update just the direction of agent (and the default, which is updating vision)
     public void update(Action rotation) {
-        switch(rotation){
+        switch (rotation) {
             case TURN_UP -> direction = NORTH;
             case TURN_DOWN -> direction = SOUTH;
             case TURN_LEFT -> direction = WEST;
@@ -161,6 +172,20 @@ public abstract class Agent {
         this.y = newPosition.y();
 
         update();
+    }
+
+    public void addMarker(MarkerType type) {
+
+        if (type == MarkerType.VISITED) {                                   //TODO depending on what our agent wants add some properties to the markers in the future
+            Marker marker = new Marker(this.getX(), this.getY(), type);
+            markers.add(marker);
+        }
+
+    }
+
+    public void addPheromone(MarkerType type) {
+
+
     }
 
     @Override

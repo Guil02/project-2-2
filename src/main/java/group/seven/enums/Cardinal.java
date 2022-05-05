@@ -25,6 +25,22 @@ public enum Cardinal {
         };
     }
 
+    public Cardinal reverseDirection(Cardinal cardinal) {
+
+        if (cardinal == NORTH) {
+            return SOUTH;
+        } else if (cardinal == SOUTH) {
+            return NORTH;
+        } else if (cardinal == WEST) {
+            return EAST;
+        } else if (cardinal == EAST) {
+            return WEST;
+        }
+
+        return null;
+
+    }
+
     public XY unitVector() {
         return unitVector;
     }
