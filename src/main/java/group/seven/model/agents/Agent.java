@@ -31,8 +31,8 @@ public abstract class Agent {
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
     //Marker and Pheromone
-    private ArrayList<Marker> markers = new ArrayList<>();
-    private ArrayList<Pheromone> pheromones = new ArrayList<>();
+    private final ArrayList<Marker> markers = new ArrayList<>();
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
     private TileNode[][] map;
     //Type
@@ -151,6 +151,19 @@ public abstract class Agent {
     public void update() {
         updateVision(); //default thing that always gets updated. Like when agent is not moving
         updateMap(); //updates the map with the content of seen list.
+    }
+
+    /**
+     * Make sure that only one instance gets stored of a tile during the vision process
+     * @param observedTiles the currently observed tiles
+     * @param newTiles the new tiles which needs to be checked
+     * @return the observedTiles with the not seen newTiles
+     */
+    public List<Tile> duplicatedTiles(List<Tile> observedTiles, List<Tile> newTiles) {
+        for (Tile tile : newTiles)
+            if (!(observedTiles.contains(tile)))
+                observedTiles.add(tile);
+        return observedTiles;
     }
 
     //update just the direction of agent (and the default, which is updating vision)

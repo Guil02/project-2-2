@@ -11,6 +11,9 @@ import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
+import group.seven.model.environment.Tile;
+
+import java.util.List;
 
 import static group.seven.enums.Cardinal.SOUTH;
 import static group.seven.enums.TileType.INTRUDER;
@@ -44,7 +47,8 @@ public class Intruder extends Agent {
 
     @Override
     public void updateVision() {
-        seenTiles.addAll(vision.updateAndGetVisionAgent(this));
+        List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
+        seenTiles = duplicatedTiles(seenTiles,newTiles);
         /*
         Could also use the below if the vision stores an instance of the agent.
         Otherwise, would recommend making vision methods static and any have vision status effects stored in agent

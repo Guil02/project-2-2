@@ -10,6 +10,9 @@ import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
+import group.seven.model.environment.Tile;
+
+import java.util.List;
 
 import java.util.ArrayList;
 
@@ -25,7 +28,7 @@ public class Guard extends Agent {
     Algorithm algorithm;
     private Vision vision;
     private ArrayList<Marker> markers = new ArrayList<>();
-    private ArrayList<Pheromone> pheromones = new ArrayList<>();
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
 
     public Guard(int x, int y, Algorithm algorithm, int startSpeed, Vision vision, ArrayList<Marker> markers) {
         this(x, y);
@@ -71,7 +74,8 @@ public class Guard extends Agent {
 
     @Override
     public void updateVision() {
-        seenTiles.addAll(vision.updateAndGetVisionAgent(this));
+        List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
+        seenTiles = duplicatedTiles(seenTiles,newTiles);
         //print(seenTiles);
     }
 
