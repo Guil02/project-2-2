@@ -181,7 +181,10 @@ public abstract class Agent {
 
     public void updateMap(){
         for(Tile tile: seenTiles){
-            map[tile.getX()][tile.getY()]=new TileNode(tile);
+            if(map[tile.getX()][tile.getY()]!=null){
+                map[tile.getX()][tile.getY()].update();
+            }
+            else map[tile.getX()][tile.getY()]=new TileNode(tile);
         }
     }
 
