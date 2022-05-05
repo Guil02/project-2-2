@@ -1,12 +1,10 @@
 package group.seven.logic.simulation;
 
 import group.seven.Main;
-import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
 import group.seven.enums.TileType;
 import group.seven.gui.SimulationScreen;
 import group.seven.logic.geometric.XY;
-import group.seven.logic.vision.Vision;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
 import group.seven.model.agents.Intruder;
@@ -22,7 +20,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import static group.seven.enums.Action.MOVE_FORWARD;
-import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.TileType.*;
 import static group.seven.model.environment.Scenario.*;
 import static group.seven.utils.Methods.print;
@@ -114,7 +111,7 @@ public class Simulator extends AnimationTimer {
             }
             case SINGLE_INTRUDER, MULTI_INTRUDER -> {
                 spawnAgents(GUARD);
-               spawnAgents(INTRUDER);
+                spawnAgents(INTRUDER);
             }
 
         }
