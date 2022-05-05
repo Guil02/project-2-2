@@ -20,8 +20,10 @@ public class TileNode {
     TileType type;
     TileType agent = null;
     List<Marker> markers;
+    List<TileNode> adjacent;
 
     public TileNode(Tile tile){
+        adjacent = new ArrayList<>();
         for(Agent agent: Scenario.TILE_MAP.agents){
             if(agent.x==tile.getX()&& agent.y==tile.getY()){
                 this.agent = agent.agentType;
