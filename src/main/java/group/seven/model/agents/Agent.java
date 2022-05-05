@@ -2,6 +2,7 @@ package group.seven.model.agents;
 
 import group.seven.enums.Action;
 import group.seven.enums.Cardinal;
+import group.seven.enums.MarkerType;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.environment.Marker;
@@ -158,21 +159,17 @@ public abstract class Agent {
         update();
     }
 
-    public void addMarker(int type) {
+    public void addMarker(MarkerType type) {
 
-        if (type == 1) {                                   //TODO depending on what our agent wants add some properties to the markers in the future
+        if (type == MarkerType.VISITED) {                                   //TODO depending on what our agent wants add some properties to the markers in the future
             Marker marker = new Marker(this.getX(), this.getY(), type);
             markers.add(marker);
         }
 
     }
 
-    public void addPheromone(int type) {
+    public void addPheromone(MarkerType type) {
 
-        if (type == 1) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
-            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, PHEROMONELIFETIME);
-            pheromones.add(pheromone);
-        }
 
     }
 

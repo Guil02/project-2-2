@@ -1,15 +1,14 @@
 package group.seven.model.environment;
 
-import java.util.ArrayList;
-import java.util.List;
+import group.seven.enums.MarkerType;
 
 public class Marker {
     private static final int SIZE = 0; //TODO : think of making an area of a markers not a single grid of marker
-    private int markerType;
-    private int xCoordinate;
-    private int yCoordinate;
+    private final MarkerType markerType;
+    private final int xCoordinate;
+    private final int yCoordinate;
 
-    public Marker(int xCoordinate, int yCoordinate, int markerType) {
+    public Marker(int xCoordinate, int yCoordinate, MarkerType markerType) {
 
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -25,12 +24,8 @@ public class Marker {
         return yCoordinate;
     }
 
-    public int getType() {
+    public MarkerType getType() {
         return markerType;
-    }
-
-    public void setType(int type) {
-        this.markerType = type;
     }
 
 
