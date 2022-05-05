@@ -17,7 +17,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="TOP_CENTER" minHeight="540.0" minWidth="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.group7.gui.MainMenu">
+<HBox alignment="TOP_CENTER" minHeight="540.0" minWidth="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.seven.gui.MainMenu">
    <children>
       <VBox alignment="TOP_CENTER" spacing="15.0" style="-fx-background-color: #dcdde1;" HBox.hgrow="ALWAYS">
          <children>
