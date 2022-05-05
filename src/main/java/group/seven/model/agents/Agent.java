@@ -36,7 +36,6 @@ public abstract class Agent {
     //Internal map
     private TileNode[][] map;
     //Type
-    public TileType agentType;
     public final XY initialPosition;
 
     //Current Speed
