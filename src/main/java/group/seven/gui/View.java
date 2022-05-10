@@ -6,11 +6,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 
-import static group.seven.enums.TileType.WALL;
 import static group.seven.model.environment.Scenario.TILE_MAP;
 import static javafx.scene.paint.Color.BLACK;
 
@@ -56,10 +54,10 @@ public class View extends ScrollPane {
         //drawPortal();
     }
 
-    private void drawPortal() {
-        g.setFill(Color.rgb(155, 89, 182).brighter());
-        //scenario.getTeleporters().forEach(t -> paintTile(t.getTarget().getX(), t.getTarget().getY()));
-    }
+//    private void drawPortal() {
+//        g.setFill(Color.rgb(155, 89, 182).brighter());
+//        //scenario.getTeleporters().forEach(t -> paintTile(t.getTarget().getX(), t.getTarget().getY()));
+//    }
 
     private void drawAgents() {
 //        g.setFill(Color.rgb(52, 152, 219));
@@ -89,10 +87,13 @@ public class View extends ScrollPane {
                 Tile tile = TILE_MAP.getMap()[x][y];
                 //g.setFill(tile.explored ? tile.getType().getColor() : tile.getType().getColor().darker().desaturate());
 
-                if (!tile.getExploredGuard() || !tile.getExploredIntruder())
-                    g.setFill(tile.getType() == WALL ? Color.gray(0.4) : tile.getType().getColor().darker().desaturate());
-                else
-                    g.setFill(tile.getType().getColor());
+                //TODO: change exploration colors for guards and intruders just for fun
+                if (tile.getExploredGuard()) g.setFill(tile.getType().getColor());
+                else if (tile.getExploredIntruder()) g.setFill(tile.getType().getColor());
+                else g.setFill(tile.getType().getColor().darker().desaturate());
+
+//                if (!tile.getExploredGuard() || !tile.getExploredIntruder()) g.setFill(tile.getType() == WALL ? Color.gray(0.4) : tile.getType().getColor().darker().desaturate());
+//                else g.setFill(tile.getType().getColor());
 
                 paintTile(x, y);
             }
