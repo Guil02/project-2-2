@@ -143,8 +143,8 @@ public class ScenarioBuilder implements Builder<Scenario> {
 
     private void setAdjacent(){
         TileMap t = TILE_MAP;
-        for(int x = 0; x <= Scenario.WIDTH; x++){
-            for (int y = 0; y <= Scenario.HEIGHT; y++) {
+        for(int x = 0; x < Scenario.WIDTH; x++){
+            for (int y = 0; y < Scenario.HEIGHT; y++) {
                 if(t.getTile(x,y)!=null){
                     t.getTile(x,y).adjacent = createAdjacent(t,x,y);
                 }

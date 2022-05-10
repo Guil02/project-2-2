@@ -85,7 +85,6 @@ public class View extends ScrollPane {
         for (int y = 0; y < MAP_HEIGHT; y++){
             for(int x = 0; x < MAP_WIDTH; x++) {
                 Tile tile = TILE_MAP.getMap()[x][y];
-                //g.setFill(tile.explored ? tile.getType().getColor() : tile.getType().getColor().darker().desaturate());
 
                 //TODO: change exploration colors for guards and intruders just for fun
                 if (tile.getExploredGuard()) g.setFill(tile.getType().getColor());
@@ -103,10 +102,6 @@ public class View extends ScrollPane {
     private void paintTile(int x, int y) {
         g.fillRect(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
     }
-
-//    private void paintLine(int x, int y, Vector2D direction) {
-//        g.strokeLine(x + (x * TILE_SIZE), y + (y * TILE_SIZE), TILE_SIZE, TILE_SIZE);
-//    }
 
     private void paintTile(double x, double y) {
         paintTile((int) x, (int) y);

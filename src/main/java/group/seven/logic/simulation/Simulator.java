@@ -69,7 +69,6 @@ public class Simulator extends AnimationTimer {
         count++;
 
         update();           //update model
-        System.out.println("GAME MODE "+ Scenario.GAME_MODE);
         if (guiMode) {
             display.render();   //update GUI
             elapsedTimeSteps += timeStep; //update elapsed time steps
