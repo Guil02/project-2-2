@@ -12,4 +12,12 @@ public record Component(Rectangle area, TileType type, XY exit, Cardinal exitDir
     public boolean isPortal() {
         return exit != null && type == PORTAL;
     }
+
+    public int getX(){
+        return area().getX();
+    }
+
+    public int getY(){
+        return area().getY();
+    }
 }

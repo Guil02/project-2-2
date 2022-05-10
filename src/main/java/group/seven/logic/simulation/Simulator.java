@@ -27,27 +27,31 @@ import static group.seven.utils.Methods.print;
 public class Simulator extends AnimationTimer {
     public static Simulator sim;
     public static Random rand = new Random();
-    private final SimulationScreen display;
+    private SimulationScreen display = null;
     private int count = 0;
     private long prev; //used for frame-rate calculation (eventually)
     double elapsedTimeSteps;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
+    final boolean guiMode = true;
 
     public Simulator(Scenario scenario) {
         sim = this;
         spawnAgents(GAME_MODE);
         elapsedTimeSteps = 0;
-
-        display = new SimulationScreen();
-        Main.stage.setScene(new Scene(display));
-        Main.stage.centerOnScreen();
-
+        if (guiMode) {
+            display = new SimulationScreen();
+            Main.stage.setScene(new Scene(display));
+            Main.stage.centerOnScreen();
+        }
         //Either there's a bug in my GUI or in the Vision or in the way agents vision is tracked/stored
-        Arrays.stream(TILE_MAP.agents).forEach(Agent::updateVision);
-        display.render();
-
+        //Arrays.stream(TILE_MAP.agents).forEach(Agent::updateVision);
+        if (guiMode) {
+            display.render();
+        }
         prev = System.nanoTime();
-        start();
+        if (guiMode) {
+            start();
+        }
     }
 
     public static void pause() {
@@ -65,8 +69,11 @@ public class Simulator extends AnimationTimer {
         count++;
 
         update();           //update model
-        display.render();   //update GUI
-        elapsedTimeSteps += timeStep; //update elapsed time steps
+        System.out.println("GAME MODE "+ Scenario.GAME_MODE);
+        if (guiMode) {
+            display.render();   //update GUI
+            elapsedTimeSteps += timeStep; //update elapsed time steps
+        }
 
         //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
         if (((int)elapsedTimeSteps) % 10 == 0) {
@@ -96,6 +103,29 @@ public class Simulator extends AnimationTimer {
         CollisionHandler.handle(positionChangeMoves);
         for (Move move : rotationChangeMoves){
             move.agent().executeTurn(move);
+            move.agent().clearVision();
+            move.agent().updateVision();
+        }
+
+        //TODO: determine where to apply the moves to updated the model and the agent's internal model
+    }
+
+    /** FOR TESTING PURPOSE ONLY
+     * Called every timeStep to update the model.
+     * Collects each agent's moves, resolves collisions, updates their vision and applies to the model.
+     */
+    public void update(List<Move> allMoves) {
+        //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
+        //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
+        List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
+        List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
+
+
+        CollisionHandler.handle(positionChangeMoves);
+        for (Move move : rotationChangeMoves){
+            move.agent().executeTurn(move);
+            move.agent().clearVision();
+            move.agent().updateVision();
         }
 
         //TODO: determine where to apply the moves to updated the model and the agent's internal model
@@ -150,9 +180,11 @@ public class Simulator extends AnimationTimer {
             switch (agentType){
                 case INTRUDER -> {
                     agent = new Intruder(x,y);
+                    agent.updateVision();
                 }
                 case GUARD -> {
                     agent = new Guard(x,y);
+                    agent.updateVision();
                 }
                 default -> {
                     agent = null;

@@ -14,6 +14,9 @@ public class BrickAndMortar implements Algorithm {
 
     @Override
     public Move getNext() {
+
+
+
         return null;
     }
 

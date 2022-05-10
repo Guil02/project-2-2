@@ -1,32 +1,45 @@
 package group.seven.model.agents;
 
 
+import group.seven.enums.MarkerType;
+import group.seven.enums.PheromoneType;
 import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.algorithms.RandomMoves;
-import group.seven.logic.algorithms.RandomTest;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
+import group.seven.model.environment.Marker;
+import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
+import group.seven.model.environment.Tile;
+
+import java.util.List;
+
+import java.util.ArrayList;
 
 import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.TileType.GUARD;
 
 public class Guard extends Agent {
 
+    public final int PHEROMONELIFETIME = 20;
     private final int ID;
-    public int currentSpeed;
     private final int maxSpeed = (int) Scenario.GUARD_SPRINT_SPEED;
-    private Vision vision;
+    public int currentSpeed;
     Algorithm algorithm;
+    private Vision vision;
+    private ArrayList<Marker> markers = new ArrayList<>();
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
 
-    public Guard(int x, int y, Algorithm algorithm, int startSpeed, Vision vision) {
+    public Guard(int x, int y, Algorithm algorithm, int startSpeed, Vision vision, ArrayList<Marker> markers) {
         this(x, y);
         this.algorithm = algorithm;
         this.currentSpeed = startSpeed;
         this.vision = vision;
+        this.markers = markers;
     }
 
     public Guard(int x, int y) {
+        super(x,y);
         ID = newID();
         setX(x);
         setY(y);
@@ -37,12 +50,13 @@ public class Guard extends Agent {
         vision = new RectangleVision(this); //DEFAULT
 
         //algorithm = new RandomTest(this);
-        currentSpeed = 1;
+        currentSpeed = 3;
     }
 
     @Override
     public void updateVision() {
-        seenTiles.addAll(vision.updateAndGetVisionAgent(this));
+        List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
+        seenTiles = duplicatedTiles(seenTiles,newTiles);
         //print(seenTiles);
     }
 
@@ -60,6 +74,7 @@ public class Guard extends Agent {
     public int getCurrentSpeed() {
         return currentSpeed;
     }
+
 
     @Override
     public String toString() {
