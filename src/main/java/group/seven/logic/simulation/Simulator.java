@@ -119,7 +119,6 @@ public class Simulator extends AnimationTimer {
         List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
         List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
 
-
         CollisionHandler.handle(positionChangeMoves);
         for (Move move : rotationChangeMoves){
             move.agent().executeTurn(move);
@@ -130,19 +129,16 @@ public class Simulator extends AnimationTimer {
         //TODO: determine where to apply the moves to updated the model and the agent's internal model
     }
 
-    //TODO: clean up code. I refactored some stuff based on intellij but don't necessarily think its the best way
-    //  also I experimented with a different way of spawning agents using a creational pattern, but it's not final
+
     private void spawnAgents(GameMode gameMode) {
         print(gameMode);
         switch (gameMode) {
-            case EXPLORATION -> {
-                spawnAgents(GUARD);
-            }
+            case EXPLORATION -> spawnAgents(GUARD);
+
             case SINGLE_INTRUDER, MULTI_INTRUDER -> {
                 spawnAgents(GUARD);
                 spawnAgents(INTRUDER);
             }
-
         }
         print(Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
     }
@@ -172,23 +168,18 @@ public class Simulator extends AnimationTimer {
         }
 
         int i = 0;
-        while(i<number){
-            int x = point.x() + (int) (dx*Math.random());
-            int y = point.y() + (int) (dy*Math.random());
-            Agent agent;
-            switch (agentType){
-                case INTRUDER -> {
-                    agent = new Intruder(x,y);
-                    agent.updateVision();
-                }
-                case GUARD -> {
-                    agent = new Guard(x,y);
-                    agent.updateVision();
-                }
-                default -> {
-                    agent = null;
-                }
-            }
+        while(i < number){
+            int x = point.x() + (int) (dx * Math.random());
+            int y = point.y() + (int) (dy * Math.random());
+
+            Agent agent = switch (agentType) {
+                case INTRUDER -> new Intruder(x,y);
+                case GUARD -> new Guard(x,y);
+                default -> throw new IllegalStateException("Unexpected value: " + agentType);
+                //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
+            };
+
+            agent.updateVision();
             TILE_MAP.addAgent(agent);
             print("added "+agentType.name()+" : " + agent.getID());
             i++;
