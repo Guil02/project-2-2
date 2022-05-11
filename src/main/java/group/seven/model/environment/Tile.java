@@ -90,6 +90,10 @@ public class Tile {
         return exploredIntruderProperty.get();
     }
 
+    public Adjacent<Tile> getAdjacent() {
+        return this.adjacent;
+    }
+
 
     /**
      * //TODO: check if theres a fancier way to store this information or more efficient data structure

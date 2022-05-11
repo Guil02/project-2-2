@@ -36,6 +36,7 @@ public abstract class Agent {
     private TileNode[][] map;
     //Type
     boolean ignorePortal = false;
+    boolean isTeleported = false;
 
     //Current Speed
     //Strategy
@@ -244,6 +245,14 @@ public abstract class Agent {
             Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
             pheromones.add(pheromone);
         }
+    }
+
+    public void setTeleported(boolean isTeleported) {
+        this.isTeleported = isTeleported;
+    }
+
+    public boolean getIsTeleported() {
+        return this.isTeleported;
     }
 
 }
