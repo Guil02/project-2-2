@@ -9,6 +9,7 @@ import group.seven.model.agents.Move;
 import group.seven.model.environment.Marker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BrickAndMortar implements Algorithm {
 
@@ -125,6 +126,26 @@ public class BrickAndMortar implements Algorithm {
         }
 
 
+        return null;
+    }
+
+
+    /**
+     * A method to return a marker located at a specified (x,y) position
+     *
+     * @param markers a list of markers
+     * @param x the x coordinate where you want to check for a marker
+     * @param y the y coordinate where you want to check for a marker
+     * @return the marker at the given (x,y) position. Will return null if there is no marker.
+     */
+    public Marker getMarker(List<Marker> markers, int x, int y){
+        for(Marker marker : markers){
+            if(marker.getXY().x()==x && marker.getXY().y()==y){
+                return marker;
+            }
+        }
+
+        // returns null if there is no marker at given x and  y
         return null;
     }
 

@@ -223,7 +223,7 @@ public abstract class Agent {
 
     public void addMarker(MarkerType type) {
         if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
-            Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection());
+            Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection().flip());
             markers.add(marker);
         }
     }
