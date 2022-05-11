@@ -9,6 +9,7 @@ import group.seven.model.agents.Move;
 import group.seven.model.environment.Marker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BrickAndMortar implements Algorithm {
@@ -42,6 +43,7 @@ public class BrickAndMortar implements Algorithm {
 
     public Move MultipleDepthFirstSearch() {
 
+
         ArrayList<Marker> markers = agent.getMarkers();
 
         Marker currentCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY());
@@ -65,71 +67,82 @@ public class BrickAndMortar implements Algorithm {
         // then
         //go to one of them randomly
 
+        ArrayList<Marker> adjacentMarkers = new ArrayList<>();
+        adjacentMarkers.add(northCellMarker);
+        adjacentMarkers.add(southCellMarker);
+        adjacentMarkers.add(westCellMarker);
+        adjacentMarkers.add(eastCellMarker);
+        Collections.shuffle(adjacentMarkers);
 
-        if (eastCellMarker != null) {
 
-            if (!(eastCellMarker.getType() == MarkerType.EXPLORED || eastCellMarker.getType() == MarkerType.VISITED)) {
+        for (int i = 0; i < adjacentMarkers.size(); i++) {
+
+            if (eastCellMarker != null && adjacentMarkers.get(i) == eastCellMarker) {
+
+                if (!(eastCellMarker.getType() == MarkerType.EXPLORED || eastCellMarker.getType() == MarkerType.VISITED)) {
 
 
-                Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
-                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                moves.add(move1);
-                moves.add(move2);
+                    Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
 
-                Move moveToExec = moves.get(0);
-                moves.remove(0);
-                return moveToExec;
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
+                }
+
             }
 
-        }
-
-        if (westCellMarker != null) {
+            if (westCellMarker != null && adjacentMarkers.get(i) == westCellMarker) {
 
 
-            if (!(westCellMarker.getType() == MarkerType.EXPLORED || westCellMarker.getType() == MarkerType.VISITED)) {
+                if (!(westCellMarker.getType() == MarkerType.EXPLORED || westCellMarker.getType() == MarkerType.VISITED)) {
 
-                Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
-                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                moves.add(move1);
-                moves.add(move2);
+                    Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
 
-                Move moveToExec = moves.get(0);
-                moves.remove(0);
-                return moveToExec;
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
+                }
             }
-        }
 
 
-        if (northCellMarker != null) {
+            if (northCellMarker != null && adjacentMarkers.get(i) == northCellMarker) {
 
 
-            if (!(northCellMarker.getType() == MarkerType.EXPLORED || northCellMarker.getType() == MarkerType.VISITED)) {
+                if (!(northCellMarker.getType() == MarkerType.EXPLORED || northCellMarker.getType() == MarkerType.VISITED)) {
 
-                Move move1 = new Move(Action.TURN_UP, 0, this.agent);
-                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                moves.add(move1);
-                moves.add(move2);
+                    Move move1 = new Move(Action.TURN_UP, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
 
-                Move moveToExec = moves.get(0);
-                moves.remove(0);
-                return moveToExec;
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
+                }
             }
-        }
 
-        if (southCellMarker != null) {
+            if (southCellMarker != null && adjacentMarkers.get(i) == southCellMarker) {
 
 
-            if (!(southCellMarker.getType() == MarkerType.EXPLORED || southCellMarker.getType() == MarkerType.VISITED)) {
+                if (!(southCellMarker.getType() == MarkerType.EXPLORED || southCellMarker.getType() == MarkerType.VISITED)) {
 
-                Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
-                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                moves.add(move1);
-                moves.add(move2);
+                    Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
 
-                Move moveToExec = moves.get(0);
-                moves.remove(0);
-                return moveToExec;
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
+                }
             }
+
         }
 
 
@@ -225,5 +238,3 @@ public class BrickAndMortar implements Algorithm {
         return AlgorithmType.BRICK_AND_MORTAR;
     }
 }
-
-//TODO optimize 9-11,5,7
