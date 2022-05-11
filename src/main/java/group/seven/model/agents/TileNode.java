@@ -24,7 +24,7 @@ public class TileNode {
     List<Marker> markers;
     Adjacent<TileNode> adjacent;
 
-    public TileNode(Tile tile, Agent a){
+    public TileNode(Tile tile, Agent a){ //internal representation for agents map  with 'adjacent'
         this.agent = a;
         for(Agent agent: Scenario.TILE_MAP.agents){
             if(agent.x==tile.getX()&& agent.y==tile.getY()){

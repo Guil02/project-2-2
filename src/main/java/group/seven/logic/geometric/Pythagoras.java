@@ -1,13 +1,15 @@
 package group.seven.logic.geometric;
 
 import group.seven.enums.Cardinal;
+import javafx.geometry.Point2D;
+
 
 import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.Cardinal.SOUTH;
 
 public class Pythagoras {
     public static double getAnglePythagoras(int x1, int y1, int x2, int y2){
-        double angle = 0;
+        double angle = 0; //degrees
         if (x1 != x2 && y1 != y2) { //checking so that no division by 0 happens
             double adjacent = Math.abs(x1 - x2);
             double opposite = Math.abs(y1 - y2);
@@ -32,11 +34,11 @@ public class Pythagoras {
                 orientationToGoal = SOUTH;
             }
         }else {
-            if ((angle<45 && angle>0) || (angle>315 && angle<360 )){
+            if ((angle<45 && angle>0) || (angle>=315 && angle<=360 )){
                 orientationToGoal = EAST;
-            } else if ((angle>45 && angle<135)) {
+            } else if ((angle>=45 && angle<=135)) {
                 orientationToGoal = NORTH;
-            }else if ((angle>135 && angle<225)) {
+            }else if ((angle>135 && angle<=225)) {
                 orientationToGoal = WEST;
             } else {
                 orientationToGoal = SOUTH;

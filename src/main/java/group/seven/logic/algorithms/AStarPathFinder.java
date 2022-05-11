@@ -29,7 +29,7 @@ public class AStarPathFinder {
 
 
 
-    public AStarPathFinder(Agent player, XY goal ) {
+    public AStarPathFinder(Agent player, XY goal) {
         this.target = new AStarNode(goal, this);
         open = new ArrayList<>();
         closed = new ArrayList<>();
