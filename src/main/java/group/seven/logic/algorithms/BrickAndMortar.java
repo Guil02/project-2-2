@@ -20,16 +20,6 @@ public class BrickAndMortar implements Algorithm {
         this.agent = agent;
     }
 
-    public static Move executeMove(ArrayList<Move> moves) {
-
-        if (!moves.isEmpty()) {
-            Move moveToExec = moves.get(0);
-            moves.remove(0);
-            return moveToExec;
-        }
-
-        return null;
-    }
 
     @Override
     public Move getNext() {
