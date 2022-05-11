@@ -12,11 +12,23 @@ import java.util.ArrayList;
 
 public class BrickAndMortar implements Algorithm {
 
+    ArrayList<Move> moves = new ArrayList<>();
     private Agent agent;
     private boolean flag = false;
 
     public BrickAndMortar(Agent agent) {
         this.agent = agent;
+    }
+
+    public static Move executeMove(ArrayList<Move> moves) {
+
+        if (!moves.isEmpty()) {
+            Move moveToExec = moves.get(0);
+            moves.remove(0);
+            return moveToExec;
+        }
+
+        return null;
     }
 
     @Override
@@ -26,6 +38,14 @@ public class BrickAndMortar implements Algorithm {
         //TileNode tileNode = new TileNode(tile);
         ArrayList<Marker> markers = agent.getMarkers();
 
+
+        if (!moves.isEmpty()) {
+
+            Move moveToExec = moves.get(0);
+            moves.remove(0);
+            return moveToExec;
+
+        }
 
         //if the current cell is unexplored then
         //2: mark it as explored
@@ -51,8 +71,15 @@ public class BrickAndMortar implements Algorithm {
 
                 if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
 
-                    Move move = new Move();
-                    return move;
+
+                    Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
+
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
                 }
 
             }
@@ -61,8 +88,14 @@ public class BrickAndMortar implements Algorithm {
 
                 if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
 
-                    Move move = new Move();
-                    return move;
+                    Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
+
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
                 }
             }
 
@@ -71,8 +104,14 @@ public class BrickAndMortar implements Algorithm {
 
                 if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
 
-                    Move move = new Move();
-                    return move;
+                    Move move1 = new Move(Action.TURN_UP, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
+
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
                 }
             }
 
@@ -81,8 +120,14 @@ public class BrickAndMortar implements Algorithm {
 
                 if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
 
-                    Move move = new Move();
-                    return move;
+                    Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
+
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
                 }
             }
 
@@ -97,16 +142,44 @@ public class BrickAndMortar implements Algorithm {
                 if (markers.get(i).getId() == agent.getID()) {
                     markers.get(i).setType(MarkerType.VISITED);
                     if (markers.get(i).getCardinal() == Cardinal.NORTH) {
-                        return new Move(Action.TURN_DOWN, 1, this.agent);
+                        Move move1 = new Move(Action.TURN_UP, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
+
+                        Move moveToExec = moves.get(0);
+                        moves.remove(0);
+                        return moveToExec;
                     } else if (markers.get(i).getCardinal() == Cardinal.SOUTH) {
 
-                        return new Move(Action.TURN_UP, 1, this.agent);
+                        Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
+
+                        Move moveToExec = moves.get(0);
+                        moves.remove(0);
+                        return moveToExec;
                     } else if (markers.get(i).getCardinal() == Cardinal.WEST) {
 
-                        return new Move(Action.TURN_RIGHT, 1, this.agent);
+                        Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
+
+                        Move moveToExec = moves.get(0);
+                        moves.remove(0);
+                        return moveToExec;
                     } else {
 
-                        return new Move(Action.TURN_LEFT, 1, this.agent);
+                        Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
+
+                        Move moveToExec = moves.get(0);
+                        moves.remove(0);
+                        return moveToExec;
                     }
 
                 }
@@ -128,8 +201,11 @@ public class BrickAndMortar implements Algorithm {
         return null;
     }
 
+
     @Override
     public AlgorithmType getType() {
         return AlgorithmType.BRICK_AND_MORTAR;
     }
 }
+
+//TODO optimize 9-11,5,7
