@@ -19,7 +19,7 @@ public abstract class Agent {
     private static int IDs = 0;
     public final int PHEROMONELIFETIME = 20;
     //Type
-    public final XY initialPosition;
+    public final XY initialPosition; //spawining
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
     //Pose
@@ -35,7 +35,6 @@ public abstract class Agent {
     //Internal map
     private TileNode[][] map;
     //Type
-    public final XY initialPosition; //spawining
     boolean ignorePortal = false;
 
     //Current Speed

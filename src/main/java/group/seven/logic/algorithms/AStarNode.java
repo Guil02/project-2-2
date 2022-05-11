@@ -7,9 +7,10 @@ public class AStarNode {
     private int gCost = Integer.MAX_VALUE;
     private int fCost = Integer.MAX_VALUE;
     private int hCost = Integer.MAX_VALUE;
+    private int rCost = Integer.MAX_VALUE;
     private AStarNode parent;
     private AStarPathFinder aStarPath;
-    private AStarGoalFinder aStarGoal;
+    private AStarAlgorithm aStarGoal;
 
     // TODO: if bugs, check this
     public AStarNode(XY xy, AStarPathFinder aStarPath) {
@@ -17,7 +18,7 @@ public class AStarNode {
         this.parent = null;
         this.aStarPath = aStarPath;
     }
-    public AStarNode(XY xy, AStarGoalFinder aStarGoal) {
+    public AStarNode(XY xy, AStarAlgorithm aStarGoal) {
         this.coordinate = xy;
         this.parent = null;
         this.aStarGoal = aStarGoal;
@@ -39,12 +40,15 @@ public class AStarNode {
         }
     }
 
+    public void updateRCost(){
+        rCost= aStarGoal.rCost(this.coordinate);
+    }
 
     public void updateGCost(){
         if (aStarGoal == null ){
-            gCost = aStarPath.hCost(this.coordinate);
+            gCost = aStarPath.gCost(this.coordinate);
         } else {
-            gCost = aStarGoal.hCost(this.coordinate);
+            gCost = aStarGoal.gCost(this.coordinate);
 
         }
 
@@ -52,7 +56,11 @@ public class AStarNode {
 
 
     public void updateFCost(){
-        fCost = gCost+hCost;
+        if (aStarGoal == null ){
+            fCost = gCost+hCost - rCost;
+        } else {
+            fCost = gCost+hCost;
+        }
     }
 
     public XY getCoordinate() {
@@ -65,6 +73,9 @@ public class AStarNode {
         return fCost;
     }
 
+    public double getrCost(){
+        return rCost;
+    }
 
     public int getgCost() {
         return gCost;
@@ -73,6 +84,8 @@ public class AStarNode {
     public int gethCost() {
         return hCost;
     }
+
+
 
     public void setgCost(int gCost){ this.gCost = gCost; }
 

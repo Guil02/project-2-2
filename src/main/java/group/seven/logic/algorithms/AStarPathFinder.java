@@ -47,7 +47,11 @@ public class AStarPathFinder {
         List<AStarNode> closedNodes = new ArrayList<>();
         openedNodes.add(currentNode);
         currentNode.updateCost();
+        int count1 = 0;
+        int count2 = 0;
         while (!openedNodes.isEmpty()){
+            count1++;
+            System.out.println("count1 "+count1);
             AStarNode node = openedNodes.get(0);
             for(int i = 1; i < openedNodes.size(); i++){
                 if(openedNodes.get(i).getfCost() < node.getfCost()) {
@@ -60,6 +64,9 @@ public class AStarPathFinder {
                 }
             }
             openedNodes.remove(node);
+            System.out.println("agent"+player.getType());
+            System.out.println("opened size"+openedNodes.size());
+            System.out.println("closed size"+closedNodes.size());
             closedNodes.add(node);
 
             if(node.equals(target)){
@@ -78,6 +85,8 @@ public class AStarPathFinder {
                     neighbor.updateFCost();
                     neighbor.setParent(node);
                     if(!openedNodes.contains(neighbor)){
+                        count2++;
+                        System.out.println("count2 "+count2);
                         openedNodes.add(neighbor);
                     }
                 }

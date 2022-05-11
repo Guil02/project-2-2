@@ -3,10 +3,8 @@ package group.seven.model.agents;
 
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
-import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.BrickAndMortar;
-import group.seven.logic.algorithms.RandomMoves;
-import group.seven.logic.algorithms.RandomTest;
+import group.seven.logic.algorithms.*;
+import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
@@ -56,41 +54,19 @@ public class Intruder extends Agent {
         Rectangle goalLocationArea = Scenario.targetArea.area();
         double heightMediumPoint =  goalLocationArea.getHeight()/2;
         double widthMediumPoint = goalLocationArea.getWidth()/2;
-        double x = goalLocationArea.getX() + widthMediumPoint;
-        double y = goalLocationArea.getY() + heightMediumPoint;
-        double angle = 0;
-        if (x != this.x && y != this.y) { //checking so that no division by 0 happens
-            double adjacent = Math.abs(x- this.x);
-            double opposite = Math.abs(y- this.y);
-            angle = Math.atan(opposite/adjacent);
-            angle = Math.toDegrees(angle);
-        }
+        int x = (int)(goalLocationArea.getX() + widthMediumPoint);
+        int y = (int)(goalLocationArea.getY() + heightMediumPoint);
+        double angle = Pythagoras.getAnglePythagoras(x, y, this.x, this.y);
         //Update angle to goal, which is in degrees
         this.angleToGoal= angle;
 
-        if (angle == 0){  // Checking if goal is in front of agent
-           if (x > this.x && y == this.y){
-               this.orientationToGoal = EAST;
-           } else if (x < this.x && y == this.y){
-               this.orientationToGoal = WEST;
-           } else if (y < this.y && x == this.x){
-               this.orientationToGoal = NORTH;
-           } else {
-               this.orientationToGoal = SOUTH;
-           }
-       }else {
-           if ((angle<45 && angle>0) || (angle>315 && angle<360 )){
-               this.orientationToGoal = EAST;
-           } else if ((angle>45 && angle<135)) {
-               this.orientationToGoal = NORTH;
-           }else if ((angle>135 && angle<225)) {
-               this.orientationToGoal = WEST;
-           } else {
-               this.orientationToGoal = SOUTH;
-           }
-       }
+       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.x ,this.y, x, y);
 
     }
+
+
+
+
 
     public Cardinal getOrientationToGoal(){
         return this.orientationToGoal;

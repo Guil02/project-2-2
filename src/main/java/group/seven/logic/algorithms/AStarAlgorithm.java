@@ -1,19 +1,22 @@
 package group.seven.logic.algorithms;
 
+import group.seven.enums.AlgorithmType;
+import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.XY;
-import group.seven.model.agents.Agent;
+import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
 import group.seven.model.agents.TileNode;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
-import group.seven.model.environment.TileMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static group.seven.enums.Action.NOTHING;
+import static group.seven.enums.AlgorithmType.A_STAR;
 import static group.seven.enums.TileType.*;
 
-public class AStarGoalFinder {
+public class AStarAlgorithm implements Algorithm {
 
     private final int initialX;
     private final int initialY;
@@ -21,7 +24,7 @@ public class AStarGoalFinder {
     private final TileNode[][] playerMap;
     private AStarNode current;
     private AStarNode target;
-    private Agent player;
+    private Intruder player;
     List<Move> movesLeft;
     List<AStarNode> open;
     List<AStarNode> closed;
@@ -29,7 +32,7 @@ public class AStarGoalFinder {
 
 
 
-    public AStarGoalFinder(Agent player) {
+    public AStarAlgorithm(Intruder player) {
         this.initialX = player.initialPosition.x();
         this.initialY =  player.initialPosition.y();;
         open = new ArrayList<>();
@@ -90,22 +93,17 @@ public class AStarGoalFinder {
             for(Tile grid: grids){
                 if(grid.getSeen().get(player.getID())){
                     AStarNode node = new AStarNode(grid.getXy(),  this);
-
-                    if(open.contains(node) || closed.contains(node) || (grid.getType()!=EMPTY && grid.getType()==WALL) || (player.getIgnoreTeleport() && grid.getType()==PORTAL)){
+                    if(open.contains(node) || closed.contains(node) || (grid.getType()!=EMPTY && grid.getType()==WALL) || (player.getIgnorePortal() && grid.getType()==PORTAL)){
                         continue;
                     }
                     open.add(node);
                     if((grid.getType()!=EMPTY  && grid.getType()==PORTAL)){ // makes the teleporter be adjacent to the new location. So the agent is aware of where it has been.
-                        XY teleportTarget = grid.g
-
-                             //   ((Teleporter)grid.getStaticComponent()).getTarget();
-                        playerMap[grid.getX()][grid.getY()] = grid;
-                        playerMap[(int) teleportTarget.x][(int) teleportTarget.y] = map[(int) teleportTarget.x][(int) teleportTarget.y];
-//                        node.setX((int) teleportTarget.x);
-//                        node.setY((int) teleportTarget.y);
+                        Tile exit = grid.getAdjacent().targetLocation();
+                        playerMap[grid.getX()][grid.getY()]= new TileNode(grid,player);
+                        playerMap[exit.getX()][exit.getY()] = new TileNode(map[exit.getX()][exit.getY()],player);
                     }
                     else{
-                        playerMap[grid.getX()][grid.getY()]=grid;
+                        playerMap[grid.getX()][grid.getY()]= new TileNode(grid,player);
                     }
                 }
             }
@@ -113,7 +111,7 @@ public class AStarGoalFinder {
         int lowestValue = Integer.MAX_VALUE;
         AStarNode currentTarget = null;
         for(AStarNode node: open){
-            node.updateCost(ASTAR_TARGET);
+            node.updateCost();
             if(node.getfCost()<lowestValue){
                 currentTarget = node;
                 lowestValue = node.getfCost();
@@ -129,9 +127,6 @@ public class AStarGoalFinder {
     }
 
 
-
-
-
     public int gCost(XY xy) {
         return (Math.abs(initialX - xy.x()) + Math.abs(initialY - xy.y()));
     }
@@ -142,6 +137,53 @@ public class AStarGoalFinder {
     }
 
 
+    public int rCost (XY xy){ //xy = current frontier node tested
+        double angleCurrentNode = Pythagoras.getAnglePythagoras(xy.x(), xy.y(), current.getX(), current.getY());
+        double angleOrientation = player.getAngleToGoal();
+        return (int)Math.round((Math.abs(angleOrientation- angleCurrentNode)));
+    }
 
+    @Override
+    public Move getNext() {
+
+        if(player.getIsTeleported()){
+            movesLeft.clear();
+            player.setTeleported(false);
+            playerMap[current.getX()][current.getY()] = new TileNode(map[current.getX()][current.getY()], player);
+        }
+        if(movesLeft.isEmpty()){
+            if(target!=null) {
+                current = target;
+            }
+
+            target = findTarget();
+            System.out.println(target.getX());
+            System.out.println(target.getY());
+
+            if(target == null){
+                movesLeft.add(new Move(NOTHING,0, player));
+            }
+            else{
+                AStarPathFinder aStarPathFinder = new AStarPathFinder(player, target.getCoordinate());
+                movesLeft = aStarPathFinder.findPath();
+            }
+        }
+        Move move = new Move(NOTHING, 0,player);
+        System.out.println("move return "+move);
+        try{
+            move = movesLeft.get(0);
+        }
+        catch(IndexOutOfBoundsException ignore){
+        }
+        if(!movesLeft.isEmpty())
+            movesLeft.remove(0);
+
+        return move;
+    }
+
+    @Override
+    public AlgorithmType getType() {
+        return A_STAR;
+    }
 
 }
