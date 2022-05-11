@@ -75,9 +75,9 @@ public class BrickAndMortar implements Algorithm {
         Collections.shuffle(adjacentMarkers);
 
 
-        for (int i = 0; i < adjacentMarkers.size(); i++) {
+        for (Marker adjacentMarker : adjacentMarkers) {
 
-            if (eastCellMarker != null && adjacentMarkers.get(i) == eastCellMarker) {
+            if (eastCellMarker != null && adjacentMarker == eastCellMarker) {
 
                 if (!(eastCellMarker.getType() == MarkerType.EXPLORED || eastCellMarker.getType() == MarkerType.VISITED)) {
 
@@ -94,7 +94,7 @@ public class BrickAndMortar implements Algorithm {
 
             }
 
-            if (westCellMarker != null && adjacentMarkers.get(i) == westCellMarker) {
+            if (westCellMarker != null && adjacentMarker == westCellMarker) {
 
 
                 if (!(westCellMarker.getType() == MarkerType.EXPLORED || westCellMarker.getType() == MarkerType.VISITED)) {
@@ -111,7 +111,7 @@ public class BrickAndMortar implements Algorithm {
             }
 
 
-            if (northCellMarker != null && adjacentMarkers.get(i) == northCellMarker) {
+            if (northCellMarker != null && adjacentMarker == northCellMarker) {
 
 
                 if (!(northCellMarker.getType() == MarkerType.EXPLORED || northCellMarker.getType() == MarkerType.VISITED)) {
@@ -127,7 +127,7 @@ public class BrickAndMortar implements Algorithm {
                 }
             }
 
-            if (southCellMarker != null && adjacentMarkers.get(i) == southCellMarker) {
+            if (southCellMarker != null && adjacentMarker == southCellMarker) {
 
 
                 if (!(southCellMarker.getType() == MarkerType.EXPLORED || southCellMarker.getType() == MarkerType.VISITED)) {
