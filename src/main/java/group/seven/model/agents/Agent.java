@@ -221,11 +221,21 @@ public abstract class Agent {
         return new XY(x - initialPosition.x(), y - initialPosition.y());
     }
 
+    /**
+     * This function adds a marker to the list of markers.
+     *
+     * @param type The type of marker to add.
+     */
     public void addMarker(MarkerType type) {
         Marker marker = new Marker(this.getX(), this.getY(), type, getID(), getDirection());
         markers.add(marker);
     }
 
+    /**
+     * > This function creates a new pheromone object and adds it to the list of pheromones
+     *
+     * @param type The type of pheromone that is being added.
+     */
     public void addPheromone(PheromoneType type) {
         Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
         pheromones.add(pheromone);                             //TODO depending on what our agent wants add some properties to the pheromones in the future

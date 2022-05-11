@@ -6,10 +6,8 @@ import group.seven.enums.Cardinal;
 import group.seven.enums.MarkerType;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.agents.TileNode;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Scenario;
-import group.seven.model.environment.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,12 +24,18 @@ public class BrickAndMortar implements Algorithm {
     }
 
 
+    /**
+     * The function first checks if the moves list is empty. If it is, it calls the multipleDepthFirstSearch() function. If
+     * it isn't, it returns the first move in the list
+     *
+     * @return The next move in the list of moves.
+     */
     @Override
     public Move getNext() {
 
         //Tile tile = new Tile(agent.getX(), agent.getY());
         //TileNode tileNode = new TileNode(tile);
-        if(moves.isEmpty()){
+        if (moves.isEmpty()) {
             multipleDepthFirstSearch();
         }
 
@@ -41,6 +45,10 @@ public class BrickAndMortar implements Algorithm {
         return moveToExec;
     }
 
+    /**
+     * If there are unexplored cells around, then go to one of them randomly. If the current cell is marked with your ID,
+     * then mark it as visited and go to the parent cell. Else, go to one of the explored cells randomly
+     */
     protected void multipleDepthFirstSearch() {
 
 
@@ -173,23 +181,20 @@ public class BrickAndMortar implements Algorithm {
         RandomMoves randomMoves = new RandomMoves(this.agent); //while a* is not done just make a random move
         moves.add(randomMoves.getNext());
 
-//        for (int i = 0; i < agent.getMarkers().size(); i++) {
-//            if (markers.get(i).getType() == MarkerType.EXPLORED) {
-//
-//                //TODO think about it using A* probably
-//
-//            }
-//        }
+        for (Marker marker : agent.getMarkers()) {
+            if (marker.getType() == MarkerType.EXPLORED) {
+                //TODO A* or D*
 
-    //    return null;
+            }
+        }
+
     }
 
     /**
      * This method generates the next move that needs to be done according to the Brick and Mortar without loop
      * closure. The moves are added to the move list {@link BrickAndMortar#moves}
-     *
      */
-    public void BAMWithoutLoopClosure(){
+    public void BAMWithoutLoopClosure() {
 
     }
 
