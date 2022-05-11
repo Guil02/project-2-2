@@ -25,7 +25,7 @@ public class Tile {
     // Lists keep track of which agent has seen the tile
     List<Boolean> seen;
     //Graph
-    Adjacent adjacent;
+    public Adjacent<Tile> adjacent;
 
     public Tile() {
         type = EMPTY;
@@ -65,7 +65,7 @@ public class Tile {
 
     //public void setAdjacent(Tile[] adjacent) { this.adjacent = adjacent;}
     public void setAdjacent(Tile north, Tile east, Tile south, Tile west, Tile target) {
-        this.adjacent = new Adjacent(north, east, south, west, target);
+        this.adjacent = new Adjacent<>(north, east, south, west, target);
     }
 
     public BooleanProperty exploredGuardProperty() {

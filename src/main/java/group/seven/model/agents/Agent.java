@@ -40,6 +40,7 @@ public abstract class Agent {
 
     public Agent(int x, int y) {
         initialPosition = new XY(x, y);
+        initializeMap();
     }
 
     public abstract Move calculateMove();
@@ -192,19 +193,24 @@ public abstract class Agent {
 
     //
     public void initializeMap() {
-        map = new TileNode[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
+        map = new TileNode[Scenario.WIDTH][Scenario.HEIGHT];
     }
 
     public void updateMap() {
         for (Tile tile : seenTiles) {
             if (map[tile.getX()][tile.getY()] != null) {
                 map[tile.getX()][tile.getY()].update();
-            } else map[tile.getX()][tile.getY()] = new TileNode(tile);
+            } else map[tile.getX()][tile.getY()] = new TileNode(tile, this);
         }
     }
 
     public TileNode getMapPosition(int x, int y) {
-        return map[x][y];
+        try{
+            return map[x][y];
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     public TileNode[][] getMap() {
