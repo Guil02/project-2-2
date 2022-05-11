@@ -27,14 +27,6 @@ public class BrickAndMortar implements Algorithm {
 
         //Tile tile = new Tile(agent.getX(), agent.getY());
         //TileNode tileNode = new TileNode(tile);
-        ArrayList<Marker> markers = agent.getMarkers();
-
-        Marker currentCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY());
-        Marker eastCellMarker = getMarker(agent.getMarkers(), agent.getX() + 1, agent.getY());
-        Marker westCellMarker = getMarker(agent.getMarkers(), agent.getX() - 1, agent.getY());
-        Marker northCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() + 1);
-        Marker southCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() - 1);
-
 
         if (!moves.isEmpty()) {
 
@@ -43,6 +35,20 @@ public class BrickAndMortar implements Algorithm {
             return moveToExec;
 
         }
+
+
+        return null;
+    }
+
+    public Move MultipleDepthFirstSearch() {
+
+        ArrayList<Marker> markers = agent.getMarkers();
+
+        Marker currentCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY());
+        Marker eastCellMarker = getMarker(agent.getMarkers(), agent.getX() + 1, agent.getY());
+        Marker westCellMarker = getMarker(agent.getMarkers(), agent.getX() - 1, agent.getY());
+        Marker northCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() + 1);
+        Marker southCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() - 1);
 
         //if the current cell is unexplored then
         //2: mark it as explored
@@ -191,10 +197,8 @@ public class BrickAndMortar implements Algorithm {
             }
         }
 
-
         return null;
     }
-
 
     /**
      * A method to return a marker located at a specified (x,y) position
