@@ -24,7 +24,7 @@ public abstract class Agent {
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
     //Pose
-    public int x, y; //You can use this if the property stuff confuses
+    public int x, y; //You can use this for updated coordinates
     //Type
     public TileType agentType;
     protected Cardinal direction;
@@ -36,7 +36,8 @@ public abstract class Agent {
     //Internal map
     private TileNode[][] map;
     //Type
-    public final XY initialPosition;
+    public final XY initialPosition; //spawining
+    boolean ignorePortal = false;
 
     //Current Speed
     //Strategy
@@ -44,6 +45,8 @@ public abstract class Agent {
     public Agent(int x, int y){
         initialPosition = new XY(x,y);
     }
+
+
 
     public abstract Move calculateMove();
 
@@ -60,6 +63,14 @@ public abstract class Agent {
     public void moveTo(XY pos) {
         this.x = pos.x();
         this.y = pos.y();
+    }
+
+    public void setIgnorePortal(boolean ignorePortal){  // TODO: handle by simulator
+        this.ignorePortal = ignorePortal;
+    }
+
+    public boolean getIgnorePortal() {
+        return this.ignorePortal;
     }
 
     public void executeTurn(Move move) {

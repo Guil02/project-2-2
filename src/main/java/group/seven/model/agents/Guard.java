@@ -35,6 +35,8 @@ public class Guard extends Agent {
         this.markers = markers;
     }
 
+
+
     public Guard(int x, int y) {
         super(x,y);
         ID = newID();

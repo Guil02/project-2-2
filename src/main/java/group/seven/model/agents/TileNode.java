@@ -37,4 +37,8 @@ public class TileNode {
             }
         }
     }
+
+    public TileType getType(){
+        return type;
+    }
 }

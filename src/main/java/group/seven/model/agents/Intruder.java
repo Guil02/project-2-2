@@ -7,12 +7,14 @@ import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.algorithms.RandomMoves;
 import group.seven.logic.algorithms.RandomTest;
+import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
+import javafx.geometry.Orientation;
 
-import static group.seven.enums.Cardinal.SOUTH;
+import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.TileType.INTRUDER;
 
 public class Intruder extends Agent {
@@ -22,10 +24,15 @@ public class Intruder extends Agent {
     private final int maxSpeed = (int) Scenario.INTRUDER_SPRINT_SPEED;
     private Vision vision;
     Algorithm algorithm;
+    private Cardinal orientationToGoal;
+    private double angleToGoal;  // in degrees
 
-    public Intruder(int x, int y, Algorithm algorithm) {
+
+    public Intruder(int x, int y, Algorithm algorithm) { //TODO: fix and finish
         this(x, y);
         this.algorithm = algorithm;
+        updateOrientationToGoal();
+
     }
 
     public Intruder(int x, int y) {
@@ -38,8 +45,56 @@ public class Intruder extends Agent {
         direction = SOUTH;      //DEFAULT
         algorithm = new RandomMoves(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
-
+        updateOrientationToGoal();
         currentSpeed = 3;
+    }
+
+    public void updateOrientationToGoal (){
+        Rectangle goalLocationArea = Scenario.targetArea.area();
+        double heightMediumPoint =  goalLocationArea.getHeight()/2;
+        double widthMediumPoint = goalLocationArea.getWidth()/2;
+        double x = goalLocationArea.getX() + widthMediumPoint;
+        double y = goalLocationArea.getY() + heightMediumPoint;
+        double angle = 0;
+        if (x != this.x && y != this.y) { //checking so that no division by 0 happens
+            double adjacent = Math.abs(x- this.x);
+            double opposite = Math.abs(y- this.y);
+            angle = Math.atan(opposite/adjacent);
+            angle = Math.toDegrees(angle);
+        }
+        //Update angle to goal, which is in degrees
+        this.angleToGoal= angle;
+
+        if (angle == 0){  // Checking if goal is in front of agent
+           if (x > this.x && y == this.y){
+               this.orientationToGoal = EAST;
+           } else if (x < this.x && y == this.y){
+               this.orientationToGoal = WEST;
+           } else if (y < this.y && x == this.x){
+               this.orientationToGoal = NORTH;
+           } else {
+               this.orientationToGoal = SOUTH;
+           }
+       }else {
+           if ((angle<45 && angle>0) || (angle>315 && angle<360 )){
+               this.orientationToGoal = EAST;
+           } else if ((angle>45 && angle<135)) {
+               this.orientationToGoal = NORTH;
+           }else if ((angle>135 && angle<225)) {
+               this.orientationToGoal = WEST;
+           } else {
+               this.orientationToGoal = SOUTH;
+           }
+       }
+
+    }
+
+    public Cardinal getOrientationToGoal(){
+        return this.orientationToGoal;
+    }
+
+    public double getAngleToGoal(){
+        return this.angleToGoal;
     }
 
     @Override
