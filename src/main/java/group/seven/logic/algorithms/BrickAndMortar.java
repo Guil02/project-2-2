@@ -29,6 +29,12 @@ public class BrickAndMortar implements Algorithm {
         //TileNode tileNode = new TileNode(tile);
         ArrayList<Marker> markers = agent.getMarkers();
 
+        Marker currentCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY());
+        Marker eastCellMarker = getMarker(agent.getMarkers(), agent.getX() + 1, agent.getY());
+        Marker westCellMarker = getMarker(agent.getMarkers(), agent.getX() - 1, agent.getY());
+        Marker northCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() + 1);
+        Marker southCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() - 1);
+
 
         if (!moves.isEmpty()) {
 
@@ -42,12 +48,10 @@ public class BrickAndMortar implements Algorithm {
         //2: mark it as explored
         //3: annotate the cell with your ID
         //4: annotate the cell with the direction of the previous cell
-        for (int i = 0; i < agent.getMarkers().size(); i++) {
-            if (markers.get(i).getXCoordinate() == agent.getX() && markers.get(i).getYCoordinate() == agent.getY()) {
-                if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
-                    agent.addMarker(MarkerType.EXPLORED);
-                }
-            }
+        if (currentCellMarker != null && (!(currentCellMarker.getType() == MarkerType.EXPLORED || currentCellMarker.getType() == MarkerType.VISITED))) {
+
+            agent.addMarker(MarkerType.EXPLORED);
+
         }
 
 
@@ -55,13 +59,112 @@ public class BrickAndMortar implements Algorithm {
         // then
         //go to one of them randomly
 
-        for (int i = 0; i < agent.getMarkers().size(); i++) {
+
+        if (eastCellMarker != null) {
+
+            if (!(eastCellMarker.getType() == MarkerType.EXPLORED || eastCellMarker.getType() == MarkerType.VISITED)) {
 
 
-            if (markers.get(i).getXCoordinate() == agent.getX() + 1 && markers.get(i).getYCoordinate() == agent.getY()) {
+                Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
+                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                moves.add(move1);
+                moves.add(move2);
 
-                if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
+                Move moveToExec = moves.get(0);
+                moves.remove(0);
+                return moveToExec;
+            }
 
+        }
+
+        if (westCellMarker != null) {
+
+
+            if (!(westCellMarker.getType() == MarkerType.EXPLORED || westCellMarker.getType() == MarkerType.VISITED)) {
+
+                Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
+                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                moves.add(move1);
+                moves.add(move2);
+
+                Move moveToExec = moves.get(0);
+                moves.remove(0);
+                return moveToExec;
+            }
+        }
+
+
+        if (northCellMarker != null) {
+
+
+            if (!(northCellMarker.getType() == MarkerType.EXPLORED || northCellMarker.getType() == MarkerType.VISITED)) {
+
+                Move move1 = new Move(Action.TURN_UP, 0, this.agent);
+                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                moves.add(move1);
+                moves.add(move2);
+
+                Move moveToExec = moves.get(0);
+                moves.remove(0);
+                return moveToExec;
+            }
+        }
+
+        if (southCellMarker != null) {
+
+
+            if (!(southCellMarker.getType() == MarkerType.EXPLORED || southCellMarker.getType() == MarkerType.VISITED)) {
+
+                Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
+                Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                moves.add(move1);
+                moves.add(move2);
+
+                Move moveToExec = moves.get(0);
+                moves.remove(0);
+                return moveToExec;
+            }
+        }
+
+
+        //if the current cell is marked with your ID then
+        //10: mark it as visited
+        //11: go to the parent cell
+
+
+        if (currentCellMarker != null) {
+            if (currentCellMarker.getId() == agent.getID()) {
+                currentCellMarker.setType(MarkerType.VISITED);
+                if (currentCellMarker.getCardinal() == Cardinal.NORTH) {
+                    Move move1 = new Move(Action.TURN_UP, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
+
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
+                } else if (currentCellMarker.getCardinal() == Cardinal.SOUTH) {
+
+                    Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
+
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
+                } else if (currentCellMarker.getCardinal() == Cardinal.WEST) {
+
+                    Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
+                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                    moves.add(move1);
+                    moves.add(move2);
+
+                    Move moveToExec = moves.get(0);
+                    moves.remove(0);
+                    return moveToExec;
+                } else {
 
                     Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
@@ -74,108 +177,8 @@ public class BrickAndMortar implements Algorithm {
                 }
 
             }
-
-            if (markers.get(i).getXCoordinate() == agent.getX() - 1 && markers.get(i).getYCoordinate() == agent.getY()) {
-
-                if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
-
-                    Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
-                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                    moves.add(move1);
-                    moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
-                }
-            }
-
-            if (markers.get(i).getXCoordinate() == agent.getX() && markers.get(i).getYCoordinate() == agent.getY() + 1) {
-
-
-                if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
-
-                    Move move1 = new Move(Action.TURN_UP, 0, this.agent);
-                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                    moves.add(move1);
-                    moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
-                }
-            }
-
-            if (markers.get(i).getXCoordinate() == agent.getX() && markers.get(i).getYCoordinate() == agent.getY() - 1) {
-
-
-                if (!(markers.get(i).getType() == MarkerType.EXPLORED || markers.get(i).getType() == MarkerType.VISITED)) {
-
-                    Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
-                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                    moves.add(move1);
-                    moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
-                }
-            }
-
         }
 
-        //if the current cell is marked with your ID then
-        //10: mark it as visited
-        //11: go to the parent cell
-
-        for (int i = 0; i < agent.getMarkers().size(); i++) {
-            if (markers.get(i).getXCoordinate() == agent.getX() && markers.get(i).getYCoordinate() == agent.getY()) {
-                if (markers.get(i).getId() == agent.getID()) {
-                    markers.get(i).setType(MarkerType.VISITED);
-                    if (markers.get(i).getCardinal() == Cardinal.NORTH) {
-                        Move move1 = new Move(Action.TURN_UP, 0, this.agent);
-                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                        moves.add(move1);
-                        moves.add(move2);
-
-                        Move moveToExec = moves.get(0);
-                        moves.remove(0);
-                        return moveToExec;
-                    } else if (markers.get(i).getCardinal() == Cardinal.SOUTH) {
-
-                        Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
-                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                        moves.add(move1);
-                        moves.add(move2);
-
-                        Move moveToExec = moves.get(0);
-                        moves.remove(0);
-                        return moveToExec;
-                    } else if (markers.get(i).getCardinal() == Cardinal.WEST) {
-
-                        Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
-                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                        moves.add(move1);
-                        moves.add(move2);
-
-                        Move moveToExec = moves.get(0);
-                        moves.remove(0);
-                        return moveToExec;
-                    } else {
-
-                        Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
-                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                        moves.add(move1);
-                        moves.add(move2);
-
-                        Move moveToExec = moves.get(0);
-                        moves.remove(0);
-                        return moveToExec;
-                    }
-
-                }
-            }
-        }
 
         //else
         //13: go to one of the explored cells randomly
@@ -197,13 +200,13 @@ public class BrickAndMortar implements Algorithm {
      * A method to return a marker located at a specified (x,y) position
      *
      * @param markers a list of markers
-     * @param x the x coordinate where you want to check for a marker
-     * @param y the y coordinate where you want to check for a marker
+     * @param x       the x coordinate where you want to check for a marker
+     * @param y       the y coordinate where you want to check for a marker
      * @return the marker at the given (x,y) position. Will return null if there is no marker.
      */
-    public Marker getMarker(List<Marker> markers, int x, int y){
-        for(Marker marker : markers){
-            if(marker.getXY().x()==x && marker.getXY().y()==y){
+    public Marker getMarker(List<Marker> markers, int x, int y) {
+        for (Marker marker : markers) {
+            if (marker.getXY().x() == x && marker.getXY().y() == y) {
                 return marker;
             }
         }
