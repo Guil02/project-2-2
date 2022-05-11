@@ -235,4 +235,8 @@ public abstract class Agent {
         }
     }
 
+    public ArrayList<Marker> getMarkers(){
+        return this.markers;
+    }
+
 }
