@@ -6,7 +6,9 @@ import group.seven.enums.Cardinal;
 import group.seven.enums.MarkerType;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
+import group.seven.model.agents.TileNode;
 import group.seven.model.environment.Marker;
+import group.seven.model.environment.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,11 +39,10 @@ public class BrickAndMortar implements Algorithm {
 
         }
 
-
-        return null;
+        return MultipleDepthFirstSearch();
     }
 
-    public Move MultipleDepthFirstSearch() {
+    protected Move MultipleDepthFirstSearch() {
 
 
         ArrayList<Marker> markers = agent.getMarkers();
@@ -202,15 +203,18 @@ public class BrickAndMortar implements Algorithm {
         //else
         //13: go to one of the explored cells randomly
 
-        for (int i = 0; i < agent.getMarkers().size(); i++) {
-            if (markers.get(i).getType() == MarkerType.EXPLORED) {
+        RandomMoves randomMoves = new RandomMoves(this.agent); //while a* is not done just make a random move
+        return randomMoves.getNext();
 
-                //TODO think about it using A* probably
+//        for (int i = 0; i < agent.getMarkers().size(); i++) {
+//            if (markers.get(i).getType() == MarkerType.EXPLORED) {
+//
+//                //TODO think about it using A* probably
+//
+//            }
+//        }
 
-            }
-        }
-
-        return null;
+    //    return null;
     }
 
     /**

@@ -1,9 +1,11 @@
 package group.seven.model.agents;
 
 
+import group.seven.enums.AlgorithmType;
 import group.seven.enums.MarkerType;
 import group.seven.enums.PheromoneType;
 import group.seven.logic.algorithms.Algorithm;
+import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.algorithms.RandomMoves;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
@@ -36,6 +38,17 @@ public class Guard extends Agent {
         this.currentSpeed = startSpeed;
         this.vision = vision;
         this.markers = markers;
+    }
+
+    public Guard(int x, int y, AlgorithmType algorithmType) {
+        this(x, y);
+        createAlgorithm(algorithmType);
+    }
+
+    public void createAlgorithm(AlgorithmType algorithmType){
+        switch (algorithmType){
+            case BRICK_AND_MORTAR -> this.algorithm=new BrickAndMortar(this);
+        }
     }
 
     public Guard(int x, int y) {
