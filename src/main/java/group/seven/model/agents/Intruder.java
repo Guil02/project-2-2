@@ -42,7 +42,7 @@ public class Intruder extends Agent {
         algorithm = new RandomMoves(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
-        currentSpeed = 3;
+        //currentSpeed = 3;
     }
 
     @Override

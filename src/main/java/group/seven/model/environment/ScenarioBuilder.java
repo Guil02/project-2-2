@@ -143,8 +143,8 @@ public class ScenarioBuilder implements Builder<Scenario> {
 
     private void setAdjacent(){
         TileMap t = TILE_MAP;
-        for(int x = 0; x <= Scenario.WIDTH; x++){
-            for (int y = 0; y <= Scenario.HEIGHT; y++) {
+        for(int x = 0; x < Scenario.WIDTH; x++){
+            for (int y = 0; y < Scenario.HEIGHT; y++) {
                 if(t.getTile(x,y)!=null){
                     t.getTile(x,y).adjacent = createAdjacent(t,x,y);
                 }
@@ -152,7 +152,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
         }
     }
 
-    private Adjacent createAdjacent(TileMap t, int x, int y) {
+    private Adjacent<Tile> createAdjacent(TileMap t, int x, int y) {
         Tile NORTH = null, EAST = null, SOUTH = null, WEST = null, TARGET = null;
         if(y>0){
             NORTH = t.getTile(x,y-1);
@@ -183,7 +183,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
                 TARGET = t.getTile(exit.x(),exit.y());
             }
         }
-        return new Adjacent(NORTH,EAST,SOUTH,WEST,TARGET);
+        return new Adjacent<>(NORTH, EAST, SOUTH, WEST, TARGET);
     }
 
     private void fillMap() {

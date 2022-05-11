@@ -40,6 +40,7 @@ public abstract class Agent {
 
     public Agent(int x, int y) {
         initialPosition = new XY(x, y);
+        initializeMap();
     }
 
     public abstract Move calculateMove();
@@ -68,13 +69,7 @@ public abstract class Agent {
         }
     }
 
-    //I still feel like this should be abstract
     public abstract void updateVision();
-//    {
-//        for (Tile tile : vision.updateAndGetVisionAgent(this)){
-//            seenTiles.add(tile);
-//        }
-//    }
 
     public void clearVision() {
         seenTiles.clear();
@@ -115,7 +110,6 @@ public abstract class Agent {
     public XY getXY() {
         return new XY(x, y);
     }
-
 
     public IntegerProperty xProperty() {
         return xProp;
@@ -161,6 +155,7 @@ public abstract class Agent {
             if (!(observedTiles.contains(tile)))
                 observedTiles.add(tile);
         return observedTiles;
+        //TODO: consider using a Set data structure, like HashSet. It ensures there are no duplicates
     }
 
     //update just the direction of agent (and the default, which is updating vision)
@@ -198,19 +193,24 @@ public abstract class Agent {
 
     //
     public void initializeMap() {
-        map = new TileNode[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
+        map = new TileNode[Scenario.WIDTH][Scenario.HEIGHT];
     }
 
     public void updateMap() {
         for (Tile tile : seenTiles) {
             if (map[tile.getX()][tile.getY()] != null) {
                 map[tile.getX()][tile.getY()].update();
-            } else map[tile.getX()][tile.getY()] = new TileNode(tile);
+            } else map[tile.getX()][tile.getY()] = new TileNode(tile, this);
         }
     }
 
     public TileNode getMapPosition(int x, int y) {
-        return map[x][y];
+        try{
+            return map[x][y];
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     public TileNode[][] getMap() {
@@ -222,22 +222,17 @@ public abstract class Agent {
     }
 
     public void addMarker(MarkerType type) {
-
         if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
             Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection());
             markers.add(marker);
         }
-
-
     }
 
     public void addPheromone(PheromoneType type) {
-
         if (type == PheromoneType.TEST) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
             Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
             pheromones.add(pheromone);
         }
-
     }
 
 }

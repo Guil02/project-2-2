@@ -1,15 +1,16 @@
 package group.seven.model.agents;
 
 import group.seven.enums.TileType;
+import group.seven.model.environment.Adjacent;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
-import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static group.seven.enums.TileType.UNKNOWN;
+import static group.seven.enums.TileType.PORTAL;
+import static group.seven.enums.TileType.TARGET;
 
 public class TileNode {
 
@@ -18,16 +19,21 @@ public class TileNode {
     //Or Point2D?
 
     TileType type;
-    TileType agent = null;
+    Agent agent;
+    TileType agentType = null;
     List<Marker> markers;
+    Adjacent<TileNode> adjacent;
 
-    public TileNode(Tile tile){
+    public TileNode(Tile tile, Agent a){
+        this.agent = a;
         for(Agent agent: Scenario.TILE_MAP.agents){
             if(agent.x==tile.getX()&& agent.y==tile.getY()){
-                this.agent = agent.agentType;
+                this.agentType = agent.agentType;
                 break;
             }
         }
+        updateAdjacent();
+
         markers = new ArrayList<>();
         for(Marker marker : Scenario.TILE_MAP.markers){
             if(marker.getXY().x()==x && marker.getXY().y()==y){
@@ -40,11 +46,11 @@ public class TileNode {
     }
 
     public void update(){
-        agent = null;
+        agentType = null;
         markers.clear();
         for(Agent agent: Scenario.TILE_MAP.agents){
             if(agent.x==x&& agent.y==y){
-                this.agent = agent.agentType;
+                this.agentType = agent.agentType;
                 break;
             }
         }
@@ -53,5 +59,21 @@ public class TileNode {
                 markers.add(marker);
             }
         }
+        updateAdjacent();
+
+    }
+
+    public void updateAdjacent(){
+        TileNode north = agent.getMapPosition(agent.x,agent.y-1);
+        TileNode east = agent.getMapPosition(agent.x+1,agent.y);
+        TileNode south = agent.getMapPosition(agent.x,agent.y+1);
+        TileNode west = agent.getMapPosition(agent.x-1,agent.y);
+        TileNode target = null;
+        int xTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getX(), yTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getY();
+        if(type==TARGET){
+            target = agent.getMapPosition(xTar,yTar);
+        }
+
+        adjacent = new Adjacent<>(north,east,south,west,target);
     }
 }
