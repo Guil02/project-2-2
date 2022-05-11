@@ -8,6 +8,7 @@ import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
 import group.seven.model.agents.TileNode;
 import group.seven.model.environment.Marker;
+import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
 import java.util.ArrayList;
@@ -30,28 +31,26 @@ public class BrickAndMortar implements Algorithm {
 
         //Tile tile = new Tile(agent.getX(), agent.getY());
         //TileNode tileNode = new TileNode(tile);
-
-        if (!moves.isEmpty()) {
-
-            Move moveToExec = moves.get(0);
-            moves.remove(0);
-            return moveToExec;
-
+        if(moves.isEmpty()){
+            multipleDepthFirstSearch();
         }
 
-        return MultipleDepthFirstSearch();
+
+        Move moveToExec = moves.get(0);
+        moves.remove(0);
+        return moveToExec;
     }
 
-    protected Move MultipleDepthFirstSearch() {
+    protected void multipleDepthFirstSearch() {
 
 
-        ArrayList<Marker> markers = agent.getMarkers();
+        ArrayList<Marker> markers = Scenario.TILE_MAP.getMarkers();
 
-        Marker currentCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY());
-        Marker eastCellMarker = getMarker(agent.getMarkers(), agent.getX() + 1, agent.getY());
-        Marker westCellMarker = getMarker(agent.getMarkers(), agent.getX() - 1, agent.getY());
-        Marker northCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() + 1);
-        Marker southCellMarker = getMarker(agent.getMarkers(), agent.getX(), agent.getY() - 1);
+        Marker currentCellMarker = getMarker(markers, agent.getX(), agent.getY());
+        Marker eastCellMarker = getMarker(markers, agent.getX() + 1, agent.getY());
+        Marker westCellMarker = getMarker(markers, agent.getX() - 1, agent.getY());
+        Marker northCellMarker = getMarker(markers, agent.getX(), agent.getY() + 1);
+        Marker southCellMarker = getMarker(markers, agent.getX(), agent.getY() - 1);
 
         //if the current cell is unexplored then
         //2: mark it as explored
@@ -87,10 +86,6 @@ public class BrickAndMortar implements Algorithm {
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 }
 
             }
@@ -104,10 +99,6 @@ public class BrickAndMortar implements Algorithm {
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 }
             }
 
@@ -121,10 +112,6 @@ public class BrickAndMortar implements Algorithm {
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 }
             }
 
@@ -137,10 +124,6 @@ public class BrickAndMortar implements Algorithm {
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 }
             }
 
@@ -160,40 +143,24 @@ public class BrickAndMortar implements Algorithm {
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 } else if (currentCellMarker.getCardinal() == Cardinal.SOUTH) {
 
                     Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 } else if (currentCellMarker.getCardinal() == Cardinal.WEST) {
 
                     Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 } else {
 
                     Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-
-                    Move moveToExec = moves.get(0);
-                    moves.remove(0);
-                    return moveToExec;
                 }
 
             }
@@ -204,7 +171,7 @@ public class BrickAndMortar implements Algorithm {
         //13: go to one of the explored cells randomly
 
         RandomMoves randomMoves = new RandomMoves(this.agent); //while a* is not done just make a random move
-        return randomMoves.getNext();
+        moves.add(randomMoves.getNext());
 
 //        for (int i = 0; i < agent.getMarkers().size(); i++) {
 //            if (markers.get(i).getType() == MarkerType.EXPLORED) {
@@ -216,6 +183,16 @@ public class BrickAndMortar implements Algorithm {
 
     //    return null;
     }
+
+    /**
+     * This method generates the next move that needs to be done according to the Brick and Mortar without loop
+     * closure. The moves are added to the move list {@link BrickAndMortar#moves}
+     *
+     */
+    public void BAMWithoutLoopClosure(){
+
+    }
+
 
     /**
      * A method to return a marker located at a specified (x,y) position
