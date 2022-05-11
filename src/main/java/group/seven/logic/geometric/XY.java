@@ -1,5 +1,7 @@
 package group.seven.logic.geometric;
 
+import javafx.geometry.Point2D;
+
 /**
  * Very simple wrapper to store integer x, y coordinates (or such)
  * Autogenerates the getters, hashcode, equals, and toString
@@ -10,5 +12,9 @@ package group.seven.logic.geometric;
 public record XY(int x, int y) {
     public XY add(int X, int Y){
         return new XY(x() + X, y() + Y);
+    }
+
+    public XY(Point2D p) {
+        this((int) p.getX(), (int) p.getY());
     }
 }

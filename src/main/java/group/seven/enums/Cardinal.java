@@ -25,6 +25,7 @@ public enum Cardinal {
         };
     }
 
+    //TODO: isn't this pretty much the same method as the flip() above?
     public Cardinal reverseDirection(Cardinal cardinal) {
 
         if (cardinal == NORTH) {

@@ -1,9 +1,6 @@
 package group.seven.model.agents;
 
-import group.seven.enums.Action;
-import group.seven.enums.Cardinal;
-import group.seven.enums.MarkerType;
-import group.seven.enums.TileType;
+import group.seven.enums.*;
 import group.seven.logic.geometric.XY;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Pheromone;
@@ -21,6 +18,8 @@ import static group.seven.enums.Cardinal.*;
 public abstract class Agent {
     private static int IDs = 0;
     public final int PHEROMONELIFETIME = 20;
+    //Type
+    public final XY initialPosition;
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
     //Pose
@@ -31,8 +30,8 @@ public abstract class Agent {
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
     //Marker and Pheromone
-    private ArrayList<Marker> markers = new ArrayList<>();
-    private ArrayList<Pheromone> pheromones = new ArrayList<>();
+    private final ArrayList<Marker> markers = new ArrayList<>();
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
     private TileNode[][] map;
     //Type
@@ -42,11 +41,10 @@ public abstract class Agent {
     //Current Speed
     //Strategy
 
-    public Agent(int x, int y){
-        initialPosition = new XY(x,y);
+    public Agent(int x, int y) {
+        initialPosition = new XY(x, y);
+        initializeMap();
     }
-
-
 
     public abstract Move calculateMove();
 
@@ -82,13 +80,7 @@ public abstract class Agent {
         }
     }
 
-    //I still feel like this should be abstract
     public abstract void updateVision();
-//    {
-//        for (Tile tile : vision.updateAndGetVisionAgent(this)){
-//            seenTiles.add(tile);
-//        }
-//    }
 
     public void clearVision() {
         seenTiles.clear();
@@ -164,6 +156,20 @@ public abstract class Agent {
         updateMap(); //updates the map with the content of seen list.
     }
 
+    /**
+     * Make sure that only one instance gets stored of a tile during the vision process
+     * @param observedTiles the currently observed tiles
+     * @param newTiles the new tiles which needs to be checked
+     * @return the observedTiles with the not seen newTiles
+     */
+    public List<Tile> duplicatedTiles(List<Tile> observedTiles, List<Tile> newTiles) {
+        for (Tile tile : newTiles)
+            if (!(observedTiles.contains(tile)))
+                observedTiles.add(tile);
+        return observedTiles;
+        //TODO: consider using a Set data structure, like HashSet. It ensures there are no duplicates
+    }
+
     //update just the direction of agent (and the default, which is updating vision)
     public void update(Action rotation) {
         switch (rotation) {
@@ -184,19 +190,6 @@ public abstract class Agent {
         update();
     }
 
-    public void addMarker(MarkerType type) {
-
-        if (type == MarkerType.VISITED) {                                   //TODO depending on what our agent wants add some properties to the markers in the future
-            Marker marker = new Marker(this.getX(), this.getY(), type);
-            markers.add(marker);
-        }
-
-    }
-
-    public void addPheromone(MarkerType type) {
-
-
-    }
 
     @Override
     public String toString() {
@@ -209,30 +202,49 @@ public abstract class Agent {
                 ", agentType=" + agentType +
                 '}';
     }
-//
-    public void initializeMap(){
-        map = new TileNode[Scenario.WIDTH+1][Scenario.HEIGHT+1];
+
+    //
+    public void initializeMap() {
+        map = new TileNode[Scenario.WIDTH][Scenario.HEIGHT];
     }
 
-    public void updateMap(){
-        for(Tile tile: seenTiles){
-            if(map[tile.getX()][tile.getY()]!=null){
+    public void updateMap() {
+        for (Tile tile : seenTiles) {
+            if (map[tile.getX()][tile.getY()] != null) {
                 map[tile.getX()][tile.getY()].update();
-            }
-            else map[tile.getX()][tile.getY()]=new TileNode(tile);
+            } else map[tile.getX()][tile.getY()] = new TileNode(tile, this);
         }
     }
 
-    public TileNode getMapPosition(int x, int y){
-        return map[x][y];
+    public TileNode getMapPosition(int x, int y) {
+        try{
+            return map[x][y];
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     public TileNode[][] getMap() {
         return map;
     }
 
-    public XY getLocalCoordinate(int x, int y){
-        return new XY(x- initialPosition.x(),y- initialPosition.y());
+    public XY getLocalCoordinate(int x, int y) {
+        return new XY(x - initialPosition.x(), y - initialPosition.y());
+    }
+
+    public void addMarker(MarkerType type) {
+        if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
+            Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection());
+            markers.add(marker);
+        }
+    }
+
+    public void addPheromone(PheromoneType type) {
+        if (type == PheromoneType.TEST) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
+            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
+            pheromones.add(pheromone);
+        }
     }
 
 }

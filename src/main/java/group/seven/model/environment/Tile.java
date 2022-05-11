@@ -25,9 +25,7 @@ public class Tile {
     // Lists keep track of which agent has seen the tile
     List<Boolean> seen;
     //Graph
-    Adjacent adjacent;
-    private ArrayList<Marker> markers = new ArrayList<>();
-    private ArrayList<Pheromone> pheromones = new ArrayList<>();
+    public Adjacent<Tile> adjacent;
 
     public Tile() {
         type = EMPTY;
@@ -73,7 +71,7 @@ public class Tile {
 
     //public void setAdjacent(Tile[] adjacent) { this.adjacent = adjacent;}
     public void setAdjacent(Tile north, Tile east, Tile south, Tile west, Tile target) {
-        this.adjacent = new Adjacent(north, east, south, west, target);
+        this.adjacent = new Adjacent<>(north, east, south, west, target);
     }
 
     public BooleanProperty exploredGuardProperty() {
@@ -116,30 +114,6 @@ public class Tile {
         return "Tile{" +
                 "xy=" + xy +
                 '}';
-    }
-
-    public void addMarker(Marker marker) {
-        markers.add(marker);
-    }
-
-    public ArrayList<Marker> getMarkers() {
-        return markers;
-    }
-
-    public void resetMarkers() {
-        markers = new ArrayList<Marker>();
-    }
-
-    public void addPheromone(Pheromone pheromone) {
-        pheromones.add(pheromone);
-    }
-
-    public ArrayList<Pheromone> getPheromones() {
-        return pheromones;
-    }
-
-    public void resetPheromones() {
-        pheromones = new ArrayList<Pheromone>();
     }
 
 }

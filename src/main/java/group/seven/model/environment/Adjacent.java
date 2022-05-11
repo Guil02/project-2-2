@@ -1,3 +1,3 @@
 package group.seven.model.environment;
 
-public record Adjacent(Tile north, Tile east, Tile south, Tile west, Tile targetLocation) {}
+public record Adjacent<T>(T north, T east, T south, T west, T targetLocation) {}

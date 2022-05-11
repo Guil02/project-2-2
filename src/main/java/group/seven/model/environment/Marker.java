@@ -1,6 +1,8 @@
 package group.seven.model.environment;
 
+import group.seven.enums.Cardinal;
 import group.seven.enums.MarkerType;
+import group.seven.logic.geometric.XY;
 
 public class Marker {
     private static final int SIZE = 0; //TODO : think of making an area of a markers not a single grid of marker
@@ -8,7 +10,7 @@ public class Marker {
     private final int xCoordinate;
     private final int yCoordinate;
 
-    public Marker(int xCoordinate, int yCoordinate, MarkerType markerType) {
+    public Marker(int xCoordinate, int yCoordinate, MarkerType markerType, int Id, Cardinal cardinal) {
 
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -26,6 +28,10 @@ public class Marker {
 
     public MarkerType getType() {
         return markerType;
+    }
+
+    public XY getXY(){
+        return new XY(this.xCoordinate,this.yCoordinate);
     }
 
 
