@@ -8,7 +8,7 @@ import group.seven.model.agents.Move;
 import group.seven.model.agents.TileNode;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
-
+import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
