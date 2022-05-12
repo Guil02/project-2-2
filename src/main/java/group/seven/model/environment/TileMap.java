@@ -6,6 +6,9 @@ import group.seven.model.agents.Agent;
 import java.util.ArrayList;
 
 public class TileMap {
+    public static double NUM_TILES;
+    public static double INTRUDER_EXPLORATION;
+    public static double GUARD_EXPLORATION;
     //TileMap
     public Tile[][] map; //observable?
     public Agent[] agents; //observable?
@@ -18,6 +21,8 @@ public class TileMap {
         //alternatively scenario fields could be static
         map = new Tile[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
         agents = new Agent[Scenario.NUM_AGENTS];
+
+        //NUM_TILES = Scenario.WIDTH * Scenario.HEIGHT; // +1 (?)
     }
 
     //update

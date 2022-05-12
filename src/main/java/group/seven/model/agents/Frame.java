@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Handles coordinate conversions
+ * Handles coordinate conversions. Uses JavaFX geometry classes.
  * To create this record: new Frame(new Translate(-spawnPoint.getX(), -spawnPoint.getY()))
  * @param frame local agent's coordinate frame Transform
  */
@@ -33,6 +33,7 @@ public record Frame(Transform frame) {
      */
     public Point2D convertToLocal(Point2D globalPoint)  {
         return frame.transform(globalPoint.getX(), globalPoint.getY());
+        //return convertToLocal(globalPoint.getX(), globalPoint.getY());
     }
 
     /**
@@ -58,8 +59,17 @@ public record Frame(Transform frame) {
     }
 
     /**
+     * Converts an XY record from local to global coordinates
+     * @param xy (x', y') coordinates from agent's local frame
+     * @return XY record (x, y) of global representation of the agent's coordinates
+     */
+    public XY convertToGlobal(XY xy) {
+        return new XY(convertToGlobal(xy.x(), xy.y()));
+    }
+
+    /**
      * Converts an integer x, y coordinate from agent local frame to same point in global frame
-     * @param x integer x-coordinate in agent's local coordiante frame
+     * @param x integer x-coordinate in agent's local coordinate frame
      * @param y integer y-coordinate in agent's local coordinate frame
      * @return a Point2D object that represents the agent's local point, but in the global coordinate frame
      */

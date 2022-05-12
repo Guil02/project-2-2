@@ -77,7 +77,7 @@ public class Simulator extends AnimationTimer {
         //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
         if (((int)elapsedTimeSteps) % 10 == 0) {
             Tuple<Double, Double> coverage = calculateCoverage();
-            display.updateStats(elapsedTimeSteps, coverage.a()); //guard coverage, will move to SimulationScreen to handle prolly
+            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
         }
 
         //TODO: implement GameOver condition checking
@@ -100,7 +100,7 @@ public class Simulator extends AnimationTimer {
         List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
 
         CollisionHandler.handle(positionChangeMoves);
-        for (Move move : rotationChangeMoves){
+        for (Move move : rotationChangeMoves) {
             move.agent().executeTurn(move);
             move.agent().clearVision();
             move.agent().updateVision();
@@ -108,27 +108,6 @@ public class Simulator extends AnimationTimer {
 
         //TODO: determine where to apply the moves to updated the model and the agent's internal model
     }
-
-    /** FOR TESTING PURPOSE ONLY
-     * Called every timeStep to update the model.
-     * Collects each agent's moves, resolves collisions, updates their vision and applies to the model.
-     */
-    public void update(List<Move> allMoves) {
-        //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
-        //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
-        List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
-        List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
-
-        CollisionHandler.handle(positionChangeMoves);
-        for (Move move : rotationChangeMoves){
-            move.agent().executeTurn(move);
-            move.agent().clearVision();
-            move.agent().updateVision();
-        }
-
-        //TODO: determine where to apply the moves to updated the model and the agent's internal model
-    }
-
 
     private void spawnAgents(GameMode gameMode) {
         print(gameMode);
@@ -215,6 +194,23 @@ public class Simulator extends AnimationTimer {
         }
 
         return new Tuple<>((guardSeenGrids / totalGrids)*100, (intruderSeenGrids/totalGrids)*100);
+    }
+
+    /** FOR TESTING PURPOSE ONLY
+     * Called every timeStep to update the model.
+     * Collects each agent's moves, resolves collisions, updates their vision and applies to the model.
+     */
+    public void update(List<Move> allMoves) {
+        //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
+        List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
+        List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
+
+        CollisionHandler.handle(positionChangeMoves);
+        for (Move move : rotationChangeMoves){
+            move.agent().executeTurn(move);
+            move.agent().clearVision();
+            move.agent().updateVision();
+        }
     }
 }
 

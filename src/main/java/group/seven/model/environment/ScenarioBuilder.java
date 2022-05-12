@@ -190,12 +190,23 @@ public class ScenarioBuilder implements Builder<Scenario> {
         COMPONENTS.forEach(c -> {
             for(int x = c.area().getX(); x < c.area().getMaxIntX(); x++){
                 for(int y = c.area().getY(); y < c.area().getMaxIntY(); y++) {
-                    Scenario.TILE_MAP.setType(x, y, c.type());
+                    TILE_MAP.setType(x, y, c.type());
                 }
             }
         });
 
-        Scenario.portals.forEach(p -> Scenario.TILE_MAP.setType(p.exit().x(), p.exit().y(), EXIT_PORTAL));
+        Scenario.portals.forEach(p -> TILE_MAP.setType(p.exit().x(), p.exit().y(), EXIT_PORTAL));
+
+        int totalGrids = 0;
+        for (int i = 0; i <= WIDTH; i++)
+            for (int j = 0; j <= HEIGHT; j++)
+                if (TILE_MAP.map[i][j].getType() != WALL)
+                    totalGrids++;
+
+        TileMap.NUM_TILES = totalGrids;
+
+        print("Total Grids: " + totalGrids);
+        print("Num Tiles: " + (WIDTH * HEIGHT));
     }
 
     //private record MetaProperties(GameMode gameMode, String mapName, int width, int height){}

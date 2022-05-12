@@ -1,10 +1,9 @@
 package group.seven.model.agents;
 
 
-import group.seven.enums.MarkerType;
-import group.seven.enums.PheromoneType;
 import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.algorithms.RandomMoves;
+import group.seven.logic.algorithms.RandomTest;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
@@ -12,9 +11,8 @@ import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.TileType.GUARD;
@@ -41,16 +39,14 @@ public class Guard extends Agent {
     public Guard(int x, int y) {
         super(x,y);
         ID = newID();
-        setX(x);
-        setY(y);
         agentType = GUARD;
-        currentSpeed = 0; //DEFAULT
+        currentSpeed = 3; //DEFAULT
         direction = NORTH; //DEFAULT
         algorithm = new RandomMoves(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
-        //algorithm = new RandomTest(this);
-        currentSpeed = 3;
+        algorithm = new RandomTest(this);
+        currentSpeed = 1;
     }
 
     @Override

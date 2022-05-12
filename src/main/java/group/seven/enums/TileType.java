@@ -24,15 +24,15 @@ public enum TileType {
         return switch (this) {
             case WALL-> Color.BLACK;
             case EMPTY -> Color.WHITE;
-            case GUARD -> Color.BLUE;
-            case INTRUDER -> Color.ORANGE;
-            case PORTAL -> Color.PURPLE;
-            case EXIT_PORTAL -> Color.VIOLET;
-            case GUARD_SPAWN -> Color.AQUA;
-            case INTRUDER_SPAWN -> Color.TOMATO;
+            case GUARD -> Color.rgb(41, 128, 185, 1.0);
+            case INTRUDER -> Color.rgb(211, 84, 0);
+            case PORTAL -> Color.rgb(142, 68, 173);
+            case EXIT_PORTAL -> Color.rgb(175, 79, 154);
+            case GUARD_SPAWN -> Color.rgb(95,174,227);
+            case INTRUDER_SPAWN -> Color.rgb(230,142,34);
             case SHADED -> Color.SLATEGREY;
             case UNKNOWN -> Color.DIMGRAY;
-            case TARGET -> Color.GREEN;
+            case TARGET -> Color.rgb(39, 174, 96);
         };
     }
 }

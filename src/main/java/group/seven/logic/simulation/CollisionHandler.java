@@ -17,8 +17,8 @@ import static group.seven.utils.Methods.print;
 
 public class CollisionHandler {
 
-    public static void handle(List<Move> moves){
-        for (Move move : moves){
+    public static void handle(List<Move> moves) {
+        for (Move move : moves) {
             Agent agent = move.agent();
             agent.clearVision();
             agent.updateVision();

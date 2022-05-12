@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.GameMode.SINGLE_INTRUDER;
-import static group.seven.enums.TileType.SHADED;
-import static group.seven.enums.TileType.WALL;
+import static group.seven.enums.TileType.*;
 
 public class Scenario {
     private static Scenario SCENARIO;
@@ -28,13 +27,13 @@ public class Scenario {
     public static int NUM_MARKERS;
     public static int SMELL_DISTANCE;
     public static double TIME_STEP, SCALING;
-    public static Component targetArea;
-    public static Component intruderSpawnArea;
-    public static Component guardSpawnArea;
+    public static Component targetArea = new Component(new Rectangle(), TARGET, null, null);
+    public static Component intruderSpawnArea = new Component(new Rectangle(), INTRUDER_SPAWN, null, null);
+    public static Component guardSpawnArea = new Component(new Rectangle(), GUARD_SPAWN, null, null);
 
     public static final List<Component> walls = new ArrayList<>(20);
-    public static final List<Component> shadedAreas = new ArrayList<>(5);
-    public static final List<Component> portals = new ArrayList<>(5);
+    public static final List<Component> shadedAreas = new ArrayList<>();
+    public static final List<Component> portals = new ArrayList<>();
 
     //replaced the get static component's method with a list containing them instead
     public static final List<Component> COMPONENTS = new ArrayList<>(30);

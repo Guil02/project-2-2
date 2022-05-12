@@ -6,9 +6,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 
+import static group.seven.gui.GuardUI.selectedGuard;
+import static group.seven.gui.IntruderGUI.selectedIntruder;
 import static group.seven.model.environment.Scenario.TILE_MAP;
 import static javafx.scene.paint.Color.BLACK;
 
@@ -51,7 +54,6 @@ public class View extends ScrollPane {
         g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         drawMap();
         drawAgents();
-        //drawPortal();
     }
 
 //    private void drawPortal() {
@@ -60,23 +62,21 @@ public class View extends ScrollPane {
 //    }
 
     private void drawAgents() {
-//        g.setFill(Color.rgb(52, 152, 219));
-//        for (Guard guard : scenario.getGuards()) {
-//            paintTile(guard.getX(), guard.getY());
-//        }
-//
-//        if (GuardUI.selected != 0) {
-//            g.setFill(Color.rgb(225, 177, 44));
-//            paintTile(GuardUI.selectedGuard.guard.getX(), GuardUI.selectedGuard.guard.getY());
-//        }
-//
-//        g.setFill(Color.rgb(192, 57, 43));
-//        scenario.getIntruders().forEach(intr -> paintTile(intr.getX(), intr.getY()));
         Arrays.stream(Scenario.TILE_MAP.agents)
                 .forEach(a -> {
                     g.setFill(a.getType().getColor());
                     paintTile(a.getX(), a.getY());
                 });
+
+        if (GuardUI.selected != 0) {
+            g.setFill(Color.rgb(23,129,118));
+            paintTile(selectedGuard.guard.getX(), selectedGuard.guard.getY());
+        }
+
+        if (IntruderGUI.selected != 0) {
+            g.setFill(Color.rgb(192, 57, 43));
+            paintTile(selectedIntruder.intruder.getX(), selectedIntruder.intruder.getY());
+        }
 
         g.setFill(BLACK);
     }
@@ -110,7 +110,11 @@ public class View extends ScrollPane {
     protected void zoom(double factor) {
         TILE_SIZE *= factor;
 
+//        double min = getViewportBounds().getWidth() / canvas.getWidth();
+//        double max = getViewportBounds().getWidth() / canvas.getWidth();
+
         TILE_SIZE = Math.max(Math.min(TILE_SIZE, 20), 4.5); //TODO: calculate actual ratio for min/max tile size
+//        TILE_SIZE = Math.max(Math.min(TILE_SIZE, max), min); //TODO: calculate actual ratio for min/max tile size
         canvas.setWidth(MAP_WIDTH * (TILE_SIZE + 1));
         canvas.setHeight(MAP_HEIGHT * (TILE_SIZE + 1));
     }

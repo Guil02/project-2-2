@@ -34,14 +34,13 @@ public class Intruder extends Agent {
     public Intruder(int x, int y) {
         super(x,y);
         ID = newID();
-        setX(x);
-        setY(y);
         agentType = INTRUDER;
         currentSpeed = 1;       //DEFAULT
         direction = SOUTH;      //DEFAULT
         algorithm = new RandomMoves(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
+        algorithm = new RandomTest(this);
         //currentSpeed = 3;
     }
 

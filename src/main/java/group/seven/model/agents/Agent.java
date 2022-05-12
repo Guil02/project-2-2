@@ -6,8 +6,7 @@ import group.seven.model.environment.Marker;
 import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.transform.Translate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +16,16 @@ import static group.seven.enums.Cardinal.*;
 //TODO the agent structure very much work in progress
 public abstract class Agent {
     private static int IDs = 0;
+
+    private double numExplored;
     public final int PHEROMONELIFETIME = 20;
-    //Type
+    //Coordinates and Frames:
     public final XY initialPosition;
-    private final IntegerProperty xProp = new SimpleIntegerProperty();
-    private final IntegerProperty yProp = new SimpleIntegerProperty();
-    //Pose
-    public int x, y; //You can use this if the property stuff confuses
+    public int x, y;
+    public Frame frame; //handles coordinate transforms
+    protected Cardinal direction;
     //Type
     public TileType agentType;
-    protected Cardinal direction;
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
     //Marker and Pheromone
@@ -40,6 +39,8 @@ public abstract class Agent {
 
     public Agent(int x, int y) {
         initialPosition = new XY(x, y);
+        frame = new Frame(new Translate(-x, -y));
+
         initializeMap();
     }
 
@@ -84,39 +85,41 @@ public abstract class Agent {
     }
 
     public int getX() {
-        //convert with frame
-//        return xProp.get();
+        /* convert with frame. This would make callers of the method receive agents coords in global frame
+        Point2D globalPosition = frame.convertToGlobal(x, y);
+        return (int) globalPosition.getX();
+        */
         return x;
     }
 
     public void setX(int x) {
-        //convert with frame
+        //convert with frame, might be trickier since the affine transforms require 2 coordinates
         this.x = x;
-        xProp.set(x);
     }
 
     public int getY() {
-        //convert with frame
-//        return yProp.get();
+
+        /* convert with frame. This would make callers of the method receive agents coords in global frame
+        Point2D globalPosition = frame.convertToGlobal(x, y);
+        return (int) globalPosition.getX();
+        */
         return y;
     }
 
     public void setY(int y) {
         //convert with frame
         this.y = y;
-        yProp.set(y);
     }
 
     public XY getXY() {
+        /* convert with frame. This would make callers of the method receive agents coords in global frame
+        Point2D globalPosition = frame.convertToGlobal(x, y);
+        return new XY(globalPosition)
+        */
+//        Point2D globalPosition = frame.convertToGlobal(x, y);
+//        new XY(globalPosition);
+
         return new XY(x, y);
-    }
-
-    public IntegerProperty xProperty() {
-        return xProp;
-    }
-
-    public IntegerProperty yProperty() {
-        return yProp;
     }
 
     public Cardinal getDirection() {
@@ -129,6 +132,14 @@ public abstract class Agent {
 
     public TileType getType() {
         return agentType;
+    }
+
+    public double getNumExplored() {
+        return numExplored;
+    }
+
+    public void updateNumExplored() {
+        this.numExplored++;
     }
 
     /*
@@ -185,8 +196,6 @@ public abstract class Agent {
                 "x=" + x +
                 ", y=" + y +
                 ", direction=" + direction +
-                ", xProp=" + xProp +
-                ", yProp=" + yProp +
                 ", agentType=" + agentType +
                 '}';
     }
