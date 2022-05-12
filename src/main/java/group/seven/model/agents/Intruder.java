@@ -3,19 +3,19 @@ package group.seven.model.agents;
 
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
-import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.BrickAndMortar;
-import group.seven.logic.algorithms.RandomMoves;
-import group.seven.logic.algorithms.RandomTest;
+import group.seven.logic.algorithms.*;
+import group.seven.logic.geometric.Pythagoras;
+import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
+import javafx.geometry.Orientation;
 import group.seven.model.environment.Tile;
 
 import java.util.List;
 
-import static group.seven.enums.Cardinal.SOUTH;
+import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.TileType.INTRUDER;
 
 public class Intruder extends Agent {
@@ -25,10 +25,15 @@ public class Intruder extends Agent {
     private final int maxSpeed = (int) Scenario.INTRUDER_SPRINT_SPEED;
     private Vision vision;
     Algorithm algorithm;
+    private Cardinal orientationToGoal;
+    private double angleToGoal;  // in degrees
 
-    public Intruder(int x, int y, Algorithm algorithm) {
+
+    public Intruder(int x, int y, Algorithm algorithm) { //TODO: fix and finish
         this(x, y);
         this.algorithm = algorithm;
+        updateOrientationToGoal();
+
     }
 
     public Intruder(int x, int y) {
@@ -41,8 +46,34 @@ public class Intruder extends Agent {
         direction = SOUTH;      //DEFAULT
         algorithm = new RandomMoves(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
+        updateOrientationToGoal();
+        currentSpeed = 3;
+    }
 
-        //currentSpeed = 3;
+    public void updateOrientationToGoal (){
+        Rectangle goalLocationArea = Scenario.targetArea.area();
+        double heightMediumPoint =  goalLocationArea.getHeight()/2;
+        double widthMediumPoint = goalLocationArea.getWidth()/2;
+        int x = (int)(goalLocationArea.getX() + widthMediumPoint);
+        int y = (int)(goalLocationArea.getY() + heightMediumPoint);
+        double angle = Pythagoras.getAnglePythagoras(x, y, this.x, this.y);
+        //Update angle to goal, which is in degrees
+        this.angleToGoal= angle;
+
+       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.x ,this.y, x, y);
+
+    }
+
+
+
+
+
+    public Cardinal getOrientationToGoal(){
+        return this.orientationToGoal;
+    }
+
+    public double getAngleToGoal(){
+        return this.angleToGoal;
     }
 
     @Override

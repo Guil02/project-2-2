@@ -19,14 +19,14 @@ public abstract class Agent {
     private static int IDs = 0;
     public final int PHEROMONELIFETIME = 20;
     //Type
-    public final XY initialPosition;
+    public final XY initialPosition; //spawining
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
     //Marker and Pheromone
     private final ArrayList<Marker> markers = new ArrayList<>();
     private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Pose
-    public int x, y; //You can use this if the property stuff confuses
+    public int x, y; //You can use this for updated coordinates
     //Type
     public TileType agentType;
     protected Cardinal direction;
@@ -34,6 +34,9 @@ public abstract class Agent {
     protected List<Tile> seenTiles = new ArrayList<>(30);
     //Internal map
     private TileNode[][] map;
+    //Type
+    boolean ignorePortal = false;
+    boolean isTeleported = false;
 
     //Current Speed
     //Strategy
@@ -58,6 +61,14 @@ public abstract class Agent {
     public void moveTo(XY pos) {
         this.x = pos.x();
         this.y = pos.y();
+    }
+
+    public void setIgnorePortal(boolean ignorePortal){  // TODO: handle by simulator
+        this.ignorePortal = ignorePortal;
+    }
+
+    public boolean getIgnorePortal() {
+        return this.ignorePortal;
     }
 
     public void executeTurn(Move move) {
@@ -89,16 +100,16 @@ public abstract class Agent {
         return x;
     }
 
-    public void setX(int x) {
-        //convert with frame
-        this.x = x;
-        xProp.set(x);
-    }
-
     public int getY() {
         //convert with frame
 //        return yProp.get();
         return y;
+    }
+
+    public void setX(int x) {
+        //convert with frame
+        this.x = x;
+        xProp.set(x);
     }
 
     public void setY(int y) {
@@ -110,6 +121,7 @@ public abstract class Agent {
     public XY getXY() {
         return new XY(x, y);
     }
+
 
     public IntegerProperty xProperty() {
         return xProp;
@@ -243,6 +255,14 @@ public abstract class Agent {
 
     public ArrayList<Marker> getMarkers() {
         return this.markers;
+    }
+
+    public void setTeleported(boolean isTeleported) {
+        this.isTeleported = isTeleported;
+    }
+
+    public boolean getIsTeleported() {
+        return this.isTeleported;
     }
 
 }

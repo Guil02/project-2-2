@@ -24,7 +24,7 @@ public class TileNode {
     List<Marker> markers;
     Adjacent<TileNode> adjacent;
 
-    public TileNode(Tile tile, Agent a){
+    public TileNode(Tile tile, Agent a){ //internal representation for agents map  with 'adjacent'
         this.agent = a;
         for(Agent agent: Scenario.TILE_MAP.agents){
             if(agent.x==tile.getX()&& agent.y==tile.getY()){
@@ -69,11 +69,16 @@ public class TileNode {
         TileNode south = agent.getMapPosition(agent.x,agent.y+1);
         TileNode west = agent.getMapPosition(agent.x-1,agent.y);
         TileNode target = null;
-        int xTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getX(), yTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getY();
         if(type==TARGET){
+            int xTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getX(); // taken inside , was outside before
+            int yTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getY();
             target = agent.getMapPosition(xTar,yTar);
         }
 
         adjacent = new Adjacent<>(north,east,south,west,target);
+    }
+
+    public TileType getType(){
+        return type;
     }
 }
