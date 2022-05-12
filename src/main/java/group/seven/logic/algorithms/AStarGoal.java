@@ -16,7 +16,7 @@ import static group.seven.enums.Action.NOTHING;
 import static group.seven.enums.AlgorithmType.A_STAR;
 import static group.seven.enums.TileType.*;
 
-public class AStarAlgorithm implements Algorithm {
+public class AStarGoal implements Algorithm {
 
     private final int initialX;
     private final int initialY;
@@ -24,17 +24,16 @@ public class AStarAlgorithm implements Algorithm {
     private final TileNode[][] playerMap;
     private AStarNode current;
     private AStarNode target;
-    private Intruder player;
+    private final Intruder player;
     List<Move> movesLeft;
     List<AStarNode> open;
     List<AStarNode> closed;
     int[][] additions = {{1,0},{-1,0},{0,1},{0,-1}}; //TODO: maybe remove
 
 
-
-    public AStarAlgorithm(Intruder player) {
+    public AStarGoal(Intruder player) {
         this.initialX = player.initialPosition.x();
-        this.initialY =  player.initialPosition.y();;
+        this.initialY =  player.initialPosition.y();
         open = new ArrayList<>();
         closed = new ArrayList<>();
         movesLeft = new ArrayList<>();
@@ -184,6 +183,98 @@ public class AStarAlgorithm implements Algorithm {
     @Override
     public AlgorithmType getType() {
         return A_STAR;
+    }
+
+
+
+    public class AStarNode {
+        private final XY coordinate;
+        private int gCost = Integer.MAX_VALUE;
+        private int fCost = Integer.MAX_VALUE;
+        private int hCost = Integer.MAX_VALUE;
+        private int rCost = Integer.MAX_VALUE;
+        private AStarNode parent;
+        private final AStarGoal aStarGoal;
+
+
+        public AStarNode(XY xy, AStarGoal aStarGoal) {
+            this.coordinate = xy;
+            this.parent = null;
+            this.aStarGoal = aStarGoal;
+        }
+
+        public void updateCost(){
+            updateGCost();
+            updateHCost();
+            updateFCost();
+        }
+
+        public void updateHCost() {
+            hCost = aStarGoal.hCost(this.coordinate);
+        }
+
+        public void updateRCost(){
+            rCost= aStarGoal.rCost(this.coordinate);
+        }
+
+        public void updateGCost(){
+            gCost = aStarGoal.gCost(this.coordinate);
+        }
+
+
+        public void updateFCost(){
+            fCost = gCost+hCost - rCost;
+        }
+
+        public XY getCoordinate() {
+            return coordinate;
+        }
+
+        public int getfCost() {
+            return fCost;
+        }
+
+        public double getrCost(){
+            return rCost;
+        }
+
+        public int getgCost(){
+            return gCost;
+        }
+
+        public int gethCost() {
+            return hCost;
+        }
+
+        public void setgCost(int gCost){ this.gCost = gCost; }
+
+        public int getX (){
+            return this.coordinate.x();
+        }
+
+        public int getY (){
+            return this.coordinate.y();
+        }
+        public AStarNode getParent(){ return parent; }
+
+        public void setParent(AStarNode parent) { this.parent = parent; }
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AStarNode aStarNode = (AStarNode) o;
+            return Objects.equals(coordinate, aStarNode.coordinate);
+        }
+
+
+        @Override
+        public String toString() {
+            return "AStarNode{" +
+                    "coordinate=" + coordinate +
+                    '}';
+        }
     }
 
 }

@@ -10,7 +10,6 @@ import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
-import javafx.geometry.Orientation;
 import group.seven.model.environment.Tile;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class Intruder extends Agent {
         agentType = INTRUDER;
         currentSpeed = 1;       //DEFAULT
         direction = SOUTH;      //DEFAULT
-        algorithm = new AStarAlgorithm(this); //DEFAULT
+        algorithm = new AStarGoal(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
         updateOrientationToGoal();
         currentSpeed = 3;

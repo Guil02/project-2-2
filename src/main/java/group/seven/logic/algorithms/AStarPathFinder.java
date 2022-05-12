@@ -5,8 +5,8 @@ import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
 import group.seven.model.agents.TileNode;
-import group.seven.model.environment.Scenario;
-import group.seven.model.environment.TileMap;
+
+import java.util.Objects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -209,6 +209,100 @@ public class AStarPathFinder {
 
     public int hCost(XY xy){
         return Math.abs(target.getX() - xy.x()) + Math.abs(target.getY() - xy.y());
+    }
+
+
+
+
+    public class AStarNode {
+        private final XY coordinate;
+        private int gCost = Integer.MAX_VALUE;
+        private int fCost = Integer.MAX_VALUE;
+        private int hCost = Integer.MAX_VALUE;
+        private final int rCost = Integer.MAX_VALUE;
+        private AStarNode parent;
+        private final AStarPathFinder aStarPath;
+
+        // TODO: if bugs, check this
+        public AStarNode(XY xy, AStarPathFinder aStarPath) {
+            this.coordinate = xy;
+            this.parent = null;
+            this.aStarPath = aStarPath;
+        }
+
+
+        public void updateCost(){
+            updateGCost();
+            updateHCost();
+            updateFCost();
+        }
+
+        public void updateHCost() {
+            hCost = aStarPath.hCost(this.coordinate);
+        }
+
+        public void updateGCost(){
+            gCost = aStarPath.gCost(this.coordinate);
+        }
+
+
+        public void updateFCost(){
+            fCost = gCost+hCost;
+        }
+
+        public XY getCoordinate() {
+            return coordinate;
+        }
+
+
+
+        public int getfCost() {
+            return fCost;
+        }
+
+        public double getrCost(){
+            return rCost;
+        }
+
+        public int getgCost() {
+            return gCost;
+        }
+
+        public int gethCost() {
+            return hCost;
+        }
+
+
+
+        public void setgCost(int gCost){ this.gCost = gCost; }
+
+        public int getX (){
+            return this.coordinate.x();
+        }
+
+        public int getY (){
+            return this.coordinate.y();
+        }
+        public AStarNode getParent(){ return parent; }
+
+        public void setParent(AStarNode parent) { this.parent = parent; }
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AStarNode aStarNode = (AStarNode) o;
+            return Objects.equals(coordinate, aStarNode.coordinate);
+        }
+
+
+        @Override
+        public String toString() {
+            return "AStarNode{" +
+                    "coordinate=" + coordinate +
+                    '}';
+        }
     }
 
 }
