@@ -2,8 +2,10 @@ package group.seven.logic.algorithms;
 
 import group.seven.logic.geometric.XY;
 
+import java.util.Objects;
+
 public class AStarNode {
-    private XY coordinate;
+    private final XY coordinate;
     private int gCost = Integer.MAX_VALUE;
     private int fCost = Integer.MAX_VALUE;
     private int hCost = Integer.MAX_VALUE;
@@ -101,6 +103,19 @@ public class AStarNode {
     public void setParent(AStarNode parent) { this.parent = parent; }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AStarNode aStarNode = (AStarNode) o;
+        return Objects.equals(coordinate, aStarNode.coordinate);
+    }
 
 
+    @Override
+    public String toString() {
+        return "AStarNode{" +
+                "coordinate=" + coordinate +
+                '}';
+    }
 }

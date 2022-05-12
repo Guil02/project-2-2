@@ -9,6 +9,7 @@ import group.seven.model.environment.Scenario;
 import group.seven.model.environment.TileMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,16 +17,16 @@ import static group.seven.enums.TileType.WALL;
 
 public class AStarPathFinder {
 
-    private AStarNode currentNode;
+    private final AStarNode currentNode;
 
 
     private AStarNode target;
-    private Agent player;
+    private final Agent player;
     int[][] additions = {{1,0},{-1,0},{0,1},{0,-1}}; //TODO: maybe remove
     List<Move> movesLeft; // moves left to do //TODO: maybe remove
     List<AStarNode> open;//TODO: maybe remove
     List<AStarNode> closed; //TODO: maybe remove
-    private TileNode[][] internalMap; // agent representation
+    private final TileNode[][] internalMap; // agent representation
 
 
 
@@ -50,8 +51,6 @@ public class AStarPathFinder {
         int count1 = 0;
         int count2 = 0;
         while (!openedNodes.isEmpty()){
-            count1++;
-            System.out.println("count1 "+count1);
             AStarNode node = openedNodes.get(0);
             for(int i = 1; i < openedNodes.size(); i++){
                 if(openedNodes.get(i).getfCost() < node.getfCost()) {
@@ -65,9 +64,10 @@ public class AStarPathFinder {
             }
             openedNodes.remove(node);
             System.out.println("agent"+player.getType());
-            System.out.println("opened size"+openedNodes.size());
-            System.out.println("closed size"+closedNodes.size());
             closedNodes.add(node);
+            System.out.println("OPEN "+Arrays.toString(openedNodes.toArray()));
+            if (count1 == 5)
+                break;
 
             if(node.equals(target)){
                 target = node;
@@ -84,16 +84,19 @@ public class AStarPathFinder {
                     neighbor.setgCost(lowestCost);
                     neighbor.updateFCost();
                     neighbor.setParent(node);
-                    if(!openedNodes.contains(neighbor)){
-                        count2++;
-                        System.out.println("count2 "+count2);
+                    //if(!openedNodes.contains(neighbor)){
+                    //Check for duplicates
+                    boolean inOpenList = true;
+                    for (AStarNode nodes : openedNodes)
+                        if (neighbor.equals(nodes)) {
+                            inOpenList = false;
+                            break;
+                        }
+                    if (inOpenList)
                         openedNodes.add(neighbor);
                     }
                 }
-
-
             }
-        }
         return makePath();
     }
 
@@ -105,7 +108,9 @@ public class AStarPathFinder {
         for(int i = 0; i<4; i++){
             AStarNode neighbor = new AStarNode(new XY (x+additions[i][0],y+additions[i][1]),this);
             if (!outOfBounds(neighbor.getX(), neighbor.getY()) && internalMap[neighbor.getX()][neighbor.getY()] != null) {
-                neighbours.add(neighbor);
+                if (!neighbours.contains(neighbor))
+                    neighbours.add(neighbor);
+
             }
         }
         return neighbours;
@@ -148,36 +153,36 @@ public class AStarPathFinder {
             AStarNode previous = nodePath.get(i);
             AStarNode next = nodePath.get(i+1);
             if(next.getX()>previous.getX() && next.getY()==previous.getY()){
-                if(orientation== orientation.EAST)
+                if(orientation== Cardinal.EAST)
                     actionPath.add(Action.MOVE_FORWARD);
                 else {
                     actionPath.add(Action.TURN_RIGHT);
                     actionPath.add(Action.MOVE_FORWARD);
-                    orientation = orientation.EAST;
+                    orientation = Cardinal.EAST;
                 }
             }else if(next.getX()<previous.getX() && next.getY()==previous.getY()){
-                if(orientation==orientation.WEST)
+                if(orientation== Cardinal.WEST)
                     actionPath.add(Action.MOVE_FORWARD);
                 else {
                     actionPath.add(Action.TURN_LEFT);
                     actionPath.add(Action.MOVE_FORWARD);
-                    orientation = orientation.WEST;
+                    orientation = Cardinal.WEST;
                 }
             }else if(next.getX()==previous.getX() && next.getY()>previous.getY()){
-                if(orientation== orientation.SOUTH)
+                if(orientation== Cardinal.SOUTH)
                     actionPath.add(Action.MOVE_FORWARD);
                 else {
                     actionPath.add(Action.TURN_DOWN);
                     actionPath.add(Action.MOVE_FORWARD);
-                    orientation = orientation.SOUTH;
+                    orientation = Cardinal.SOUTH;
                 }
             }else if(next.getX() == previous.getX() && next.getY()<previous.getY()){
-                if(orientation== orientation.NORTH)
+                if(orientation== Cardinal.NORTH)
                     actionPath.add(Action.MOVE_FORWARD);
                 else {
                     actionPath.add(Action.TURN_UP);
                     actionPath.add(Action.MOVE_FORWARD);
-                    orientation = orientation.NORTH;
+                    orientation = Cardinal.NORTH;
                 }
             }
         }
