@@ -134,11 +134,11 @@ public class ScenarioBuilder implements Builder<Scenario> {
 
     private void initMap() {
         TileMap tileMap = new TileMap();
+        Scenario.TILE_MAP = tileMap;
         for(int x = 0; x <= Scenario.WIDTH; x++)
             for (int y = 0; y <= Scenario.HEIGHT; y++)
                 tileMap.setTile(x, y, new Tile(x, y));
 
-        Scenario.TILE_MAP = tileMap;
     }
 
     private void setAdjacent(){

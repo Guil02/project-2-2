@@ -18,6 +18,11 @@ import static group.seven.enums.Cardinal.*;
 public abstract class Agent {
     private static int IDs = 0;
     public final int PHEROMONELIFETIME = 20;
+
+    public XY getInitialPosition() {
+        return initialPosition;
+    }
+
     //Type
     public final XY initialPosition; //spawining
     private final IntegerProperty xProp = new SimpleIntegerProperty();
@@ -208,11 +213,28 @@ public abstract class Agent {
         map = new TileNode[Scenario.WIDTH][Scenario.HEIGHT];
     }
 
+    public void initializeInitialTile(){
+        try{
+            map[x][y]=new TileNode(Scenario.TILE_MAP.getTile(x,y),this);
+        }
+        catch (Exception e){
+            System.err.println("An error occurred in the initialization of the initial tile in the agent class");
+            e.printStackTrace();
+        }
+    }
+
     public void updateMap() {
         for (Tile tile : seenTiles) {
             if (map[tile.getX()][tile.getY()] != null) {
                 map[tile.getX()][tile.getY()].update();
             } else map[tile.getX()][tile.getY()] = new TileNode(tile, this);
+        }
+
+        for(TileNode[] tiles : map){
+            for(TileNode tile: tiles){
+                if(tile!=null)
+                    tile.updateAdjacent();
+            }
         }
     }
 

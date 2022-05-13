@@ -26,7 +26,7 @@ public class AStarPathFinder {
     List<Move> movesLeft; // moves left to do //TODO: maybe remove
     List<AStarNode> open;//TODO: maybe remove
     List<AStarNode> closed; //TODO: maybe remove
-    private final TileNode[][] internalMap; // agent representation
+    private TileNode[][] internalMap; // agent representation
 
 
 
@@ -44,12 +44,12 @@ public class AStarPathFinder {
 
 
     public List<Move> findPath(){
+        internalMap=player.getMap();
         List<AStarNode> openedNodes = new ArrayList<>();
         List<AStarNode> closedNodes = new ArrayList<>();
         openedNodes.add(currentNode);
         currentNode.updateCost();
-        int count1 = 0;
-        int count2 = 0;
+
         while (!openedNodes.isEmpty()){
             AStarNode node = openedNodes.get(0);
             for(int i = 1; i < openedNodes.size(); i++){
@@ -63,11 +63,10 @@ public class AStarPathFinder {
                 }
             }
             openedNodes.remove(node);
-            System.out.println("agent"+player.getType());
+            //System.out.println("agent"+player.getType());
             closedNodes.add(node);
-            System.out.println("OPEN "+Arrays.toString(openedNodes.toArray()));
-            if (count1 == 5)
-                break;
+            //System.out.println("OPEN "+Arrays.toString(openedNodes.toArray()));
+
 
             if(node.equals(target)){
                 target = node;
@@ -84,19 +83,21 @@ public class AStarPathFinder {
                     neighbor.setgCost(lowestCost);
                     neighbor.updateFCost();
                     neighbor.setParent(node);
-                    //if(!openedNodes.contains(neighbor)){
-                    //Check for duplicates
-                    boolean inOpenList = true;
-                    for (AStarNode nodes : openedNodes)
-                        if (neighbor.equals(nodes)) {
-                            inOpenList = false;
-                            break;
-                        }
-                    if (inOpenList)
+                    if(!openedNodes.contains(neighbor)){
                         openedNodes.add(neighbor);
                     }
+                    //Check for duplicates
+                    //boolean inOpenList = true;
+                    //for (AStarNode nodes : openedNodes)
+                      //  if (neighbor.equals(nodes)) {
+                        //    inOpenList = false;
+                          //  break;
+                        //}
+                    //if (inOpenList)
+                      //  openedNodes.add(neighbor);
                 }
             }
+        }
         return makePath();
     }
 

@@ -14,6 +14,14 @@ import static group.seven.enums.TileType.TARGET;
 
 public class TileNode {
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     //from agent's perspective
     int x, y;
     //Or Point2D?
@@ -25,9 +33,11 @@ public class TileNode {
     Adjacent<TileNode> adjacent;
 
     public TileNode(Tile tile, Agent a){ //internal representation for agents map  with 'adjacent'
+        x = tile.getX();
+        y = tile.getY();
         this.agent = a;
         for(Agent agent: Scenario.TILE_MAP.agents){
-            if(agent.x==tile.getX()&& agent.y==tile.getY()){
+            if(agent!=null && agent.x==tile.getX()&& agent.y==tile.getY()){
                 this.agentType = agent.agentType;
                 break;
             }
@@ -45,6 +55,7 @@ public class TileNode {
         y = tile.getY();
     }
 
+    //updates one node
     public void update(){
         agentType = null;
         markers.clear();
@@ -69,7 +80,7 @@ public class TileNode {
         TileNode south = agent.getMapPosition(agent.x,agent.y+1);
         TileNode west = agent.getMapPosition(agent.x-1,agent.y);
         TileNode target = null;
-        if(type==TARGET){
+        if(type==PORTAL){
             int xTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getX(); // taken inside , was outside before
             int yTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getY();
             target = agent.getMapPosition(xTar,yTar);
