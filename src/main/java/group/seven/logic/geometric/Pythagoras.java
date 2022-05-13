@@ -47,5 +47,15 @@ public class Pythagoras {
     return orientationToGoal;
     }
 
+    public static double angleFromAgentToTarget(XY target, XY agent) {
+        Point2D point = new Vector(target.x() - agent.x(), target.y() - agent.y());
+        Point2D norm = point.normalize();
+        double angle = Math.asin(norm.getY());
+        if (angle < 0) {
+            return angle+360;
+        }
+        return angle;
+    }
+
 
 }

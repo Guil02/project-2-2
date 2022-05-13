@@ -134,17 +134,16 @@ public class AStarGoal implements Algorithm {
     //TODO: This needs to be fixed - figure out the r heuristic and how to apply the angle to the player
     public int rCost (XY xy){ //xy = current frontier node tested
         player.updateOrientationToGoal();
-        double angleCurrentNode = Pythagoras.getAnglePythagoras(xy.x(), xy.y(), player.getX(), player.getY());
-        if (angleCurrentNode > 180){
-            angleCurrentNode= angleCurrentNode-180;
-        }
+        double angleAgentToGoal = Pythagoras.getAnglePythagoras(xy.x(), xy.y(), player.getX(), player.getY());
+        double angleTileToAgent = Pythagoras.angleFromAgentToTarget(xy,new XY(player.getX(),player.getY()));
         //double angleCurrentNode = Pythagoras.getAnglePythagoras(xy.x(), xy.y(), current.getX(), current.getY()); is current the current target?
         double angleOrientation = player.getAngleToGoal();
-        int r = (int)Math.round((Math.abs(angleOrientation- angleCurrentNode)));
+        //TODO: ELENA PEREGO FROM ITALY IS CODING THIS
+        //int r = (int)Math.round((Math.abs(angleOrientation- angleCurrentNode)));
         //if (r > 180) {
         //    r = 360 - r;
         //}
-        return r;
+        return 0;
     }
 
     @Override
