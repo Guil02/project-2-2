@@ -1,5 +1,6 @@
 package group.seven.model.environment;
 
+import group.seven.enums.PheromoneType;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
@@ -9,6 +10,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import static group.seven.enums.PheromoneType.SMELL;
 import static group.seven.enums.TileType.EMPTY;
 import static group.seven.model.environment.Scenario.NUM_AGENTS;
 
@@ -26,8 +28,12 @@ public class Tile {
     List<Boolean> seen;
     //Graph
     public Adjacent<Tile> adjacent;
+    public Pheromone pheromone;
 
     public Tile() {
+        xy = new XY(0,0);
+        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
+        Scenario.TILE_MAP.pheromones.add(pheromone);
         type = EMPTY;
         seen = new ArrayList<>(NUM_AGENTS);
         for (int i = 0; i < NUM_AGENTS; i++)

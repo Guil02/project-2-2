@@ -11,6 +11,7 @@ import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
 import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
+import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
@@ -107,8 +108,15 @@ public class Simulator extends AnimationTimer {
             move.agent().clearVision();
             move.agent().updateVision();
         }
-
+        updatePheromones();
+        updateAllAgents();
         //TODO: determine where to apply the moves to updated the model and the agent's internal model
+    }
+
+    private void updatePheromones() {
+        for(Pheromone f: TILE_MAP.getPheromones()){
+            f.update();
+        }
     }
 
     /** FOR TESTING PURPOSE ONLY
@@ -142,7 +150,14 @@ public class Simulator extends AnimationTimer {
                 spawnAgents(INTRUDER);
             }
         }
+        updateAllAgents();
         print(Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
+    }
+
+    private void updateAllAgents() {
+        for(Agent agent : TILE_MAP.agents){
+            agent.update();
+        }
     }
 
     private void spawnAgents(TileType agentType){
@@ -176,11 +191,11 @@ public class Simulator extends AnimationTimer {
 
             Agent agent = switch (agentType) {
                 case INTRUDER -> new Intruder(x,y);
-                case GUARD -> new Guard(x,y, AlgorithmType.BRICK_AND_MORTAR);
+                case GUARD -> new Guard(x,y, AlgorithmType.EVAW);
                 default -> throw new IllegalStateException("Unexpected value: " + agentType);
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };
-
+            agent.initializeInitialTile();
             agent.updateVision();
             TILE_MAP.addAgent(agent);
             print("added "+agentType.name()+" : " + agent.getID());
