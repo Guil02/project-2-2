@@ -81,8 +81,11 @@ public class TileNode {
         TileNode west = agent.getMapPosition(agent.x-1,agent.y);
         TileNode target = null;
         if(type==PORTAL){
-            int xTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getX(); // taken inside , was outside before
-            int yTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getY();
+            System.out.println("position "+Scenario.TILE_MAP.getTile(x,y));
+            //int xTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getX(); // taken inside , was outside before
+            //int yTar=Scenario.TILE_MAP.getTile(x,y).adjacent.targetLocation().getY();
+            int xTar=Scenario.targetArea.getX(); // taken inside , was outside before
+            int yTar=Scenario.targetArea.getY();
             target = agent.getMapPosition(xTar,yTar);
         }
 

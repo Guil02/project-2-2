@@ -2,6 +2,7 @@ package group.seven.logic.algorithms;
 
 import group.seven.enums.AlgorithmType;
 import group.seven.logic.geometric.Pythagoras;
+import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
@@ -15,6 +16,7 @@ import java.util.List;
 import static group.seven.enums.Action.NOTHING;
 import static group.seven.enums.AlgorithmType.A_STAR;
 import static group.seven.enums.TileType.*;
+import static group.seven.utils.Methods.print;
 
 public class AStarGoal implements Algorithm {
 
@@ -29,6 +31,7 @@ public class AStarGoal implements Algorithm {
     List<AStarNode> open;
     List<AStarNode> closed;
     int[][] additions = {{1,0},{-1,0},{0,1},{0,-1}}; //TODO: maybe remove
+    int wallPenalization = 2;
 
 
     public AStarGoal(Intruder player) {
@@ -91,7 +94,13 @@ public class AStarGoal implements Algorithm {
                 if(grid==null)
                     continue;
                 AStarNode node = new AStarNode(new XY(grid.getX(), grid.getY()),  this);
-                if(open.contains(node) || closed.contains(node) || grid.getType()==WALL || (player.getIgnorePortal() && grid.getType()==PORTAL)){
+                if (grid.getType()==WALL) {
+                    node.setfCost(node.getfCost()*wallPenalization);
+                    for (AStarNode neighbor : neighbours(node)) {
+                        neighbor.setfCost(neighbor.getfCost()*wallPenalization);
+                    }
+                }
+                if(open.contains(node) || closed.contains(node) || (player.getIgnorePortal() && grid.getType()==PORTAL)){
                     continue;
                 }
                 open.add(node);
@@ -134,16 +143,22 @@ public class AStarGoal implements Algorithm {
     //TODO: This needs to be fixed - figure out the r heuristic and how to apply the angle to the player
     public int rCost (XY xy){ //xy = current frontier node tested
         player.updateOrientationToGoal();
-        double angleAgentToGoal = Pythagoras.getAnglePythagoras(xy.x(), xy.y(), player.getX(), player.getY());
-        double angleTileToAgent = Pythagoras.angleFromAgentToTarget(xy,new XY(player.getX(),player.getY()));
-        //double angleCurrentNode = Pythagoras.getAnglePythagoras(xy.x(), xy.y(), current.getX(), current.getY()); is current the current target?
-        double angleOrientation = player.getAngleToGoal();
+
+        double angleAgentToGoal = player.getAngleToGoal();
+
+        double angleAgentToTile = Pythagoras.angleFromAgentToTarget(xy,new XY(player.getX(),player.getY()));
+
+
         //TODO: ELENA PEREGO FROM ITALY IS CODING THIS
-        //int r = (int)Math.round((Math.abs(angleOrientation- angleCurrentNode)));
-        //if (r > 180) {
-        //    r = 360 - r;
-        //}
-        return 0;
+        double r = Math.abs(angleAgentToGoal- angleAgentToTile);
+
+        if (r > 180) {
+            r = 360 - r;
+        }
+        print(r);
+        r = (r/180)*50;
+
+        return (int)Math.round(r);
     }
 
     @Override
@@ -211,7 +226,7 @@ public class AStarGoal implements Algorithm {
         }
 
         public void updateCost(){
-            updateGCost();
+            //updateGCost();
             updateHCost();
             updateRCost();
             updateFCost();
@@ -241,6 +256,8 @@ public class AStarGoal implements Algorithm {
         public int getfCost() {
             return fCost;
         }
+
+        public void setfCost(int newCost) { this.fCost = newCost;}
 
         public double getrCost(){
             return rCost;

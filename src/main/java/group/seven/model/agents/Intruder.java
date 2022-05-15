@@ -6,6 +6,7 @@ import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.*;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
+import group.seven.logic.geometric.XY;
 import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
@@ -55,7 +56,8 @@ public class Intruder extends Agent {
         double widthMediumPoint = goalLocationArea.getWidth()/2;
         int x = (int)(goalLocationArea.getX() + widthMediumPoint);
         int y = (int)(goalLocationArea.getY() + heightMediumPoint);
-        double angle = Pythagoras.getAnglePythagoras(x, y, this.x, this.y);
+        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
+        //double angle = Pythagoras.getAnglePythagoras(this.x,this.y,x,y);
         //Update angle to goal, which is in degrees
         this.angleToGoal= angle;
 

@@ -8,6 +8,8 @@ import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.Cardinal.SOUTH;
 
 public class Pythagoras {
+    //x1,y1 = agent
+    //x2,y2 = goal
     public static double getAnglePythagoras(int x1, int y1, int x2, int y2){
         double angle = 0; //degrees
         if (x1 != x2 && y1 != y2) { //checking so that no division by 0 happens
@@ -50,7 +52,8 @@ public class Pythagoras {
     public static double angleFromAgentToTarget(XY target, XY agent) {
         Point2D point = new Vector(target.x() - agent.x(), target.y() - agent.y());
         Point2D norm = point.normalize();
-        double angle = Math.asin(norm.getY());
+        double angle = Math.atan2(-norm.getY(),norm.getX());
+        angle = Math.toDegrees(angle);
         if (angle < 0) {
             return angle+360;
         }

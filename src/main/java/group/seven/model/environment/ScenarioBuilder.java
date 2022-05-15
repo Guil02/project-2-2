@@ -175,6 +175,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
             for (Component component : Scenario.portals) {
                 if (component.getX() == x && component.getY() == y) {
                     portal = component;
+                    TARGET = Scenario.TILE_MAP.getTile(Scenario.targetArea.getX(),Scenario.targetArea.getY());
                     break;
                 }
             }
