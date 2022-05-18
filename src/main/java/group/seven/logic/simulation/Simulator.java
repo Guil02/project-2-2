@@ -6,6 +6,7 @@ import group.seven.enums.GameMode;
 import group.seven.enums.Status;
 import group.seven.enums.TileType;
 import group.seven.gui.SimulationScreen;
+//import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
@@ -36,8 +37,8 @@ public class Simulator extends AnimationTimer {
     double elapsedTimeSteps;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
     final boolean guiMode = true;
-    final int RANGE_TO_CATCH_INTRUDER = 3;
-    final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 55;
+    final int RANGE_TO_CATCH_INTRUDER = 5;
+    final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
 
     public static Status status;
 
@@ -145,10 +146,6 @@ public class Simulator extends AnimationTimer {
         List<Agent> intruders = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == INTRUDER).toList();
 
 
-
-
-
-
         for (Agent agent : TILE_MAP.agents) {
             agent.updateVision();
             agent.updateMap();
@@ -159,7 +156,7 @@ public class Simulator extends AnimationTimer {
                             ((Intruder)intruder).killIntruder();
                             //TODO: END SIMULATION SAM
                             if (checkGameOver(GAURD_GAME_MODE, GUARD)) {
-                                System.out.println("CAUGHT INTRUDER");
+                                System.out.println("GAURDS WON");
                                 stop();
                             }
                         }
@@ -168,7 +165,7 @@ public class Simulator extends AnimationTimer {
             } else {//if agent is not Guard it has to be an Intruder
                 for (Agent intruder : TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
-                        if (targetArea.area().contains(intruder.x,intruder.y)) {
+                        if (targetArea.area().contains(intruder.getX(),intruder.getY())) {
                             int inTargetAreaSince = ((Intruder)intruder).intruderInTargetArea();
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
                                 if (checkGameOver(INTRUDER_GAME_MODE, INTRUDER)) {
@@ -287,7 +284,7 @@ public class Simulator extends AnimationTimer {
 
             Agent agent = switch (agentType) {
                 case INTRUDER -> new Intruder(x,y);
-                case GUARD -> new Guard(x,y, AlgorithmType.EVAW);
+                case GUARD -> new Guard(x,y, AlgorithmType.ANT_PURSUIT);
                 default -> throw new IllegalStateException("Unexpected value: " + agentType);
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };

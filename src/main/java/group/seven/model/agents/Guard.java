@@ -48,8 +48,11 @@ public class Guard extends Agent {
         switch (algorithmType){
             case BRICK_AND_MORTAR -> this.algorithm=new BrickAndMortar(this);
             case EVAW -> this.algorithm=new EVAW(this);
+            case ANT_PURSUIT -> this.algorithm= new AntsPursuit(this);
         }
     }
+
+
 
     public Guard(int x, int y) {
         super(x,y);
