@@ -2,7 +2,11 @@ package group.seven.enums;
 
 import group.seven.logic.geometric.XY;
 
-//TODO: maybe change name to Orientation, but JavaFX has its own Orientation enum, so might be confusing
+/**
+ * Represents the cardinal directions on a map compass.
+ * North, South, East, West
+ * also contains value of "Nowhere", representing none of the above.
+ */
 public enum Cardinal {
 
     NORTH(new XY(0, -1)),
@@ -11,6 +15,10 @@ public enum Cardinal {
     WEST(new XY(-1, 0)),
     NOWHERE(new XY(0,0));
 
+    /**
+     * A XY unit vector representing one step in the direction of this
+     * Cardinal value in both the x and y directions
+     */
     public final XY unitVector;
 
     Cardinal(XY unitVector) {
@@ -43,8 +51,6 @@ public enum Cardinal {
         return null;
 
     }
-
-
 
     public XY unitVector() {
         return unitVector;

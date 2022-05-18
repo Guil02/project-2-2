@@ -2,8 +2,6 @@ package group.seven.model.agents;
 
 
 import group.seven.enums.AlgorithmType;
-import group.seven.enums.MarkerType;
-import group.seven.enums.PheromoneType;
 import group.seven.logic.algorithms.*;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
@@ -13,9 +11,8 @@ import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 import group.seven.utils.Config;
 
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.TileType.GUARD;
@@ -42,7 +39,6 @@ public class Guard extends Agent {
     public Guard(int x, int y, AlgorithmType algorithmType) {
         this(x, y);
         algorithm = initAlgo(algorithmType);
-        System.out.println(algorithmType);
     }
 
     public void createAlgorithm(AlgorithmType algorithmType){
@@ -52,8 +48,6 @@ public class Guard extends Agent {
             case ANT_PURSUIT -> this.algorithm= new AntsPursuit(this);
         }
     }
-
-
 
     public Guard(int x, int y) {
         super(x,y);
@@ -66,17 +60,16 @@ public class Guard extends Agent {
         algorithm = initAlgo(Config.ALGORITHM_GUARD); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
-        //algorithm = new RandomTest(this);
         currentSpeed = 3;
     }
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
-            case EVAW -> this.algorithm=new EVAW(this);
-            case ANT_PURSUIT -> this.algorithm= new AntsPursuit(this);
+            case EVAW -> algorithm = new EVAW(this);
+            case ANT_PURSUIT -> algorithm = new AntsPursuit(this);
             case ANT -> new Ant(this);
             case BRICK_AND_MORTAR -> new BrickAndMortar(this);
-            default -> new RandomTest(this);
+            default -> new RandomAlt(this);
         };
     }
 

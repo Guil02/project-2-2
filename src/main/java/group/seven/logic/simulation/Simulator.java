@@ -1,13 +1,11 @@
 package group.seven.logic.simulation;
 
 import group.seven.Main;
-import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
 import group.seven.enums.Status;
 import group.seven.enums.TileType;
 import group.seven.gui.GameEnd;
 import group.seven.gui.SimulationScreen;
-//import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
@@ -136,6 +134,17 @@ public class Simulator extends AnimationTimer {
         return false;
     }
 
+    protected void endSimulation() {
+        try {
+            Thread.sleep(3600);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        GameEnd end = new GameEnd();
+        Main.stage.setScene(new Scene(end));
+        Main.stage.centerOnScreen();
+    }
+
     /**
      * Called every timeStep to update the model.
      * Collects each agent's moves, resolves collisions, updates their vision and applies to the model.
@@ -156,13 +165,11 @@ public class Simulator extends AnimationTimer {
                     if (intruder.agentType == INTRUDER) {
                         if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
                             ((Intruder)intruder).killIntruder();
-                            //TODO: END SIMULATION SAM
+
                             if (checkGameOver(GAURD_GAME_MODE, GUARD)) {
                                 System.out.println("GAURDS WON");
-                                GameEnd end = new GameEnd();
-                                Main.stage.setScene(new Scene(end));
-                                Main.stage.centerOnScreen();
                                 stop();
+                                endSimulation();
                             }
                         }
                     }
@@ -175,10 +182,11 @@ public class Simulator extends AnimationTimer {
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
                                 if (checkGameOver(INTRUDER_GAME_MODE, INTRUDER)) {
                                     System.out.println("INTRUDER WON");
-                                    GameEnd end = new GameEnd();
-                                    Main.stage.setScene(new Scene(end));
-                                    Main.stage.centerOnScreen();
-                                    stop();
+//                                    GameEnd end = new GameEnd();
+//                                    Main.stage.setScene(new Scene(end));
+//                                    Main.stage.centerOnScreen();
+                                    stop(); // stops AnimationTimer
+                                    endSimulation();
                                 }
                                 //TODO: END SIMULATION SAM
 

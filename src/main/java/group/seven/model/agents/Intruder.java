@@ -57,9 +57,9 @@ public class Intruder extends Agent {
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
-            case RANDOM -> new RandomTest(this);
+            case RANDOM -> new RandomAlt(this);
             case A_STAR -> new AStarGoal(this);
-            default -> new RandomTest(this);
+            default -> new RandomAlt(this);
         };
     }
 
@@ -152,7 +152,7 @@ public class Intruder extends Agent {
             case RANDOM -> new RandomMoves(this);
             case BRICK_AND_MORTAR -> new BrickAndMortar(this);
 
-            default -> new RandomTest(this);
+            default -> new RandomAlt(this);
         };
 
         return this;
@@ -164,7 +164,7 @@ public class Intruder extends Agent {
             case RANDOM -> new RandomMoves(this);
             case BRICK_AND_MORTAR -> new BrickAndMortar(this);
 
-            default -> new RandomTest(this);
+            default -> new RandomAlt(this);
         };
 
         return this;

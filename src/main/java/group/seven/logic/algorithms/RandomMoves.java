@@ -36,7 +36,7 @@ public class RandomMoves implements Algorithm {
             return new Move(Action.TURN_DOWN, 0, agent);
         } else {
             int distance = (int) (Math.random() * Scenario.VIEW_DISTANCE);
-            return new Move(Action.MOVE_FORWARD, distance, agent);
+            return new Move(Action.MOVE_FORWARD, (distance == 0 ? 1 : distance), agent);
         }
     }
 
