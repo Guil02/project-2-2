@@ -33,6 +33,8 @@ public class Simulator extends AnimationTimer {
     double elapsedTimeSteps;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
     final boolean guiMode = true;
+    final int RANGE_TO_CATCH_INTRUDER = 3;
+    final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 55;
 
     public Simulator(Scenario scenario) {
         sim = this;
@@ -96,7 +98,34 @@ public class Simulator extends AnimationTimer {
         for (Agent agent : TILE_MAP.agents) {
             agent.updateVision();
             agent.updateMap();
+            if (agent.agentType == GUARD) {
+                for (Agent intruder : TILE_MAP.agents) {
+                    if (intruder.agentType == INTRUDER) {
+                        if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
+                            System.out.println("CATCHED GUARD");
+                            //TODO: END SIMULATION SAM
+                        }
+                    }
+                }
+            }
+            //if agent is not Guard it has to be an Intruder
+            else {
+                for (Agent intruder : TILE_MAP.agents) {
+                    if (intruder.agentType == INTRUDER) {
+                        if (targetArea.area().contains(intruder.x,intruder.y)) {
+                            int inTargetAreaSince = ((Intruder)intruder).intruderInTargetArea();
+                            if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
+                                System.out.println("INTRUDER WON");
+                                //TODO: END SIMULATION SAM
+                            }
+                        } else {
+                            ((Intruder)intruder).intruderNotInTargetArea();
+                        }
+                    }
+                }
+            }
         }
+        //System.out.println("TARGET AREA: "+targetArea.area().contains(intruder.x,intruder.y));
         List<Move> allMoves = Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::calculateMove).toList();
 
         //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.

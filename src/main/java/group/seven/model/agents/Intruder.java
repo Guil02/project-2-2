@@ -1,6 +1,7 @@
 package group.seven.model.agents;
 
 
+import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.*;
@@ -27,7 +28,9 @@ public class Intruder extends Agent {
     Algorithm algorithm;
     private Cardinal orientationToGoal;
     private double angleToGoal;  // in degrees
+    private int inTargetArea = 0;
 
+    boolean firstTimeInTargetArea = true;
 
     public Intruder(int x, int y, Algorithm algorithm) { //TODO: fix and finish
         this(x, y);
@@ -91,7 +94,16 @@ public class Intruder extends Agent {
 
     @Override
     public Move calculateMove() {
-        return algorithm.getNext();
+        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
+            if (firstTimeInTargetArea) {
+                firstTimeInTargetArea = false;
+                return algorithm.getNext();
+            }
+            else
+                return new Move(Action.NOTHING,0,this);
+        } else {
+            return algorithm.getNext();
+        }
     }
 
     @Override
@@ -156,6 +168,15 @@ public class Intruder extends Agent {
     public Intruder direction(Cardinal orientation) {
         direction = orientation;
         return this;
+    }
+
+    public int intruderInTargetArea() {
+        inTargetArea += 1;
+        return inTargetArea;
+    }
+
+    public void intruderNotInTargetArea() {
+        inTargetArea = 0;
     }
 
     @Override
