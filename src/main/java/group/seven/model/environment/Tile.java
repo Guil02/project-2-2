@@ -1,5 +1,7 @@
 package group.seven.model.environment;
 
+import group.seven.enums.Cardinal;
+import group.seven.enums.MarkerType;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
@@ -11,6 +13,7 @@ import java.util.List;
 
 import static group.seven.enums.TileType.EMPTY;
 import static group.seven.model.environment.Scenario.NUM_AGENTS;
+import static group.seven.model.environment.Scenario.NUM_GUARDS;
 
 public class Tile {
     //Exploration Status, also not sure about this
@@ -26,9 +29,14 @@ public class Tile {
     List<Boolean> seen;
     //Graph
     public Adjacent<Tile> adjacent;
+    public Marker marker;
 
     public Tile() {
         type = EMPTY;
+//        marker = new Marker(xy.x(),xy.y(), MarkerType.UNEXPLORED,999, Cardinal.NOWHERE);
+//        for (int i = 0; i < NUM_GUARDS; i++) {
+//
+//        }
         seen = new ArrayList<>(NUM_AGENTS);
         for (int i = 0; i < NUM_AGENTS; i++)
             seen.add(false);
