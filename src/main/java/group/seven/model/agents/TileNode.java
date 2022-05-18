@@ -28,8 +28,8 @@ public class TileNode {
         this.agent = a;
         this.pheromone = tile.pheromone;
         for(Agent agent: Scenario.TILE_MAP.agents){
-            if(a.x==tile.getX()&& a.y==tile.getY()){
-                this.agentType = a.agentType;
+            if(agent!=null && agent.x==tile.getX()&& agent.y==tile.getY()){
+                this.agentType = agent.agentType;
                 break;
             }
         }
@@ -44,6 +44,7 @@ public class TileNode {
         type  = tile.getType();
     }
 
+    //updates one node
     public void update(){
         agentType = null;
         markers.clear();

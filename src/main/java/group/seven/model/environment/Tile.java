@@ -39,7 +39,13 @@ public class Tile {
         for (int i = 0; i < NUM_AGENTS; i++)
             seen.add(false);
     }
+    public List<Boolean> getSeen(){
+        return seen;
+    }
 
+    public XY getXy(){
+        return this.xy;
+    }
     public Tile(int x, int y) {
         this();
         xy = new XY(x, y);
@@ -88,6 +94,10 @@ public class Tile {
 
     public boolean getExploredIntruder() {
         return exploredIntruderProperty.get();
+    }
+
+    public Adjacent<Tile> getAdjacent() {
+        return this.adjacent;
     }
 
 

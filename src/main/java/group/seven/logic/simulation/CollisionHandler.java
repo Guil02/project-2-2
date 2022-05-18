@@ -22,6 +22,7 @@ public class CollisionHandler {
             Agent agent = move.agent();
             agent.clearVision();
             agent.updateVision();
+            agent.updateMap();
             for (int i = 0; i < move.distance(); i++){
                 int x = agent.getX();
                 int y = agent.getY();
@@ -41,10 +42,12 @@ public class CollisionHandler {
                     print(agent.getID() + " just whooshed");
                     agent.moveTo(portal.exit());
                     agent.updateVision();
+                    agent.updateMap();
                     break;
                 } else {
                     move.agent().executeMove(1);
                     agent.updateVision();
+                    agent.updateMap();
                 }
             }
         }

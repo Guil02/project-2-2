@@ -96,6 +96,10 @@ public class Simulator extends AnimationTimer {
         //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
         //Creates a list of Moves for each agent's calculatedMove.
         //First filters out null agents, then maps agents to their calculatedMoves, and then collects these Moves into a List
+        for (Agent agent : TILE_MAP.agents) {
+            agent.updateVision();
+            agent.updateMap();
+        }
         List<Move> allMoves = Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::calculateMove).toList();
 
         //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
@@ -107,6 +111,7 @@ public class Simulator extends AnimationTimer {
             move.agent().executeTurn(move);
             move.agent().clearVision();
             move.agent().updateVision();
+            move.agent().updateMap();
         }
         updatePheromones();
         updateAllAgents();
@@ -135,7 +140,7 @@ public class Simulator extends AnimationTimer {
             move.agent().clearVision();
             move.agent().updateVision();
         }
-
+        updateAllAgents();
         //TODO: determine where to apply the moves to updated the model and the agent's internal model
     }
 
