@@ -7,8 +7,8 @@ public enum Cardinal {
 
     NORTH(new XY(0, -1)),
     SOUTH(new XY(0, 1)),
-    EAST(new XY(-1, 0)),
-    WEST(new XY(1, 0));
+    EAST(new XY(1, 0)),
+    WEST(new XY(-1, 0));
 
     public final XY unitVector;
 
@@ -41,6 +41,8 @@ public enum Cardinal {
         return null;
 
     }
+
+
 
     public XY unitVector() {
         return unitVector;

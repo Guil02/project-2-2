@@ -17,7 +17,7 @@ public class BrickAndMortar implements Algorithm {
 
     ArrayList<Move> moves = new ArrayList<>();
     private Agent agent;
-    private boolean flag = false;
+
 
     public BrickAndMortar(Agent agent) {
         this.agent = agent;
@@ -33,12 +33,12 @@ public class BrickAndMortar implements Algorithm {
     @Override
     public Move getNext() {
 
-        //Tile tile = new Tile(agent.getX(), agent.getY());
-        //TileNode tileNode = new TileNode(tile);
         if (moves.isEmpty()) {
             multipleDepthFirstSearch();
         }
-
+        if(moves.isEmpty()){
+            return new Move(Action.NOTHING,0,agent);
+        }
 
         Move moveToExec = moves.get(0);
         moves.remove(0);
@@ -54,139 +54,148 @@ public class BrickAndMortar implements Algorithm {
 
         ArrayList<Marker> markers = Scenario.TILE_MAP.getMarkers();
 
-        Marker currentCellMarker = getMarker(markers, agent.getX(), agent.getY());
-        Marker eastCellMarker = getMarker(markers, agent.getX() + 1, agent.getY());
-        Marker westCellMarker = getMarker(markers, agent.getX() - 1, agent.getY());
-        Marker northCellMarker = getMarker(markers, agent.getX(), agent.getY() + 1);
-        Marker southCellMarker = getMarker(markers, agent.getX(), agent.getY() - 1);
+        List<Marker> currentCellMarkers = getMarker(markers, agent.getX(), agent.getY());
+
+        List<Marker> eastCellMarkers = getMarker(markers, agent.getX() + 1, agent.getY());
+        List<Marker> westCellMarkers = getMarker(markers, agent.getX() - 1, agent.getY());
+        List<Marker> northCellMarkers = getMarker(markers, agent.getX(), agent.getY() + 1);
+        List<Marker> southCellMarkers = getMarker(markers, agent.getX(), agent.getY() - 1);
 
         //if the current cell is unexplored then
         //2: mark it as explored
         //3: annotate the cell with your ID
         //4: annotate the cell with the direction of the previous cell
-        if (currentCellMarker != null && (!(currentCellMarker.getType() == MarkerType.EXPLORED || currentCellMarker.getType() == MarkerType.VISITED))) {
 
-            agent.addMarker(MarkerType.EXPLORED);
+        boolean flag1 = true;
 
+        for (Marker currentCellMarker :
+                currentCellMarkers) {
+            if (currentCellMarker.getType() == MarkerType.EXPLORED || currentCellMarker.getType() == MarkerType.VISITED) {
+                flag1 = false;
+                break;
+
+            }
         }
-
+        if (flag1) {
+            agent.addMarker(MarkerType.EXPLORED);
+        }
 
         //if there are unexplored cells around
         // then
         //go to one of them randomly
 
-        ArrayList<Marker> adjacentMarkers = new ArrayList<>();
-        adjacentMarkers.add(northCellMarker);
-        adjacentMarkers.add(southCellMarker);
-        adjacentMarkers.add(westCellMarker);
-        adjacentMarkers.add(eastCellMarker);
+        ArrayList<List<Marker>> adjacentMarkers = new ArrayList<>();
+        adjacentMarkers.add(northCellMarkers);
+        adjacentMarkers.add(southCellMarkers);
+        adjacentMarkers.add(eastCellMarkers);
+        adjacentMarkers.add(westCellMarkers);
         Collections.shuffle(adjacentMarkers);
 
+        label:
+        for (List<Marker> adjacentMarker : adjacentMarkers) {
 
-        for (Marker adjacentMarker : adjacentMarkers) {
+            boolean bool = true;
 
-            if (eastCellMarker != null && adjacentMarker == eastCellMarker) {
-
-                if (!(eastCellMarker.getType() == MarkerType.EXPLORED || eastCellMarker.getType() == MarkerType.VISITED)) {
-
-
-                    Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
-                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                    moves.add(move1);
-                    moves.add(move2);
-                }
-
-            }
-
-            if (westCellMarker != null && adjacentMarker == westCellMarker) {
-
-
-                if (!(westCellMarker.getType() == MarkerType.EXPLORED || westCellMarker.getType() == MarkerType.VISITED)) {
-
-                    Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
-                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                    moves.add(move1);
-                    moves.add(move2);
+            for (Marker m : adjacentMarker) {
+                if (m.getType() == MarkerType.EXPLORED || m.getType() == MarkerType.VISITED) {
+                    bool = false;
+                    break;
                 }
             }
+            if (bool) {
+                for (Marker m : adjacentMarker) {
+                    if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.NORTH) {
+                        Move move1 = new Move(Action.TURN_UP, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
 
-
-            if (northCellMarker != null && adjacentMarker == northCellMarker) {
-
-
-                if (!(northCellMarker.getType() == MarkerType.EXPLORED || northCellMarker.getType() == MarkerType.VISITED)) {
-
-                    Move move1 = new Move(Action.TURN_UP, 0, this.agent);
-                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                    moves.add(move1);
-                    moves.add(move2);
-                }
-            }
-
-            if (southCellMarker != null && adjacentMarker == southCellMarker) {
-
-
-                if (!(southCellMarker.getType() == MarkerType.EXPLORED || southCellMarker.getType() == MarkerType.VISITED)) {
-
-                    Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
-                    Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
-                    moves.add(move1);
-                    moves.add(move2);
+                    } else if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.SOUTH) {
+                        Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
+                    } else if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.WEST) {
+                        Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
+                    } else if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.EAST) {
+                        Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
+                        Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                        moves.add(move1);
+                        moves.add(move2);
+                    }
+                    break label;
                 }
             }
 
         }
-
-
         //if the current cell is marked with your ID then
         //10: mark it as visited
         //11: go to the parent cell
 
 
-        if (currentCellMarker != null) {
-            if (currentCellMarker.getId() == agent.getID()) {
-                currentCellMarker.setType(MarkerType.VISITED);
-                if (currentCellMarker.getCardinal() == Cardinal.NORTH) {
+        boolean flag2 = false;
+Marker cm = null;
+        for (Marker currentCellMarker :
+                currentCellMarkers) {
+            if (currentCellMarker.getType()==MarkerType.EXPLORED && currentCellMarker.getId()==agent.getID()) {
+                flag2 = true;
+                cm=currentCellMarker;
+            }
+        }
+        if (flag2) {
+            cm.setType(MarkerType.VISITED);
+
+                if (cm.getCardinal() == Cardinal.NORTH) {
                     Move move1 = new Move(Action.TURN_UP, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-                } else if (currentCellMarker.getCardinal() == Cardinal.SOUTH) {
 
+                } else if (cm.getCardinal() == Cardinal.SOUTH) {
                     Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-                } else if (currentCellMarker.getCardinal() == Cardinal.WEST) {
 
+                } else if (cm.getCardinal() == Cardinal.WEST) {
                     Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
-                } else {
 
+                } else if (cm.getCardinal() == Cardinal.EAST) {
                     Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
                     Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                     moves.add(move1);
                     moves.add(move2);
+
                 }
 
-            }
         }
 
 
         //else
         //13: go to one of the explored cells randomly
 
-        RandomMoves randomMoves = new RandomMoves(this.agent); //while a* is not done just make a random move
-        moves.add(randomMoves.getNext());
+//        RandomMoves randomMoves = new RandomMoves(this.agent); //while a* is not done just make a random move
+//        moves.add(randomMoves.getNext());
+
+        ArrayList<Marker> exploredTiles = new ArrayList<>();
 
         for (Marker marker : agent.getMarkers()) {
             if (marker.getType() == MarkerType.EXPLORED) {
-                //TODO A* or D*
-
+                exploredTiles.add(marker);
             }
         }
+
+        Collections.shuffle(exploredTiles);
+
+        AStarPathFinder aStarPathFinder = new AStarPathFinder(this.agent, exploredTiles.get(0).getXY());
+        ArrayList<Move> movesAStar = new ArrayList<>(aStarPathFinder.findPath());
+        moves.addAll(movesAStar);
 
     }
 
@@ -198,7 +207,6 @@ public class BrickAndMortar implements Algorithm {
 
     }
 
-
     /**
      * A method to return a marker located at a specified (x,y) position
      *
@@ -207,17 +215,33 @@ public class BrickAndMortar implements Algorithm {
      * @param y       the y coordinate where you want to check for a marker
      * @return the marker at the given (x,y) position. Will return null if there is no marker.
      */
-    public Marker getMarker(List<Marker> markers, int x, int y) {
+    public List<Marker> getMarker(List<Marker> markers, int x, int y) {
+
+        List<Marker> allMarkers = new ArrayList<>();
+
         for (Marker marker : markers) {
             if (marker.getXY().x() == x && marker.getXY().y() == y) {
-                return marker;
+                allMarkers.add(marker);
             }
         }
 
         // returns null if there is no marker at given x and  y
-        return null;
+        return allMarkers;
     }
 
+    public static Cardinal tilePosToAgent(int tileX, int tileY, int agentX, int agentY) {
+
+        if (agentX > tileX) {
+            return Cardinal.WEST;
+        } else if (agentX < tileX) {
+            return Cardinal.EAST;
+        } else if (agentY > tileY) {
+            return Cardinal.NORTH;
+        } else if (agentY < tileY) {
+            return Cardinal.SOUTH;
+        }
+        return null;
+    }
 
     @Override
     public AlgorithmType getType() {
