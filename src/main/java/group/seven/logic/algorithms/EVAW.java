@@ -16,6 +16,7 @@ import java.util.List;
 import static group.seven.enums.AlgorithmType.EVAW;
 import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.TileType.WALL;
+import static group.seven.utils.Methods.print;
 
 public class EVAW implements Algorithm{
     private Cardinal lastMove = null;
@@ -37,8 +38,6 @@ public class EVAW implements Algorithm{
         if(moves.isEmpty()){
             return new Move(Action.NOTHING, 0,agent);
         }
-        if(agent.getID()==0)
-            System.out.print("\rmove list: "+moves);
         Move nextMove = moves.get(0);
         moves.remove(0);
         return nextMove;

@@ -29,12 +29,12 @@ public class AntsPursuit implements Algorithm{
         if(moves.isEmpty()){
             XY target = seeTarget();
             if(target.x()!=-1 && target.y() != -1){
-                System.out.print("\r path finding to "+target+"");
+                System.out.println("path finding to "+target+"");
                 AStarPathFinder pf = new AStarPathFinder(agent, target);
                 moves.addAll(pf.findPath());
             }
             else{
-                evaw.getNext();
+                moves.add(evaw.getNext());
                 moves.addAll(evaw.moves);
             }
         }

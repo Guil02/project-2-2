@@ -49,11 +49,13 @@ public class Tile {
     public Tile(int x, int y) {
         this();
         xy = new XY(x, y);
+        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
     }
 
     public Tile(TileType type, int x, int y) {
         this(x, y);
         this.type = type;
+        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
     }
 
     //Actionable
