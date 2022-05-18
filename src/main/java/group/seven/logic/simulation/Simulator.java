@@ -196,7 +196,7 @@ public class Simulator extends AnimationTimer {
 
             Agent agent = switch (agentType) {
                 case INTRUDER -> new Intruder(x,y);
-                case GUARD -> new Guard(x,y, AlgorithmType.EVAW);
+                case GUARD -> new Guard(x,y, AlgorithmType.ANT_PURSUIT);
                 default -> throw new IllegalStateException("Unexpected value: " + agentType);
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };

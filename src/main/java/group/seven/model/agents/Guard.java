@@ -4,10 +4,7 @@ package group.seven.model.agents;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.MarkerType;
 import group.seven.enums.PheromoneType;
-import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.BrickAndMortar;
-import group.seven.logic.algorithms.EVAW;
-import group.seven.logic.algorithms.RandomMoves;
+import group.seven.logic.algorithms.*;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
@@ -50,6 +47,7 @@ public class Guard extends Agent {
         switch (algorithmType){
             case BRICK_AND_MORTAR -> this.algorithm=new BrickAndMortar(this);
             case EVAW -> this.algorithm=new EVAW(this);
+            case ANT_PURSUIT -> this.algorithm= new AntsPursuit(this);
         }
     }
 
