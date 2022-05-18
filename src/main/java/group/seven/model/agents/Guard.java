@@ -61,7 +61,7 @@ public class Guard extends Agent {
         agentType = GUARD;
         currentSpeed = 0; //DEFAULT
         direction = NORTH; //DEFAULT
-        algorithm = new RandomMoves(this); //DEFAULT
+        algorithm = new EVAW(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
         //algorithm = new RandomTest(this);

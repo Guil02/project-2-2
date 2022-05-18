@@ -98,10 +98,10 @@ public class Intruder extends Agent {
         //Check if Intruder is in the target area
         if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
+                Scenario.INTRUDERS_AT_TARGET++;
                 firstTimeInTargetArea = false;
                 return algorithm.getNext();
             } else {
-                Scenario.INTRUDERS_AT_TARGET++;
                 return new Move(Action.NOTHING, 0, this);
             }
         } //Check if Intruder is alive = is not caught yet
@@ -182,8 +182,10 @@ public class Intruder extends Agent {
     }
 
     public void killIntruder() {
-        Scenario.INTRUDERS_CAUGHT++;
-        this.alive = false;
+        if (this.alive) {
+            Scenario.INTRUDERS_CAUGHT++;
+            this.alive = false;
+        }
     }
 
     public void intruderNotInTargetArea() {
