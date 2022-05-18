@@ -1,6 +1,8 @@
 package group.seven.model.environment;
 
 import group.seven.enums.PheromoneType;
+import group.seven.enums.Cardinal;
+import group.seven.enums.MarkerType;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
@@ -13,6 +15,7 @@ import java.util.List;
 import static group.seven.enums.PheromoneType.SMELL;
 import static group.seven.enums.TileType.EMPTY;
 import static group.seven.model.environment.Scenario.NUM_AGENTS;
+import static group.seven.model.environment.Scenario.NUM_GUARDS;
 
 public class Tile {
     //Exploration Status, also not sure about this
@@ -29,12 +32,18 @@ public class Tile {
     //Graph
     public Adjacent<Tile> adjacent;
     public Pheromone pheromone;
+//    public List<Marker> guard_marker;
 
     public Tile() {
         xy = new XY(0,0);
         pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
         Scenario.TILE_MAP.pheromones.add(pheromone);
         type = EMPTY;
+//        guard_marker = new ArrayList<>();
+//        for (int i = 0; i < NUM_GUARDS; i++) {
+//            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
+//        }
+//        Scenario.TILE_MAP.markers.addAll(guard_marker);
         seen = new ArrayList<>(NUM_AGENTS);
         for (int i = 0; i < NUM_AGENTS; i++)
             seen.add(false);
@@ -49,11 +58,17 @@ public class Tile {
     public Tile(int x, int y) {
         this();
         xy = new XY(x, y);
+        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
+//        guard_marker.clear();
+//        for (int i = 0; i < NUM_GUARDS; i++) {
+//            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
+//        }
     }
 
     public Tile(TileType type, int x, int y) {
         this(x, y);
         this.type = type;
+        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
     }
 
     //Actionable
