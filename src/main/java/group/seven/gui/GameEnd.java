@@ -27,7 +27,7 @@ public class GameEnd extends BorderPane {
     @FXML private Button BackToMainMenu;
 
     @FXML
-    void initialize() throws IOException {
+    void initialize() {
         setCenter(view);
         QuitGame.setOnMouseEntered(event -> QuitGame.setStyle("-fx-background-color: #27ae60;"));
         QuitGame.setOnMouseExited(event -> QuitGame.setStyle("-fx-background-color: #2ecc71;"));
@@ -35,7 +35,13 @@ public class GameEnd extends BorderPane {
 
         BackToMainMenu.setOnMouseEntered(event -> BackToMainMenu.setStyle("-fx-background-color: #27ae60;"));
         BackToMainMenu.setOnMouseExited(event -> BackToMainMenu.setStyle("-fx-background-color: #2ecc71;"));
-        BackToMainMenu.setOnAction(event -> Main.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/mainMenu.fxml")))));
+        BackToMainMenu.setOnAction(event -> {
+            try {
+                Main.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/mainMenu.fxml"))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 
