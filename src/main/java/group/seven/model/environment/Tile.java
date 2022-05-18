@@ -32,18 +32,18 @@ public class Tile {
     //Graph
     public Adjacent<Tile> adjacent;
     public Pheromone pheromone;
-    public List<Marker> guard_marker;
+//    public List<Marker> guard_marker;
 
     public Tile() {
         xy = new XY(0,0);
         pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
         Scenario.TILE_MAP.pheromones.add(pheromone);
         type = EMPTY;
-        guard_marker = new ArrayList<>();
-        for (int i = 0; i < NUM_GUARDS; i++) {
-            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
-        }
-        Scenario.TILE_MAP.markers.addAll(guard_marker);
+//        guard_marker = new ArrayList<>();
+//        for (int i = 0; i < NUM_GUARDS; i++) {
+//            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
+//        }
+//        Scenario.TILE_MAP.markers.addAll(guard_marker);
         seen = new ArrayList<>(NUM_AGENTS);
         for (int i = 0; i < NUM_AGENTS; i++)
             seen.add(false);
@@ -59,10 +59,10 @@ public class Tile {
         this();
         xy = new XY(x, y);
         pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
-        guard_marker.clear();
-        for (int i = 0; i < NUM_GUARDS; i++) {
-            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
-        }
+//        guard_marker.clear();
+//        for (int i = 0; i < NUM_GUARDS; i++) {
+//            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
+//        }
     }
 
     public Tile(TileType type, int x, int y) {

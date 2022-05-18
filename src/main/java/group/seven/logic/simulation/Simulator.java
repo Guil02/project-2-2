@@ -5,7 +5,7 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
 import group.seven.enums.TileType;
 import group.seven.gui.SimulationScreen;
-import group.seven.logic.algorithms.BrickAndMortar;
+//import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
@@ -196,7 +196,7 @@ public class Simulator extends AnimationTimer {
 
             Agent agent = switch (agentType) {
                 case INTRUDER -> new Intruder(x,y);
-                case GUARD -> new Guard(x,y, AlgorithmType.BRICK_AND_MORTAR);
+                case GUARD -> new Guard(x,y, AlgorithmType.ANT_PURSUIT);
                 default -> throw new IllegalStateException("Unexpected value: " + agentType);
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };

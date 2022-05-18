@@ -49,9 +49,9 @@ public class BrickAndMortar implements Algorithm {
         if (moves.isEmpty()) {
             multipleDepthFirstSearch();
         }
-//       if(moves.isEmpty()){
-//            return new Move(Action.NOTHING,0,agent);
-//        }
+       if(moves.isEmpty()){
+            return new Move(Action.NOTHING,0,agent);
+        }
 
         Move moveToExec = moves.get(0);
         moves.remove(0);
@@ -63,7 +63,7 @@ public class BrickAndMortar implements Algorithm {
      * then mark it as visited and go to the parent cell. Else, go to one of the explored cells randomly
      */
     protected void multipleDepthFirstSearch() {
-
+/*
 
         ArrayList<Marker> markers = Scenario.TILE_MAP.getMarkers();
 
@@ -218,7 +218,7 @@ public class BrickAndMortar implements Algorithm {
             moves.addAll(movesAStar);
         }
 
-
+*/
     }
 
     /**
