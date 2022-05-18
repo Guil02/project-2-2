@@ -3,9 +3,9 @@ package group.seven.logic.simulation;
 import group.seven.Main;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
+import group.seven.enums.Status;
 import group.seven.enums.TileType;
 import group.seven.gui.SimulationScreen;
-import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
@@ -39,6 +39,8 @@ public class Simulator extends AnimationTimer {
     final int RANGE_TO_CATCH_INTRUDER = 3;
     final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 55;
 
+    public static Status status;
+
     public Simulator(Scenario scenario) {
         sim = this;
         spawnAgents(GAME_MODE);
@@ -57,10 +59,13 @@ public class Simulator extends AnimationTimer {
         if (guiMode) {
             start();
         }
+
+        status = Status.RUNNING;
     }
 
     public static void pause() {
         sim.stop();
+        status = Status.PAUSED;
     }
 
     /**
@@ -87,7 +92,45 @@ public class Simulator extends AnimationTimer {
 
         //TODO: implement GameOver condition checking
         if (count > 100000) stop();
-        prev = System.nanoTime();
+            prev = System.nanoTime();
+    }
+
+
+    private boolean checkGameOver(GameMode gameMode, TileType agent) {
+        print(gameMode.toString(), true);
+        if (agent == GUARD) {
+            switch (gameMode) {
+                case SINGLE_INTRUDER_CAUGHT -> {
+                    status = Status.GUARD_WIN;
+                    return true;
+                }
+
+                case ALL_INTRUDERS_CAUGHT -> {
+                    if (INTRUDERS_CAUGHT == NUM_INTRUDERS) {
+                        status = Status.GUARD_WIN;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        if (agent == INTRUDER) {
+            switch (gameMode) {
+                case ONE_INTRUDER_AT_TARGET -> {
+                    status = Status.INTRUDER_WIN;
+                    return true;
+                }
+
+                case ALL_INTRUDER_AT_TARGET -> {
+                    if (INTRUDERS_AT_TARGET == NUM_INTRUDERS) {
+                        status = Status.GUARD_WIN;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -98,6 +141,14 @@ public class Simulator extends AnimationTimer {
         //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
         //Creates a list of Moves for each agent's calculatedMove.
         //First filters out null agents, then maps agents to their calculatedMoves, and then collects these Moves into a List
+        List<Agent> guards = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == GUARD).toList();
+        List<Agent> intruders = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == INTRUDER).toList();
+
+
+
+
+
+
         for (Agent agent : TILE_MAP.agents) {
             agent.updateVision();
             agent.updateMap();
@@ -105,24 +156,30 @@ public class Simulator extends AnimationTimer {
                 for (Agent intruder : TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
                         if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
-                            System.out.println("CATCHED GUARD");
+                            ((Intruder)intruder).killIntruder();
                             //TODO: END SIMULATION SAM
+                            if (checkGameOver(GAURD_GAME_MODE, GUARD)) {
+                                System.out.println("CAUGHT INTRUDER");
+                                stop();
+                            }
                         }
                     }
                 }
-            }
-            //if agent is not Guard it has to be an Intruder
-            else {
+            } else {//if agent is not Guard it has to be an Intruder
                 for (Agent intruder : TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
                         if (targetArea.area().contains(intruder.x,intruder.y)) {
                             int inTargetAreaSince = ((Intruder)intruder).intruderInTargetArea();
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
-                                System.out.println("INTRUDER WON");
+                                if (checkGameOver(INTRUDER_GAME_MODE, INTRUDER)) {
+                                    System.out.println("INTRUDER WON");
+                                    stop();
+                                }
                                 //TODO: END SIMULATION SAM
+
                             }
                         } else {
-                            ((Intruder)intruder).intruderNotInTargetArea();
+                            ((Intruder)intruder).intruderNotInTargetArea(); //reset time in target area counter
                         }
                     }
                 }
@@ -179,7 +236,12 @@ public class Simulator extends AnimationTimer {
         switch (gameMode) {
             case EXPLORATION -> spawnAgents(GUARD);
 
-            case SINGLE_INTRUDER, MULTI_INTRUDER -> {
+//            case SINGLE_INTRUDER, MULTI_INTRUDER -> {
+//                spawnAgents(GUARD);
+//                spawnAgents(INTRUDER);
+//            }
+
+            default -> {
                 spawnAgents(GUARD);
                 spawnAgents(INTRUDER);
             }

@@ -1,7 +1,10 @@
 package group.seven.enums;
 
 public enum GameMode {
-    EXPLORATION,
-    SINGLE_INTRUDER,
-    MULTI_INTRUDER
+    EXPLORATION, //0
+    SINGLE_INTRUDER_CAUGHT, // 1
+    ALL_INTRUDERS_CAUGHT, // 2
+    ONE_INTRUDER_AT_TARGET, // 3
+    ALL_INTRUDER_AT_TARGET // 4
+
 }

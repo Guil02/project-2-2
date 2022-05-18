@@ -53,7 +53,7 @@ public class Intruder extends Agent {
         currentSpeed = 3;
     }
 
-    public void updateOrientationToGoal (){
+    public void updateOrientationToGoal(){
         Rectangle goalLocationArea = Scenario.targetArea.area();
         double heightMediumPoint =  goalLocationArea.getHeight()/2;
         double widthMediumPoint = goalLocationArea.getWidth()/2;

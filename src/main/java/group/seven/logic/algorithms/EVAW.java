@@ -7,7 +7,6 @@ import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
 import group.seven.model.agents.TileNode;
 import group.seven.model.environment.Adjacent;
-import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 
 import java.util.LinkedList;
@@ -37,8 +36,7 @@ public class EVAW implements Algorithm{
         if(moves.isEmpty()){
             return new Move(Action.NOTHING, 0,agent);
         }
-        if(agent.getID()==0)
-            System.out.print("\rmove list: "+moves);
+
         Move nextMove = moves.get(0);
         moves.remove(0);
         return nextMove;
