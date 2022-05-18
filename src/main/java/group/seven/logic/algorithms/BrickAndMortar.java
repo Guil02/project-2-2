@@ -36,9 +36,9 @@ public class BrickAndMortar implements Algorithm {
         if (moves.isEmpty()) {
             multipleDepthFirstSearch();
         }
-        if(moves.isEmpty()){
-            return new Move(Action.NOTHING,0,agent);
-        }
+//       if(moves.isEmpty()){
+//            return new Move(Action.NOTHING,0,agent);
+//        }
 
         Move moveToExec = moves.get(0);
         moves.remove(0);
@@ -70,14 +70,16 @@ public class BrickAndMortar implements Algorithm {
 
         for (Marker currentCellMarker :
                 currentCellMarkers) {
-            if (currentCellMarker.getType() == MarkerType.EXPLORED || currentCellMarker.getType() == MarkerType.VISITED) {
+            if (currentCellMarker.getType() == MarkerType.EXPLORED || currentCellMarker.getType() == MarkerType.VISITED || currentCellMarker.getType()==null) {
                 flag1 = false;
                 break;
 
             }
         }
         if (flag1) {
+            Marker marker = new Marker(agent.getX(), agent.getY(), MarkerType.EXPLORED,agent.getID(),agent.getDirection());
             agent.addMarker(MarkerType.EXPLORED);
+            markers.add(marker);
         }
 
         //if there are unexplored cells around
@@ -97,7 +99,7 @@ public class BrickAndMortar implements Algorithm {
             boolean bool = true;
 
             for (Marker m : adjacentMarker) {
-                if (m.getType() == MarkerType.EXPLORED || m.getType() == MarkerType.VISITED) {
+                if (m.getType() == MarkerType.EXPLORED || m.getType() == MarkerType.VISITED || m.getType()==null) {
                     bool = false;
                     break;
                 }
@@ -180,8 +182,6 @@ Marker cm = null;
         //else
         //13: go to one of the explored cells randomly
 
-//        RandomMoves randomMoves = new RandomMoves(this.agent); //while a* is not done just make a random move
-//        moves.add(randomMoves.getNext());
 
         ArrayList<Marker> exploredTiles = new ArrayList<>();
 
