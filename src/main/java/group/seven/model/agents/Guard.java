@@ -4,16 +4,14 @@ package group.seven.model.agents;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.MarkerType;
 import group.seven.enums.PheromoneType;
-import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.BrickAndMortar;
-import group.seven.logic.algorithms.EVAW;
-import group.seven.logic.algorithms.RandomMoves;
+import group.seven.logic.algorithms.*;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
+import group.seven.utils.Config;
 
 import java.util.List;
 
@@ -61,11 +59,20 @@ public class Guard extends Agent {
         agentType = GUARD;
         currentSpeed = 0; //DEFAULT
         direction = NORTH; //DEFAULT
-        algorithm = new RandomMoves(this); //DEFAULT
+        algorithm = initAlgo(Config.ALGORITHM_GUARD); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
         //algorithm = new RandomTest(this);
         currentSpeed = 3;
+    }
+
+    public Algorithm initAlgo(AlgorithmType type) {
+        return switch (type) {
+            case RANDOM -> new RandomTest(this);
+            case ANT -> new Ant(this);
+            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
+            default -> new RandomTest(this);
+        };
     }
 
     @Override

@@ -5,6 +5,14 @@ public enum GameMode {
     SINGLE_INTRUDER_CAUGHT, // 1
     ALL_INTRUDERS_CAUGHT, // 2
     ONE_INTRUDER_AT_TARGET, // 3
-    ALL_INTRUDER_AT_TARGET // 4
+    ALL_INTRUDER_AT_TARGET; // 4
+
+    public static GameMode getEnum(String name) {
+        return switch (name) {
+            case "Single Intruder Caught" -> SINGLE_INTRUDER_CAUGHT;
+            case "All intruders Caught" -> ALL_INTRUDERS_CAUGHT;
+            default -> EXPLORATION;
+        };
+    }
 
 }

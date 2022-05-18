@@ -1,6 +1,7 @@
 package group.seven.gui;
 
 import group.seven.enums.AlgorithmType;
+import group.seven.enums.GameMode;
 import group.seven.logic.simulation.Simulator;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.ScenarioBuilder;
@@ -26,13 +27,17 @@ import java.util.Map;
 public class MainMenu {
 
     @FXML private ChoiceBox<String> chosenAlgorithm;
+    @FXML private ChoiceBox<String> chosenIntruder;
+    @FXML private ChoiceBox<String> chosenGamemode;
     @FXML private Label gameModeLabel;
     @FXML private CheckBox logDataChoice;
     @FXML private ToggleGroup mapChoice;
     @FXML private Label mapNameLabel;
     @FXML private ImageView mapView;
     @FXML private Label messageLabel;
-    @FXML private Label algorithmLabel;
+    @FXML private Label algorithmLabel0;
+    @FXML private Label algorithmLabel1;
+    @FXML private Label algorithmLabel2;
     @FXML private Button startButton;
     @FXML private RadioButton uploadToggle;
     @FXML private RadioButton existingToggle;
@@ -43,10 +48,14 @@ public class MainMenu {
     @FXML
     void start(ActionEvent event) {
         messageLabel.setText("");    //clear message label
-        String algorithm = chosenAlgorithm.getValue();
+        String algorithm = chosenAlgorithm.getValue();      //guard value
+        String algorithm2 = chosenIntruder.getValue();      //intruder value
+        String gamemode = chosenGamemode.getValue();
 
-        if (!algorithm.equals("Choose Algorithm")) {
-            Config.ALGORITHM = AlgorithmType.getEnum(algorithm);
+        if (!algorithm.equals("Choose Guard") && !algorithm2.equals(("Choose Intruder")) && !gamemode.equals("Choose Gamemode")) {
+            Config.ALGORITHM_GUARD = AlgorithmType.getEnum(algorithm);
+            Config.ALGORITHM_INTRUDER = AlgorithmType.getEnum(algorithm2);
+            Config.GAMEMODE = GameMode.getEnum(gamemode);
             Scenario scenario = new ScenarioBuilder(scenarioFile).build();
             //Runner runner =
             new Simulator(scenario);
@@ -145,16 +154,32 @@ public class MainMenu {
         mapNameLabel.setText(scenarioFile.getName().split("\\.")[0]);
 
         chosenAlgorithm.getItems().addAll(
+                "Ants",
+                "Brick And Mortar",
+                "Random"        //RandomTest.java file, not RandomMoves
+        );
+
+        chosenAlgorithm.setValue("Choose Guard");
+        chosenAlgorithm.setOnHidden(event -> algorithmLabel0.setText(chosenAlgorithm.getValue()));
+        chosenAlgorithm.setStyle("-fx-font-size: 16; -fx-background-color: #f5f6fa;");
+
+        chosenIntruder.getItems().addAll(
                 "A*",
-                //"Wall Following",
-                //"Flood Fill",
-                "Frontier",
                 "Random"
         );
 
-        chosenAlgorithm.setValue("Choose Algorithm");
-        chosenAlgorithm.setOnHidden(event -> algorithmLabel.setText(chosenAlgorithm.getValue()));
-        chosenAlgorithm.setStyle("-fx-font-size: 16; -fx-background-color: #f5f6fa;");
+        chosenIntruder.setValue("Choose Intruder");
+        chosenIntruder.setOnHidden(event -> algorithmLabel1.setText(chosenIntruder.getValue()));
+        chosenIntruder.setStyle("-fx-font-size: 16; -fx-background-color: #f5f6fa;");
+
+        chosenGamemode.getItems().addAll(
+            "Single Intruder Caught",
+            "All intruders Caught"
+        );
+
+        chosenGamemode.setValue("Choose Gamemode");
+        chosenGamemode.setOnHidden(event -> algorithmLabel2.setText(chosenGamemode.getValue()));
+        chosenGamemode.setStyle("-fx-font-size: 16; -fx-background-color: #f5f6fa;");
 
         startButton.setOnMouseEntered(event -> startButton.setStyle("-fx-background-color: #27ae60;"));
         startButton.setOnMouseExited(event -> startButton.setStyle("-fx-background-color: #2ecc71;"));
