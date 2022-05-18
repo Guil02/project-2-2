@@ -2,6 +2,7 @@ package group.seven.model.environment;
 
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
+import group.seven.logic.simulation.CollisionHandler;
 import group.seven.utils.Config;
 import javafx.util.Builder;
 
@@ -171,14 +172,9 @@ public class ScenarioBuilder implements Builder<Scenario> {
         }
 
         if(t.getType(x,y)==PORTAL){
-            Component portal = null;
-            for (Component component : Scenario.portals) {
-                if (component.getX() == x && component.getY() == y) {
-                    portal = component;
-                    TARGET = Scenario.TILE_MAP.getTile(Scenario.targetArea.getX(),Scenario.targetArea.getY());
-                    break;
-                }
-            }
+            XY xy = new XY(x,y);
+
+            Component portal = CollisionHandler.getComponent(xy,PORTAL);
             if(portal != null){
                 XY exit = portal.exit();
                 TARGET = t.getTile(exit.x(),exit.y());

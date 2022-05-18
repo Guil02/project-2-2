@@ -27,6 +27,9 @@ public abstract class Agent {
     public final XY initialPosition; //spawining
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
+    //Marker and Pheromone
+    private final ArrayList<Marker> markers = new ArrayList<>();
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Pose
     public int x, y; //You can use this for updated coordinates
     //Type
@@ -34,9 +37,6 @@ public abstract class Agent {
     protected Cardinal direction;
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
-    //Marker and Pheromone
-    private final ArrayList<Marker> markers = new ArrayList<>();
-    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
     private TileNode[][] map;
     //Type
@@ -163,8 +163,9 @@ public abstract class Agent {
 
     /**
      * Make sure that only one instance gets stored of a tile during the vision process
+     *
      * @param observedTiles the currently observed tiles
-     * @param newTiles the new tiles which needs to be checked
+     * @param newTiles      the new tiles which needs to be checked
      * @return the observedTiles with the not seen newTiles
      */
     public List<Tile> duplicatedTiles(List<Tile> observedTiles, List<Tile> newTiles) {
@@ -239,10 +240,9 @@ public abstract class Agent {
     }
 
     public TileNode getMapPosition(int x, int y) {
-        try{
+        try {
             return map[x][y];
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -256,17 +256,17 @@ public abstract class Agent {
     }
 
     public void addMarker(MarkerType type) {
-        if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
-            Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection());
-            markers.add(marker);
-        }
+        Marker marker = new Marker(this.getX(), this.getY(), type, getID(), getDirection());
+        markers.add(marker);
     }
 
     public void addPheromone(PheromoneType type) {
-        if (type == PheromoneType.TEST) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
-            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
-            pheromones.add(pheromone);
-        }
+        Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
+        pheromones.add(pheromone);                             //TODO depending on what our agent wants add some properties to the pheromones in the future
+    }
+
+    public ArrayList<Marker> getMarkers() {
+        return this.markers;
     }
 
     public void setTeleported(boolean isTeleported) {

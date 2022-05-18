@@ -1,14 +1,17 @@
 package group.seven.logic.simulation;
 
 import group.seven.Main;
+import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
 import group.seven.enums.TileType;
 import group.seven.gui.SimulationScreen;
+import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Guard;
 import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
+import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
@@ -139,8 +142,15 @@ public class Simulator extends AnimationTimer {
             move.agent().updateVision();
             move.agent().updateMap();
         }
-
+        updatePheromones();
+        updateAllAgents();
         //TODO: determine where to apply the moves to updated the model and the agent's internal model
+    }
+
+    private void updatePheromones() {
+        for(Pheromone f: TILE_MAP.getPheromones()){
+            f.update();
+        }
     }
 
     /** FOR TESTING PURPOSE ONLY
@@ -215,7 +225,7 @@ public class Simulator extends AnimationTimer {
 
             Agent agent = switch (agentType) {
                 case INTRUDER -> new Intruder(x,y);
-                case GUARD -> new Guard(x,y);
+                case GUARD -> new Guard(x,y, AlgorithmType.EVAW);
                 default -> throw new IllegalStateException("Unexpected value: " + agentType);
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };

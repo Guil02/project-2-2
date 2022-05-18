@@ -7,7 +7,8 @@ public enum AlgorithmType {
     FRONTIER,
     ANT,
     BRICK_AND_MORTAR,
-    RANDOM;
+    RANDOM,
+    EVAW;
 
     public static AlgorithmType getEnum(String name) {
         return switch (name) {
@@ -17,6 +18,7 @@ public enum AlgorithmType {
             case "Wall Following" -> WALL_FOLLOWING;
             case "Frontier" -> FRONTIER;
             case "Flood Fill" -> FLOOD_FILL;
+            case "EVAW" -> EVAW;
             default -> A_STAR;
         };
     }

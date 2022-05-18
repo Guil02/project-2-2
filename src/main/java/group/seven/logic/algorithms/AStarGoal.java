@@ -155,7 +155,6 @@ public class AStarGoal implements Algorithm {
         if (r > 180) {
             r = 360 - r;
         }
-        print(r);
         r = (r/180)*50;
 
         return (int)Math.round(r);
