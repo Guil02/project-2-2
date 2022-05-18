@@ -1,7 +1,7 @@
 package group.seven.gui;
 
-
 import group.seven.Main;
+//import group.seven.Main;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 import javafx.scene.Scene;

@@ -42,6 +42,8 @@ public enum Cardinal {
 
     }
 
+
+
     public XY unitVector() {
         return unitVector;
     }
