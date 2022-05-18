@@ -34,9 +34,9 @@ public class Intruder extends Agent {
     private boolean firstTimeInTargetArea = true;
     private boolean alive = true;
 
-    public Intruder(int x, int y, Algorithm algorithm) { //TODO: fix and finish
+    public Intruder(int x, int y, AlgorithmType algorithm) { //TODO: fix and finish
         this(x, y);
-        this.algorithm = algorithm;
+        //this.algorithm = algorithm;
         updateOrientationToGoal();
 
     }

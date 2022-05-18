@@ -155,6 +155,8 @@ public class MainMenu {
 
         chosenAlgorithm.getItems().addAll(
                 "Ants",
+                "ANT_PURSUIT",
+                "EVAW",
                 "Brick And Mortar",
                 "Random"        //RandomTest.java file, not RandomMoves
         );

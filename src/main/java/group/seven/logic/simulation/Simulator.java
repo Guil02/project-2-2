@@ -5,6 +5,7 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
 import group.seven.enums.Status;
 import group.seven.enums.TileType;
+import group.seven.gui.GameEnd;
 import group.seven.gui.SimulationScreen;
 //import group.seven.logic.algorithms.BrickAndMortar;
 import group.seven.logic.geometric.XY;
@@ -14,6 +15,7 @@ import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
 import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
+import group.seven.utils.Config;
 import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
@@ -157,6 +159,9 @@ public class Simulator extends AnimationTimer {
                             //TODO: END SIMULATION SAM
                             if (checkGameOver(GAURD_GAME_MODE, GUARD)) {
                                 System.out.println("GAURDS WON");
+                                GameEnd end = new GameEnd();
+                                Main.stage.setScene(new Scene(end));
+                                Main.stage.centerOnScreen();
                                 stop();
                             }
                         }
@@ -170,6 +175,9 @@ public class Simulator extends AnimationTimer {
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
                                 if (checkGameOver(INTRUDER_GAME_MODE, INTRUDER)) {
                                     System.out.println("INTRUDER WON");
+                                    GameEnd end = new GameEnd();
+                                    Main.stage.setScene(new Scene(end));
+                                    Main.stage.centerOnScreen();
                                     stop();
                                 }
                                 //TODO: END SIMULATION SAM
@@ -283,8 +291,8 @@ public class Simulator extends AnimationTimer {
             int y = point.y() + (int) (dy * Math.random());
 
             Agent agent = switch (agentType) {
-                case INTRUDER -> new Intruder(x,y);
-                case GUARD -> new Guard(x,y, AlgorithmType.ANT_PURSUIT);
+                case INTRUDER -> new Intruder(x,y, Config.ALGORITHM_INTRUDER);
+                case GUARD -> new Guard(x,y, Config.ALGORITHM_GUARD);
                 default -> throw new IllegalStateException("Unexpected value: " + agentType);
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };
