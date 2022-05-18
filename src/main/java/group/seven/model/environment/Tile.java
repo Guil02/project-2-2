@@ -41,7 +41,7 @@ public class Tile {
         type = EMPTY;
         guard_marker = new ArrayList<>();
         for (int i = 0; i < NUM_GUARDS; i++) {
-            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
+            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NOWHERE));
         }
         Scenario.TILE_MAP.markers.addAll(guard_marker);
         seen = new ArrayList<>(NUM_AGENTS);
@@ -61,7 +61,7 @@ public class Tile {
         pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
         guard_marker.clear();
         for (int i = 0; i < NUM_GUARDS; i++) {
-            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
+            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NOWHERE));
         }
     }
 

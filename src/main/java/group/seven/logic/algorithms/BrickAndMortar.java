@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static group.seven.logic.simulation.Simulator.rand;
+
 public class BrickAndMortar implements Algorithm {
 
     private final Agent agent;
@@ -47,11 +49,12 @@ public class BrickAndMortar implements Algorithm {
     public Move getNext() {
 
         if (moves.isEmpty()) {
+            System.out.println("here");
             multipleDepthFirstSearch();
         }
-//       if(moves.isEmpty()){
-//            return new Move(Action.NOTHING,0,agent);
-//        }
+        if (moves.isEmpty()) {
+            return new Move(Action.NOTHING, 0, agent);
+        }
 
         Move moveToExec = moves.get(0);
         moves.remove(0);
@@ -84,7 +87,7 @@ public class BrickAndMortar implements Algorithm {
 
         for (Marker currentCellMarker :
                 currentCellMarkers) {
-            if (currentCellMarker.getType() == MarkerType.EXPLORED || currentCellMarker.getType() == MarkerType.VISITED ) {
+            if (currentCellMarker.getType() == MarkerType.EXPLORED || currentCellMarker.getType() == MarkerType.VISITED) {
                 flag1 = false;
                 break;
 
@@ -123,25 +126,57 @@ public class BrickAndMortar implements Algorithm {
                         Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                         moves.add(move1);
                         moves.add(move2);
-
+                        break;
                     } else if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.SOUTH) {
                         Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
                         Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                         moves.add(move1);
                         moves.add(move2);
+                        break;
                     } else if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.WEST) {
                         Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
                         Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                         moves.add(move1);
                         moves.add(move2);
+                        break;
                     } else if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.EAST) {
                         Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
                         Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
                         moves.add(move1);
                         moves.add(move2);
+                        break;
+                    } else if (tilePosToAgent(m.getXCoordinate(), m.getYCoordinate(), agent.getX(), agent.getY()) == Cardinal.NOWHERE) {
+                        int intRandom = rand.nextInt(4);
+                        if (intRandom == 0) {
+                            Move move1 = new Move(Action.TURN_LEFT, 0, this.agent);
+                            Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                            moves.add(move1);
+                            moves.add(move2);
+                            break;
+                        } else if (intRandom == 1) {
+                            Move move1 = new Move(Action.TURN_UP, 0, this.agent);
+                            Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                            moves.add(move1);
+                            moves.add(move2);
+                            break;
+                        } else if (intRandom == 2) {
+                            Move move1 = new Move(Action.TURN_DOWN, 0, this.agent);
+                            Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                            moves.add(move1);
+                            moves.add(move2);
+                            break;
+                        } else if (intRandom == 3) {
+                            Move move1 = new Move(Action.TURN_RIGHT, 0, this.agent);
+                            Move move2 = new Move(Action.MOVE_FORWARD, 1, this.agent);
+                            moves.add(move1);
+                            moves.add(move2);
+                            break;
+                        }
+
                     }
-                    break label;
+
                 }
+                multipleDepthFirstSearch();
             }
 
         }
@@ -188,6 +223,7 @@ public class BrickAndMortar implements Algorithm {
 
             }
 
+            multipleDepthFirstSearch();
         }
 
 
@@ -216,6 +252,7 @@ public class BrickAndMortar implements Algorithm {
             AStarPathFinder aStarPathFinder = new AStarPathFinder(this.agent, exploredTiles.get(0).getXY());
             ArrayList<Move> movesAStar = new ArrayList<>(aStarPathFinder.findPath());
             moves.addAll(movesAStar);
+            multipleDepthFirstSearch();
         }
 
 
