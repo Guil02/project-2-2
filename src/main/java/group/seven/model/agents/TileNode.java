@@ -98,4 +98,8 @@ public class TileNode {
     public int getY() {
         return y;
     }
+
+    public TileType getType() {
+        return type;
+    }
 }

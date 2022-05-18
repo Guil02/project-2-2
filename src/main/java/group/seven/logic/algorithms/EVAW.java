@@ -15,9 +15,10 @@ import java.util.List;
 
 import static group.seven.enums.AlgorithmType.EVAW;
 import static group.seven.enums.Cardinal.*;
+import static group.seven.enums.TileType.WALL;
 
 public class EVAW implements Algorithm{
-
+    private Cardinal lastMove = null;
     Agent agent;
     public EVAW(Agent a) {
         this.agent = a;
@@ -30,13 +31,14 @@ public class EVAW implements Algorithm{
      */
     @Override
     public Move getNext() {
-
         if(moves.isEmpty()){
             calculateMove();
         }
         if(moves.isEmpty()){
             return new Move(Action.NOTHING, 0,agent);
         }
+        if(agent.getID()==0)
+            System.out.print("\rmove list: "+moves);
         Move nextMove = moves.get(0);
         moves.remove(0);
         return nextMove;
@@ -55,9 +57,29 @@ public class EVAW implements Algorithm{
         d.target=a.north();
         d.targetOrientation=NORTH;
 
-        checkDifference(d, a.east(),EAST);
-        checkDifference(d, a.south(),SOUTH);
-        checkDifference(d, a.west(),WEST);
+        if(d.target!=null){
+            checkDifference(d, a.east(),EAST);
+        }
+        else if(a.east()!=null && a.east().getType()!=WALL && lastMove!=null && lastMove!=WEST){
+            d.target = a.east();
+            d.targetOrientation = EAST;
+        }
+
+        if (d.target != null) {
+            checkDifference(d,a.south(),SOUTH);
+        }
+        else if (a.south()!=null && a.south().getType()!=WALL && lastMove!=null && lastMove!=NORTH){
+            d.target = a.south();
+            d.targetOrientation = SOUTH;
+        }
+
+        if(d.target != null){
+            checkDifference(d,a.west(),WEST);
+        }
+        else if(a.south() != null && a.south().getType()!=WALL && lastMove!=null && lastMove!=EAST){
+            d.target = a.west();
+            d.targetOrientation = WEST;
+        }
 
 //        d.target.getPheromone().setStrength(Pheromone.maxStrength);
         Scenario.TILE_MAP.dropPheromone(d.target.getX(),d.target.getY());
@@ -71,6 +93,7 @@ public class EVAW implements Algorithm{
             }
         }
         moves.add(new Move(Action.MOVE_FORWARD,1,agent));
+        lastMove = d.targetOrientation;
     }
 
     /**
@@ -89,20 +112,16 @@ public class EVAW implements Algorithm{
      * @param compareOrientation the orientation of the tile {@code compare} with respect to the initial position.
      */
     public void checkDifference(Difference difference, TileNode compare, Cardinal compareOrientation){
-        if(difference.target==null){
-            difference.target=compare;
-            difference.targetOrientation = compareOrientation;
-        }
-        else if(compare!=null && compare.getPheromoneStrength()<=difference.target.getPheromoneStrength()){
-            if(compare.getPheromoneStrength()==difference.target.getPheromoneStrength()){
-                if(Math.random()>0.5){
+        if(compare!=null) {
+            if (compare.getPheromoneStrength() < difference.target.getPheromoneStrength()) {
+                difference.target = compare;
+                difference.targetOrientation = compareOrientation;
+            }
+            else if (compare.getPheromoneStrength() == difference.target.getPheromoneStrength()) {
+                if (Math.random() > 0.5) {
                     difference.target = compare;
                     difference.targetOrientation = compareOrientation;
                 }
-            }
-            else{
-                difference.target = compare;
-                difference.targetOrientation = compareOrientation;
             }
         }
     }

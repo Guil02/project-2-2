@@ -27,6 +27,7 @@ public class Pheromone {
      */
     public void update() {
         strength = Math.random()*strength;
+//        strength = strength-1;
 //        strength -= alpha;
     }
 

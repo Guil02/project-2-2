@@ -27,7 +27,7 @@ public class TileMap {
 
         return map[x][y];
     }
-    private static final int spreadDistance = 20;
+    private static final int spreadDistance = 50;
     public void dropPheromone(int x, int y){
         for(int i = x-spreadDistance/2; i<x+spreadDistance/2; i++){
             for(int j = y-spreadDistance/2; j<y+spreadDistance / 2; j++){
