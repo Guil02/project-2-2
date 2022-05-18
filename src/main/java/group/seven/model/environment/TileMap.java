@@ -6,6 +6,7 @@ import group.seven.model.agents.Agent;
 import java.util.ArrayList;
 
 public class TileMap {
+    //used for coverage calculation
     public static double NUM_TILES;
     public static double INTRUDER_EXPLORATION;
     public static double GUARD_EXPLORATION;
@@ -76,5 +77,7 @@ public class TileMap {
     public void resetPheromones() {
         pheromones = new ArrayList<Pheromone>();
     }
+
+
 
 }

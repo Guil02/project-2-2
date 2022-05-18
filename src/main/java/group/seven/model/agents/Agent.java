@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.Cardinal.*;
+import static group.seven.utils.Methods.print;
 
 //TODO the agent structure very much work in progress
 public abstract class Agent {
@@ -20,8 +21,8 @@ public abstract class Agent {
     private double numExplored;
     public final int PHEROMONELIFETIME = 20;
     //Coordinates and Frames:
-    public final XY initialPosition;
-    public int x, y;
+    public final XY initialPosition; //global spawn position
+    protected int x, y;
     public Frame frame; //handles coordinate transforms
     protected Cardinal direction;
     //Type
@@ -38,8 +39,8 @@ public abstract class Agent {
     //Strategy
 
     public Agent(int x, int y) {
-        initialPosition = new XY(x, y);
         frame = new Frame(new Translate(-x, -y));
+        initialPosition = new XY(x, y);
 
         initializeMap();
     }
@@ -57,6 +58,8 @@ public abstract class Agent {
     }
 
     public void moveTo(XY pos) {
+        pos = frame.convertToLocal(pos);
+
         this.x = pos.x();
         this.y = pos.y();
     }
@@ -89,12 +92,14 @@ public abstract class Agent {
         Point2D globalPosition = frame.convertToGlobal(x, y);
         return (int) globalPosition.getX();
         */
-        return x;
+        XY globalPosition = frame.convertToGlobal(x, y);
+        return globalPosition.x();
+        //return x;
     }
 
     public void setX(int x) {
-        //convert with frame, might be trickier since the affine transforms require 2 coordinates
-        this.x = x;
+        //convert with frame, might be trickier since the affine transforms require 2D coordinate
+        this.x = frame.convertToLocal(x, 0).x();
     }
 
     public int getY() {
@@ -103,12 +108,16 @@ public abstract class Agent {
         Point2D globalPosition = frame.convertToGlobal(x, y);
         return (int) globalPosition.getX();
         */
-        return y;
+//        XY globalPosition = ;
+        return frame.convertToGlobal(x, y).y();
+//        return y;
     }
 
     public void setY(int y) {
         //convert with frame
-        this.y = y;
+        //this.y = y;
+        this.y = frame.convertToLocal(0, y).y();
+
     }
 
     public XY getXY() {
@@ -116,10 +125,17 @@ public abstract class Agent {
         Point2D globalPosition = frame.convertToGlobal(x, y);
         return new XY(globalPosition)
         */
-//        Point2D globalPosition = frame.convertToGlobal(x, y);
-//        new XY(globalPosition);
+        return frame.convertToGlobal(x, y);
+    }
 
-        return new XY(x, y);
+    public void setXY(XY newXY) {
+        XY local = frame.convertToLocal(newXY);
+        x = local.x();
+        y = local.y();
+    }
+
+    public void setXY(int x, int y) {
+        setXY(new XY(x, y));
     }
 
     public Cardinal getDirection() {
@@ -166,7 +182,6 @@ public abstract class Agent {
             if (!(observedTiles.contains(tile)))
                 observedTiles.add(tile);
         return observedTiles;
-        //TODO: consider using a Set data structure, like HashSet. It ensures there are no duplicates
     }
 
     //update just the direction of agent (and the default, which is updating vision)
@@ -183,6 +198,9 @@ public abstract class Agent {
 
     //update the agents coordinates (and its vision)
     public void update(XY newPosition) {
+
+        newPosition = frame.convertToLocal(newPosition);
+
         this.x = newPosition.x();
         this.y = newPosition.y();
 
@@ -202,7 +220,7 @@ public abstract class Agent {
 
     //
     public void initializeMap() {
-        map = new TileNode[Scenario.WIDTH][Scenario.HEIGHT];
+        map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
     }
 
     public void updateMap() {
@@ -214,10 +232,12 @@ public abstract class Agent {
     }
 
     public TileNode getMapPosition(int x, int y) {
+        XY pos = frame.convertToLocal(x, y);
         try{
-            return map[x][y];
+            return map[pos.x()][pos.y()];
         }
-        catch (Exception e){
+        catch (IndexOutOfBoundsException e){
+            print(e.getMessage());
             return null;
         }
     }

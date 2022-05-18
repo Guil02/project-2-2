@@ -67,6 +67,7 @@ public class Simulator extends AnimationTimer {
     @Override
     public void handle(long now) {
         count++;
+        //System.out.print("\r\n " + Arrays.toString(TILE_MAP.agents));
 
         update();           //update model
         if (guiMode) {
@@ -161,6 +162,7 @@ public class Simulator extends AnimationTimer {
             agent.updateVision();
             TILE_MAP.addAgent(agent);
             print("added "+agentType.name()+" : " + agent.getID());
+            System.out.println(agent.getType() + ": " + agent.getX() + " " +agent.getY());
             i++;
         }
 

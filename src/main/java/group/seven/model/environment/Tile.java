@@ -11,11 +11,6 @@ import static group.seven.enums.TileType.*;
 import static group.seven.model.environment.Scenario.NUM_AGENTS;
 
 public class Tile {
-    //Exploration Status, also not sure about this
-    //boolean explored for guard and agent for calculating coverage
-//    private final BooleanProperty exploredGuardProperty = new SimpleBooleanProperty(false);
-//    private final BooleanProperty exploredIntruderProperty = new SimpleBooleanProperty(false);
-    //Type
     TileType type;
     XY xy; //or Point2D, or int x, y
     boolean exploredByGuard = false;
@@ -66,14 +61,6 @@ public class Tile {
         this.adjacent = new Adjacent<>(north, east, south, west, target);
     }
 
-//    public BooleanProperty exploredGuardProperty() {
-//        return exploredGuardProperty;
-//    }
-//
-//    public BooleanProperty exploredIntruderProperty() {
-//        return exploredIntruderProperty;
-//    }
-//
     public boolean getExploredGuard() {
         return exploredByGuard;
     }
@@ -93,19 +80,16 @@ public class Tile {
         if (agent.getType() == GUARD) {
             if (!exploredByGuard) {
                 TileMap.GUARD_EXPLORATION++; //prolly need to test this
-                agent.updateNumExplored();
+                agent.updateNumExplored(); //maybe this belongs outside the if?
             }
 
-            exploredByGuard = true;
-            //exploredGuardProperty.set(true);
+            exploredByGuard = true;         //exploredGuardProperty.set(true);
         } else if (agent.getType() == INTRUDER) {
             if (!exploredByIntruder) {
                 TileMap.INTRUDER_EXPLORATION++; //and this
                 agent.updateNumExplored();
             }
-
-            exploredByIntruder = true;
-            //exploredIntruderProperty.set(true);
+            exploredByIntruder = true;      //exploredIntruderProperty.set(true);
         }
         // Because the int is static it just increases and guards and intruders don't share it, therefore we just save it
         seen.set(agent.getID(), true);
@@ -117,5 +101,19 @@ public class Tile {
                 "xy=" + xy +
                 '}';
     }
+
+    //Exploration Status, also not sure about this
+    //boolean explored for guard and agent for calculating coverage
+//    private final BooleanProperty exploredGuardProperty = new SimpleBooleanProperty(false);
+//    private final BooleanProperty exploredIntruderProperty = new SimpleBooleanProperty(false);
+
+//    public BooleanProperty exploredGuardProperty() {
+//        return exploredGuardProperty;
+//    }
+//
+//    public BooleanProperty exploredIntruderProperty() {
+//        return exploredIntruderProperty;
+//    }
+//
 
 }

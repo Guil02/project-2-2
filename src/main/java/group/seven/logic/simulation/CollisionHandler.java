@@ -26,6 +26,7 @@ public class CollisionHandler {
                 int x = agent.getX();
                 int y = agent.getY();
                 XY targetPos = new XY(x,y);
+                //XY targetPos = agent.getXY();
                 targetPos = targetPos.add(agent.getDirection().unitVector.x(), agent.getDirection().unitVector.y());
 
                 if(!(i < move.agent().getCurrentSpeed())){/*is out of bounds*/

@@ -23,9 +23,12 @@ public record Frame(Transform frame) {
      * as a XY record containing integers
      */
     public XY convertToLocal(int x, int y)  {
-        return new XY(convertToLocal((double) x, y));
+        return new XY(convertToLocal(x, (double)y));
     }
 
+    public XY convertToLocal(XY xy) {
+        return new XY(convertToLocal((double) xy.x(), xy.y()));
+    }
     /**
      * Converts a Point2D in global space to a Point2D in agent's local coordinate space
      * @param globalPoint global point which to convert
@@ -64,7 +67,7 @@ public record Frame(Transform frame) {
      * @return XY record (x, y) of global representation of the agent's coordinates
      */
     public XY convertToGlobal(XY xy) {
-        return new XY(convertToGlobal(xy.x(), xy.y()));
+        return convertToGlobal(xy.x(), xy.y());
     }
 
     /**
@@ -73,8 +76,8 @@ public record Frame(Transform frame) {
      * @param y integer y-coordinate in agent's local coordinate frame
      * @return a Point2D object that represents the agent's local point, but in the global coordinate frame
      */
-    public Point2D convertToGlobal(int x, int y) {
-        return convertToGlobal(new Point2D(x, y));
+    public XY convertToGlobal(int x, int y) {
+        return new XY(convertToGlobal(new Point2D(x, y)));
     }
 
     /**
@@ -93,4 +96,6 @@ public record Frame(Transform frame) {
     public Point2D getRelativeOrigin() {
         return new Point2D(frame.getTx(), frame.getTy()).multiply(-1);
     }
+
+
 }

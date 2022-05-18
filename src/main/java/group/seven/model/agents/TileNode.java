@@ -9,12 +9,10 @@ import group.seven.model.environment.Tile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static group.seven.enums.TileType.PORTAL;
 import static group.seven.enums.TileType.TARGET;
 
 public class TileNode {
 
-    //from agent's perspective
     int x, y;
     //Or Point2D?
 
@@ -27,7 +25,7 @@ public class TileNode {
     public TileNode(Tile tile, Agent a){
         this.agent = a;
         for(Agent agent: Scenario.TILE_MAP.agents){
-            if(agent.x==tile.getX()&& agent.y==tile.getY()){
+            if(agent.getX() == tile.getX() && agent.getY() == tile.getY()){
                 this.agentType = agent.agentType;
                 break;
             }
@@ -49,7 +47,7 @@ public class TileNode {
         agentType = null;
         markers.clear();
         for(Agent agent: Scenario.TILE_MAP.agents){
-            if(agent.x==x&& agent.y==y){
+            if(agent.getX()==x&& agent.getY()==y){
                 this.agentType = agent.agentType;
                 break;
             }
