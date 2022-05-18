@@ -30,7 +30,8 @@ public class Intruder extends Agent {
     private double angleToGoal;  // in degrees
     private int inTargetArea = 0;
 
-    boolean firstTimeInTargetArea = true;
+    private boolean firstTimeInTargetArea = true;
+    private boolean alive = true;
 
     public Intruder(int x, int y, Algorithm algorithm) { //TODO: fix and finish
         this(x, y);
@@ -94,15 +95,20 @@ public class Intruder extends Agent {
 
     @Override
     public Move calculateMove() {
+        //Check if Intruder is in the target area
         if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
                 firstTimeInTargetArea = false;
                 return algorithm.getNext();
+            } else {
+                Scenario.INTRUDERS_AT_TARGET++;
+                return new Move(Action.NOTHING, 0, this);
             }
-            else
-                return new Move(Action.NOTHING,0,this);
-        } else {
+        } //Check if Intruder is alive = is not caught yet
+        else if (alive){
             return algorithm.getNext();
+        } else {
+            return new Move(Action.NOTHING,0,this);
         }
     }
 
@@ -173,6 +179,11 @@ public class Intruder extends Agent {
     public int intruderInTargetArea() {
         inTargetArea += 1;
         return inTargetArea;
+    }
+
+    public void killIntruder() {
+        Scenario.INTRUDERS_CAUGHT++;
+        this.alive = false;
     }
 
     public void intruderNotInTargetArea() {

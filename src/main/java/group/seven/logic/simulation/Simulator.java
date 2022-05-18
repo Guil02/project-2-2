@@ -43,7 +43,7 @@ public class Simulator extends AnimationTimer {
 
     public Simulator(Scenario scenario) {
         sim = this;
-        spawnAgents(GAME_MODE);
+        spawnAgents(GAURD_GAME_MODE);
         elapsedTimeSteps = 0;
         if (guiMode) {
             display = new SimulationScreen();
