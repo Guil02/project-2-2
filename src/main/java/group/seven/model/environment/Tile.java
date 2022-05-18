@@ -32,17 +32,17 @@ public class Tile {
     //Graph
     public Adjacent<Tile> adjacent;
     public Pheromone pheromone;
-    public Marker marker;
+    public List<Marker> guard_marker;
 
     public Tile() {
         xy = new XY(0,0);
         pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
         Scenario.TILE_MAP.pheromones.add(pheromone);
         type = EMPTY;
-//        marker = new Marker(xy.x(),xy.y(), MarkerType.UNEXPLORED,999, Cardinal.NOWHERE);
-//        for (int i = 0; i < NUM_GUARDS; i++) {
-//
-//        }
+        for (int i = 0; i < NUM_GUARDS; i++) {
+            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
+        }
+        Scenario.TILE_MAP.markers.addAll(guard_marker);
         seen = new ArrayList<>(NUM_AGENTS);
         for (int i = 0; i < NUM_AGENTS; i++)
             seen.add(false);
