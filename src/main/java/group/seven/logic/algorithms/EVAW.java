@@ -81,7 +81,7 @@ public class EVAW implements Algorithm{
 //            d.target = a.west();
 //            d.targetOrientation = WEST;
 //        }
-        TileNode target = chooseTile(agent.getX(), agent.getY(), 5);
+        TileNode target = chooseTile(agent.getX(), agent.getY(), 10);
 
 
 //        d.target.getPheromone().setStrength(Pheromone.maxStrength);

@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import static group.seven.enums.MarkerType.UNEXPLORED;
 import static group.seven.enums.PheromoneType.SMELL;
 import static group.seven.enums.TileType.EMPTY;
 import static group.seven.model.environment.Scenario.NUM_AGENTS;
@@ -32,6 +33,7 @@ public class Tile {
     //Graph
     public Adjacent<Tile> adjacent;
     public Pheromone pheromone;
+    private MarkerType exploreType = UNEXPLORED;
 //    public List<Marker> guard_marker;
 
     public Tile() {
@@ -132,6 +134,14 @@ public class Tile {
         }
         // Because the int is static it just increases and guards and intruders don't share it, therefore we just save it
         seen.set(agent.getID(), true);
+    }
+
+    public MarkerType getExploreType() {
+        return exploreType;
+    }
+
+    public void setExploreType(MarkerType exploreType) {
+        this.exploreType = exploreType;
     }
 
     @Override
