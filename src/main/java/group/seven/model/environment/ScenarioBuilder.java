@@ -1,5 +1,6 @@
 package group.seven.model.environment;
 
+import group.seven.enums.GameMode;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
 import group.seven.logic.simulation.CollisionHandler;
@@ -8,11 +9,11 @@ import javafx.util.Builder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 import static group.seven.enums.Cardinal.NORTH;
-import static group.seven.enums.GameMode.EXPLORATION;
-import static group.seven.enums.GameMode.SINGLE_INTRUDER;
 import static group.seven.enums.TileType.*;
 import static group.seven.model.environment.Scenario.*;
 import static group.seven.utils.Methods.print;
@@ -73,7 +74,11 @@ public class ScenarioBuilder implements Builder<Scenario> {
         switch (property) {
             //simple properties:
             case "name"                 -> Scenario.NAME = value;
-            case "gameMode"             -> Scenario.GAME_MODE = parseInt(value) == 1 ? SINGLE_INTRUDER : EXPLORATION;
+//            case "gameMode"             -> Scenario.GAURD_GAME_MODE = parseInt(value) == 1 ? ALL_INTRUDER_AT_TARGET : EXPLORATION;
+            case "gameMode" -> {
+                if (parseInt(value) > 2) INTRUDER_GAME_MODE = GameMode.values()[parseInt(value)];
+                else GAURD_GAME_MODE = GameMode.values()[parseInt(value)];
+            }
             case "height"               -> Scenario.HEIGHT = parseInt(value);    // the height of the map
             case "width"                -> Scenario.WIDTH = parseInt(value);    // the width of the map
             case "numGuards"            -> Scenario.NUM_GUARDS = parseInt(value);    // the amount of guards

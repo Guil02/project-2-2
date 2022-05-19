@@ -13,6 +13,7 @@ import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
+import group.seven.utils.Config;
 
 import java.util.List;
 
@@ -30,11 +31,12 @@ public class Intruder extends Agent {
     private double angleToGoal;  // in degrees
     private int inTargetArea = 0;
 
-    boolean firstTimeInTargetArea = true;
+    private boolean firstTimeInTargetArea = true;
+    private boolean alive = true;
 
-    public Intruder(int x, int y, Algorithm algorithm) { //TODO: fix and finish
+    public Intruder(int x, int y, AlgorithmType algorithm) { //TODO: fix and finish
         this(x, y);
-        this.algorithm = algorithm;
+        //this.algorithm = algorithm;
         updateOrientationToGoal();
 
     }
@@ -47,13 +49,21 @@ public class Intruder extends Agent {
         agentType = INTRUDER;
         currentSpeed = 1;       //DEFAULT
         direction = SOUTH;      //DEFAULT
-        algorithm = new AStarGoal(this); //DEFAULT
+        algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
         updateOrientationToGoal();
         currentSpeed = 3;
     }
 
-    public void updateOrientationToGoal (){
+    public Algorithm initAlgo(AlgorithmType type) {
+        return switch (type) {
+            case RANDOM -> new RandomTest(this);
+            case A_STAR -> new AStarGoal(this);
+            default -> new RandomTest(this);
+        };
+    }
+
+    public void updateOrientationToGoal(){
         Rectangle goalLocationArea = Scenario.targetArea.area();
         double heightMediumPoint =  goalLocationArea.getHeight()/2;
         double widthMediumPoint = goalLocationArea.getWidth()/2;
@@ -94,15 +104,20 @@ public class Intruder extends Agent {
 
     @Override
     public Move calculateMove() {
+        //Check if Intruder is in the target area
         if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
+                Scenario.INTRUDERS_AT_TARGET++;
                 firstTimeInTargetArea = false;
                 return algorithm.getNext();
+            } else {
+                return new Move(Action.NOTHING, 0, this);
             }
-            else
-                return new Move(Action.NOTHING,0,this);
-        } else {
+        } //Check if Intruder is alive = is not caught yet
+        else if (alive){
             return algorithm.getNext();
+        } else {
+            return new Move(Action.NOTHING,0,this);
         }
     }
 
@@ -173,6 +188,13 @@ public class Intruder extends Agent {
     public int intruderInTargetArea() {
         inTargetArea += 1;
         return inTargetArea;
+    }
+
+    public void killIntruder() {
+        if (this.alive) {
+            Scenario.INTRUDERS_CAUGHT++;
+            this.alive = false;
+        }
     }
 
     public void intruderNotInTargetArea() {
