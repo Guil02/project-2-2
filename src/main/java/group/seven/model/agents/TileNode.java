@@ -1,5 +1,6 @@
 package group.seven.model.agents;
 
+import group.seven.enums.MarkerType;
 import group.seven.enums.TileType;
 import group.seven.model.environment.*;
 
@@ -102,5 +103,13 @@ public class TileNode {
 
     public TileType getType() {
         return type;
+    }
+
+    public MarkerType getExploreType(){
+        return Scenario.TILE_MAP.getTile(this.x,this.y).getExploreType();
+    }
+
+    public void setExploreType(MarkerType m){
+        Scenario.TILE_MAP.getTile(this.x,this.y).setExploreType(m);
     }
 }
