@@ -154,9 +154,7 @@ public class MainMenu {
         mapNameLabel.setText(scenarioFile.getName().split("\\.")[0]);
 
         chosenAlgorithm.getItems().addAll(
-                "Ants",
                 "ANT_PURSUIT",
-                "EVAW",
                 "Brick And Mortar",
                 "Random"        //RandomTest.java file, not RandomMoves
         );
