@@ -30,7 +30,7 @@ public class AStarGoal implements Algorithm {
     List<Move> movesLeft;
     List<AStarNode> open;
     List<AStarNode> closed;
-    int[][] additions = {{1,0},{-1,0},{0,1},{0,-1}}; //TODO: maybe remove
+    int[][] additions = {{1,0},{-1,0},{0,1},{0,-1}};
     int wallPenalization = 2;
 
 
@@ -140,7 +140,6 @@ public class AStarGoal implements Algorithm {
     }
 
 
-    //TODO: This needs to be fixed - figure out the r heuristic and how to apply the angle to the player
     public int rCost (XY xy){ //xy = current frontier node tested
         player.updateOrientationToGoal();
 
@@ -149,7 +148,6 @@ public class AStarGoal implements Algorithm {
         double angleAgentToTile = Pythagoras.angleFromAgentToTarget(xy,new XY(player.getX(),player.getY()));
 
 
-        //TODO: ELENA PEREGO FROM ITALY IS CODING THIS
         double r = Math.abs(angleAgentToGoal- angleAgentToTile);
 
         if (r > 180) {
@@ -191,13 +189,6 @@ public class AStarGoal implements Algorithm {
         }
         catch(IndexOutOfBoundsException ignore){
         }
-        //System.out.println("move return "+move);
-        //System.out.println("Current gCost "+current.getgCost());
-        //System.out.println("Current hCost "+current.gethCost());
-        //System.out.println("Current fCost "+current.getfCost());
-        //System.out.println("Current rCost "+current.getrCost());
-        //System.out.println(target);
-        //System.out.println(movesLeft);
         return move;
     }
 
