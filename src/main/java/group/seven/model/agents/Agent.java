@@ -34,6 +34,9 @@ public abstract class Agent {
     private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
     private TileNode[][] map;
+    //Type
+    boolean ignorePortal = false;
+    boolean isTeleported = false;
 
     //Current Speed
     //Strategy
@@ -64,6 +67,14 @@ public abstract class Agent {
         this.y = pos.y();
     }
 
+    public void setIgnorePortal(boolean ignorePortal){  // TODO: handle by simulator
+        this.ignorePortal = ignorePortal;
+    }
+
+    public boolean getIgnorePortal() {
+        return this.ignorePortal;
+    }
+
     public void executeTurn(Move move) {
         switch (move.action()) {
             case TURN_UP -> direction = NORTH;
@@ -89,9 +100,6 @@ public abstract class Agent {
 
     public int getX() {
         /* convert with frame. This would make callers of the method receive agents coords in global frame
-        Point2D globalPosition = frame.convertToGlobal(x, y);
-        return (int) globalPosition.getX();
-        */
         XY globalPosition = frame.convertToGlobal(x, y);
         return globalPosition.x();
         //return x;
@@ -142,6 +150,11 @@ public abstract class Agent {
         return direction;
     }
 
+    //TODO: transform?
+    private XY getInitialPosition() {
+        return initialPosition;
+    }
+
     public void setDirection(Cardinal d) {
         direction = d;
     }
@@ -173,8 +186,9 @@ public abstract class Agent {
 
     /**
      * Make sure that only one instance gets stored of a tile during the vision process
+     *
      * @param observedTiles the currently observed tiles
-     * @param newTiles the new tiles which needs to be checked
+     * @param newTiles      the new tiles which needs to be checked
      * @return the observedTiles with the not seen newTiles
      */
     public List<Tile> duplicatedTiles(List<Tile> observedTiles, List<Tile> newTiles) {
@@ -223,11 +237,29 @@ public abstract class Agent {
         map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
     }
 
+    public void initializeInitialTile(){
+        //TODO: conversion
+        try{
+            map[x][y]=new TileNode(Scenario.TILE_MAP.getTile(x,y),this);
+        }
+        catch (Exception e){
+            System.err.println("An error occurred in the initialization of the initial tile in the agent class");
+            e.printStackTrace();
+        }
+    }
+
     public void updateMap() {
         for (Tile tile : seenTiles) {
             if (map[tile.getX()][tile.getY()] != null) {
                 map[tile.getX()][tile.getY()].update();
             } else map[tile.getX()][tile.getY()] = new TileNode(tile, this);
+        }
+
+        for(TileNode[] tiles : map){
+            for(TileNode tile: tiles){
+                if(tile!=null)
+                    tile.updateAdjacent();
+            }
         }
     }
 
@@ -250,18 +282,38 @@ public abstract class Agent {
         return new XY(x - initialPosition.x(), y - initialPosition.y());
     }
 
+    /**
+     * This function adds a marker to the list of markers.
+     *
+     * @param type The type of marker to add.
+     */
     public void addMarker(MarkerType type) {
-        if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
-            Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection());
-            markers.add(marker);
-        }
+        //TODO coordinate-deconversion?
+        Marker marker = new Marker(this.getX(), this.getY(), type, getID(), getDirection());
+        markers.add(marker);
     }
 
+    /**
+     * > This function creates a new pheromone object and adds it to the list of pheromones
+     *
+     * @param type The type of pheromone that is being added.
+     */
     public void addPheromone(PheromoneType type) {
-        if (type == PheromoneType.TEST) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
-            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
-            pheromones.add(pheromone);
-        }
+        //TODO transform?
+        Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
+        pheromones.add(pheromone);                             //TODO depending on what our agent wants add some properties to the pheromones in the future
+    }
+
+    public ArrayList<Marker> getMarkers() {
+        return this.markers;
+    }
+
+    public void setTeleported(boolean isTeleported) {
+        this.isTeleported = isTeleported;
+    }
+
+    public boolean getIsTeleported() {
+        return this.isTeleported;
     }
 
 }

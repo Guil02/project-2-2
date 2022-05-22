@@ -1,21 +1,23 @@
 package group.seven.model.agents;
 
 
+import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
-import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.BrickAndMortar;
-import group.seven.logic.algorithms.RandomMoves;
-import group.seven.logic.algorithms.RandomTest;
+import group.seven.logic.algorithms.*;
+import group.seven.logic.geometric.Pythagoras;
+import group.seven.logic.geometric.Rectangle;
+import group.seven.logic.geometric.XY;
 import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
+import group.seven.utils.Config;
 
 import java.util.List;
 
-import static group.seven.enums.Cardinal.SOUTH;
+import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.TileType.INTRUDER;
 
 public class Intruder extends Agent {
@@ -25,10 +27,18 @@ public class Intruder extends Agent {
     private final int maxSpeed = (int) Scenario.INTRUDER_SPRINT_SPEED;
     private Vision vision;
     Algorithm algorithm;
+    private Cardinal orientationToGoal;
+    private double angleToGoal;  // in degrees
+    private int inTargetArea = 0;
 
-    public Intruder(int x, int y, Algorithm algorithm) {
+    private boolean firstTimeInTargetArea = true;
+    private boolean alive = true;
+
+    public Intruder(int x, int y, AlgorithmType algorithm) { //TODO: fix and finish
         this(x, y);
-        this.algorithm = algorithm;
+        //this.algorithm = algorithm;
+        updateOrientationToGoal();
+
     }
 
     public Intruder(int x, int y) {
@@ -36,11 +46,45 @@ public class Intruder extends Agent {
         ID = newID();
         agentType = INTRUDER;
         direction = SOUTH;      //DEFAULT
-        //algorithm = new RandomMoves(this); //DEFAULT
+        algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
+        updateOrientationToGoal();
+        currentSpeed = 3; //TODO base soeed?
+    }
 
-        algorithm = new RandomTest(this);
-        currentSpeed = 3;
+    public Algorithm initAlgo(AlgorithmType type) {
+        return switch (type) {
+            case RANDOM -> new RandomTest(this);
+            case A_STAR -> new AStarGoal(this);
+            default -> new RandomTest(this);
+        };
+    }
+
+    public void updateOrientationToGoal(){
+        Rectangle goalLocationArea = Scenario.targetArea.area();
+        double heightMediumPoint =  goalLocationArea.getHeight()/2;
+        double widthMediumPoint = goalLocationArea.getWidth()/2;
+        int x = (int)(goalLocationArea.getX() + widthMediumPoint);
+        int y = (int)(goalLocationArea.getY() + heightMediumPoint);
+        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
+        //double angle = Pythagoras.getAnglePythagoras(this.x,this.y,x,y);
+        //Update angle to goal, which is in degrees
+        this.angleToGoal= angle;
+
+       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.x ,this.y, x, y);
+
+    }
+
+
+
+
+
+    public Cardinal getOrientationToGoal(){
+        return this.orientationToGoal;
+    }
+
+    public double getAngleToGoal(){
+        return this.angleToGoal;
     }
 
     @Override
@@ -57,7 +101,21 @@ public class Intruder extends Agent {
 
     @Override
     public Move calculateMove() {
-        return algorithm.getNext();
+        //Check if Intruder is in the target area
+        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
+            if (firstTimeInTargetArea) {
+                Scenario.INTRUDERS_AT_TARGET++;
+                firstTimeInTargetArea = false;
+                return algorithm.getNext();
+            } else {
+                return new Move(Action.NOTHING, 0, this);
+            }
+        } //Check if Intruder is alive = is not caught yet
+        else if (alive){
+            return algorithm.getNext();
+        } else {
+            return new Move(Action.NOTHING,0,this);
+        }
     }
 
     @Override
@@ -122,6 +180,22 @@ public class Intruder extends Agent {
     public Intruder direction(Cardinal orientation) {
         direction = orientation;
         return this;
+    }
+
+    public int intruderInTargetArea() {
+        inTargetArea += 1;
+        return inTargetArea;
+    }
+
+    public void killIntruder() {
+        if (this.alive) {
+            Scenario.INTRUDERS_CAUGHT++;
+            this.alive = false;
+        }
+    }
+
+    public void intruderNotInTargetArea() {
+        inTargetArea = 0;
     }
 
     @Override

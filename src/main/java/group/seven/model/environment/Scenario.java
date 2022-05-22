@@ -6,8 +6,10 @@ import group.seven.logic.geometric.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-import static group.seven.enums.GameMode.SINGLE_INTRUDER;
-import static group.seven.enums.TileType.*;
+import static group.seven.enums.GameMode.ALL_INTRUDERS_CAUGHT;
+import static group.seven.enums.GameMode.ALL_INTRUDER_AT_TARGET;
+import static group.seven.enums.TileType.SHADED;
+import static group.seven.enums.TileType.WALL;
 
 public class Scenario {
     private static Scenario SCENARIO;
@@ -16,7 +18,8 @@ public class Scenario {
         return SCENARIO;
     }
 
-    public static GameMode GAME_MODE = SINGLE_INTRUDER;
+    public static GameMode GAURD_GAME_MODE = ALL_INTRUDERS_CAUGHT;
+    public static GameMode INTRUDER_GAME_MODE = ALL_INTRUDER_AT_TARGET;
     public static String NAME = "untitled map";
     public static int WIDTH, HEIGHT;
     public static int TILE_SIZE = 10;
@@ -30,6 +33,9 @@ public class Scenario {
     public static Component targetArea = new Component(new Rectangle(), TARGET, null, null);
     public static Component intruderSpawnArea = new Component(new Rectangle(), INTRUDER_SPAWN, null, null);
     public static Component guardSpawnArea = new Component(new Rectangle(), GUARD_SPAWN, null, null);
+
+    public static int INTRUDERS_CAUGHT = 0;
+    public static int INTRUDERS_AT_TARGET = 0;
 
     public static final List<Component> walls = new ArrayList<>(20);
     public static final List<Component> shadedAreas = new ArrayList<>();

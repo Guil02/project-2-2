@@ -2,13 +2,13 @@ package group.seven.enums;
 
 import group.seven.logic.geometric.XY;
 
-//TODO: maybe change name to Orientation, but JavaFX has its own Orientation enum, so might be confusing
 public enum Cardinal {
 
     NORTH(new XY(0, -1)),
     SOUTH(new XY(0, 1)),
-    EAST(new XY(-1, 0)),
-    WEST(new XY(1, 0));
+    EAST(new XY(1, 0)),
+    WEST(new XY(-1, 0)),
+    NOWHERE(new XY(0,0));
 
     public final XY unitVector;
 
@@ -22,6 +22,7 @@ public enum Cardinal {
             case SOUTH -> NORTH;
             case EAST -> WEST;
             case WEST -> EAST;
+            case NOWHERE -> NOWHERE;
         };
     }
 
@@ -41,6 +42,8 @@ public enum Cardinal {
         return null;
 
     }
+
+
 
     public XY unitVector() {
         return unitVector;
