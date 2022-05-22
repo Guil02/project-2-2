@@ -156,7 +156,6 @@ public class Simulator extends AnimationTimer {
                     if (intruder.agentType == INTRUDER) {
                         if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
                             ((Intruder)intruder).killIntruder();
-                            //TODO: END SIMULATION SAM
                             if (checkGameOver(GAURD_GAME_MODE, GUARD)) {
                                 System.out.println("GAURDS WON");
                                 GameEnd end = new GameEnd();
@@ -180,7 +179,6 @@ public class Simulator extends AnimationTimer {
                                     Main.stage.centerOnScreen();
                                     stop();
                                 }
-                                //TODO: END SIMULATION SAM
 
                             }
                         } else {

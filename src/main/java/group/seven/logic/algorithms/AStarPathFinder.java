@@ -86,15 +86,6 @@ public class AStarPathFinder {
                     if(!openedNodes.contains(neighbor)){
                         openedNodes.add(neighbor);
                     }
-                    //Check for duplicates
-                    //boolean inOpenList = true;
-                    //for (AStarNode nodes : openedNodes)
-                      //  if (neighbor.equals(nodes)) {
-                        //    inOpenList = false;
-                          //  break;
-                        //}
-                    //if (inOpenList)
-                      //  openedNodes.add(neighbor);
                 }
             }
         }
