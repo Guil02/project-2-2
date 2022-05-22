@@ -9,11 +9,11 @@ import group.seven.logic.geometric.XY;
  */
 public enum Cardinal {
 
-    NORTH(new XY(0, -1)),
-    SOUTH(new XY(0, 1)),
-    EAST(new XY(1, 0)),
-    WEST(new XY(-1, 0)),
-    NOWHERE(new XY(0,0));
+    NORTH(new XY(0, -1)), //0
+    SOUTH(new XY(0, 1)), //1
+    EAST(new XY(1, 0)), //2
+    WEST(new XY(-1, 0)), //3
+    NOWHERE(new XY(0,0)); //4
 
     /**
      * A XY unit vector representing one step in the direction of this
@@ -23,6 +23,20 @@ public enum Cardinal {
 
     Cardinal(XY unitVector) {
         this.unitVector = unitVector;
+    }
+
+    public Cardinal rotation(XY location) {
+        if (unitVector.x() * location.x() == 0) {
+            if (unitVector.y() * location.y() > 0)
+                return NORTH;
+            else return SOUTH;
+        } else if (unitVector.y() * location.y() == 0) {
+            if (unitVector.x() * location.y() > 0)
+                return EAST;
+            else return WEST;
+        } else {
+            return NOWHERE;
+        }
     }
 
     public Cardinal flip() {

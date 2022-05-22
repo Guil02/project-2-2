@@ -1,4 +1,5 @@
 package group.seven.logic.algorithms;
+
 import group.seven.enums.Action;
 import group.seven.enums.Cardinal;
 import group.seven.logic.geometric.XY;
@@ -6,12 +7,10 @@ import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
 import group.seven.model.agents.TileNode;
 
-import java.util.Objects;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static group.seven.enums.TileType.WALL;
 
@@ -73,11 +72,11 @@ public class AStarPathFinder {
                 return makePath();
             }
             for (AStarNode neighbor: neighbours(node)) {
-                if(closedNodes.contains(neighbor) || internalMap[neighbor.getX()][neighbor.getY()]== null || internalMap[neighbor.getX()][neighbor.getY()].getType()==WALL){
+                if(closedNodes.contains(neighbor) || internalMap[neighbor.getX()][neighbor.getY()] == null || internalMap[neighbor.getX()][neighbor.getY()].getType()==WALL){
                     continue;
                 }
                 //                neighbor.updateCost(ASTAR_PATH);
-                int lowestCost = node.getgCost()+Math.abs(node.getX() - neighbor.getX()) + Math.abs(node.getY() - neighbor.getY());
+                int lowestCost = node.getgCost() + Math.abs(node.getX() - neighbor.getX()) + Math.abs(node.getY() - neighbor.getY());
                 if(lowestCost < neighbor.getgCost() || !openedNodes.contains(neighbor)){
                     neighbor.updateHCost();
                     neighbor.setgCost(lowestCost);

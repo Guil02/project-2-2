@@ -13,11 +13,10 @@ import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
-import group.seven.utils.Config;
 
 import java.util.List;
 
-import static group.seven.enums.Cardinal.*;
+import static group.seven.enums.Cardinal.SOUTH;
 import static group.seven.enums.TileType.INTRUDER;
 
 public class Intruder extends Agent {
@@ -49,10 +48,11 @@ public class Intruder extends Agent {
         agentType = INTRUDER;
         currentSpeed = 1;       //DEFAULT
         direction = SOUTH;      //DEFAULT
-        algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
+//        algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
+        algorithm = new Astar(this); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
         updateOrientationToGoal();
-        currentSpeed = 3;
+        //currentSpeed = 3;
     }
 
     public Algorithm initAlgo(AlgorithmType type) {

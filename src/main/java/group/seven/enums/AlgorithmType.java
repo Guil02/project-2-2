@@ -6,7 +6,7 @@ public enum AlgorithmType {
     BRICK_AND_MORTAR,
     RANDOM,
     EVAW,
-    ANT_PURSUIT;
+    ANT_PURSUIT, A_STAR_ALT;
 
     public static AlgorithmType getEnum(String name) {
         return switch (name) {

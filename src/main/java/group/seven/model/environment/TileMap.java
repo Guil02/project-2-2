@@ -1,6 +1,7 @@
 package group.seven.model.environment;
 
 import group.seven.enums.TileType;
+import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 
 import java.util.ArrayList;
@@ -22,12 +23,15 @@ public class TileMap {
 
     //update
     public Tile getTile(int x, int y) {
-        if (x < 0 || y < 0 || x > map.length || y > map[0].length)
-            return new Tile(); // should probably throw an exception instead of empty tile
+        if (x < 0 || y < 0 || x > map.length || y > map[0].length) {
+            System.err.println("Out of bounds");
+            return null; // should probably throw an exception instead of empty tile
+        }
 
         return map[x][y];
     }
     private static final int spreadDistance = 50;
+
     public void dropPheromone(int x, int y){
         for(int i = x-spreadDistance/2; i<x+spreadDistance/2; i++){
             for(int j = y-spreadDistance/2; j<y+spreadDistance / 2; j++){
@@ -87,4 +91,7 @@ public class TileMap {
         pheromones = new ArrayList<Pheromone>();
     }
 
+    public Tile getTile(XY pos) {
+        return getTile(pos.x(), pos.y());
+    }
 }
