@@ -1,10 +1,10 @@
 name = bigger test scenario
-gameMode = 1
+gameMode = 4
 height = 150
 width = 200
 scaling = 0.1
-numGuards = 3
-numIntruders = 1
+numGuards = 5
+numIntruders = 5
 distanceViewing = 10
 baseSpeedIntruder = 14.0
 sprintSpeedIntruder = 20.0

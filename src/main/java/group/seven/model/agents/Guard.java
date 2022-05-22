@@ -1,16 +1,17 @@
 package group.seven.model.agents;
 
 
+import group.seven.enums.AlgorithmType;
 import group.seven.enums.MarkerType;
 import group.seven.enums.PheromoneType;
-import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.RandomMoves;
+import group.seven.logic.algorithms.*;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
+import group.seven.utils.Config;
 
 import java.util.List;
 
@@ -38,6 +39,22 @@ public class Guard extends Agent {
         this.markers = markers;
     }
 
+    public Guard(int x, int y, AlgorithmType algorithmType) {
+        this(x, y);
+        algorithm = initAlgo(algorithmType);
+        System.out.println(algorithmType);
+    }
+
+    public void createAlgorithm(AlgorithmType algorithmType){
+        switch (algorithmType){
+            case BRICK_AND_MORTAR -> this.algorithm=new BrickAndMortar(this);
+            case EVAW -> this.algorithm=new EVAW(this);
+            case ANT_PURSUIT -> this.algorithm= new AntsPursuit(this);
+        }
+    }
+
+
+
     public Guard(int x, int y) {
         super(x,y);
         ID = newID();
@@ -46,11 +63,21 @@ public class Guard extends Agent {
         agentType = GUARD;
         currentSpeed = 0; //DEFAULT
         direction = NORTH; //DEFAULT
-        algorithm = new RandomMoves(this); //DEFAULT
+        algorithm = initAlgo(Config.ALGORITHM_GUARD); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
         //algorithm = new RandomTest(this);
         currentSpeed = 3;
+    }
+
+    public Algorithm initAlgo(AlgorithmType type) {
+        return switch (type) {
+            case EVAW -> this.algorithm=new EVAW(this);
+            case ANT_PURSUIT -> this.algorithm= new AntsPursuit(this);
+            case ANT -> new Ant(this);
+            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
+            default -> new RandomTest(this);
+        };
     }
 
     @Override

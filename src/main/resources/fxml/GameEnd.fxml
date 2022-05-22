@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="202.0" prefWidth="600.0" type="BorderPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <TitledPane animated="false" text="Game Over!" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="QuitGame" alignment="CENTER" contentDisplay="CENTER" layoutX="252.0" layoutY="46.0" mnemonicParsing="false" text="Quit Game" />
+                  <Button fx:id="BackToMainMenu" layoutX="230.0" layoutY="98.0" mnemonicParsing="false" text="Back to Main Menu" />
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
+   </top>
+</fx:root>

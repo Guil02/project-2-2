@@ -18,22 +18,30 @@ import static group.seven.enums.Cardinal.*;
 public abstract class Agent {
     private static int IDs = 0;
     public final int PHEROMONELIFETIME = 20;
+
+    public XY getInitialPosition() {
+        return initialPosition;
+    }
+
     //Type
-    public final XY initialPosition;
+    public final XY initialPosition; //spawining
     private final IntegerProperty xProp = new SimpleIntegerProperty();
     private final IntegerProperty yProp = new SimpleIntegerProperty();
+    //Marker and Pheromone
+    private final ArrayList<Marker> markers = new ArrayList<>();
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Pose
-    public int x, y; //You can use this if the property stuff confuses
+    public int x, y; //You can use this for updated coordinates
     //Type
     public TileType agentType;
     protected Cardinal direction;
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
-    //Marker and Pheromone
-    private final ArrayList<Marker> markers = new ArrayList<>();
-    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
     private TileNode[][] map;
+    //Type
+    boolean ignorePortal = false;
+    boolean isTeleported = false;
 
     //Current Speed
     //Strategy
@@ -58,6 +66,14 @@ public abstract class Agent {
     public void moveTo(XY pos) {
         this.x = pos.x();
         this.y = pos.y();
+    }
+
+    public void setIgnorePortal(boolean ignorePortal){  // TODO: handle by simulator
+        this.ignorePortal = ignorePortal;
+    }
+
+    public boolean getIgnorePortal() {
+        return this.ignorePortal;
     }
 
     public void executeTurn(Move move) {
@@ -89,16 +105,16 @@ public abstract class Agent {
         return x;
     }
 
-    public void setX(int x) {
-        //convert with frame
-        this.x = x;
-        xProp.set(x);
-    }
-
     public int getY() {
         //convert with frame
 //        return yProp.get();
         return y;
+    }
+
+    public void setX(int x) {
+        //convert with frame
+        this.x = x;
+        xProp.set(x);
     }
 
     public void setY(int y) {
@@ -110,6 +126,7 @@ public abstract class Agent {
     public XY getXY() {
         return new XY(x, y);
     }
+
 
     public IntegerProperty xProperty() {
         return xProp;
@@ -146,8 +163,9 @@ public abstract class Agent {
 
     /**
      * Make sure that only one instance gets stored of a tile during the vision process
+     *
      * @param observedTiles the currently observed tiles
-     * @param newTiles the new tiles which needs to be checked
+     * @param newTiles      the new tiles which needs to be checked
      * @return the observedTiles with the not seen newTiles
      */
     public List<Tile> duplicatedTiles(List<Tile> observedTiles, List<Tile> newTiles) {
@@ -196,19 +214,35 @@ public abstract class Agent {
         map = new TileNode[Scenario.WIDTH][Scenario.HEIGHT];
     }
 
+    public void initializeInitialTile(){
+        try{
+            map[x][y]=new TileNode(Scenario.TILE_MAP.getTile(x,y),this);
+        }
+        catch (Exception e){
+            System.err.println("An error occurred in the initialization of the initial tile in the agent class");
+            e.printStackTrace();
+        }
+    }
+
     public void updateMap() {
         for (Tile tile : seenTiles) {
             if (map[tile.getX()][tile.getY()] != null) {
                 map[tile.getX()][tile.getY()].update();
             } else map[tile.getX()][tile.getY()] = new TileNode(tile, this);
         }
+
+        for(TileNode[] tiles : map){
+            for(TileNode tile: tiles){
+                if(tile!=null)
+                    tile.updateAdjacent();
+            }
+        }
     }
 
     public TileNode getMapPosition(int x, int y) {
-        try{
+        try {
             return map[x][y];
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -221,18 +255,36 @@ public abstract class Agent {
         return new XY(x - initialPosition.x(), y - initialPosition.y());
     }
 
+    /**
+     * This function adds a marker to the list of markers.
+     *
+     * @param type The type of marker to add.
+     */
     public void addMarker(MarkerType type) {
-        if (type == MarkerType.VISITED) { //TODO depending on what our agent wants add some properties to the markers in the future
-            Marker marker = new Marker(this.getX(), this.getY(), type,getID(),getDirection());
-            markers.add(marker);
-        }
+        Marker marker = new Marker(this.getX(), this.getY(), type, getID(), getDirection());
+        markers.add(marker);
     }
 
+    /**
+     * > This function creates a new pheromone object and adds it to the list of pheromones
+     *
+     * @param type The type of pheromone that is being added.
+     */
     public void addPheromone(PheromoneType type) {
-        if (type == PheromoneType.TEST) {                                   //TODO depending on what our agent wants add some properties to the pheromones in the future
-            Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
-            pheromones.add(pheromone);
-        }
+        Pheromone pheromone = new Pheromone(this.getX(), this.getY(), type, this.PHEROMONELIFETIME);
+        pheromones.add(pheromone);                             //TODO depending on what our agent wants add some properties to the pheromones in the future
+    }
+
+    public ArrayList<Marker> getMarkers() {
+        return this.markers;
+    }
+
+    public void setTeleported(boolean isTeleported) {
+        this.isTeleported = isTeleported;
+    }
+
+    public boolean getIsTeleported() {
+        return this.isTeleported;
     }
 
 }

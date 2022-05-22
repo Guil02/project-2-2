@@ -25,6 +25,6 @@ public class RandomTest implements Algorithm {
 
     @Override
     public AlgorithmType getType() {
-        return AlgorithmType.WALL_FOLLOWING; //not really
+        return AlgorithmType.A_STAR; //not really
     }
 }
