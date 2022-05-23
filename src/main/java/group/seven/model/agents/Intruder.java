@@ -17,8 +17,9 @@ import group.seven.utils.Config;
 
 import java.util.List;
 
-import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.TileType.INTRUDER;
+import static group.seven.model.environment.Scenario.targetArea;
+import static group.seven.utils.Methods.print;
 
 public class Intruder extends Agent {
 
@@ -60,7 +61,7 @@ public class Intruder extends Agent {
     }
 
     public void updateOrientationToGoal(){
-        Rectangle goalLocationArea = Scenario.targetArea.area();
+        Rectangle goalLocationArea = targetArea.area();
         double heightMediumPoint =  goalLocationArea.getHeight()/2;
         double widthMediumPoint = goalLocationArea.getWidth()/2;
         int x = (int)(goalLocationArea.getX() + widthMediumPoint);
@@ -100,13 +101,16 @@ public class Intruder extends Agent {
     @Override
     public Move calculateMove() {
         //Check if Intruder is in the target area
-        if (Scenario.targetArea.contains(getXY())) {
+        if (targetArea.contains(getXY())) {
 //        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
+                print("Intruder " + getID() + " made it to target");
+                //TODO handle leaving and returning to target area
                 Scenario.INTRUDERS_AT_TARGET++;
                 firstTimeInTargetArea = false;
                 return algorithm.getNext();
             } else {
+                //TODO: make intruder leave target area if guard nearby or to make room for other intruders
                 return new Move(Action.NOTHING, 0, this);
             }
         } //Check if Intruder is alive = is not caught yet
@@ -183,6 +187,7 @@ public class Intruder extends Agent {
     }
 
     public int intruderInTargetArea() {
+        print("Intruder " + ID + " has got the goods");
         inTargetArea += 1;
         return inTargetArea;
     }
@@ -191,6 +196,7 @@ public class Intruder extends Agent {
         if (this.alive) {
             Scenario.INTRUDERS_CAUGHT++;
             this.alive = false;
+            System.out.println("Intruder " + ID + " just got shot");
         }
     }
 

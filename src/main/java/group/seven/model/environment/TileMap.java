@@ -1,9 +1,16 @@
 package group.seven.model.environment;
 
 import group.seven.enums.TileType;
+import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import static group.seven.enums.TileType.GUARD;
+import static group.seven.model.environment.Scenario.*;
+import static group.seven.utils.Methods.print;
 
 public class TileMap {
     //used for coverage calculation
@@ -11,17 +18,26 @@ public class TileMap {
     public static double INTRUDER_EXPLORATION;
     public static double GUARD_EXPLORATION;
     //TileMap
-    public Tile[][] map; //observable?
-    public Agent[] agents; //observable?
+    public Tile[][] map;
+    public Set<XY> guardPositions; //observable?
+    public Set<XY> intruderPositions; //observable?
+    public Agent[] agents;
 
-    public ArrayList<Marker> markers = new ArrayList<>();
-    public ArrayList<Pheromone> pheromones = new ArrayList<>();
+    //marker/pheromone stuff. Should this belong here?
+    public ArrayList<Marker> markers;
+    public ArrayList<Pheromone> pheromones;
+    private static final int spreadDistance = 50;
+
 
     public TileMap() {
-        //not sure if TileMap needs a reference to the scenario, or if builder can take care of all that
-        //alternatively scenario fields could be static
         map = new Tile[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
-        agents = new Agent[Scenario.NUM_AGENTS];
+        agents = new Agent[NUM_AGENTS];
+        //guardPositions = new ArrayList<>(NUM_GUARDS);
+        //intruderPositions = new ArrayList<>(NUM_INTRUDERS);
+        guardPositions = new HashSet<>(NUM_GUARDS);
+        intruderPositions = new HashSet<>(NUM_INTRUDERS);
+        markers = new ArrayList<>();
+        pheromones = new ArrayList<>();
 
         //NUM_TILES = Scenario.WIDTH * Scenario.HEIGHT; // +1 (?)
     }
@@ -34,16 +50,17 @@ public class TileMap {
         return map[x][y];
     }
 
-    private static final int spreadDistance = 50;
-
     public void dropPheromone(int x, int y) {
         for (int i = x - spreadDistance / 2; i < x + spreadDistance / 2; i++) {
             for (int j = y - spreadDistance / 2; j < y + spreadDistance / 2; j++) {
                 int dis = Math.abs(x - i + y - j);
                 double adjustedStrength = Pheromone.maxStrength - (Pheromone.maxStrength / spreadDistance) * dis;
+
                 try {
                     map[i][j].pheromone.setStrength(Math.max(map[i][j].pheromone.getStrength(), adjustedStrength));
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    print(e.getMessage());
+                    print(e.getCause());
                 }
             }
         }
@@ -62,12 +79,24 @@ public class TileMap {
         map[x][y].type = type;
     }
 
+    protected void setType(XY xy, TileType type) {
+        map[xy.x()][xy.y()].type = type;
+    }
+
     public TileType getType(int x, int y) {
         return map[x][y].type;
     }
 
+    public TileType getType(XY xy) {
+        return map[xy.x()][xy.y()].type;
+    }
+
     public void addAgent(Agent agent) {
         agents[agent.getID()] = agent;
+
+        if (agent.getType() == GUARD)
+             guardPositions.add(agent.getXY());
+        else intruderPositions.add(agent.getXY());
     }
 
     public void addMarker(Marker marker) {
@@ -79,7 +108,7 @@ public class TileMap {
     }
 
     public void resetMarkers() {
-        markers = new ArrayList<Marker>();
+        markers = new ArrayList<>();
     }
 
     public void addPheromone(Pheromone pheromone) {
@@ -91,8 +120,11 @@ public class TileMap {
     }
 
     public void resetPheromones() {
-        pheromones = new ArrayList<Pheromone>();
+        pheromones = new ArrayList<>();
     }
 
 
+    public Tile getTile(XY xy) {
+        return map[xy.x()][xy.y()];
+    }
 }

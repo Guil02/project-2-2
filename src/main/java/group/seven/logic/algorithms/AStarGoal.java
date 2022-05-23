@@ -143,7 +143,7 @@ public class AStarGoal implements Algorithm {
 
         double angleAgentToGoal = player.getAngleToGoal();
 
-        double angleAgentToTile = Pythagoras.angleFromAgentToTarget(xy, new XY(player.getX(), player.getY()));
+        double angleAgentToTile = Pythagoras.angleFromAgentToTarget(xy, player.getXY());
 
 
         double r = Math.abs(angleAgentToGoal - angleAgentToTile);

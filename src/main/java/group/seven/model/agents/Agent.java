@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.Cardinal.*;
+import static group.seven.model.environment.Scenario.TILE_MAP;
 import static group.seven.utils.Methods.print;
 
 //TODO the agent structure very much work in progress
@@ -16,7 +17,6 @@ public abstract class Agent {
     private static int IDs = 0;
 
     private double numExplored;
-    public final int PHEROMONELIFETIME = 20;
     //Coordinates and Frames:
     public final XY globalSpawn; //global spawn position
     protected int x, y;
@@ -27,6 +27,7 @@ public abstract class Agent {
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
     //Marker and Pheromone
+    public int PHEROMONELIFETIME = 20;
     private final ArrayList<Marker> markers = new ArrayList<>();
     private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Internal map
@@ -42,7 +43,9 @@ public abstract class Agent {
         frame = new Frame(new Translate(-x, -y));
         globalSpawn = new XY(x, y);
 
-        initializeMap();
+        map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
+        setXY(x, y);
+        //initializeMap();
     }
 
     public abstract Move calculateMove();
@@ -122,20 +125,20 @@ public abstract class Agent {
     }
 
     public void setXY(XY newXY) {
-        XY local = frame.convertToLocal(newXY);
-        x = local.x();
-        y = local.y();
+        setXY(newXY.x(), newXY.y());
     }
 
     public void setXY(int x, int y) {
-        setXY(new XY(x, y));
+        XY local = frame.convertToLocal(x, y);
+        this.x = local.x();
+        this.y = local.y();
     }
 
     public Cardinal getDirection() {
         return direction;
     }
 
-    private XY getGlobalSpawn() {
+    public XY getGlobalSpawn() {
         return globalSpawn;
     }
 
@@ -208,17 +211,6 @@ public abstract class Agent {
         update();
     }
 
-
-    @Override
-    public String toString() {
-        return "Agent{" +
-                "x=" + x +
-                ", y=" + y +
-                ", direction=" + direction +
-                ", agentType=" + agentType +
-                '}';
-    }
-
     //
     public void initializeMap() {
         map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
@@ -226,13 +218,9 @@ public abstract class Agent {
 
     //I think this just gets called once upon spawning
     public void initializeInitialTile(){
-//        XY globalPos = frame.convertToGlobal(x, y);
-        //TODO: conversion
-        try{
-//            map[x][y]=new TileNode(Scenario.TILE_MAP.getTile(x,y),this);
-            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(Scenario.TILE_MAP.getTile(globalSpawn.x(), globalSpawn.y()),this);
-        }
-        catch (Exception e){
+        try {
+            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(TILE_MAP.getTile(globalSpawn),this);
+        } catch (Exception e){
             System.err.println("An error occurred in the initialization of the initial tile in the agent class");
             e.printStackTrace();
         }
@@ -240,25 +228,26 @@ public abstract class Agent {
 
     public void updateMap() {
         for (Tile tile : seenTiles) {
-            if (map[tile.getX()][tile.getY()] != null) {
-                map[tile.getX()][tile.getY()].update();
-            } else map[tile.getX()][tile.getY()] = new TileNode(tile, this);
+            int tx = tile.getX();
+            int ty = tile.getY();
+
+            //because the map is initialized as null
+            if (map[tx][ty] != null) {
+                map[tx][ty].update();
+            } else map[tx][ty] = new TileNode(tile, this);
         }
 
-        for(TileNode[] tiles : map){
-            for(TileNode tile: tiles){
-                if(tile != null)
-                    tile.updateAdjacent();
-            }
-        }
+
+//        for(TileNode[] tiles : map){
+//            for(TileNode tile: tiles){
+//                if(tile != null) tile.updateAdjacent();
+//            }
+//        }
     }
 
     //parameters are in global
     public TileNode getMapPosition(int x, int y) {
-//        XY pos = frame.convertToLocal(x, y);
-//        XY pos = frame.convertToGlobal(x, y);
         try{
-//            return map[pos.x()][pos.y()];
             return map[x][y];
         }
         catch (IndexOutOfBoundsException e){
@@ -271,9 +260,34 @@ public abstract class Agent {
         return map;
     }
 
-    public XY getLocalCoordinate(int x, int y) {
-        return new XY(x - globalSpawn.x(), y - globalSpawn.y());
+//    public XY getLocalCoordinate(int x, int y) {
+//        return new XY(x - globalSpawn.x(), y - globalSpawn.y());
+//    }
+
+
+    public void setTeleported(boolean isTeleported) {
+        this.isTeleported = isTeleported;
     }
+
+    public boolean getIsTeleported() {
+        return this.isTeleported;
+    }
+
+    @Override
+    public String toString() {
+        XY global = getXY();
+        return "Agent{" +
+                "x=" + x +
+                ", y=" + y +
+                ", globalX=" +  global.x() +
+                ", globalY=" + global.y() +
+                ", direction=" + direction +
+                ", agentType=" + agentType +
+                '}';
+    }
+
+
+    //#################### Unused methods: ##########################//
 
     /**
      * This function adds a marker to the list of markers.
@@ -299,14 +313,6 @@ public abstract class Agent {
 
     public ArrayList<Marker> getMarkers() {
         return this.markers;
-    }
-
-    public void setTeleported(boolean isTeleported) {
-        this.isTeleported = isTeleported;
-    }
-
-    public boolean getIsTeleported() {
-        return this.isTeleported;
     }
 
 }

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.TileType.PORTAL;
+import static group.seven.model.environment.Scenario.TILE_MAP;
+import static group.seven.utils.Methods.print;
 
 public class TileNode {
 
@@ -30,17 +32,18 @@ public class TileNode {
         xy = tile.getXY();
         agent = a;
         pheromone = tile.pheromone;
-        for (Agent agent : Scenario.TILE_MAP.agents) {
+        for (Agent agent : TILE_MAP.agents) {
             //if(agent!=null && agent.x==tile.getX()&& agent.y==tile.getY()){ //theirs
             if (agent != null && agent.getXY().equals(xy)) {//mine
                 agentType = agent.agentType;
                 break;
             }
         }
+
         updateAdjacent();
 
         markers = new ArrayList<>();
-        for (Marker marker : Scenario.TILE_MAP.markers) {
+        for (Marker marker : TILE_MAP.markers) {
             if (marker.getXY().equals(xy)) {
                 markers.add(marker);
             }
@@ -50,6 +53,7 @@ public class TileNode {
 
     //updates one node
     public void update() {
+        TileType atype = agentType;
         agentType = null;
         markers.clear();
 //        for (Agent agentEntity : Scenario.TILE_MAP.agents) { //theirs
@@ -58,14 +62,16 @@ public class TileNode {
 //                break;
 //            }
 //        }
-        for (Agent agent : Scenario.TILE_MAP.agents) { //mine
+        for (Agent agent : TILE_MAP.agents) { //mine
             if (agent.getXY().equals(xy)) {
                 this.agentType = agent.agentType;
                 break;
             }
         }
 
-        for (Marker marker : Scenario.TILE_MAP.markers) {
+        if (atype != agentType) print("before: " + atype + " after update: " + agentType);
+
+        for (Marker marker : TILE_MAP.markers) {
             if (marker.getXY().equals(xy)) {
                 markers.add(marker);
             }
@@ -94,9 +100,9 @@ public class TileNode {
 
         TileNode target = null;
         if (type == PORTAL) {
-            int xTar = Scenario.TILE_MAP.getTile(x, y).adjacent.targetLocation().getX();
-            int yTar = Scenario.TILE_MAP.getTile(x, y).adjacent.targetLocation().getY();
-            target = agent.getMapPosition(xTar, yTar); //TODO should this be local or global?
+            int xTar = TILE_MAP.getTile(x, y).adjacent.targetLocation().getX();
+            int yTar = TILE_MAP.getTile(x, y).adjacent.targetLocation().getY();
+            target = agent.getMapPosition(xTar, yTar);
         }
 
         adjacent = new Adjacent<>(north, east, south, west, target);
@@ -127,10 +133,10 @@ public class TileNode {
     }
 
     public MarkerType getExploreType() {
-        return Scenario.TILE_MAP.getTile(x, y).getExploreType();
+        return TILE_MAP.getTile(x, y).getExploreType();
     }
 
     public void setExploreType(MarkerType m) {
-        Scenario.TILE_MAP.getTile(x, y).setExploreType(m);
+        TILE_MAP.getTile(x, y).setExploreType(m);
     }
 }
