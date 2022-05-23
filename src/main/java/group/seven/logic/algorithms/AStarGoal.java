@@ -2,21 +2,20 @@ package group.seven.logic.algorithms;
 
 import group.seven.enums.AlgorithmType;
 import group.seven.logic.geometric.Pythagoras;
-import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
-import group.seven.model.agents.TileNode;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
-import java.util.Objects;
+import group.seven.model.environment.TileNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.Action.NOTHING;
 import static group.seven.enums.AlgorithmType.A_STAR;
-import static group.seven.enums.TileType.*;
-import static group.seven.utils.Methods.print;
+import static group.seven.enums.TileType.PORTAL;
+import static group.seven.enums.TileType.WALL;
 
 public class AStarGoal implements Algorithm {
 
@@ -30,36 +29,35 @@ public class AStarGoal implements Algorithm {
     List<Move> movesLeft;
     List<AStarNode> open;
     List<AStarNode> closed;
-    int[][] additions = {{1,0},{-1,0},{0,1},{0,-1}};
+    int[][] additions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     int wallPenalization = 2;
 
 
     public AStarGoal(Intruder player) {
-        this.initialX = player.initialPosition.x();
-        this.initialY =  player.initialPosition.y();
+        this.initialX = player.globalSpawn.x();
+        this.initialY = player.globalSpawn.y();
         open = new ArrayList<>();
         closed = new ArrayList<>();
         movesLeft = new ArrayList<>();
         this.map = Scenario.TILE_MAP.getMap();
-        current = new AStarNode(player.getXY(),  this);
+        current = new AStarNode(player.getXY(), this);
         open.add(current);
         this.player = player;
         //playerMap[initialX][initialY]=new TileNode(map[initialX][initialY],player);
     }
 
 
-
-    public void updateOpen(){
+    public void updateOpen() {
         List<AStarNode> toBeRemoved = new ArrayList<>();
-        for(AStarNode node: open){
+        for (AStarNode node : open) {
             List<AStarNode> neighbours = neighbours(node);
             int count = 0;
-            for(AStarNode neighbour : neighbours){
-                if(player.getMap()[neighbour.getX()][neighbour.getY()]!=null){
+            for (AStarNode neighbour : neighbours) {
+                if (player.getMap()[neighbour.getX()][neighbour.getY()] != null) {
                     count++;
                 }
             }
-            if(count>=4){
+            if (count >= 4) {
                 toBeRemoved.add(node);
             }
         }
@@ -67,40 +65,41 @@ public class AStarGoal implements Algorithm {
         closed.addAll(toBeRemoved);
     }
 
-    public List<AStarNode> neighbours(AStarNode node){
+    public List<AStarNode> neighbours(AStarNode node) {
         int x = node.getX();
         int y = node.getY();
         List<AStarNode> neighbours = new ArrayList<>();
-        for(int i = 0; i<4; i++){
-            AStarNode neighbor = new AStarNode(new XY(x+additions[i][0],y+additions[i][1]),this);
+        for (int i = 0; i < 4; i++) {
+            AStarNode neighbor = new AStarNode(new XY(x + additions[i][0], y + additions[i][1]), this);
             if (!outOfBounds(neighbor.getX(), neighbor.getY()) && player.getMap()[neighbor.getX()][neighbor.getY()] != null) {
                 neighbours.add(neighbor);
             }
         }
         return neighbours;
     }
-    public boolean outOfBounds(int x, int y){
-        return x < 0  || x >= player.getMap().length || y < 0 || y >= player.getMap()[0].length;
+
+    public boolean outOfBounds(int x, int y) {
+        return x < 0 || x >= player.getMap().length || y < 0 || y >= player.getMap()[0].length;
     }
 
-    public AStarNode findTarget(){
+    public AStarNode findTarget() {
         updateOpen();
         open.remove(current);
-        if(!closed.contains(current))
+        if (!closed.contains(current))
             closed.add(current);
 
-        for(TileNode[] grids: player.getMap()){
-            for(TileNode grid: grids){
-                if(grid==null)
+        for (TileNode[] grids : player.getMap()) {
+            for (TileNode grid : grids) {
+                if (grid == null)
                     continue;
-                AStarNode node = new AStarNode(new XY(grid.getX(), grid.getY()),  this);
-                if (grid.getType()==WALL) {
-                    node.setfCost(node.getfCost()*wallPenalization);
+                AStarNode node = new AStarNode(new XY(grid.getX(), grid.getY()), this);
+                if (grid.getType() == WALL) {
+                    node.setfCost(node.getfCost() * wallPenalization);
                     for (AStarNode neighbor : neighbours(node)) {
-                        neighbor.setfCost(neighbor.getfCost()*wallPenalization);
+                        neighbor.setfCost(neighbor.getfCost() * wallPenalization);
                     }
                 }
-                if(open.contains(node) || closed.contains(node) || (player.getIgnorePortal() && grid.getType()==PORTAL)){
+                if (open.contains(node) || closed.contains(node) || (player.getIgnorePortal() && grid.getType() == PORTAL)) {
                     continue;
                 }
                 open.add(node);
@@ -109,22 +108,21 @@ public class AStarGoal implements Algorithm {
         updateOpen();
         int lowestValue = Integer.MAX_VALUE;
         AStarNode currentTarget = null;
-        for(AStarNode node: open){
+        for (AStarNode node : open) {
             node.updateCost();
-            if(node.getfCost()<lowestValue){
+            if (node.getfCost() < lowestValue) {
                 currentTarget = node;
                 lowestValue = node.getfCost();
-            }
-            else if(node.getfCost()==lowestValue){
-                if(node.gethCost()< current.gethCost()){
+            } else if (node.getfCost() == lowestValue) {
+                if (node.gethCost() < current.gethCost()) {
                     lowestValue = node.getfCost();
                     currentTarget = node;
                 }
             }
         }
-        if(currentTarget!=null){
-        open.remove(currentTarget);
-        closed.add(currentTarget);
+        if (currentTarget != null) {
+            open.remove(currentTarget);
+            closed.add(currentTarget);
         }
         return currentTarget;
     }
@@ -135,59 +133,57 @@ public class AStarGoal implements Algorithm {
     }
 
 
-    public int hCost(XY xy ){
+    public int hCost(XY xy) {
         return (Math.abs(current.getX() - xy.x()) + Math.abs(current.getY() - xy.y()));
     }
 
 
-    public int rCost (XY xy){ //xy = current frontier node tested
+    public int rCost(XY xy) { //xy = current frontier node tested
         player.updateOrientationToGoal();
 
         double angleAgentToGoal = player.getAngleToGoal();
 
-        double angleAgentToTile = Pythagoras.angleFromAgentToTarget(xy,new XY(player.getX(),player.getY()));
+        double angleAgentToTile = Pythagoras.angleFromAgentToTarget(xy, new XY(player.getX(), player.getY()));
 
 
-        double r = Math.abs(angleAgentToGoal- angleAgentToTile);
+        double r = Math.abs(angleAgentToGoal - angleAgentToTile);
 
         if (r > 180) {
             r = 360 - r;
         }
-        r = (r/180)*50;
+        r = (r / 180) * 50;
 
-        return (int)Math.round(r);
+        return (int) Math.round(r);
     }
 
     @Override
     public Move getNext() {
 
-        if(player.getIsTeleported()){
+        if (player.getIsTeleported()) {
             movesLeft.clear();
             player.setTeleported(false);
 
         }
-        if(movesLeft.isEmpty()){
-            if(target!=null) {
+        if (movesLeft.isEmpty()) {
+            if (target != null) {
                 current = target;
             }
 
             target = findTarget();
 
 
-            if(target == null){
-                movesLeft.add(new Move(NOTHING,0, player));
-            }
-            else{
+            if (target == null) {
+                movesLeft.add(new Move(NOTHING, 0, player));
+            } else {
                 AStarPathFinder aStarPathFinder = new AStarPathFinder(player, target.getCoordinate());
                 movesLeft = aStarPathFinder.findPath();
             }
         }
-        Move move = new Move(NOTHING, 0,player);
-        try{
+        Move move = new Move(NOTHING, 0, player);
+        try {
             move = movesLeft.get(0);
             movesLeft.remove(0);
-        }
-        catch(IndexOutOfBoundsException ignore){
+        } catch (IndexOutOfBoundsException ignore) {
         }
         return move;
     }
@@ -196,7 +192,6 @@ public class AStarGoal implements Algorithm {
     public AlgorithmType getType() {
         return A_STAR;
     }
-
 
 
     public class AStarNode {
@@ -215,7 +210,7 @@ public class AStarGoal implements Algorithm {
             this.aStarGoal = aStarGoal;
         }
 
-        public void updateCost(){
+        public void updateCost() {
             //updateGCost();
             updateHCost();
             updateRCost();
@@ -226,17 +221,17 @@ public class AStarGoal implements Algorithm {
             hCost = aStarGoal.hCost(this.coordinate);
         }
 
-        public void updateRCost(){
-            rCost= aStarGoal.rCost(this.coordinate);
+        public void updateRCost() {
+            rCost = aStarGoal.rCost(this.coordinate);
         }
 
-        public void updateGCost(){
+        public void updateGCost() {
             gCost = aStarGoal.gCost(this.coordinate);
         }
 
 
-        public void updateFCost(){
-            fCost = gCost+hCost + rCost;
+        public void updateFCost() {
+            fCost = gCost + hCost + rCost;
         }
 
         public XY getCoordinate() {
@@ -247,13 +242,15 @@ public class AStarGoal implements Algorithm {
             return fCost;
         }
 
-        public void setfCost(int newCost) { this.fCost = newCost;}
+        public void setfCost(int newCost) {
+            this.fCost = newCost;
+        }
 
-        public double getrCost(){
+        public double getrCost() {
             return rCost;
         }
 
-        public int getgCost(){
+        public int getgCost() {
             return gCost;
         }
 
@@ -261,18 +258,25 @@ public class AStarGoal implements Algorithm {
             return hCost;
         }
 
-        public void setgCost(int gCost){ this.gCost = gCost; }
+        public void setgCost(int gCost) {
+            this.gCost = gCost;
+        }
 
-        public int getX (){
+        public int getX() {
             return this.coordinate.x();
         }
 
-        public int getY (){
+        public int getY() {
             return this.coordinate.y();
         }
-        public AStarNode getParent(){ return parent; }
 
-        public void setParent(AStarNode parent) { this.parent = parent; }
+        public AStarNode getParent() {
+            return parent;
+        }
+
+        public void setParent(AStarNode parent) {
+            this.parent = parent;
+        }
 
 
         @Override

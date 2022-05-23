@@ -76,8 +76,6 @@ public class SimulationScreen extends BorderPane {
 
         String gameMode = switch (Scenario.GAURD_GAME_MODE) {
             case EXPLORATION -> "Exploration";
-//            case SINGLE_INTRUDER_CAUGHT -> "Intruder";
-//            case ALL_INTRUDER_AT_TARGET -> "Multi Intruder";
             default -> "Intruders";
         };
 

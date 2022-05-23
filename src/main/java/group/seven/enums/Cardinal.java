@@ -1,6 +1,7 @@
 package group.seven.enums;
 
 import group.seven.logic.geometric.XY;
+import group.seven.logic.simulation.Simulator;
 
 public enum Cardinal {
 
@@ -16,6 +17,19 @@ public enum Cardinal {
         this.unitVector = unitVector;
     }
 
+    /**
+     * Returns a random Cardinal direction of the 4 types
+     * NOWHERE is excluded
+     * @return a random cardinal direction
+     */
+    public static Cardinal randomDirection() {
+        return Cardinal.values()[Simulator.rand.nextInt(5)];
+    }
+
+    /**
+     * Inverts this Cardinals direction
+     * @return the opposite direction of this Cardinal
+     */
     public Cardinal flip() {
         return switch (this) {
             case NORTH -> SOUTH;
@@ -26,25 +40,11 @@ public enum Cardinal {
         };
     }
 
-    //TODO: isn't this pretty much the same method as the flip() above?
-    public Cardinal reverseDirection(Cardinal cardinal) {
-
-        if (cardinal == NORTH) {
-            return SOUTH;
-        } else if (cardinal == SOUTH) {
-            return NORTH;
-        } else if (cardinal == WEST) {
-            return EAST;
-        } else if (cardinal == EAST) {
-            return WEST;
-        }
-
-        return null;
-
-    }
-
-
-
+    /**
+     * Returns an XY that represents one discrete step in this cardinal's direction
+     * in the x and y-axis
+     * @return an XY of unit length that represents a step in the cardinals direction
+     */
     public XY unitVector() {
         return unitVector;
     }

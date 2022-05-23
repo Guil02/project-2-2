@@ -4,12 +4,11 @@ import group.seven.enums.Cardinal;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.agents.TileNode;
+import group.seven.model.environment.TileNode;
 
 import java.util.Objects;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -98,7 +97,7 @@ public class AStarPathFinder {
         int y = node.getY();
         List<AStarNode> neighbours = new ArrayList<>();
         for(int i = 0; i<4; i++){
-            AStarNode neighbor = new AStarNode(new XY (x+additions[i][0],y+additions[i][1]),this);
+            AStarNode neighbor = new AStarNode(new XY(x + additions[i][0], y + additions[i][1]), this);
             if (!outOfBounds(neighbor.getX(), neighbor.getY()) && internalMap[neighbor.getX()][neighbor.getY()] != null) {
                 if (!neighbours.contains(neighbor))
                     neighbours.add(neighbor);
@@ -206,7 +205,7 @@ public class AStarPathFinder {
 
 
 
-    public class AStarNode {
+    public static class AStarNode {
         private final XY coordinate;
         private int gCost = Integer.MAX_VALUE;
         private int fCost = Integer.MAX_VALUE;

@@ -9,7 +9,6 @@ import group.seven.model.environment.Component;
 import group.seven.model.environment.Scenario;
 import javafx.geometry.Point2D;
 
-import java.util.Collections;
 import java.util.List;
 
 import static group.seven.enums.TileType.*;
@@ -63,10 +62,10 @@ public class CollisionHandler {
                 Agent agent = move.agent();
                 agent.clearVision();
                 agent.updateVision();
-                int x = agent.getX();
-                int y = agent.getY();
+                //int x = agent.getX();
+                //int y = agent.getY();
                 XY position = agent.getXY();
-                XY targetPos = new XY(x, y);
+                XY targetPos = new XY(position.x(), position.y());
                 targetPos = targetPos.add(agent.getDirection().unitVector.x(), agent.getDirection().unitVector.y());
                 int distance = Math.abs((position.x()-targetPos.x()) + (position.y() - targetPos.y()));
                 if (i < move.distance()) {

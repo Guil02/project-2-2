@@ -1,7 +1,5 @@
 package group.seven.model.environment;
 
-import group.seven.enums.PheromoneType;
-import group.seven.enums.Cardinal;
 import group.seven.enums.MarkerType;
 import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
@@ -12,10 +10,8 @@ import java.util.List;
 
 import static group.seven.enums.MarkerType.UNEXPLORED;
 import static group.seven.enums.PheromoneType.SMELL;
-import static group.seven.enums.TileType.EMPTY;
 import static group.seven.enums.TileType.*;
 import static group.seven.model.environment.Scenario.NUM_AGENTS;
-import static group.seven.model.environment.Scenario.NUM_GUARDS;
 
 public class Tile {
     TileType type;
@@ -33,6 +29,7 @@ public class Tile {
     public Tile() {
         xy = new XY(0,0);
         pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
+
         Scenario.TILE_MAP.pheromones.add(pheromone);
         type = EMPTY;
 //        guard_marker = new ArrayList<>();
@@ -48,13 +45,10 @@ public class Tile {
         return seen;
     }
 
-    public XY getXy(){
-        return this.xy;
-    }
     public Tile(int x, int y) {
         this();
         xy = new XY(x, y);
-        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
+        pheromone = new Pheromone(x, y, SMELL, 0);
 //        guard_marker.clear();
 //        for (int i = 0; i < NUM_GUARDS; i++) {
 //            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
@@ -64,11 +58,14 @@ public class Tile {
     public Tile(TileType type, int x, int y) {
         this(x, y);
         this.type = type;
-        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
+        pheromone = new Pheromone(x, y, SMELL, 0);
     }
 
     //Actionable
     // void doAction() {}
+    public XY getXY(){
+        return xy;
+    }
 
     public int getX() {
         return xy.x();

@@ -29,8 +29,6 @@ public class View extends ScrollPane {
         MAP_HEIGHT = Scenario.HEIGHT;
 
         canvas = new Canvas(MAP_WIDTH * (TILE_SIZE + 1), MAP_HEIGHT * (TILE_SIZE + 1));
-        //canvas.setCache(true);
-        //canvas.setCacheHint(CacheHint.SPEED);
         g = canvas.getGraphicsContext2D();
 
         StackPane container = new StackPane();

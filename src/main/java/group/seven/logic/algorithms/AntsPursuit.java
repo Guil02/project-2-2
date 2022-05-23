@@ -49,8 +49,9 @@ public class AntsPursuit implements Algorithm {
     public XY seeTarget() {
         for (Tile t : agent.getSeenTiles()) {
             for (Agent a : Scenario.TILE_MAP.agents) {
-                if (a.getType() == INTRUDER && a.getX() == t.getX() && a.getY() == t.getY()) {
-                    return new XY(a.getX(), a.getY());
+                XY agentPos; //doing the coordinate transform is expensive, so only initialize if a == Intruder
+                if (a.getType() == INTRUDER && (agentPos = a.getXY()).equals(t.getXY())) {
+                    return agentPos;
                 }
             }
         }

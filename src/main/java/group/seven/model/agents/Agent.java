@@ -2,10 +2,7 @@ package group.seven.model.agents;
 
 import group.seven.enums.*;
 import group.seven.logic.geometric.XY;
-import group.seven.model.environment.Marker;
-import group.seven.model.environment.Pheromone;
-import group.seven.model.environment.Scenario;
-import group.seven.model.environment.Tile;
+import group.seven.model.environment.*;
 import javafx.scene.transform.Translate;
 
 import java.util.ArrayList;
@@ -21,9 +18,9 @@ public abstract class Agent {
     private double numExplored;
     public final int PHEROMONELIFETIME = 20;
     //Coordinates and Frames:
-    public final XY initialPosition; //global spawn position
+    public final XY globalSpawn; //global spawn position
     protected int x, y;
-    public Frame frame; //handles coordinate transforms
+    public final Frame frame; //handles coordinate transforms
     protected Cardinal direction;
     //Type
     public TileType agentType;
@@ -43,7 +40,7 @@ public abstract class Agent {
 
     public Agent(int x, int y) {
         frame = new Frame(new Translate(-x, -y));
-        initialPosition = new XY(x, y);
+        globalSpawn = new XY(x, y);
 
         initializeMap();
     }
@@ -99,9 +96,8 @@ public abstract class Agent {
     }
 
     public int getX() {
-        /* convert with frame. This would make callers of the method receive agents coords in global frame
-        XY globalPosition = frame.convertToGlobal(x, y);
-        return globalPosition.x();
+        /* convert with frame. This would make callers of the method receive agents coords in global frame*/
+        return frame.convertToGlobal(x, y).x();
         //return x;
     }
 
@@ -111,28 +107,17 @@ public abstract class Agent {
     }
 
     public int getY() {
-
-        /* convert with frame. This would make callers of the method receive agents coords in global frame
-        Point2D globalPosition = frame.convertToGlobal(x, y);
-        return (int) globalPosition.getX();
-        */
-//        XY globalPosition = ;
         return frame.convertToGlobal(x, y).y();
 //        return y;
     }
 
     public void setY(int y) {
-        //convert with frame
         //this.y = y;
         this.y = frame.convertToLocal(0, y).y();
 
     }
 
     public XY getXY() {
-        /* convert with frame. This would make callers of the method receive agents coords in global frame
-        Point2D globalPosition = frame.convertToGlobal(x, y);
-        return new XY(globalPosition)
-        */
         return frame.convertToGlobal(x, y);
     }
 
@@ -150,9 +135,8 @@ public abstract class Agent {
         return direction;
     }
 
-    //TODO: transform?
-    private XY getInitialPosition() {
-        return initialPosition;
+    private XY getGlobalSpawn() {
+        return globalSpawn;
     }
 
     public void setDirection(Cardinal d) {
@@ -192,9 +176,12 @@ public abstract class Agent {
      * @return the observedTiles with the not seen newTiles
      */
     public List<Tile> duplicatedTiles(List<Tile> observedTiles, List<Tile> newTiles) {
-        for (Tile tile : newTiles)
-            if (!(observedTiles.contains(tile)))
-                observedTiles.add(tile);
+        for (Tile tile : newTiles) {
+            if (observedTiles.contains(tile)) {
+                continue;
+            }
+            observedTiles.add(tile);
+        }
         return observedTiles;
     }
 
@@ -237,10 +224,13 @@ public abstract class Agent {
         map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
     }
 
+    //I think this just gets called once upon spawning
     public void initializeInitialTile(){
+//        XY globalPos = frame.convertToGlobal(x, y);
         //TODO: conversion
         try{
-            map[x][y]=new TileNode(Scenario.TILE_MAP.getTile(x,y),this);
+//            map[x][y]=new TileNode(Scenario.TILE_MAP.getTile(x,y),this);
+            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(Scenario.TILE_MAP.getTile(globalSpawn.x(), globalSpawn.y()),this);
         }
         catch (Exception e){
             System.err.println("An error occurred in the initialization of the initial tile in the agent class");
@@ -257,16 +247,19 @@ public abstract class Agent {
 
         for(TileNode[] tiles : map){
             for(TileNode tile: tiles){
-                if(tile!=null)
+                if(tile != null)
                     tile.updateAdjacent();
             }
         }
     }
 
+    //parameters are in global
     public TileNode getMapPosition(int x, int y) {
-        XY pos = frame.convertToLocal(x, y);
+//        XY pos = frame.convertToLocal(x, y);
+//        XY pos = frame.convertToGlobal(x, y);
         try{
-            return map[pos.x()][pos.y()];
+//            return map[pos.x()][pos.y()];
+            return map[x][y];
         }
         catch (IndexOutOfBoundsException e){
             print(e.getMessage());
@@ -279,7 +272,7 @@ public abstract class Agent {
     }
 
     public XY getLocalCoordinate(int x, int y) {
-        return new XY(x - initialPosition.x(), y - initialPosition.y());
+        return new XY(x - globalSpawn.x(), y - globalSpawn.y());
     }
 
     /**

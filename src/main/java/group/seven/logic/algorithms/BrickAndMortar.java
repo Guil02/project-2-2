@@ -6,9 +6,8 @@ import group.seven.enums.Cardinal;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.agents.TileNode;
+import group.seven.model.environment.TileNode;
 import group.seven.model.environment.Adjacent;
-import group.seven.model.environment.Marker;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static group.seven.enums.Action.NOTHING;
 import static group.seven.enums.Action.*;
 import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.MarkerType.*;
@@ -80,7 +78,7 @@ public class BrickAndMortar implements Algorithm {
      * closure. The moves are added to the move list {@link BrickAndMortar#moves}
      */
     public void BAMWithoutLoopClosure() {
-        TileNode currentTile = agent.getMapPosition(agent.x, agent.y);
+        TileNode currentTile = agent.getMapPosition(agent.getX(), agent.getY()); //TODO I changed in terms of global coords
         Adjacent<TileNode> neighbours = currentTile.getAdjacent();
         D d = countD(neighbours);
 

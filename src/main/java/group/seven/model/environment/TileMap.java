@@ -33,16 +33,17 @@ public class TileMap {
 
         return map[x][y];
     }
+
     private static final int spreadDistance = 50;
-    public void dropPheromone(int x, int y){
-        for(int i = x-spreadDistance/2; i<x+spreadDistance/2; i++){
-            for(int j = y-spreadDistance/2; j<y+spreadDistance / 2; j++){
-                int dis = Math.abs(x-i+y-j);
-                double adjustedStrength = Pheromone.maxStrength - (Pheromone.maxStrength/spreadDistance)*dis;
-                try{
-                    map[i][j].pheromone.setStrength(Math.max(map[i][j].pheromone.getStrength(),adjustedStrength));
-                }
-                catch (Exception ignored){
+
+    public void dropPheromone(int x, int y) {
+        for (int i = x - spreadDistance / 2; i < x + spreadDistance / 2; i++) {
+            for (int j = y - spreadDistance / 2; j < y + spreadDistance / 2; j++) {
+                int dis = Math.abs(x - i + y - j);
+                double adjustedStrength = Pheromone.maxStrength - (Pheromone.maxStrength / spreadDistance) * dis;
+                try {
+                    map[i][j].pheromone.setStrength(Math.max(map[i][j].pheromone.getStrength(), adjustedStrength));
+                } catch (Exception ignored) {
                 }
             }
         }
@@ -92,7 +93,6 @@ public class TileMap {
     public void resetPheromones() {
         pheromones = new ArrayList<Pheromone>();
     }
-
 
 
 }

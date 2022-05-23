@@ -8,8 +8,7 @@ import java.util.List;
 
 import static group.seven.enums.GameMode.ALL_INTRUDERS_CAUGHT;
 import static group.seven.enums.GameMode.ALL_INTRUDER_AT_TARGET;
-import static group.seven.enums.TileType.SHADED;
-import static group.seven.enums.TileType.WALL;
+import static group.seven.enums.TileType.*;
 
 public class Scenario {
     private static Scenario SCENARIO;

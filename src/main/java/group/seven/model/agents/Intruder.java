@@ -45,7 +45,7 @@ public class Intruder extends Agent {
         super(x, y);
         ID = newID();
         agentType = INTRUDER;
-        direction = SOUTH;      //DEFAULT
+        direction = Cardinal.randomDirection();      //DEFAULT
         algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
         updateOrientationToGoal();
@@ -54,7 +54,6 @@ public class Intruder extends Agent {
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
-            case RANDOM -> new RandomTest(this);
             case A_STAR -> new AStarGoal(this);
             default -> new RandomTest(this);
         };
@@ -66,18 +65,17 @@ public class Intruder extends Agent {
         double widthMediumPoint = goalLocationArea.getWidth()/2;
         int x = (int)(goalLocationArea.getX() + widthMediumPoint);
         int y = (int)(goalLocationArea.getY() + heightMediumPoint);
-        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
+//        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
+        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.getX(), this.getY())); //todo changed so frames match
         //double angle = Pythagoras.getAnglePythagoras(this.x,this.y,x,y);
         //Update angle to goal, which is in degrees
         this.angleToGoal= angle;
 
-       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.x ,this.y, x, y);
+//       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX() ,this.getY(), x, y); //todo changed to match frame
+        //I think the parameter order might have been wrong
+       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX(), x, this.getY(), y); //todo changed to match frame
 
     }
-
-
-
-
 
     public Cardinal getOrientationToGoal(){
         return this.orientationToGoal;
@@ -90,7 +88,7 @@ public class Intruder extends Agent {
     @Override
     public void updateVision() {
         List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
-        seenTiles = duplicatedTiles(seenTiles,newTiles);
+        seenTiles = duplicatedTiles(seenTiles, newTiles);
         /*
         Could also use the below if the vision stores an instance of the agent.
         Otherwise, would recommend making vision methods static and any have vision status effects stored in agent
@@ -102,7 +100,8 @@ public class Intruder extends Agent {
     @Override
     public Move calculateMove() {
         //Check if Intruder is in the target area
-        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
+        if (Scenario.targetArea.contains(getXY())) {
+//        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
                 Scenario.INTRUDERS_AT_TARGET++;
                 firstTimeInTargetArea = false;
@@ -132,9 +131,10 @@ public class Intruder extends Agent {
 
     //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
     //Methods here all return an instance to the object, so you can chain methods together
-    public static Intruder create(int x, int y) {
+
+    /*public static Intruder create(int x, int y) {
         return new Intruder(x, y);
-    }
+    }*/
 
     //sets the speed of this intruder and returns the same intruder object back
     public Intruder speed(int speed) {
@@ -204,6 +204,8 @@ public class Intruder extends Agent {
                 "ID=" + ID +
                 ", x=" + x +
                 ", y=" + y +
+                ", globalX=" + getX() +
+                ", globalY=" + getY() +
                 ", direction=" + direction +
                 ", speed=" + currentSpeed +
                 ", algorithm=" + algorithm.getType() +
