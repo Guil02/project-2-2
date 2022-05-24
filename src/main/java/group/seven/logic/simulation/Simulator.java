@@ -169,6 +169,8 @@ public class Simulator extends AnimationTimer {
                     if (intruder.agentType == INTRUDER) {
                         if (targetArea.contains(intruder.getXY())) {
                             int inTargetAreaSince = ((Intruder)intruder).intruderInTargetArea();
+                            print("Intruder " + intruder.getID() + " made it to target");
+                            print("In target area since: " + inTargetAreaSince);
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
                                 if (checkGameOver(INTRUDER_GAME_MODE, INTRUDER)) {
                                     System.out.println("INTRUDER WON");

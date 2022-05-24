@@ -45,7 +45,7 @@ public class TileMap {
     //update
     public Tile getTile(int x, int y) {
         if (x < 0 || y < 0 || x > map.length || y > map[0].length)
-            return new Tile(); // should probably throw an exception instead of empty tile
+            return null; // should probably throw an exception instead of empty tile
 
         return map[x][y];
     }

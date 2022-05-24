@@ -90,6 +90,15 @@ public record Frame(Transform frame) {
     }
 
     /**
+     * Convert a collection of global points to a List of local points
+     * @param points Any Collection or subclass (ArrayList, etc.) of XY global points
+     * @return List of XY global points
+     */
+    public List<XY> convertPointsXY(Collection<XY> points) {
+        return points.stream().map(this::convertToLocal).toList();
+    }
+
+    /**
      * Returns the agent's local origin (0,0); into its global coordinate representation
      * @return a Point2D object that contains the true origin of the agent in global coordinate frame
      */

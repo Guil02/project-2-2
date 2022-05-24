@@ -49,7 +49,7 @@ public enum Cardinal {
      * @return a random cardinal direction
      */
     public static Cardinal randomDirection() {
-        return Cardinal.values()[Simulator.rand.nextInt(5)];
+        return Cardinal.values()[Simulator.rand.nextInt(4)];
     }
 
     /**

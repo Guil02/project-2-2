@@ -8,9 +8,12 @@ import group.seven.model.agents.Move;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 import group.seven.model.environment.TileNode;
+import group.seven.utils.Methods;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static group.seven.enums.Action.NOTHING;
 import static group.seven.enums.AlgorithmType.A_STAR;
@@ -48,7 +51,8 @@ public class AStarGoal implements Algorithm {
 
 
     public void updateOpen() {
-        List<AStarNode> toBeRemoved = new ArrayList<>();
+//        List<AStarNode> toBeRemoved = new ArrayList<>();
+        Set<AStarNode> toBeRemoved = new HashSet<>();
         for (AStarNode node : open) {
             List<AStarNode> neighbours = neighbours(node);
             int count = 0;
@@ -142,10 +146,7 @@ public class AStarGoal implements Algorithm {
         player.updateOrientationToGoal();
 
         double angleAgentToGoal = player.getAngleToGoal();
-
         double angleAgentToTile = Pythagoras.angleFromAgentToTarget(xy, player.getXY());
-
-
         double r = Math.abs(angleAgentToGoal - angleAgentToTile);
 
         if (r > 180) {
@@ -174,11 +175,13 @@ public class AStarGoal implements Algorithm {
 
             if (target == null) {
                 movesLeft.add(new Move(NOTHING, 0, player));
+                Methods.print("No target: " + player);
             } else {
                 AStarPathFinder aStarPathFinder = new AStarPathFinder(player, target.getCoordinate());
                 movesLeft = aStarPathFinder.findPath();
             }
         }
+
         Move move = new Move(NOTHING, 0, player);
         try {
             move = movesLeft.get(0);
@@ -289,11 +292,20 @@ public class AStarGoal implements Algorithm {
             //return Objects.equals(coordinate, aStarNode.coordinate);
         }
 
+        @Override
+        public int hashCode() {
+            return coordinate.hashCode();
+        }
+
 
         @Override
         public String toString() {
             return "AStarNode{" +
                     "coordinate=" + coordinate +
+                    ", gCost=" + gCost +
+                    ", fCost=" + fCost +
+                    ", hCost=" + hCost +
+                    ", rCost=" + rCost +
                     '}';
         }
     }

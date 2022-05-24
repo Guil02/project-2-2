@@ -9,14 +9,13 @@ import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import static group.seven.enums.TileType.INTRUDER;
 
 public class AntsPursuit implements Algorithm {
     Agent agent;
     private final EVAW evaw;
-    private final List<Move> moves = new LinkedList<>();
+    private final LinkedList<Move> moves = new LinkedList<>();
 
     public AntsPursuit(Agent agent) {
         this.agent = agent;
@@ -41,9 +40,9 @@ public class AntsPursuit implements Algorithm {
         }
 
 
-        Move nextMove = moves.get(0);
-        moves.remove(0);
-        return nextMove;
+//        Move nextMove = moves.get(0);
+//        moves.remove(0);
+        return moves.poll();
     }
 
     public XY seeTarget() {

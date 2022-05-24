@@ -9,10 +9,7 @@ import group.seven.model.agents.Move;
 import group.seven.model.environment.TileNode;
 import group.seven.model.environment.Scenario;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static group.seven.enums.AlgorithmType.EVAW;
 import static group.seven.enums.TileType.WALL;
@@ -25,7 +22,8 @@ public class EVAW implements Algorithm {
         this.agent = a;
     }
 
-    List<Move> moves = new LinkedList<>();
+    LinkedList<Move> moves = new LinkedList<>();
+//    Queue<Move> moves = new LinkedList<>();
 
     /**
      * This method will check if
@@ -40,10 +38,11 @@ public class EVAW implements Algorithm {
         if (moves.isEmpty()) {
             return new Move(Action.NOTHING, 0, agent);
         }
-        Move nextMove = moves.get(0);
-        moves.remove(0);
-        return nextMove;
+//        Move nextMove = moves.get(0);
+//        moves.remove(0);
+//        return nextMove;
 
+        return moves.poll();
     }
 
 
