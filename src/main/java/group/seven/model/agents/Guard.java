@@ -2,6 +2,7 @@ package group.seven.model.agents;
 
 
 import group.seven.enums.AlgorithmType;
+import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.*;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
@@ -14,12 +15,11 @@ import group.seven.utils.Config;
 import java.util.ArrayList;
 import java.util.List;
 
-import static group.seven.enums.Cardinal.NORTH;
 import static group.seven.enums.TileType.GUARD;
 
 public class Guard extends Agent {
 
-    public final int PHEROMONELIFETIME = 20;
+    public final int PHEROMONE_LIFETIME = 20;
     private final int ID;
     private final int maxSpeed = (int) Scenario.GUARD_SPRINT_SPEED;
     public int currentSpeed;
@@ -39,44 +39,36 @@ public class Guard extends Agent {
     public Guard(int x, int y, AlgorithmType algorithmType) {
         this(x, y);
         algorithm = initAlgo(algorithmType);
+        System.out.println(algorithmType);
     }
 
-    public void createAlgorithm(AlgorithmType algorithmType){
-        switch (algorithmType){
-            case BRICK_AND_MORTAR -> this.algorithm=new BrickAndMortar(this);
-            case EVAW -> this.algorithm=new EVAW(this);
-            case ANT_PURSUIT -> this.algorithm= new AntsPursuit(this);
-        }
-    }
 
     public Guard(int x, int y) {
-        super(x,y);
+        super(x, y);
         ID = newID();
-        setX(x);
-        setY(y);
         agentType = GUARD;
-        currentSpeed = 0; //DEFAULT
-        direction = NORTH; //DEFAULT
+        currentSpeed = 3; //DEFAULT //TODO base speed?
+        direction = Cardinal.randomDirection();
         algorithm = initAlgo(Config.ALGORITHM_GUARD); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
 
-        currentSpeed = 3;
+        // algorithm = new RandomTest(this);
     }
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
-            case EVAW -> algorithm = new EVAW(this);
-            case ANT_PURSUIT -> algorithm = new AntsPursuit(this);
-            case ANT -> new Ant(this);
-            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
-            default -> new RandomAlt(this);
+            case BRICK_AND_MORTAR   -> new BrickAndMortar(this);
+            case ANT_PURSUIT        -> new AntsPursuit(this);
+            case ANT                -> new Ant(this);
+            case EVAW               -> new EVAW(this);
+            default                 -> new RandomAlt(this);
         };
     }
 
     @Override
     public void updateVision() {
         List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
-        seenTiles = duplicatedTiles(seenTiles,newTiles);
+        seenTiles = duplicatedTiles(seenTiles, newTiles);
         //print(seenTiles);
     }
 
@@ -94,7 +86,6 @@ public class Guard extends Agent {
     public int getCurrentSpeed() {
         return currentSpeed;
     }
-
 
     @Override
     public String toString() {

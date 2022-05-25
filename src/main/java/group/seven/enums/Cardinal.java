@@ -1,6 +1,8 @@
 package group.seven.enums;
 
 import group.seven.logic.geometric.XY;
+import group.seven.logic.simulation.Simulator;
+import javafx.geometry.Point2D;
 
 /**
  * Represents the cardinal directions on a map compass.
@@ -39,6 +41,39 @@ public enum Cardinal {
         }
     }
 
+    public Cardinal getRotation(int x, int y) {
+        Point2D p = new Point2D(unitVector().x(), unitVector.y());
+        Point2D o = new Point2D(x, y);
+        double degrees = p.angle(o);
+        Point2D n = o.normalize();
+        double atan2 = Math.atan2(n.getX(), n.getY());
+        int direction = (int) (((atan2 * 2 / Math.PI)) + 4) % 4;
+        System.out.println("degrees : " + degrees);
+        System.out.println("direction : " + direction);
+
+        return this;
+    }
+
+    public static void main(String[] args) {
+        EAST.getRotation(25, 2);
+        EAST.getRotation(75, -2);
+        EAST.getRotation(-2, -400);
+        EAST.getRotation(-90, 2);
+    }
+
+    /**
+     * Returns a random Cardinal direction of the 4 types
+     * NOWHERE is excluded
+     * @return a random cardinal direction
+     */
+    public static Cardinal randomDirection() {
+        return Cardinal.values()[Simulator.rand.nextInt(4)];
+    }
+
+    /**
+     * Inverts this Cardinals direction
+     * @return the opposite direction of this Cardinal
+     */
     public Cardinal flip() {
         return switch (this) {
             case NORTH -> SOUTH;
@@ -49,23 +84,11 @@ public enum Cardinal {
         };
     }
 
-    //TODO: isn't this pretty much the same method as the flip() above?
-    public Cardinal reverseDirection(Cardinal cardinal) {
-
-        if (cardinal == NORTH) {
-            return SOUTH;
-        } else if (cardinal == SOUTH) {
-            return NORTH;
-        } else if (cardinal == WEST) {
-            return EAST;
-        } else if (cardinal == EAST) {
-            return WEST;
-        }
-
-        return null;
-
-    }
-
+    /**
+     * Returns an XY that represents one discrete step in this cardinal's direction
+     * in the x and y-axis
+     * @return an XY of unit length that represents a step in the cardinals direction
+     */
     public XY unitVector() {
         return unitVector;
     }

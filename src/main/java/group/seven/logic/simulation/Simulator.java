@@ -18,9 +18,8 @@ import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 import static group.seven.enums.Action.MOVE_FORWARD;
@@ -88,17 +87,18 @@ public class Simulator extends AnimationTimer {
         //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
         if (((int)elapsedTimeSteps) % 10 == 0) {
             Tuple<Double, Double> coverage = calculateCoverage();
-            display.updateStats(elapsedTimeSteps, coverage.a()); //guard coverage, will move to SimulationScreen to handle prolly
+            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
         }
 
         //TODO: implement GameOver condition checking
         if (count > 100000) stop();
-            prev = System.nanoTime();
+
+        prev = System.nanoTime();
     }
 
 
     private boolean checkGameOver(GameMode gameMode, TileType agent) {
-        print(gameMode.toString(), true);
+        //print(gameMode.toString());
         if (agent == GUARD) {
             switch (gameMode) {
                 case SINGLE_INTRUDER_CAUGHT -> {
@@ -153,8 +153,8 @@ public class Simulator extends AnimationTimer {
         //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
         //Creates a list of Moves for each agent's calculatedMove.
         //First filters out null agents, then maps agents to their calculatedMoves, and then collects these Moves into a List
-        List<Agent> guards = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == GUARD).toList();
-        List<Agent> intruders = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == INTRUDER).toList();
+        //List<Agent> guards = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == GUARD).toList();
+        //List<Agent> intruders = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == INTRUDER).toList();
 
 
         for (Agent agent : TILE_MAP.agents) {
@@ -177,8 +177,10 @@ public class Simulator extends AnimationTimer {
             } else {//if agent is not Guard it has to be an Intruder
                 for (Agent intruder : TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
-                        if (targetArea.area().contains(intruder.getX(),intruder.getY())) {
+                        if (targetArea.contains(intruder.getXY())) {
                             int inTargetAreaSince = ((Intruder)intruder).intruderInTargetArea();
+                            print("Intruder " + intruder.getID() + " made it to target");
+                            print("In target area since: " + inTargetAreaSince);
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
                                 if (checkGameOver(INTRUDER_GAME_MODE, INTRUDER)) {
                                     System.out.println("INTRUDER WON");
@@ -188,8 +190,6 @@ public class Simulator extends AnimationTimer {
                                     stop(); // stops AnimationTimer
                                     endSimulation();
                                 }
-                                //TODO: END SIMULATION SAM
-
                             }
                         } else {
                             ((Intruder)intruder).intruderNotInTargetArea(); //reset time in target area counter
@@ -199,22 +199,33 @@ public class Simulator extends AnimationTimer {
             }
         }
         //System.out.println("TARGET AREA: "+targetArea.area().contains(intruder.x,intruder.y));
-        List<Move> allMoves = Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::calculateMove).toList();
+//        List<Move> allMoves = Arrays.stream(TILE_MAP.agents).map(Agent::calculateMove).toList();
+
+        //List<Move> allMoves = new LinkedList<>();
+        List<Move> positionChangeMoves = new LinkedList<>();
+        List<Move> rotationChangeMoves = new LinkedList<>();
+        for (Agent a : TILE_MAP.agents) {
+            Move m = a.calculateMove();
+            //allMoves.add(m);
+            if (m.action() == MOVE_FORWARD)
+                positionChangeMoves.add(m);
+            else
+                rotationChangeMoves.add(m);
+        }
 
         //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
-        List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
-        List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
+        //List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
+        //List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
 
         CollisionHandler.handle(positionChangeMoves);
         for (Move move : rotationChangeMoves){
             move.agent().executeTurn(move);
             move.agent().clearVision();
-            move.agent().updateVision();
-            move.agent().updateMap();
+            //move.agent().updateVision();
+            //move.agent().updateMap();
         }
         updatePheromones();
         updateAllAgents();
-        //TODO: determine where to apply the moves to updated the model and the agent's internal model
     }
 
     private void updatePheromones() {
@@ -228,39 +239,29 @@ public class Simulator extends AnimationTimer {
      * Collects each agent's moves, resolves collisions, updates their vision and applies to the model.
      */
     public void update(List<Move> allMoves) {
-        //TODO: sort list such that rotation moves appear last in list. (Not 100% sure if necessary)
         //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
         List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
         List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
 
         CollisionHandler.handle(positionChangeMoves);
-        for (Move move : rotationChangeMoves){
+        for (Move move : rotationChangeMoves) {
             move.agent().executeTurn(move);
             move.agent().clearVision();
             move.agent().updateVision();
         }
         updateAllAgents();
-        //TODO: determine where to apply the moves to updated the model and the agent's internal model
     }
-
 
     private void spawnAgents(GameMode gameMode) {
         print(gameMode);
-        switch (gameMode) {
-            case EXPLORATION -> spawnAgents(GUARD);
-
-//            case SINGLE_INTRUDER, MULTI_INTRUDER -> {
-//                spawnAgents(GUARD);
-//                spawnAgents(INTRUDER);
-//            }
-
-            default -> {
-                spawnAgents(GUARD);
-                spawnAgents(INTRUDER);
-            }
+        if (gameMode == GameMode.EXPLORATION)
+            spawnAgents(GUARD);
+        else {
+            spawnAgents(GUARD);
+            spawnAgents(INTRUDER);
         }
         updateAllAgents();
-        print(Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
+        //print(Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
     }
 
     private void updateAllAgents() {
@@ -305,9 +306,10 @@ public class Simulator extends AnimationTimer {
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };
             agent.initializeInitialTile();
-            agent.updateVision();
+            //agent.updateVision();
             TILE_MAP.addAgent(agent);
             print("added "+agentType.name()+" : " + agent.getID());
+            System.out.println(agent.getType() + ": " + agent.getX() + " " +agent.getY());
             i++;
         }
 

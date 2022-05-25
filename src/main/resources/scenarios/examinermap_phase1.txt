@@ -1,4 +1,5 @@
 name = examiner_map
+gameMode = 1
 height = 100 // height of map in cells (discrete space) or in units of distance (continuous space)
 width = 200 // width of map in cells (discrete space) or in units of distance (continuous space)
 numGuards = 5 // will be your exploration agents

@@ -19,6 +19,10 @@ public class Rectangle extends Rectangle2D {
         super(minX, minY, width, height);
     }
 
+    public Rectangle() {
+        super(0,0,0,0);
+    }
+
     /**
      * Returns the min x value of this rectangle as an int.
      * Use the {@code getMinX()} if you need it as a double

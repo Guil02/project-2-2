@@ -1,6 +1,7 @@
 package group.seven.logic.vision;
 
 import group.seven.enums.Cardinal;
+import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
@@ -38,8 +39,9 @@ public class RectangleVision implements Vision {
     public List<Tile> updateAndGetVisionAgent(Agent agent) {
         List<Tile> observedTiles = new LinkedList<>(); // list contains all the tiles seen by agent
         //get position of agent
-        int xCoordinate = agent.getX();
-        int yCoordinate = agent.getY();
+        XY agentGlobal = agent.getXY(); //only have to transform once
+        int xCoordinate = agentGlobal.x();
+        int yCoordinate = agentGlobal.y();
         Cardinal directionAgent = agent.getDirection(); //get direction of agent
 
         switch (directionAgent) {
