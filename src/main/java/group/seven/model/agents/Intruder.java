@@ -4,7 +4,9 @@ package group.seven.model.agents;
 import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
-import group.seven.logic.algorithms.*;
+import group.seven.logic.algorithms.AStarGoal;
+import group.seven.logic.algorithms.Algorithm;
+import group.seven.logic.algorithms.RandomAlt;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
@@ -60,29 +62,29 @@ public class Intruder extends Agent {
         };
     }
 
-    public void updateOrientationToGoal(){
+    public void updateOrientationToGoal() {
         Rectangle goalLocationArea = targetArea.area();
-        double heightMediumPoint =  goalLocationArea.getHeight()/2;
-        double widthMediumPoint = goalLocationArea.getWidth()/2;
-        int x = (int)(goalLocationArea.getX() + widthMediumPoint);
-        int y = (int)(goalLocationArea.getY() + heightMediumPoint);
+        double heightMediumPoint = goalLocationArea.getHeight() / 2;
+        double widthMediumPoint = goalLocationArea.getWidth() / 2;
+        int x = (int) (goalLocationArea.getX() + widthMediumPoint);
+        int y = (int) (goalLocationArea.getY() + heightMediumPoint);
 //        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
-        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.getX(), this.getY())); //todo changed so frames match
+        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), new XY(this.getX(), this.getY())); //todo changed so frames match
         //double angle = Pythagoras.getAnglePythagoras(this.x,this.y,x,y);
         //Update angle to goal, which is in degrees
-        this.angleToGoal= angle;
+        this.angleToGoal = angle;
 
 //       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX() ,this.getY(), x, y); //todo changed to match frame
         //I think the parameter order might have been wrong
-       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX(), x, this.getY(), y); //todo changed to match frame
+        this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX(), x, this.getY(), y); //todo changed to match frame
 
     }
 
-    public Cardinal getOrientationToGoal(){
+    public Cardinal getOrientationToGoal() {
         return this.orientationToGoal;
     }
 
-    public double getAngleToGoal(){
+    public double getAngleToGoal() {
         return this.angleToGoal;
     }
 
@@ -114,10 +116,10 @@ public class Intruder extends Agent {
                 return new Move(Action.NOTHING, 0, this);
             }
         } //Check if Intruder is alive = is not caught yet
-        else if (alive){
+        else if (alive) {
             return algorithm.getNext();
         } else {
-            return new Move(Action.NOTHING,0,this);
+            return new Move(Action.NOTHING, 0, this);
         }
     }
 
@@ -130,7 +132,6 @@ public class Intruder extends Agent {
     public int getCurrentSpeed() {
         return currentSpeed;
     }
-
 
 
     //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
@@ -149,9 +150,7 @@ public class Intruder extends Agent {
     //Goal: add pre-configured algorithm (e.g. with different constructors), however, currently not implemented
     public Intruder algorithm(Algorithm algorithm) {
         this.algorithm = switch (algorithm.getType()) {
-            case RANDOM -> new RandomMoves(this);
-            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
-
+            case A_STAR -> new AStarGoal(this);
             default -> new RandomAlt(this);
         };
 
@@ -161,9 +160,7 @@ public class Intruder extends Agent {
     //intruder builder method
     public Intruder algorithm(AlgorithmType algorithm) {
         this.algorithm = switch (algorithm) {
-            case RANDOM -> new RandomMoves(this);
-            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
-
+            case A_STAR -> new AStarGoal(this);
             default -> new RandomAlt(this);
         };
 

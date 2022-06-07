@@ -76,9 +76,9 @@ public class Astar implements Algorithm {
             System.out.print("\t -> " + current);
             if (current == target) {
                 print("Found target : " + target + " from: " + current);
-                System.out.println("firat: " + path.getFirst() + " last: " +path.getLast());
+                System.out.println("first: " + path.getFirst() + " last: " + path.getLast());
                 Collections.reverse(path);
-                System.out.println("reversed firat: " + path.getFirst() + " last: " +path.getLast());
+                System.out.println("reversed first: " + path.getFirst() + " last: " + path.getLast());
                 foundTarget = true;
                 break; // agent has reached target, so break out of the loop to process the path
             }
@@ -117,10 +117,10 @@ public class Astar implements Algorithm {
     }
 
 
-
     /**
      * f(s, t) cost
      * Total cost to get from s to t given path from start node to s
+     *
      * @param node current node to evaluate
      * @param goal target node to reach
      * @return total cost where f = g + n -> sum of the distance to s + heuristic(s) estimate to target node
@@ -132,6 +132,7 @@ public class Astar implements Algorithm {
     /**
      * g cost
      * total tiles (or moves) needed to get from this node to the next
+     *
      * @param node current node
      * @param next next node it wants to reach
      * @return cost ot get form this node to next
@@ -146,9 +147,10 @@ public class Astar implements Algorithm {
      * Heuristic estimate function h(u, v) = cost estimate of getting from node u to node v
      * Generally u is the current agent's node position or am arbitrary start node it's evaluating
      * Generally v is the current agent's node target/goal or am arbitrary start node it's evaluating
-     *      It for the case of intruders it may evaluate its cost from its position to a local goal
-     *          and it could evaluate its position to the target area, and use it as a factor in the heuristic function
-     * @param node Start node
+     * It for the case of intruders it may evaluate its cost from its position to a local goal
+     * and it could evaluate its position to the target area, and use it as a factor in the heuristic function
+     *
+     * @param node   Start node
      * @param target Goal node
      * @return estimated h cost from start node to target
      */
@@ -174,7 +176,8 @@ public class Astar implements Algorithm {
         }
     }
 
-    record Occupancy(boolean occupied, Agent agent){}
+    record Occupancy(boolean occupied, Agent agent) {
+    }
 
     class Node implements Comparable<Node> {
         Point2D pos;
