@@ -32,8 +32,8 @@ public class Astar implements Algorithm {
     //pop moves off to get the next destination/targets/moves to target
     Stack<Node> moveStack = new Stack<>();
 
-    Queue<Node> openList; //open set, fringe. Order by lowest f cost
-    Set<Node> closedSet;
+    //    Queue<Node> openList; //open set, fringe. Order by lowest f cost
+//    Set<Node> closedSet;
     //Node goal = new Node(new XY(132, 150));
     Node goal = new Node(new XY(30, 12)); //small map temp close goal
 
@@ -46,8 +46,8 @@ public class Astar implements Algorithm {
     }
 
     public Astar(Agent agent, Node target) {
-        openList = new PriorityQueue<>();
-        closedSet = new HashSet<>();
+        //openList = new PriorityQueue<>(); //orders open list by f-cost. The Node class must implement Comparable
+        //closedSet = new HashSet<>(); //hashsets cannot store duplicates. Constant time for all operations
         goal = target;
         //start = new Node(agent.getXY(), 0);
         //openList.add(start);
@@ -57,23 +57,25 @@ public class Astar implements Algorithm {
     @Override
     public Move getNext() {
         Queue<Node> open = new PriorityQueue<>();
-        Set<Node> closedSet = new HashSet<>();
-        LinkedList<Node> path = new LinkedList<>();
+        Set<Node> closed = new HashSet<>();
+        LinkedList<Node> path = new LinkedList<>(); // this will store the actual path the agent ought to take
 
-        Node target = goal;
-        Node start = new Node(agent.getXY());
+        Node target = goal; //goal node dynamically updated with new information gain to get better estimate
+        Node start = new Node(agent.getXY()); // agents position in global coords
 
         open.add(start);
         path.add(start);
-
+        Node prev = start;
         boolean foundTarget = false;
         int count = 0;
         //while there are still nodes to evaluate...
         while (open.size() > 0 && count < 10) {
             count++;
-            System.out.println("Getting next... ");
+
             Node current = open.poll(); //retrieve next node with lowest f cost and remove from queue
-            System.out.print("\t -> " + current);
+            System.out.println("Getting next... open: " + open.size() + " closed: " + closed.size());
+            System.out.print("\t -> " + (current == prev ? "same : " + current : "different! " + current));
+
             if (current == target) {
                 print("Found target : " + target + " from: " + current);
                 System.out.println("first: " + path.getFirst() + " last: " + path.getLast());
@@ -83,12 +85,13 @@ public class Astar implements Algorithm {
                 break; // agent has reached target, so break out of the loop to process the path
             }
 
-            closedSet.add(current);
-            System.out.println("closed set added" + current);
+            closed.add(current);
+            System.out.println("\nclosed set added" + current);
+            prev = current;
 
-            for (Node neighbor : current.getNeighbours()) {
+            for (Node neighbor : current.getNeighbours(current)) {
                 //we don't care about evaluated neighbors
-                if (closedSet.contains(neighbor)) continue;
+                if (closed.contains(neighbor)) continue;
 
                 //check cost to neighbor
                 int potential = current.g + g(current, neighbor); // technically just g + 1, but different in dynamic speeding, supposed to be the distance
@@ -96,6 +99,7 @@ public class Astar implements Algorithm {
                 //check if node has been discovered and see if better score found
                 if (open.contains(neighbor)) {
                     if (potential >= neighbor.g) continue;      //did not find a better path to neighbor from current
+                    print("\tpotential for " + neighbor + " = " + potential + " \t ::: better than current? " + current);
                 } else open.add(neighbor);                    //discovered new node, add to openList
 
                 //update with the best path values found so far
@@ -104,6 +108,7 @@ public class Astar implements Algorithm {
                 neighbor.g = potential;
                 neighbor.h = h(neighbor, target);
                 neighbor.f = cost(neighbor, target);
+                print("Discovered: " + neighbor);
             }
             System.out.println("\tfinished finding neighbors");
         }
@@ -139,7 +144,8 @@ public class Astar implements Algorithm {
      */
     private int g(Node node, Node next) {
         //in case of dynamic speeding return manhattan distance between node and next
-        return node.g + 1;
+//        return node.g + 1;
+        return Math.abs(distance.getValue(node, next));
         //return Math.abs(node.x - next.x) + Math.abs(node.y - next.y); //node = start, next = current
     }
 
@@ -205,30 +211,32 @@ public class Astar implements Algorithm {
         }
 
 
-        public List<Node> getNeighbours() {
-            print("getting neighbours...");
+        public List<Node> getNeighbours(Node current) {
+            print("getting neighbours... : " + current);
             List<Node> adjacent = new ArrayList<>(5);
 
             for (int d = 0; d < 4; d++) {
                 XY nextPos = Cardinal.values()[d].unitVector.add(x, y); //maybe add offset for dynamic speeding
 
                 Tile t = TILE_MAP.getTile(nextPos.x(), nextPos.y());
-                if (t == null) continue;
-                if (t.getType() == WALL) continue;
+                if (t != null) {
+                    if (t.getType() != WALL) {
+                        Node adj = new Node(nextPos, this);
+                        //                 adj = new Node(nextPos);
+                        Occupancy occupancy = occupied(adj);
 
-                Node adj = new Node(nextPos, this);
-//                 adj = new Node(nextPos);
-                Occupancy occupancy = occupied(adj);
+                        if (!occupancy.occupied) {
+                            adjacent.add(adj);
+                        } else {
+                            Agent other = occupancy.agent;
+                            //define behaviour or record agent info
+                        }
 
-                if (!occupancy.occupied) {
-                    adjacent.add(adj);
-                } else {
-                    Agent other = occupancy.agent;
-                    //define behaviour or record agent info
+                        if (t.getType() == PORTAL) { //assumes there's just one portal;
+                            adjacent.add(new Node(Scenario.portals.get(0).exit(), this));
+                        }
+                    }
                 }
-
-                if (t.getType() == PORTAL) //assumes there's just one portal;
-                    adjacent.add(new Node(Scenario.portals.get(0).exit(), this));
             }
 //            XY exit = null;
 //            if (t.getType() == TileType.PORTAL) {
@@ -252,6 +260,34 @@ public class Astar implements Algorithm {
             //e.g. distance to nearest obstacle or target or agent or whatever
             //prolly better to keep moving in same direction
             return this.f - o.f;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Node node)) return false;
+            if (x != node.x) return false;
+            if (y != node.y) return false;
+            if (f != node.f) return false;
+            if (h != node.h) return false;
+            if (g != node.g) return false;
+            if (parent == null && node.parent == null) return true;
+            else {
+                assert parent != null;
+                return parent.equals(node.parent);
+            }
+            //return parent.equals(node.parent);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = x;
+            result = 31 * result + y;
+            result = 31 * result + f;
+            result = 31 * result + h;
+            result = 31 * result + g;
+//            result = 31 * result + parent.hashCode();
+            return result;
         }
 
         @Override

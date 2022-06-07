@@ -6,6 +6,7 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.AStarGoal;
 import group.seven.logic.algorithms.Algorithm;
+import group.seven.logic.algorithms.Astar;
 import group.seven.logic.algorithms.RandomAlt;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
@@ -58,6 +59,7 @@ public class Intruder extends Agent {
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
             case A_STAR -> new AStarGoal(this);
+            case A_STAR_ALT -> new Astar(this);
             default -> new RandomAlt(this);
         };
     }
