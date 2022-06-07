@@ -69,7 +69,7 @@ public class TileNode {
             }
         }
 
-        if (atype != agentType) print("before: " + atype + " after update: " + agentType);
+        if (atype != agentType) print("before: " + atype + " after update: " + agentType, false);
 
         for (Marker marker : TILE_MAP.markers) {
             if (marker.getXY().equals(xy)) {
