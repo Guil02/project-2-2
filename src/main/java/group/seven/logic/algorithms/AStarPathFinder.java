@@ -16,6 +16,8 @@ import static group.seven.enums.TileType.WALL;
 
 public class AStarPathFinder {
 
+    public static int instances = 0;
+
     private final AStarNode currentNode;
 
 
@@ -29,6 +31,8 @@ public class AStarPathFinder {
 
 
     public AStarPathFinder(Agent player, XY goal) {
+        instances++;
+        System.out.print("\r number: " + instances + " from: " + player.getType());
         this.target = new AStarNode(goal, this);
         open = new ArrayList<>();
         closed = new ArrayList<>();
