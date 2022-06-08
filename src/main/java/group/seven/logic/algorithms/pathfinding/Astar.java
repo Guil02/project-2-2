@@ -1,8 +1,9 @@
-package group.seven.logic.algorithms;
+package group.seven.logic.algorithms.pathfinding;
 
 import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
+import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
@@ -17,6 +18,7 @@ import static group.seven.enums.TileType.WALL;
 import static group.seven.model.environment.Scenario.TILE_MAP;
 import static group.seven.utils.Methods.print;
 
+//TODO: playing around and expirementing. Disregard and doesn't work/is incomplete
 public class Astar implements Algorithm {
 
     Tile[][] map = TILE_MAP.getMap();

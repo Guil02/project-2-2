@@ -4,6 +4,7 @@ import java.util.*;
 
 import static group.seven.model.environment.Scenario.TILE_MAP;
 
+//TODO: also disregard
 public class AX {
 
     //TODO: pre-calculate all heuristic values
@@ -49,5 +50,5 @@ public class AX {
         }
     }
 
-    te
+
 }

@@ -6,7 +6,7 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.AStarGoal;
 import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.Astar;
+import group.seven.logic.algorithms.pathfinding.Astar;
 import group.seven.logic.algorithms.RandomAlt;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;

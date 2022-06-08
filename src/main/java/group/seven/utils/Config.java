@@ -10,7 +10,7 @@ public class Config {
 
     public static final double DEFAULT_SOUND_DISTANCE = 50;
     public static final double TIME_STEP = 0.1;
-    public static final boolean DEBUG_MODE = true;
+    public static final boolean DEBUG_MODE = false;
     public static boolean LOG_DATA = false;
     public static AlgorithmType ALGORITHM_GUARD = AlgorithmType.RANDOM;
     public static AlgorithmType ALGORITHM_INTRUDER = AlgorithmType.A_STAR;

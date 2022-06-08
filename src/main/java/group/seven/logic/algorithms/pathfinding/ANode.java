@@ -1,5 +1,6 @@
 package group.seven.logic.algorithms.pathfinding;
 
+//TODO: everything in this package is
 public class ANode implements Comparable<ANode> {
     public int x, y;
     public double f, h, g;
