@@ -7,7 +7,8 @@ public enum AlgorithmType {
     RANDOM,
     EVAW,
     ANT_PURSUIT,
-    A_STAR_ALT;
+    A_STAR_ALT,
+    FISH;
 
     public static AlgorithmType getEnum(String name) {
         return switch (name) {

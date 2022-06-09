@@ -54,6 +54,7 @@ public class MainMenu {
 
         if (!algorithm.equals("Choose Guard") && !algorithm2.equals(("Choose Intruder")) && !gamemode.equals("Choose Gamemode")) {
             Config.ALGORITHM_GUARD = AlgorithmType.getEnum(algorithm);
+            System.out.println("BRICK GOT SELECTED "+AlgorithmType.getEnum(algorithm));
             Config.ALGORITHM_INTRUDER = AlgorithmType.getEnum(algorithm2);
             Config.GAMEMODE = GameMode.getEnum(gamemode);
             Scenario scenario = new ScenarioBuilder(scenarioFile).build();
