@@ -4,6 +4,7 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.TileType;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
+import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
 import java.sql.SQLOutput;
@@ -15,9 +16,20 @@ public class FishSwarm implements Algorithm {
     LinkedList<Move> moves = new LinkedList<>();
     private final int F_MAX = 1;
     private final int CROWDING_FACTOR = 2;
+    private final int[][] fitnessMap = new int[Scenario.WIDTH][Scenario.HEIGHT];
+    private final int layerLevels = 1; // levels of neighbours to consider
 
     public FishSwarm(Agent agent) {
         this.agent = agent;
+        calculateFitness();
+
+    //  TESTING PURPOSES
+    //    for (int i = 0; i<fitnessMap[0].length; i++) {
+    //        for (int j = 0; j<fitnessMap[1].length; j++) {
+    //            System.out.print(" "+fitnessMap[i][j]+" ");
+    //        }
+    //        System.out.println();
+    //    }
     }
 
     @Override
@@ -87,10 +99,81 @@ public class FishSwarm implements Algorithm {
         return null;
     }
 
-    //5
     public int getTileValue(Tile tile){
+        return fitnessMap[tile.getX()][tile.getY()];
+    }
 
-        return 0;
+    public void calculateFitness() {
+        int numberOfNeighbours = layerLevels*8;
+        for (int x = 0; x < fitnessMap[0].length; x++) {
+            for (int y = 0; y < fitnessMap[1].length; y++) {
+                //loop through the levels of layers
+                List<Tile> neighbours = new LinkedList<>();
+                if (Scenario.TILE_MAP.getTile(x,y).getType() != TileType.WALL) {
+                    for (int layer = 1; layer <= layerLevels; layer++) {
+                        //4 independent four loops for each side
+                        neighbours.addAll(traverseNeighbours(Scenario.TILE_MAP.getTile(x,y),layer));
+                    }
+                    int walls = countWalls(neighbours);
+                    fitnessMap[y][x] = numberOfNeighbours- walls;
+                }
+            }
+        }
+    }
+
+    public List<Tile> traverseNeighbours(Tile current, int layer) {
+        List<Tile> neighbours = new LinkedList<>();
+        //traverse top
+        for (int column = current.getY()-layer; column <= current.getY()+layer; column++) {
+            int row = current.getX()-layer;
+            if (row > Scenario.WIDTH && column > Scenario.HEIGHT) {
+                break;
+            }
+            if (row >= 0 && column >= 0) {
+                neighbours.add(Scenario.TILE_MAP.getTile(row,column));
+            }
+        }
+        //traverse right
+        for (int row = current.getX()-layer; row <= current.getX()+layer; row++) {
+            int column = current.getY()+layer;
+            if (row > Scenario.WIDTH && column > Scenario.HEIGHT) {
+                break;
+            }
+            if (row >= 0 && column >= 0) {
+                neighbours.add(Scenario.TILE_MAP.getTile(row,column));
+            }
+        }
+        //traverse bottom
+        for (int column = current.getY()-layer; column <= current.getY()+layer; column++) {
+            int row = current.getX()+layer;
+            if (row > Scenario.WIDTH && column > Scenario.HEIGHT) {
+                break;
+            }
+            if (row >= 0 && column >= 0) {
+                neighbours.add(Scenario.TILE_MAP.getTile(row,column));
+            }
+        }
+        //traverse left
+        for (int row = current.getX()-layer; row <= current.getX()+layer; row++) {
+            int column = current.getY()-layer;
+            if (row > Scenario.WIDTH && column > Scenario.HEIGHT) {
+                break;
+            }
+            if (row >= 0 && column >= 0) {
+                neighbours.add(Scenario.TILE_MAP.getTile(row,column));
+            }
+        }
+        return neighbours;
+    }
+
+    public int countWalls(List<Tile> neighbours) {
+        int numberOfWalls = 0;
+        for (Tile tile : neighbours) {
+            if (tile.getType() == TileType.WALL) {
+                numberOfWalls++;
+            }
+        }
+        return numberOfWalls;
     }
 
     //TODO: check agent class, and connect the frontier to vision

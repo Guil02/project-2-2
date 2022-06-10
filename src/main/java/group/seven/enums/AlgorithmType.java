@@ -16,6 +16,7 @@ public enum AlgorithmType {
 //            case "A*" -> A_STAR_ALT;
             case "Brick And Mortar" -> BRICK_AND_MORTAR;
             case "Ant Pursuit" -> ANT_PURSUIT;
+            case "Fish Swarm" -> FISH;
             default -> RANDOM;
         };
     }

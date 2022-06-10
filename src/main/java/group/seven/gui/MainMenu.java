@@ -157,7 +157,8 @@ public class MainMenu {
         chosenAlgorithm.getItems().addAll(
                 "Ant Pursuit",
                 "Brick And Mortar",
-                "Random"        //RandomTest.java file, not RandomMoves
+                "Random",        //RandomTest.java file, not RandomMoves
+                "Fish Swarm"
         );
 
         chosenAlgorithm.setValue("Choose Guard");

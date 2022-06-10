@@ -61,6 +61,7 @@ public class Guard extends Agent {
             case ANT_PURSUIT        -> new AntsPursuit(this);
             case ANT                -> new Ant(this);
             case EVAW               -> new EVAW(this);
+            case FISH               -> new FishSwarm(this);
             default                 -> new RandomAlt(this);
         };
     }
