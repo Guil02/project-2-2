@@ -21,8 +21,16 @@ public class GeneticAlgorithm {
     public void train() {
         int index = 0;
         while (index < amountOfGenerations) {
+            System.out.println("Generation: " + index);
+            runSimulations();
+            population.updateGeneration();
+            population.storeWeights();
             index++;
         }
+    }
+
+    private void runSimulations() {
+
     }
 
 }

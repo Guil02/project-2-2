@@ -142,4 +142,7 @@ public class Population {
     }
 
 
+    public void storeWeights() {
+        throw new UnsupportedOperationException("Operation not implemented yet");
+    }
 }
