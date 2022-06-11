@@ -10,7 +10,7 @@ public class GeneticAlgorithm {
     static final int outputSize = 6;
     static final int chromosomeLength = inputSize * hiddenSize + hiddenSize + hiddenSize * outputSize + outputSize;
     static final int maxTime = 1000;
-    private Population population;
+    private final Population population;
 
     public GeneticAlgorithm() {
         population = new Population(populationSize, chromosomeLength, true);

@@ -9,11 +9,11 @@ import java.util.List;
 public class Population {
     private final static int numberOfStrongest = 20;
     private final static int numberOfSurvivors = 10;
-    private final String fileName = "TBD";
+    private final static String fileName = "TBD";
+    private final int chromosomeLength;
     List<Individual> population;
     int populationSize;
     boolean isSorted = false;
-    private int chromosomeLength;
 
     public Population(int populationSize, int chromosomeLength, boolean randomWeights) {
         this.chromosomeLength = chromosomeLength;
@@ -30,6 +30,7 @@ public class Population {
 
     private void readInWeights() {
         ArrayList<ArrayList<Double>> weights = Methods.readGAWeights(fileName);
+        throw new UnsupportedOperationException("Operation not implemented yet");
     }
 
     /**
