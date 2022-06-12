@@ -243,4 +243,22 @@ public class Matrix {
         }
         return array;
     }
+
+    /**
+     * This method will run the matrix through a sigmoid
+     * https://en.wikipedia.org/wiki/Sigmoid_function
+     *
+     * @return a matrix containing the result of the operation
+     */
+    public Matrix sigmoid() {
+        double[][] newData = new double[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                newData[i][j] = 1 / (1 + Math.exp(data[i][j]));
+            }
+        }
+
+        return new Matrix(newData);
+    }
 }

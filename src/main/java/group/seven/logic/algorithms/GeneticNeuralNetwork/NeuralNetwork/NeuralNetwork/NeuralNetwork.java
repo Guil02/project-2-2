@@ -24,8 +24,8 @@ public class NeuralNetwork {
     }
 
     public Matrix pass_forward(Matrix input) {
-        Matrix output = input.multiply(weight_hidden).add(bias_hidden);
-        output = output.multiply(weight_output).add(bias_output);
+        Matrix output = input.multiply(weight_hidden).add(bias_hidden).sigmoid();
+        output = output.multiply(weight_output).add(bias_output).sigmoid();
         return output;
     }
 
