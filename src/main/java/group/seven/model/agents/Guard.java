@@ -57,11 +57,11 @@ public class Guard extends Agent {
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
-            case BRICK_AND_MORTAR   -> new BrickAndMortar(this);
-            case ANT_PURSUIT        -> new AntsPursuit(this);
-            case ANT                -> new Ant(this);
-            case EVAW               -> new EVAW(this);
-            default                 -> new RandomAlt(this);
+            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
+            case ANT_PURSUIT -> new AntsPursuit(this);
+            case ANT -> new Ant(this);
+            case EVAW -> new EVAW(this);
+            default -> new RandomAlt(this);
         };
     }
 
@@ -83,7 +83,12 @@ public class Guard extends Agent {
     }
 
     @Override
-    public int getCurrentSpeed() {
+    public void setSpeed(int speed) {
+        this.currentSpeed = speed;
+    }
+
+    @Override
+    public int getSpeed() {
         return currentSpeed;
     }
 

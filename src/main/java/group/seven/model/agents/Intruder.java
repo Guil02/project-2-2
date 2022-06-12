@@ -131,8 +131,13 @@ public class Intruder extends Agent {
     }
 
     @Override
-    public int getCurrentSpeed() {
+    public int getSpeed() {
         return currentSpeed;
+    }
+
+    @Override
+    public void setSpeed(int speed) {
+        currentSpeed = speed;
     }
 
 

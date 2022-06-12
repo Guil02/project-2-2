@@ -118,7 +118,7 @@ public class AStarPathFinder {
     public List<Move> makePath() {
         List<Action> actionPath = actionsPath(nodePath()); //convert from path of nodes to path of actions
         List<Move> path = new ArrayList<>();
-        double speed = player.getCurrentSpeed();
+        double speed = player.getSpeed();
         for (int i = 0; i < actionPath.size(); i++) {
             if (actionPath.get(i) == Action.MOVE_FORWARD) {
                 int count = 1;

@@ -43,16 +43,20 @@ public abstract class Agent {
         frame = new Frame(new Translate(-x, -y));
         globalSpawn = new XY(x, y);
 
-        map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
+        map = new TileNode[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
         setXY(x, y);
         //initializeMap();
     }
 
+    //--------<Abstract methods>---------//
     public abstract Move calculateMove();
 
     public abstract int getID();
 
-    public abstract int getCurrentSpeed();
+    public abstract int getSpeed();
+
+    public abstract void setSpeed(int speed);
+    //-----------------------------------//
 
     //is the distance parameter required here? Seems like it's always 1 based oon CollisionHandler line 46
     public void executeMove(int distance) {
@@ -67,7 +71,7 @@ public abstract class Agent {
         this.y = pos.y();
     }
 
-    public void setIgnorePortal(boolean ignorePortal){  // TODO: handle by simulator
+    public void setIgnorePortal(boolean ignorePortal) {  // TODO: handle by simulator
         this.ignorePortal = ignorePortal;
     }
 
@@ -213,14 +217,14 @@ public abstract class Agent {
 
     //
     public void initializeMap() {
-        map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
+        map = new TileNode[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
     }
 
     //I think this just gets called once upon spawning
-    public void initializeInitialTile(){
+    public void initializeInitialTile() {
         try {
-            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(TILE_MAP.getTile(globalSpawn),this);
-        } catch (Exception e){
+            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(TILE_MAP.getTile(globalSpawn), this);
+        } catch (Exception e) {
             System.err.println("An error occurred in the initialization of the initial tile in the agent class");
             e.printStackTrace();
         }
@@ -247,10 +251,9 @@ public abstract class Agent {
 
     //parameters are in global
     public TileNode getMapPosition(int x, int y) {
-        try{
+        try {
             return map[x][y];
-        }
-        catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             print(e.getMessage());
             return null;
         }
@@ -279,7 +282,7 @@ public abstract class Agent {
         return "Agent{" +
                 "x=" + x +
                 ", y=" + y +
-                ", globalX=" +  global.x() +
+                ", globalX=" + global.x() +
                 ", globalY=" + global.y() +
                 ", direction=" + direction +
                 ", agentType=" + agentType +
