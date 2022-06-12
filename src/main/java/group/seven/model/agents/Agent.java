@@ -242,11 +242,11 @@ public abstract class Agent {
         }
 
 
-//        for(TileNode[] tiles : map){
-//            for(TileNode tile: tiles){
-//                if(tile != null) tile.updateAdjacent();
-//            }
-//        }
+        for (TileNode[] tiles : map) {
+            for (TileNode tile : tiles) {
+                if (tile != null) tile.updateAdjacent();
+            }
+        }
     }
 
     //parameters are in global

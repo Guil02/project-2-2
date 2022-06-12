@@ -77,7 +77,7 @@ public class TileNode {
             }
         }
 
-        updateAdjacent();
+//        updateAdjacent();
 
     }
 
