@@ -11,7 +11,6 @@ import java.util.List;
 import static group.seven.enums.MarkerType.UNEXPLORED;
 import static group.seven.enums.PheromoneType.SMELL;
 import static group.seven.enums.TileType.*;
-import static group.seven.model.environment.Scenario.NUM_AGENTS;
 
 public class Tile {
     TileType type;
@@ -24,29 +23,32 @@ public class Tile {
     public Adjacent<Tile> adjacent;
     public Pheromone pheromone;
     private MarkerType exploreType = UNEXPLORED;
-//    public List<Marker> guard_marker;
+    //    public List<Marker> guard_marker;
+    protected Scenario scenario;
 
-    public Tile() {
-        xy = new XY(0,0);
-        pheromone = new Pheromone(xy.x(),xy.y(), SMELL, 0);
-
-        Scenario.TILE_MAP.pheromones.add(pheromone);
+    public Tile(Scenario scenario) {
+        xy = new XY(0, 0);
+        pheromone = new Pheromone(xy.x(), xy.y(), SMELL, 0);
+        this.scenario = scenario;
+        scenario.TILE_MAP.pheromones.add(pheromone);
         type = EMPTY;
+
+        seen = new ArrayList<>(scenario.NUM_AGENTS);
+        for (int i = 0; i < scenario.NUM_AGENTS; i++)
+            seen.add(false);
 //        guard_marker = new ArrayList<>();
 //        for (int i = 0; i < NUM_GUARDS; i++) {
 //            guard_marker.add(new Marker(xy.x(),xy.y(),MarkerType.UNEXPLORED,i,Cardinal.NORTH));
 //        }
 //        Scenario.TILE_MAP.markers.addAll(guard_marker);
-        seen = new ArrayList<>(NUM_AGENTS);
-        for (int i = 0; i < NUM_AGENTS; i++)
-            seen.add(false);
     }
-    public List<Boolean> getSeen(){
+
+    public List<Boolean> getSeen() {
         return seen;
     }
 
-    public Tile(int x, int y) {
-        this();
+    public Tile(int x, int y, Scenario s) {
+        this(s);
         xy = new XY(x, y);
         pheromone = new Pheromone(x, y, SMELL, 0);
 //        guard_marker.clear();
@@ -55,15 +57,15 @@ public class Tile {
 //        }
     }
 
-    public Tile(TileType type, int x, int y) {
-        this(x, y);
+    public Tile(TileType type, int x, int y, Scenario s) {
+        this(x, y, s);
         this.type = type;
         pheromone = new Pheromone(x, y, SMELL, 0);
     }
 
     //Actionable
     // void doAction() {}
-    public XY getXY(){
+    public XY getXY() {
         return xy;
     }
 
@@ -110,14 +112,14 @@ public class Tile {
     public void setExplored(Agent agent) {
         if (agent.getType() == GUARD) {
             if (!exploredByGuard) {
-                TileMap.GUARD_EXPLORATION++; //prolly need to test this
+                scenario.TILE_MAP.GUARD_EXPLORATION++; //prolly need to test this
                 agent.updateNumExplored(); //maybe this belongs outside the if?
             }
 
             exploredByGuard = true;         //exploredGuardProperty.set(true);
         } else if (agent.getType() == INTRUDER) {
             if (!exploredByIntruder) {
-                TileMap.INTRUDER_EXPLORATION++; //and this
+                scenario.TILE_MAP.INTRUDER_EXPLORATION++; //and this
                 agent.updateNumExplored();
             }
             exploredByIntruder = true;      //exploredIntruderProperty.set(true);

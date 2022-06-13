@@ -26,21 +26,36 @@ import java.util.Map;
 
 public class MainMenu {
 
-    @FXML private ChoiceBox<String> chosenAlgorithm;
-    @FXML private ChoiceBox<String> chosenIntruder;
-    @FXML private ChoiceBox<String> chosenGamemode;
-    @FXML private Label gameModeLabel;
-    @FXML private CheckBox logDataChoice;
-    @FXML private ToggleGroup mapChoice;
-    @FXML private Label mapNameLabel;
-    @FXML private ImageView mapView;
-    @FXML private Label messageLabel;
-    @FXML private Label algorithmLabel0;
-    @FXML private Label algorithmLabel1;
-    @FXML private Label algorithmLabel2;
-    @FXML private Button startButton;
-    @FXML private RadioButton uploadToggle;
-    @FXML private RadioButton existingToggle;
+    @FXML
+    private ChoiceBox<String> chosenAlgorithm;
+    @FXML
+    private ChoiceBox<String> chosenIntruder;
+    @FXML
+    private ChoiceBox<String> chosenGamemode;
+    @FXML
+    private Label gameModeLabel;
+    @FXML
+    private CheckBox logDataChoice;
+    @FXML
+    private ToggleGroup mapChoice;
+    @FXML
+    private Label mapNameLabel;
+    @FXML
+    private ImageView mapView;
+    @FXML
+    private Label messageLabel;
+    @FXML
+    private Label algorithmLabel0;
+    @FXML
+    private Label algorithmLabel1;
+    @FXML
+    private Label algorithmLabel2;
+    @FXML
+    private Button startButton;
+    @FXML
+    private RadioButton uploadToggle;
+    @FXML
+    private RadioButton existingToggle;
 
     private File scenarioFile;
     private Map<String, Image> mapLibrary;
@@ -56,11 +71,11 @@ public class MainMenu {
             Config.ALGORITHM_GUARD = AlgorithmType.getEnum(algorithm);
             Config.ALGORITHM_INTRUDER = AlgorithmType.getEnum(algorithm2);
             Config.GAMEMODE = GameMode.getEnum(gamemode);
-            Scenario scenario = new ScenarioBuilder(scenarioFile).build();
-            //Runner runner =
-            new Simulator(scenario);
-            //runner.start();
 
+
+            //here is how you can create more scenario objects with different scenariofiles
+            Scenario scenario = new ScenarioBuilder(scenarioFile).build();
+            Simulator sim = new Simulator(scenario);
         } else {
             messageLabel.setText("Please Select an Algorithm");
         }
@@ -81,8 +96,9 @@ public class MainMenu {
             scenarioFile = chosen;
             mapNameLabel.setText(scenarioFile.getName().split("\\.")[0]);
             startButton.setDisable(false);
-            if (mapLibrary.containsKey(scenarioFile.getName())) mapView.setImage(mapLibrary.get(scenarioFile.getName()));
-            else mapView.setEffect(new ColorAdjust(0,0,0.5,0.0));
+            if (mapLibrary.containsKey(scenarioFile.getName()))
+                mapView.setImage(mapLibrary.get(scenarioFile.getName()));
+            else mapView.setEffect(new ColorAdjust(0, 0, 0.5, 0.0));
         } else {
             messageLabel.setText("No file chosen!");
         }
@@ -108,7 +124,7 @@ public class MainMenu {
 
     private void browse(String mapFile) {
         try {
-            scenarioFile = new File(getClass().getResource("/scenarios/"+mapFile).toURI());
+            scenarioFile = new File(getClass().getResource("/scenarios/" + mapFile).toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -173,8 +189,8 @@ public class MainMenu {
         chosenIntruder.setStyle("-fx-font-size: 16; -fx-background-color: #f5f6fa;");
 
         chosenGamemode.getItems().addAll(
-            "Single Intruder Caught",
-            "All intruders Caught"
+                "Single Intruder Caught",
+                "All intruders Caught"
         );
 
         chosenGamemode.setValue("Choose Gamemode");

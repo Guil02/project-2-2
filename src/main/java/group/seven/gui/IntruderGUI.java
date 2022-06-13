@@ -1,7 +1,6 @@
 package group.seven.gui;
 
 import group.seven.model.agents.Intruder;
-import group.seven.model.environment.TileMap;
 import group.seven.utils.Methods;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -12,26 +11,32 @@ public class IntruderGUI extends AnchorPane {
     protected static int selected = 0;
     protected static IntruderGUI selectedIntruder = null;
 
-    @FXML private Label agentID;
-    @FXML private Label coverage;
-    @FXML private Label orientation;
+    @FXML
+    private Label agentID;
+    @FXML
+    private Label coverage;
+    @FXML
+    private Label orientation;
 
     protected final Intruder intruder;
     protected final int ID;
+    View view;
 
     public IntruderGUI(Intruder intruder, View view) {
         this.intruder = intruder;
+        this.view = view;
         ID = intruder.getID();
         Methods.loadFXML(this, "/fxml/intruderGUI.fxml");
     }
 
     protected void update() {
-        coverage.setText((int) ((intruder.getNumExplored() / TileMap.NUM_TILES) * 100) + "%");
+        coverage.setText((int) ((intruder.getNumExplored() / view.s.TILE_MAP.NUM_TILES) * 100) + "%");
         //orientation.setText(guard.getOrientation().toString());
     }
 
-    @FXML void initialize() {
-        agentID.setText("#"+ (ID + 1));
+    @FXML
+    void initialize() {
+        agentID.setText("#" + (ID + 1));
         coverage.setText("0%");
         orientation.setText(intruder.getDirection().toString());
     }

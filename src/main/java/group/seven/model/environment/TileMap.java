@@ -9,14 +9,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static group.seven.enums.TileType.GUARD;
-import static group.seven.model.environment.Scenario.*;
 import static group.seven.utils.Methods.print;
 
 public class TileMap {
     //used for coverage calculation
-    public static double NUM_TILES;
-    public static double INTRUDER_EXPLORATION;
-    public static double GUARD_EXPLORATION;
+    public double NUM_TILES;
+    public double INTRUDER_EXPLORATION;
+    public double GUARD_EXPLORATION;
     //TileMap
     public Tile[][] map;
     public Set<XY> guardPositions; //observable?
@@ -26,16 +25,16 @@ public class TileMap {
     //marker/pheromone stuff. Should this belong here?
     public ArrayList<Marker> markers;
     public ArrayList<Pheromone> pheromones;
-    private static final int spreadDistance = 50;
+    private final int spreadDistance = 50;
 
 
-    public TileMap() {
-        map = new Tile[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
-        agents = new Agent[NUM_AGENTS];
+    public TileMap(Scenario s) {
+        map = new Tile[s.WIDTH + 1][s.HEIGHT + 1];
+        agents = new Agent[s.NUM_AGENTS];
         //guardPositions = new ArrayList<>(NUM_GUARDS);
         //intruderPositions = new ArrayList<>(NUM_INTRUDERS);
-        guardPositions = new HashSet<>(NUM_GUARDS);
-        intruderPositions = new HashSet<>(NUM_INTRUDERS);
+        guardPositions = new HashSet<>(s.NUM_GUARDS);
+        intruderPositions = new HashSet<>(s.NUM_INTRUDERS);
         markers = new ArrayList<>();
         pheromones = new ArrayList<>();
 
@@ -93,11 +92,12 @@ public class TileMap {
         return map[xy.x()][xy.y()].type;
     }
 
+    //tODO
     public void addAgent(Agent agent) {
         agents[agent.getID()] = agent;
 
         if (agent.getType() == GUARD)
-             guardPositions.add(agent.getXY());
+            guardPositions.add(agent.getXY());
         else intruderPositions.add(agent.getXY());
     }
 

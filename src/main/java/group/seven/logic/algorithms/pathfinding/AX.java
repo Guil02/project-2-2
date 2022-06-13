@@ -1,11 +1,14 @@
 package group.seven.logic.algorithms.pathfinding;
 
+import group.seven.model.environment.Scenario;
+
 import java.util.*;
 
-import static group.seven.model.environment.Scenario.TILE_MAP;
 
 //TODO: also disregard
 public class AX {
+
+    Scenario scenario;
 
     //TODO: pre-calculate all heuristic values
 
@@ -42,7 +45,7 @@ public class AX {
                 int nX = current.x + xDirections[i];
                 int nY = current.y + yDirections[i];
 
-                if (nX < 0 || nY < 0 || nX > TILE_MAP.map.length || nY > TILE_MAP.map[0].length) {
+                if (nX < 0 || nY < 0 || nX > scenario.TILE_MAP.map.length || nY > scenario.TILE_MAP.map[0].length) {
                     ANode neighbor = new ANode(nX, nY);
 
                 }

@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.Cardinal.*;
-import static group.seven.model.environment.Scenario.TILE_MAP;
 import static group.seven.utils.Methods.print;
 
 //TODO the agent structure very much work in progress
 public abstract class Agent {
-    private static int IDs = 0;
+    public static int IDs = 0;
 
     private double numExplored;
     //Coordinates and Frames:
@@ -35,15 +34,17 @@ public abstract class Agent {
     //Type
     boolean ignorePortal = false;
     boolean isTeleported = false;
+    public Scenario scenario;
 
     //Current Speed
     //Strategy
 
-    public Agent(int x, int y) {
+    public Agent(int x, int y, Scenario s) {
+        scenario = s;
         frame = new Frame(new Translate(-x, -y));
         globalSpawn = new XY(x, y);
 
-        map = new TileNode[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
+        map = new TileNode[s.WIDTH + 1][s.HEIGHT + 1];
         setXY(x, y);
         //initializeMap();
     }
@@ -217,13 +218,13 @@ public abstract class Agent {
 
     //
     public void initializeMap() {
-        map = new TileNode[Scenario.WIDTH + 1][Scenario.HEIGHT + 1];
+        map = new TileNode[scenario.WIDTH + 1][scenario.HEIGHT + 1];
     }
 
     //I think this just gets called once upon spawning
     public void initializeInitialTile() {
         try {
-            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(TILE_MAP.getTile(globalSpawn), this);
+            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(scenario.TILE_MAP.getTile(globalSpawn), this);
         } catch (Exception e) {
             System.err.println("An error occurred in the initialization of the initial tile in the agent class");
             e.printStackTrace();

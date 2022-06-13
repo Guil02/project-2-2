@@ -26,11 +26,13 @@ public class BrickAndMortar implements Algorithm {
     private final Agent agent;
     ArrayList<Move> moves = new ArrayList<>();
     private final Cardinal[] orientations = {NORTH, EAST, SOUTH, WEST};
+    private Scenario scenario;
 
 
     public BrickAndMortar(Agent agent) {
         moves.add(new Move(getAction(orientations[agent.getID() % 4]), 0, agent));
         this.agent = agent;
+        scenario = agent.scenario;
     }
 
     /**
@@ -63,7 +65,7 @@ public class BrickAndMortar implements Algorithm {
 
     public XY seeTarget() {
         for (Tile t : agent.getSeenTiles()) {
-            for (Agent a : Scenario.TILE_MAP.agents) {
+            for (Agent a : scenario.TILE_MAP.agents) {
                 if (a.getType() == INTRUDER && a.getX() == t.getX() && a.getY() == t.getY()) {
                     return new XY(a.getX(), a.getY());
                 }

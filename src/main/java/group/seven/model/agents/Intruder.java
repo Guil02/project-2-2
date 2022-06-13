@@ -21,14 +21,13 @@ import group.seven.utils.Config;
 import java.util.List;
 
 import static group.seven.enums.TileType.INTRUDER;
-import static group.seven.model.environment.Scenario.targetArea;
 import static group.seven.utils.Methods.print;
 
 public class Intruder extends Agent {
 
     private final int ID;
     protected int currentSpeed;
-    private final int maxSpeed = (int) Scenario.INTRUDER_SPRINT_SPEED;
+    private final int maxSpeed;
     private Vision vision;
     Algorithm algorithm;
     private Cardinal orientationToGoal;
@@ -38,15 +37,15 @@ public class Intruder extends Agent {
     private boolean firstTimeInTargetArea = true;
     private boolean alive = true;
 
-    public Intruder(int x, int y, AlgorithmType algorithm) { //TODO: fix and finish
-        this(x, y);
+    public Intruder(int x, int y, Scenario s, AlgorithmType algorithm) { //TODO: fix and finish
+        this(x, y, s);
         //this.algorithm = algorithm;
         updateOrientationToGoal();
 
     }
 
-    public Intruder(int x, int y) {
-        super(x, y);
+    public Intruder(int x, int y, Scenario s) {
+        super(x, y, s);
         ID = newID();
         agentType = INTRUDER;
         direction = Cardinal.randomDirection();      //DEFAULT
@@ -54,6 +53,7 @@ public class Intruder extends Agent {
         vision = new RectangleVision(this); //DEFAULT
         updateOrientationToGoal();
         currentSpeed = 3; //TODO base soeed?
+        maxSpeed = (int) scenario.INTRUDER_SPRINT_SPEED;
     }
 
     public Algorithm initAlgo(AlgorithmType type) {
@@ -65,13 +65,15 @@ public class Intruder extends Agent {
     }
 
     public void updateOrientationToGoal() {
-        Rectangle goalLocationArea = targetArea.area();
+        Rectangle goalLocationArea = scenario.targetArea.area();
         double heightMediumPoint = goalLocationArea.getHeight() / 2;
         double widthMediumPoint = goalLocationArea.getWidth() / 2;
         int x = (int) (goalLocationArea.getX() + widthMediumPoint);
         int y = (int) (goalLocationArea.getY() + heightMediumPoint);
+        XY agentGlobal = getXY();
 //        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
-        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), new XY(this.getX(), this.getY())); //todo changed so frames match
+//        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), new XY(this.getX(), this.getY())); //todo changed so frames match
+        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), agentGlobal); //todo changed so frames match
         //double angle = Pythagoras.getAnglePythagoras(this.x,this.y,x,y);
         //Update angle to goal, which is in degrees
         this.angleToGoal = angle;
@@ -105,12 +107,12 @@ public class Intruder extends Agent {
     @Override
     public Move calculateMove() {
         //Check if Intruder is in the target area
-        if (targetArea.contains(getXY())) {
+        if (scenario.targetArea.contains(getXY())) {
 //        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
                 print("Intruder " + getID() + " made it to target");
                 //TODO handle leaving and returning to target area
-                Scenario.INTRUDERS_AT_TARGET++;
+                scenario.INTRUDERS_AT_TARGET++;
                 firstTimeInTargetArea = false;
                 return algorithm.getNext();
             } else {
@@ -143,8 +145,8 @@ public class Intruder extends Agent {
 
     //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
     //Methods here all return an instance to the object, so you can chain methods together
-    public static Intruder create(int x, int y) {
-        return new Intruder(x, y);
+    public static Intruder create(int x, int y, Scenario s) {
+        return new Intruder(x, y, s);
     }
 
     //sets the speed of this intruder and returns the same intruder object back
@@ -197,7 +199,7 @@ public class Intruder extends Agent {
 
     public void killIntruder() {
         if (this.alive) {
-            Scenario.INTRUDERS_CAUGHT++;
+            scenario.INTRUDERS_CAUGHT++;
             this.alive = false;
             System.out.println("Intruder " + ID + " just got shot");
         }

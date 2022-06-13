@@ -14,8 +14,8 @@ public class GameEnd extends BorderPane {
 
     private final View view;
 
-    public GameEnd() {
-        view = new View();
+    public GameEnd(SimulationScreen simGUI) {
+        view = new View(simGUI);
         Methods.loadFXML(this, "/fxml/GameEnd.fxml");
     }
 
@@ -23,8 +23,10 @@ public class GameEnd extends BorderPane {
         view.update();
     }
 
-    @FXML private Button QuitGame;
-    @FXML private Button BackToMainMenu;
+    @FXML
+    private Button QuitGame;
+    @FXML
+    private Button BackToMainMenu;
 
     @FXML
     void initialize() {

@@ -15,13 +15,13 @@ import java.util.*;
 
 import static group.seven.enums.TileType.PORTAL;
 import static group.seven.enums.TileType.WALL;
-import static group.seven.model.environment.Scenario.TILE_MAP;
 import static group.seven.utils.Methods.print;
 
 //TODO: playing around and expirementing. Disregard and doesn't work/is incomplete
 public class Astar implements Algorithm {
 
-    Tile[][] map = TILE_MAP.getMap();
+    private final Scenario scenario;
+    Tile[][] map;// = TILE_MAP.getMap();
 
     //Manhattan distance heurstic -> good if only 4 directions
     //Euclidean distance (straigtht line) -> maybe good for estimating target based one direction, angle or whatever
@@ -45,6 +45,8 @@ public class Astar implements Algorithm {
 
     public Astar(Agent agent) {
         this.agent = agent;
+        map = agent.scenario.getTileMap().getMap();
+        scenario = agent.scenario;
     }
 
     public Astar(Agent agent, Node target) {
@@ -54,6 +56,7 @@ public class Astar implements Algorithm {
         //start = new Node(agent.getXY(), 0);
         //openList.add(start);
         this.agent = agent;
+        scenario = agent.scenario;
     }
 
     @Override
@@ -220,7 +223,7 @@ public class Astar implements Algorithm {
             for (int d = 0; d < 4; d++) {
                 XY nextPos = Cardinal.values()[d].unitVector.add(x, y); //maybe add offset for dynamic speeding
 
-                Tile t = TILE_MAP.getTile(nextPos.x(), nextPos.y());
+                Tile t = scenario.TILE_MAP.getTile(nextPos.x(), nextPos.y());
                 if (t != null) {
                     if (t.getType() != WALL) {
                         Node adj = new Node(nextPos, this);
@@ -235,7 +238,7 @@ public class Astar implements Algorithm {
                         }
 
                         if (t.getType() == PORTAL) { //assumes there's just one portal;
-                            adjacent.add(new Node(Scenario.portals.get(0).exit(), this));
+                            adjacent.add(new Node(scenario.portals.get(0).exit(), this));
                         }
                     }
                 }
@@ -249,7 +252,7 @@ public class Astar implements Algorithm {
 
         private Occupancy occupied(Node other) {
             //need to test this
-            for (Agent a : TILE_MAP.agents)
+            for (Agent a : scenario.TILE_MAP.agents)
                 if (a.getX() == other.x && a.getY() == other.y && a != agent)
                     return new Occupancy(true, a);
 
