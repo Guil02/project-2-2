@@ -46,75 +46,103 @@ public class ConeVision implements Vision {
             case NORTH -> {
                 List<Integer> blockedTiles = new LinkedList<>();
                 int counter = 1;
-                int see_wall = 1;
+                int x_counter = 1;
+                int see_wall = 0;
                 // <= or <, ceck the for loops with debugging
                 for (int y = yCoordinate - counter; y >= yCoordinate - distance; y--) {
-                    System.out.println("yCoordinate"+ yCoordinate);
-                    System.out.println("y "+y);
-                    System.out.println("until "+ (yCoordinate-distance));
-                    for (int x = xCoordinate - counter; x <= xCoordinate + counter ; x++) {
+                    System.out.println("yCoordinate" + yCoordinate);
+                    System.out.println("y " + y);
+                    System.out.println("until " + (yCoordinate - distance));
+                    for (int x = xCoordinate - x_counter; x <= xCoordinate + x_counter; x++) {
                         if (blockedTiles.contains(x)) {
                             break;
                         }
-                        if (y > Scenario.HEIGHT || x < Scenario.WIDTH || x <= 0 || y <= 0) {
+                        if (y >= Scenario.HEIGHT || x <= Scenario.WIDTH || x < 0 || y < 0) {
                             observe(x, y, observedTiles, agent);
                         }
                         if (TILE_MAP.getTile(x, y).getType() == WALL) {
                             blockedTiles.add(x);
+                            see_wall++;
                             for (int i = y; y <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
                                 blockedTiles.add(x - see_wall * i);
                                 blockedTiles.add(x + see_wall * i);
                             }
                         }
-                        see_wall++;
                     }
+                    x_counter++;
                 }
             }
             case SOUTH -> {
-                for (int y = yCoordinate; y < yCoordinate + Scenario.VIEW_DISTANCE; y++) { //check straight
-                    if (y < Scenario.HEIGHT) { //cant go lower than y=map.height, so if the number is larger is out of bound
-                        observe(xCoordinate, y, observedTiles, agent);
-
-                        //CHECK COLLISIONS with walls
-                        if (TILE_MAP.getTile(xCoordinate, y).getType() == WALL) {
+                List<Integer> blockedTiles = new LinkedList<>();
+                int counter = 1;
+                int x_counter = 1;
+                int see_wall = 0;
+                for (int y = yCoordinate + counter; y <= yCoordinate + distance; y++) {
+                    for (int x = xCoordinate - x_counter; x <= xCoordinate + x_counter; x++) {
+                        if (blockedTiles.contains(x)) {
                             break;
                         }
-                    } else { //out of bound for edges of map
-                        observe(xCoordinate, y - 1, observedTiles, agent);
-
-                        break;
+                        if (y > Scenario.HEIGHT || x < Scenario.WIDTH || x < 0 || y < 0) {
+                            observe(x, y, observedTiles, agent);
+                        }
+                        if (TILE_MAP.getTile(x, y).getType() == WALL) {
+                            blockedTiles.add(x);
+                            see_wall++;
+                            for (int i = y; i <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
+                                blockedTiles.add(x - see_wall * i);
+                                blockedTiles.add(x + see_wall * i);
+                            }
+                        }
                     }
+                    x_counter++;
                 }
-                //create rays
             }
             case EAST -> {
-                for (int x = xCoordinate; x < xCoordinate + Scenario.VIEW_DISTANCE; x++) { //check straight
-                    if (x < Scenario.WIDTH) {
-                        observe(x, yCoordinate, observedTiles, agent);
-
-                        //CHECK COLLISIONS with walls
-                        if (TILE_MAP.getTile(x, yCoordinate).getType() == WALL) {
+                List<Integer> blockedTiles = new LinkedList<>();
+                int counter = 1;
+                int y_counter = 1;
+                int see_wall = 0;
+                for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
+                    for (int x = xCoordinate + counter; x <= xCoordinate + distance; x++) {
+                        if (blockedTiles.contains(x)) {
                             break;
                         }
-                    } else { //out of bound for edges of map
-                        observe(x - 1, yCoordinate, observedTiles, agent);
-                        break;
+                        if (y > Scenario.HEIGHT || x < Scenario.WIDTH || x < 0 || y < 0) {
+                            observe(x, y, observedTiles, agent);
+                        }
+                        if (TILE_MAP.getTile(x, y).getType() == WALL) {
+                            blockedTiles.add(x);
+                            see_wall++;
+                            for (int i = x; x <= xCoordinate + Scenario.VIEW_DISTANCE; i--) {
+                                blockedTiles.add(x - see_wall * i);
+                                blockedTiles.add(x + see_wall * i);
+                            }
+                        }
                     }
                 }
             }
             //create rays
             case WEST -> {
-                for (int x = xCoordinate; x > xCoordinate - Scenario.VIEW_DISTANCE; x--) { //check straight
-                    if (x >= 0) {
-                        observe(x, yCoordinate, observedTiles, agent);
-
-                        //CHECK COLLISIONS with walls
-                        if (TILE_MAP.getTile(x, yCoordinate).getType() == WALL) {
+                List<Integer> blockedTiles = new LinkedList<>();
+                int counter = 1;
+                int y_counter = 1;
+                int see_wall = 0;
+                for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
+                    for (int x = xCoordinate - counter; x <= xCoordinate - distance; x++) {
+                        if (blockedTiles.contains(x)) {
                             break;
                         }
-                    } else { //out of bound for edges of map
-                        observe(x + 1, yCoordinate, observedTiles, agent);
-                        break;
+                        if (y > Scenario.HEIGHT || x < Scenario.WIDTH || x < 0 || y < 0) {
+                            observe(x, y, observedTiles, agent);
+                        }
+                        if (TILE_MAP.getTile(x, y).getType() == WALL) {
+                            blockedTiles.add(x);
+                            see_wall++;
+                            for (int i = x; x <= xCoordinate + Scenario.VIEW_DISTANCE; i--) {
+                                blockedTiles.add(x - see_wall * i);
+                                blockedTiles.add(x + see_wall * i);
+                            }
+                        }
                     }
                 }
             }
@@ -123,12 +151,12 @@ public class ConeVision implements Vision {
     }
 
     @Override
-    public List<Tile> updateAndGetVisionAgent() {
+    public List<Tile> updateAndGetVisionAgent () {
         return updateAndGetVisionAgent(agent);
     }
 
     @Override
-    public Type getType() {
+    public Type getType () {
         return type;
     }
 }
