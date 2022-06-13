@@ -17,6 +17,7 @@ public class ConeVision implements Vision {
 
     public Type type = CONE;
     private Agent agent;
+    public static int counterBIG = 0;
 
     public ConeVision() {
 
@@ -50,9 +51,6 @@ public class ConeVision implements Vision {
                 int see_wall = 0;
                 // <= or <, ceck the for loops with debugging
                 for (int y = yCoordinate - counter; y >= yCoordinate - distance; y--) {
-                    System.out.println("yCoordinate" + yCoordinate);
-                    System.out.println("y " + y);
-                    System.out.println("until " + (yCoordinate - distance));
                     for (int x = xCoordinate - x_counter; x <= xCoordinate + x_counter; x++) {
                         if (blockedTiles.contains(x)) {
                             break;
@@ -66,6 +64,7 @@ public class ConeVision implements Vision {
                             for (int i = y; y <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
                                 blockedTiles.add(x - see_wall * i);
                                 blockedTiles.add(x + see_wall * i);
+                                System.out.println("STUCK HERE 1");
                             }
                         }
                     }
@@ -91,6 +90,7 @@ public class ConeVision implements Vision {
                             for (int i = y; i <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
                                 blockedTiles.add(x - see_wall * i);
                                 blockedTiles.add(x + see_wall * i);
+                                System.out.println("STUCK HERE 2");
                             }
                         }
                     }
@@ -116,6 +116,7 @@ public class ConeVision implements Vision {
                             for (int i = x; x <= xCoordinate + Scenario.VIEW_DISTANCE; i--) {
                                 blockedTiles.add(x - see_wall * i);
                                 blockedTiles.add(x + see_wall * i);
+                                System.out.println("STUCK HERE 3");
                             }
                         }
                     }
@@ -142,6 +143,7 @@ public class ConeVision implements Vision {
                             for (int i = x; x <= xCoordinate + Scenario.VIEW_DISTANCE; i--) {
                                 blockedTiles.add(x - see_wall * i);
                                 blockedTiles.add(x + see_wall * i);
+                                System.out.println("STUCK HERE 4");
                             }
                         }
                     }
@@ -149,6 +151,9 @@ public class ConeVision implements Vision {
                 }
             }
         }
+        System.out.println("Size "+observedTiles.size());
+        System.out.println("count "+counterBIG);
+        counterBIG++;
         return observedTiles;
     }
 
