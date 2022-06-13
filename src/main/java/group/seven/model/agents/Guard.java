@@ -4,6 +4,7 @@ package group.seven.model.agents;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.*;
+import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
@@ -50,7 +51,7 @@ public class Guard extends Agent {
         currentSpeed = 3; //DEFAULT //TODO base speed?
         direction = Cardinal.randomDirection();
         algorithm = initAlgo(Config.ALGORITHM_GUARD); //DEFAULT
-        vision = new RectangleVision(this); //DEFAULT
+        vision = new ConeVision(this); //DEFAULT
 
         // algorithm = new RandomTest(this);
     }
