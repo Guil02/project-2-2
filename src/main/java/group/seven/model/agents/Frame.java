@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Handles coordinate conversions
+ * Handles coordinate conversions. Uses JavaFX geometry classes.
  * To create this record: new Frame(new Translate(-spawnPoint.getX(), -spawnPoint.getY()))
  * @param frame local agent's coordinate frame Transform
  */
@@ -23,9 +23,12 @@ public record Frame(Transform frame) {
      * as a XY record containing integers
      */
     public XY convertToLocal(int x, int y)  {
-        return new XY(convertToLocal((double) x, y));
+        return new XY(convertToLocal(x, (double)y));
     }
 
+    public XY convertToLocal(XY xy) {
+        return new XY(convertToLocal((double) xy.x(), xy.y()));
+    }
     /**
      * Converts a Point2D in global space to a Point2D in agent's local coordinate space
      * @param globalPoint global point which to convert
@@ -33,6 +36,7 @@ public record Frame(Transform frame) {
      */
     public Point2D convertToLocal(Point2D globalPoint)  {
         return frame.transform(globalPoint.getX(), globalPoint.getY());
+        //return convertToLocal(globalPoint.getX(), globalPoint.getY());
     }
 
     /**
@@ -58,13 +62,22 @@ public record Frame(Transform frame) {
     }
 
     /**
+     * Converts an XY record from local to global coordinates
+     * @param xy (x', y') coordinates from agent's local frame
+     * @return XY record (x, y) of global representation of the agent's coordinates
+     */
+    public XY convertToGlobal(XY xy) {
+        return convertToGlobal(xy.x(), xy.y());
+    }
+
+    /**
      * Converts an integer x, y coordinate from agent local frame to same point in global frame
-     * @param x integer x-coordinate in agent's local coordiante frame
+     * @param x integer x-coordinate in agent's local coordinate frame
      * @param y integer y-coordinate in agent's local coordinate frame
      * @return a Point2D object that represents the agent's local point, but in the global coordinate frame
      */
-    public Point2D convertToGlobal(int x, int y) {
-        return convertToGlobal(new Point2D(x, y));
+    public XY convertToGlobal(int x, int y) {
+        return new XY(convertToGlobal(new Point2D(x, y)));
     }
 
     /**
@@ -77,10 +90,21 @@ public record Frame(Transform frame) {
     }
 
     /**
+     * Convert a collection of global points to a List of local points
+     * @param points Any Collection or subclass (ArrayList, etc.) of XY global points
+     * @return List of XY global points
+     */
+    public List<XY> convertPointsXY(Collection<XY> points) {
+        return points.stream().map(this::convertToLocal).toList();
+    }
+
+    /**
      * Returns the agent's local origin (0,0); into its global coordinate representation
      * @return a Point2D object that contains the true origin of the agent in global coordinate frame
      */
     public Point2D getRelativeOrigin() {
         return new Point2D(frame.getTx(), frame.getTy()).multiply(-1);
     }
+
+
 }

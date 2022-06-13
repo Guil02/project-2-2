@@ -6,14 +6,16 @@ public enum AlgorithmType {
     BRICK_AND_MORTAR,
     RANDOM,
     EVAW,
-    ANT_PURSUIT;
+    ANT_PURSUIT,
+    A_STAR_ALT;
 
     public static AlgorithmType getEnum(String name) {
         return switch (name) {
-            case "Random" -> RANDOM;
-            case "Brick and Mortar" -> BRICK_AND_MORTAR;
-            case "ANT_PURSUIT" -> ANT_PURSUIT;
-            default -> A_STAR;
+            case "A*" -> A_STAR;
+//            case "A*" -> A_STAR_ALT;
+            case "Brick And Mortar" -> BRICK_AND_MORTAR;
+            case "Ant Pursuit" -> ANT_PURSUIT;
+            default -> RANDOM;
         };
     }
 }

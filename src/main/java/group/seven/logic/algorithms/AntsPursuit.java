@@ -5,18 +5,16 @@ import group.seven.enums.AlgorithmType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import static group.seven.enums.TileType.INTRUDER;
 
 public class AntsPursuit implements Algorithm {
     Agent agent;
-    private EVAW evaw;
-    private List<Move> moves = new LinkedList<>();
+    private final EVAW evaw;
+    private final LinkedList<Move> moves = new LinkedList<>();
 
     public AntsPursuit(Agent agent) {
         this.agent = agent;
@@ -41,19 +39,22 @@ public class AntsPursuit implements Algorithm {
         }
 
 
-        Move nextMove = moves.get(0);
-        moves.remove(0);
-        return nextMove;
+//        Move nextMove = moves.get(0);
+//        moves.remove(0);
+        return moves.poll();
     }
 
     public XY seeTarget() {
         for (Tile t : agent.getSeenTiles()) {
-            for (Agent a : Scenario.TILE_MAP.agents) {
-                if (a.getType() == INTRUDER && a.getX() == t.getX() && a.getY() == t.getY()) {
-                    return new XY(a.getX(), a.getY());
+            for (Agent a : agent.scenario.TILE_MAP.agents) {
+                XY agentPos; //doing the coordinate transform is expensive, so only initialize if a == Intruder
+                if (a.getType() == INTRUDER && (agentPos = a.getXY()).equals(t.getXY())) {
+                    return agentPos;
                 }
             }
         }
+
+        //tODO: not sure if makes sense with coordinate transform cuz that's an valid coordinate
         return new XY(-1, -1);
     }
 

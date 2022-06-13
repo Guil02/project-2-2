@@ -4,7 +4,10 @@ package group.seven.model.agents;
 import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
-import group.seven.logic.algorithms.*;
+import group.seven.logic.algorithms.AStarGoal;
+import group.seven.logic.algorithms.Algorithm;
+import group.seven.logic.algorithms.pathfinding.Astar;
+import group.seven.logic.algorithms.RandomAlt;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
@@ -17,14 +20,14 @@ import group.seven.utils.Config;
 
 import java.util.List;
 
-import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.TileType.INTRUDER;
+import static group.seven.utils.Methods.print;
 
 public class Intruder extends Agent {
 
     private final int ID;
     protected int currentSpeed;
-    private final int maxSpeed = (int) Scenario.INTRUDER_SPRINT_SPEED;
+    private final int maxSpeed;
     private Vision vision;
     Algorithm algorithm;
     private Cardinal orientationToGoal;
@@ -34,66 +37,65 @@ public class Intruder extends Agent {
     private boolean firstTimeInTargetArea = true;
     private boolean alive = true;
 
-    public Intruder(int x, int y, AlgorithmType algorithm) { //TODO: fix and finish
-        this(x, y);
+    public Intruder(int x, int y, Scenario s, AlgorithmType algorithm) { //TODO: fix and finish
+        this(x, y, s);
         //this.algorithm = algorithm;
         updateOrientationToGoal();
 
     }
 
-    public Intruder(int x, int y) {
-        super(x,y);
+    public Intruder(int x, int y, Scenario s) {
+        super(x, y, s);
         ID = newID();
-        setX(x);
-        setY(y);
         agentType = INTRUDER;
-        currentSpeed = 1;       //DEFAULT
-        direction = SOUTH;      //DEFAULT
+        direction = Cardinal.randomDirection();      //DEFAULT
         algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
         updateOrientationToGoal();
-        currentSpeed = 3;
+        currentSpeed = 3; //TODO base soeed?
+        maxSpeed = (int) scenario.INTRUDER_SPRINT_SPEED;
     }
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
-            case RANDOM -> new RandomTest(this);
             case A_STAR -> new AStarGoal(this);
-            default -> new RandomTest(this);
+            case A_STAR_ALT -> new Astar(this);
+            default -> new RandomAlt(this);
         };
     }
 
-    public void updateOrientationToGoal(){
-        Rectangle goalLocationArea = Scenario.targetArea.area();
-        double heightMediumPoint =  goalLocationArea.getHeight()/2;
-        double widthMediumPoint = goalLocationArea.getWidth()/2;
-        int x = (int)(goalLocationArea.getX() + widthMediumPoint);
-        int y = (int)(goalLocationArea.getY() + heightMediumPoint);
-        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
+    public void updateOrientationToGoal() {
+        Rectangle goalLocationArea = scenario.targetArea.area();
+        double heightMediumPoint = goalLocationArea.getHeight() / 2;
+        double widthMediumPoint = goalLocationArea.getWidth() / 2;
+        int x = (int) (goalLocationArea.getX() + widthMediumPoint);
+        int y = (int) (goalLocationArea.getY() + heightMediumPoint);
+        XY agentGlobal = getXY();
+//        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
+//        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), new XY(this.getX(), this.getY())); //todo changed so frames match
+        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), agentGlobal); //todo changed so frames match
         //double angle = Pythagoras.getAnglePythagoras(this.x,this.y,x,y);
         //Update angle to goal, which is in degrees
-        this.angleToGoal= angle;
+        this.angleToGoal = angle;
 
-       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.x ,this.y, x, y);
+//       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX() ,this.getY(), x, y); //todo changed to match frame
+        //I think the parameter order might have been wrong
+        this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX(), x, this.getY(), y); //todo changed to match frame
 
     }
 
-
-
-
-
-    public Cardinal getOrientationToGoal(){
+    public Cardinal getOrientationToGoal() {
         return this.orientationToGoal;
     }
 
-    public double getAngleToGoal(){
+    public double getAngleToGoal() {
         return this.angleToGoal;
     }
 
     @Override
     public void updateVision() {
         List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
-        seenTiles = duplicatedTiles(seenTiles,newTiles);
+        seenTiles = duplicatedTiles(seenTiles, newTiles);
         /*
         Could also use the below if the vision stores an instance of the agent.
         Otherwise, would recommend making vision methods static and any have vision status effects stored in agent
@@ -105,19 +107,23 @@ public class Intruder extends Agent {
     @Override
     public Move calculateMove() {
         //Check if Intruder is in the target area
-        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
+        if (scenario.targetArea.contains(getXY())) {
+//        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
-                Scenario.INTRUDERS_AT_TARGET++;
+                print("Intruder " + getID() + " made it to target");
+                //TODO handle leaving and returning to target area
+                scenario.INTRUDERS_AT_TARGET++;
                 firstTimeInTargetArea = false;
                 return algorithm.getNext();
             } else {
+                //TODO: make intruder leave target area if guard nearby or to make room for other intruders
                 return new Move(Action.NOTHING, 0, this);
             }
         } //Check if Intruder is alive = is not caught yet
-        else if (alive){
+        else if (alive) {
             return algorithm.getNext();
         } else {
-            return new Move(Action.NOTHING,0,this);
+            return new Move(Action.NOTHING, 0, this);
         }
     }
 
@@ -127,16 +133,20 @@ public class Intruder extends Agent {
     }
 
     @Override
-    public int getCurrentSpeed() {
+    public int getSpeed() {
         return currentSpeed;
     }
 
+    @Override
+    public void setSpeed(int speed) {
+        currentSpeed = speed;
+    }
 
 
     //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
     //Methods here all return an instance to the object, so you can chain methods together
-    public static Intruder create(int x, int y) {
-        return new Intruder(x, y);
+    public static Intruder create(int x, int y, Scenario s) {
+        return new Intruder(x, y, s);
     }
 
     //sets the speed of this intruder and returns the same intruder object back
@@ -149,10 +159,8 @@ public class Intruder extends Agent {
     //Goal: add pre-configured algorithm (e.g. with different constructors), however, currently not implemented
     public Intruder algorithm(Algorithm algorithm) {
         this.algorithm = switch (algorithm.getType()) {
-            case RANDOM -> new RandomMoves(this);
-            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
-
-            default -> new RandomTest(this);
+            case A_STAR -> new AStarGoal(this);
+            default -> new RandomAlt(this);
         };
 
         return this;
@@ -161,10 +169,8 @@ public class Intruder extends Agent {
     //intruder builder method
     public Intruder algorithm(AlgorithmType algorithm) {
         this.algorithm = switch (algorithm) {
-            case RANDOM -> new RandomMoves(this);
-            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
-
-            default -> new RandomTest(this);
+            case A_STAR -> new AStarGoal(this);
+            default -> new RandomAlt(this);
         };
 
         return this;
@@ -186,14 +192,16 @@ public class Intruder extends Agent {
     }
 
     public int intruderInTargetArea() {
+        print("Intruder " + ID + " has got the goods");
         inTargetArea += 1;
         return inTargetArea;
     }
 
     public void killIntruder() {
         if (this.alive) {
-            Scenario.INTRUDERS_CAUGHT++;
+            scenario.INTRUDERS_CAUGHT++;
             this.alive = false;
+            System.out.println("Intruder " + ID + " just got shot");
         }
     }
 
@@ -207,6 +215,8 @@ public class Intruder extends Agent {
                 "ID=" + ID +
                 ", x=" + x +
                 ", y=" + y +
+                ", globalX=" + getX() +
+                ", globalY=" + getY() +
                 ", direction=" + direction +
                 ", speed=" + currentSpeed +
                 ", algorithm=" + algorithm.getType() +

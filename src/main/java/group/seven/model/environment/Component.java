@@ -13,6 +13,10 @@ public record Component(Rectangle area, TileType type, XY exit, Cardinal exitDir
         return exit != null && type == PORTAL;
     }
 
+    public boolean contains(XY xy) {
+        return area().contains(xy.x(), xy.y());
+    }
+
     public int getX(){
         return area().getX();
     }

@@ -4,10 +4,10 @@ import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.environment.Scenario;
 
 public class RandomMoves implements Algorithm {
     private Agent agent;
+
     public RandomMoves(Agent agent) {
         this.agent = agent;
     }
@@ -18,6 +18,7 @@ public class RandomMoves implements Algorithm {
     /**
      * Calculates a random action for a agent where the chance of moving forward has a higher probability
      * then a change in cardinal direction. Move forward = 1/3 - each cardinal change = 1/6
+     *
      * @return a new move with taking into account the max viewing distance if the move is forward
      */
     @Override
@@ -35,8 +36,8 @@ public class RandomMoves implements Algorithm {
         if (randomInt == 3) {
             return new Move(Action.TURN_DOWN, 0, agent);
         } else {
-            int distance = (int) (Math.random() * Scenario.VIEW_DISTANCE);
-            return new Move(Action.MOVE_FORWARD, distance, agent);
+            int distance = (int) (Math.random() * agent.scenario.VIEW_DISTANCE);
+            return new Move(Action.MOVE_FORWARD, (distance == 0 ? 1 : distance), agent);
         }
     }
 

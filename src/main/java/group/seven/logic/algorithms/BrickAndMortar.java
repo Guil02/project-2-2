@@ -6,9 +6,8 @@ import group.seven.enums.Cardinal;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.agents.TileNode;
+import group.seven.model.environment.TileNode;
 import group.seven.model.environment.Adjacent;
-import group.seven.model.environment.Marker;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static group.seven.enums.Action.NOTHING;
 import static group.seven.enums.Action.*;
 import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.MarkerType.*;
@@ -28,11 +26,13 @@ public class BrickAndMortar implements Algorithm {
     private final Agent agent;
     ArrayList<Move> moves = new ArrayList<>();
     private final Cardinal[] orientations = {NORTH, EAST, SOUTH, WEST};
+    private Scenario scenario;
 
 
     public BrickAndMortar(Agent agent) {
         moves.add(new Move(getAction(orientations[agent.getID() % 4]), 0, agent));
         this.agent = agent;
+        scenario = agent.scenario;
     }
 
     /**
@@ -65,7 +65,7 @@ public class BrickAndMortar implements Algorithm {
 
     public XY seeTarget() {
         for (Tile t : agent.getSeenTiles()) {
-            for (Agent a : Scenario.TILE_MAP.agents) {
+            for (Agent a : scenario.TILE_MAP.agents) {
                 if (a.getType() == INTRUDER && a.getX() == t.getX() && a.getY() == t.getY()) {
                     return new XY(a.getX(), a.getY());
                 }
@@ -80,7 +80,7 @@ public class BrickAndMortar implements Algorithm {
      * closure. The moves are added to the move list {@link BrickAndMortar#moves}
      */
     public void BAMWithoutLoopClosure() {
-        TileNode currentTile = agent.getMapPosition(agent.x, agent.y);
+        TileNode currentTile = agent.getMapPosition(agent.getX(), agent.getY()); //TODO I changed in terms of global coords
         Adjacent<TileNode> neighbours = currentTile.getAdjacent();
         D d = countD(neighbours);
 
@@ -113,9 +113,7 @@ public class BrickAndMortar implements Algorithm {
             moves.addAll(pf.findPath());
         } else if (d.exploredTiles > 0) {
 //            choose first direction based upon agent id so not all agent go same direction
-            boolean selectSame = true;
-            if (d.exploredTiles > 1)
-                selectSame = false;
+            boolean selectSame = (d.exploredTiles <= 1);
             int index = agent.getID() % 4;
             TileNode target = chooseTarget(currentTile, index, selectSame);
             AStarPathFinder pf = new AStarPathFinder(agent, new XY(target.getX(), target.getY()));
@@ -188,6 +186,7 @@ public class BrickAndMortar implements Algorithm {
      * @return the amount of adjacent tiles that are visited or a wall
      */
     public int countVisitedAndWalls(TileNode t) {
+        //maybe should distinguish between walls and visited, since visited are at least traversable
         Adjacent<TileNode> a = t.getAdjacent();
         int count = 0;
         if (a.north() != null && (a.north().getType() == WALL || a.north().getExploreType() == VISITED))

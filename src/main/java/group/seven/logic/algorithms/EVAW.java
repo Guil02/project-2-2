@@ -6,13 +6,10 @@ import group.seven.enums.Cardinal;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.agents.TileNode;
+import group.seven.model.environment.TileNode;
 import group.seven.model.environment.Scenario;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static group.seven.enums.AlgorithmType.EVAW;
 import static group.seven.enums.TileType.WALL;
@@ -20,12 +17,19 @@ import static group.seven.enums.TileType.WALL;
 public class EVAW implements Algorithm {
     private Cardinal lastMove = null;
     Agent agent;
+    private Scenario s;
 
     public EVAW(Agent a) {
         this.agent = a;
+        s = a.scenario;
     }
 
-    List<Move> moves = new LinkedList<>();
+//    public EVAW(Agent a, Scenario scenario) {
+//        this.agent = a;
+//        s = scenario;
+//    }
+
+    LinkedList<Move> moves = new LinkedList<>();
 
     /**
      * This method will check if
@@ -40,10 +44,11 @@ public class EVAW implements Algorithm {
         if (moves.isEmpty()) {
             return new Move(Action.NOTHING, 0, agent);
         }
-        Move nextMove = moves.get(0);
-        moves.remove(0);
-        return nextMove;
+//        Move nextMove = moves.get(0);
+//        moves.remove(0);
+//        return nextMove;
 
+        return moves.poll();
     }
 
 
@@ -53,8 +58,8 @@ public class EVAW implements Algorithm {
      * Olivier Buffet and François Charpillet.
      */
     public void calculateMove() {
-        TileNode target = chooseTile(agent.getX(), agent.getY(), 10);
-        Scenario.TILE_MAP.dropPheromone(target.getX(), target.getY());
+        TileNode target = chooseTile(agent.getX(), agent.getY(), 10); //TODO, this is agents global pos
+        s.TILE_MAP.dropPheromone(target.getX(), target.getY());
         AStarPathFinder pf = new AStarPathFinder(agent, new XY(target.getX(), target.getY()));
         moves.addAll(pf.findPath());
     }
@@ -88,8 +93,9 @@ public class EVAW implements Algorithm {
         }
     }
 
+    //receives x and y in global position
     public TileNode chooseTile(int x, int y, int distance) {
-        TileNode target = agent.getMapPosition(x, y);
+        TileNode target = agent.getMapPosition(x, y); //x and y are agent global here
         List<TileNode> choice = new ArrayList<>();
         choice.add(target);
         for (int i = x - distance; i < x + distance; i++) {

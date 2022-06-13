@@ -2,15 +2,27 @@ package group.seven.enums;
 
 import javafx.scene.paint.Color;
 
+import static javafx.scene.paint.Color.*;
+
 /**
  * Represents the type of the tile
  */
 public enum TileType {
-    EMPTY, WALL, SHADED,
-    PORTAL, EXIT_PORTAL,
-    GUARD_SPAWN, INTRUDER_SPAWN,
-    GUARD, INTRUDER,
-    UNKNOWN, TARGET;
+    EMPTY(WHITE), WALL(BLACK), SHADED(SLATEGREY),
+    PORTAL(Color.rgb(142, 68, 173)),
+    EXIT_PORTAL(Color.rgb(175, 79, 154)),
+    GUARD_SPAWN(Color.rgb(95,174,227)),
+    INTRUDER_SPAWN(Color.rgb(230,142,34)),
+    GUARD(Color.rgb(41, 128, 185, 1.0)),
+    INTRUDER(Color.rgb(211, 84, 0)),
+    UNKNOWN(DIMGRAY),
+    TARGET(Color.rgb(39, 174, 96));
+
+    TileType(Color color) {
+        this.color = color;
+    }
+
+    public final Color color;
 
     public boolean isObstacle() {
         return switch (this) {
@@ -19,20 +31,8 @@ public enum TileType {
         };
     }
 
-    //TODO: make these properties of the enums or store in hashmap
     public Color getColor() {
-        return switch (this) {
-            case WALL-> Color.BLACK;
-            case EMPTY -> Color.WHITE;
-            case GUARD -> Color.BLUE;
-            case INTRUDER -> Color.ORANGE;
-            case PORTAL -> Color.PURPLE;
-            case EXIT_PORTAL -> Color.VIOLET;
-            case GUARD_SPAWN -> Color.AQUA;
-            case INTRUDER_SPAWN -> Color.TOMATO;
-            case SHADED -> Color.SLATEGREY;
-            case UNKNOWN -> Color.DIMGRAY;
-            case TARGET -> Color.GREEN;
-        };
+        return color;
     }
+
 }

@@ -1,8 +1,8 @@
 name = mazeTest_MeliTheBest
 height = 105 // height of map in cells (discrete space) or in units of distance (continuous space)
 width = 200 // width of map in cells (discrete space) or in units of distance (continuous space)
-numGuards = 5
-numIntruders = 5 // will be your exploration agents
+numGuards = 2
+numIntruders = 4 // will be your exploration agents
 baseSpeedIntruder = 5 // speed of exploration agents when walking
 baseSpeedGuard = 5
 distanceViewing = 10 // how many cells/units of distance an agent can see features in front of them (except walls or other obstacles are in their way).

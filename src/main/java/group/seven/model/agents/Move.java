@@ -2,8 +2,6 @@ package group.seven.model.agents;
 
 import group.seven.enums.Action;
 
-//public record Move(Action action, int distance, Cardinal direction, Tile destination) { }
-
 /**
  * Simple encoding of a move. All fields are final.
  * All getters automatically generated.
