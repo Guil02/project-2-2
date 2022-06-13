@@ -102,8 +102,8 @@ public class ConeVision implements Vision {
                 int counter = 1;
                 int y_counter = 1;
                 int see_wall = 0;
-                for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
-                    for (int x = xCoordinate + counter; x <= xCoordinate + distance; x++) {
+                for (int x = xCoordinate + counter; x <= xCoordinate + distance; x++) {
+                    for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
                         if (blockedTiles.contains(x)) {
                             break;
                         }
@@ -119,6 +119,7 @@ public class ConeVision implements Vision {
                             }
                         }
                     }
+                    y_counter++;
                 }
             }
             //create rays
@@ -127,8 +128,8 @@ public class ConeVision implements Vision {
                 int counter = 1;
                 int y_counter = 1;
                 int see_wall = 0;
-                for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
-                    for (int x = xCoordinate - counter; x <= xCoordinate - distance; x++) {
+                for (int x = xCoordinate - counter; x >= xCoordinate - distance; x--) {
+                    for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
                         if (blockedTiles.contains(x)) {
                             break;
                         }
@@ -144,6 +145,7 @@ public class ConeVision implements Vision {
                             }
                         }
                     }
+                    y_counter++;
                 }
             }
         }
