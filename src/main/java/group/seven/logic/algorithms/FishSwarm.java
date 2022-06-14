@@ -2,12 +2,12 @@ package group.seven.logic.algorithms;
 
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.TileType;
+import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
-import java.sql.SQLOutput;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +17,7 @@ public class FishSwarm implements Algorithm {
     private final int layerLevels = 2; // levels of neighbours to consider
     private final int F_MAX = 1;
     private final int CROWDING_FACTOR = 2;
+    private final double EPSILON = 0.000001;
     private final double[][] fitnessMap = new double[Scenario.WIDTH][Scenario.HEIGHT];
 
     public FishSwarm(Agent agent) {
@@ -39,17 +40,19 @@ public class FishSwarm implements Algorithm {
 
     @Override
     public Move getNext() {
-        System.out.println("ARE WE AlIVE");
         //TODO: CHECK which mode the fish should be
         if (moves.isEmpty()) {
-            double x_i = getTileValue(new Tile(agent.getX(),agent.getY()));
+            XY agentGlobalPosition = agent.getXY();
+            double x_i = getTileValue(new Tile(agentGlobalPosition.x(),agentGlobalPosition.y()));
             Tile x_c_Tile = getHighestFrontier();
             double x_c = getTileValue(x_c_Tile);
             int fishesInVision = countFishesInVision(agent.getSeenTiles());
             //SWARMING MODE
             //IF f(x_c) > f(x_i) i.e if middle point > current point
-            if (x_c >= x_i) {
+            if (x_c > x_i || Math.abs(x_c - x_i) < EPSILON) {
                 moves.addAll(pathFind(x_c_Tile));
+                System.out.println("Path"+pathFind(x_c_Tile));
+                System.out.println("TILE "+x_c_Tile);
                 System.out.println("WHERE ARE WE 1");
             }
             //CHASING MODE (another fish)
@@ -71,6 +74,9 @@ public class FishSwarm implements Algorithm {
             else if (F_MAX == x_c){
                 moves.addAll(pathFind(x_c_Tile));
                 System.out.println("WHERE ARE WE 4");
+            }
+            if(moves.isEmpty()){
+                System.out.println();
             }
         }
         System.out.println("MOVE "+moves);
@@ -203,12 +209,17 @@ public class FishSwarm implements Algorithm {
     public Tile getHighestFrontier(){
         int random = (int) Math.random()*agent.getSeenTiles().size();
         Tile max = agent.getSeenTiles().get(random);
+        while (max.getXY().equalsWithinRange(agent.getXY(),0)) {
+            random = (int) Math.random()*agent.getSeenTiles().size();
+            max = agent.getSeenTiles().get(random);
+        }
         for (Tile tile : agent.getSeenTiles()) {
             if (tile.getType() == TileType.INTRUDER) {
                 return tile;
             }
             if (getTileValue(tile) > getTileValue(max)){
-                max = tile;
+                if (tile.getXY().equalsWithinRange(agent.getXY(),0))
+                    max = tile;
             }
         }
         return max;
