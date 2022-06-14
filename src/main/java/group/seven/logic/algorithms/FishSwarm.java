@@ -14,22 +14,22 @@ import java.util.List;
 public class FishSwarm implements Algorithm {
     Agent agent;
     LinkedList<Move> moves = new LinkedList<>();
+    private final int layerLevels = 2; // levels of neighbours to consider
     private final int F_MAX = 1;
     private final int CROWDING_FACTOR = 2;
-    private final int[][] fitnessMap = new int[Scenario.WIDTH][Scenario.HEIGHT];
-    private final int layerLevels = 1; // levels of neighbours to consider
+    private final double[][] fitnessMap = new double[Scenario.WIDTH][Scenario.HEIGHT];
 
     public FishSwarm(Agent agent) {
         this.agent = agent;
         calculateFitness();
 
     //  TESTING PURPOSES
-    //    for (int i = 0; i<fitnessMap[0].length; i++) {
-    //        for (int j = 0; j<fitnessMap[1].length; j++) {
-    //            System.out.print(" "+fitnessMap[i][j]+" ");
-    //        }
-    //        System.out.println();
-    //    }
+        for (int i = 0; i<fitnessMap[0].length; i++) {
+            for (int j = 0; j<fitnessMap[1].length; j++) {
+                System.out.print(" "+fitnessMap[i][j]+" ");
+            }
+            System.out.println();
+        }
     }
 
     @Override
@@ -39,25 +39,30 @@ public class FishSwarm implements Algorithm {
 
     @Override
     public Move getNext() {
+        System.out.println("ARE WE AlIVE");
         //TODO: CHECK which mode the fish should be
         if (moves.isEmpty()) {
-            int x_i = getTileValue(new Tile(agent.getX(),agent.getY()));
+            double x_i = getTileValue(new Tile(agent.getX(),agent.getY()));
             Tile x_c_Tile = getHighestFrontier();
-            int x_c = getTileValue(x_c_Tile);
+            double x_c = getTileValue(x_c_Tile);
             int fishesInVision = countFishesInVision(agent.getSeenTiles());
             //SWARMING MODE
             //IF f(x_c) > f(x_i) i.e if middle point > current point
-            if (x_c > x_i) {
+            if (x_c >= x_i) {
                 moves.addAll(pathFind(x_c_Tile));
+                System.out.println("WHERE ARE WE 1");
             }
             //CHASING MODE (another fish)
             //IF f(x_max > f(x_i) and there exists a fish in the visual field --> follow fish
             else if (F_MAX > x_i && fishesInVision!=0) {
                 //IF not to crowded follow otherwise escape
-                if (fishesInVision < CROWDING_FACTOR )
+                if (fishesInVision < CROWDING_FACTOR ) {
                     moves.addAll(chasingMode(agent.getSeenTiles()));
+                    System.out.println("WHERE ARE WE 2");
+                }
                 else {
                     //too crowded return random move
+                    System.out.println("WHERE ARE WE 3");
                     return new RandomMoves(agent).getNext();
                 }
             }
@@ -65,9 +70,10 @@ public class FishSwarm implements Algorithm {
             //IF f(x_max) == f(x_c) i.e Intruder seen
             else if (F_MAX == x_c){
                 moves.addAll(pathFind(x_c_Tile));
+                System.out.println("WHERE ARE WE 4");
             }
         }
-
+        System.out.println("MOVE "+moves);
         return moves.poll();
 
     }
@@ -89,7 +95,6 @@ public class FishSwarm implements Algorithm {
     }
 
     public List<Move> chasingMode(List<Tile> vision) {
-        //TODO: ensure that vision is ordered
         for (Tile tile : vision) {
             if (tile.getType() == TileType.GUARD) {
                 return pathFind(tile);
@@ -99,11 +104,15 @@ public class FishSwarm implements Algorithm {
         return null;
     }
 
-    public int getTileValue(Tile tile){
+    public double getTileValue(Tile tile){
+        if (tile.getType() == TileType.INTRUDER) {
+            return 1;
+        }
         return fitnessMap[tile.getX()][tile.getY()];
     }
 
     public void calculateFitness() {
+        double maxVal = 0;
         int numberOfNeighbours = layerLevels*8;
         for (int x = 0; x < fitnessMap[0].length; x++) {
             for (int y = 0; y < fitnessMap[1].length; y++) {
@@ -116,6 +125,20 @@ public class FishSwarm implements Algorithm {
                     }
                     int walls = countWalls(neighbours);
                     fitnessMap[y][x] = numberOfNeighbours- walls;
+                    if (fitnessMap[y][x] > maxVal) {
+                        maxVal = fitnessMap[y][x];
+                    }
+                }
+            }
+        }
+        //normalize fitness
+        for (int x = 0; x < fitnessMap[0].length; x++) {
+            for (int y = 0; y < fitnessMap[1].length; y++) {
+                if (fitnessMap[y][x] == maxVal) {
+                    fitnessMap[y][x] = (fitnessMap[y][x] / maxVal) - 0.00001;
+                }
+                else {
+                    fitnessMap[y][x] = fitnessMap[y][x] / maxVal;
                 }
             }
         }
@@ -178,8 +201,12 @@ public class FishSwarm implements Algorithm {
 
     //TODO: check agent class, and connect the frontier to vision
     public Tile getHighestFrontier(){
-        Tile max = agent.getSeenFurthestTiles().get(0);
-        for (Tile tile : agent.getSeenFurthestTiles()) {
+        int random = (int) Math.random()*agent.getSeenTiles().size();
+        Tile max = agent.getSeenTiles().get(random);
+        for (Tile tile : agent.getSeenTiles()) {
+            if (tile.getType() == TileType.INTRUDER) {
+                return tile;
+            }
             if (getTileValue(tile) > getTileValue(max)){
                 max = tile;
             }
