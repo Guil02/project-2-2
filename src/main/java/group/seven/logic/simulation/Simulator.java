@@ -27,18 +27,18 @@ import static group.seven.enums.TileType.*;
 import static group.seven.utils.Methods.print;
 
 public class Simulator extends AnimationTimer {
+    public static final int maxTime = Config.MAX_GAME_LENGTH;
     public static Random rand = new Random();
-    private SimulationScreen display = null;
-    private int count = 0;
-    private long prev; //used for frame-rate calculation (eventually)
-    double elapsedTimeSteps;
+    public static Status status;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
     final boolean guiMode = true;
     final int RANGE_TO_CATCH_INTRUDER = 5;
     final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
-
-    public static Status status;
     public Scenario scenario;
+    double elapsedTimeSteps;
+    private SimulationScreen display = null;
+    private int count = 0;
+    private long prev; //used for frame-rate calculation (eventually)
 
     public Simulator(Scenario scenario) {
         this.scenario = scenario;
@@ -47,22 +47,37 @@ public class Simulator extends AnimationTimer {
         spawnAgents(scenario.GUARD_GAME_MODE);
 
         elapsedTimeSteps = 0;
-        if (guiMode) {
+        if (Config.GUI_ON) {
             display = new SimulationScreen(this);
             Main.stage.setScene(new Scene(display));
             Main.stage.centerOnScreen();
         }
         //Either there's a bug in my GUI or in the Vision or in the way agents vision is tracked/stored
         //Arrays.stream(TILE_MAP.agents).forEach(Agent::updateVision);
-        if (guiMode) {
+        if (Config.GUI_ON) {
             display.render();
         }
         prev = System.nanoTime();
-        if (guiMode) {
+        if (Config.GUI_ON) {
             start();
         }
 
+        if (!Config.GUI_ON) {
+            runSimulation();
+        }
+
         status = Status.RUNNING;
+    }
+
+    /**
+     * This is the main simulation loop, similar too {@link Simulator#handle(long)}
+     * The only difference is that it runs without the GUI.
+     */
+    private void runSimulation() {
+        while (count < maxTime) {
+            count++;
+            update();
+        }
     }
 
     public void pause() {

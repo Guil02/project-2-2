@@ -14,6 +14,11 @@ public class Config {
     public static boolean LOG_DATA = false;
     public static AlgorithmType ALGORITHM_GUARD = AlgorithmType.RANDOM;
     public static AlgorithmType ALGORITHM_INTRUDER = AlgorithmType.A_STAR;
+
+    public static boolean GUI_ON = false;
+    public static boolean GA_ON = true;
+
+    public static int MAX_GAME_LENGTH = 1000;
     public static GameMode GAMEMODE;
 
 }

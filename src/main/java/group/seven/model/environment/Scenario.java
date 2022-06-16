@@ -1,7 +1,9 @@
 package group.seven.model.environment;
 
 import group.seven.enums.GameMode;
+import group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm;
 import group.seven.logic.geometric.Rectangle;
+import group.seven.utils.Methods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,11 @@ import static group.seven.enums.GameMode.ALL_INTRUDER_AT_TARGET;
 import static group.seven.enums.TileType.*;
 
 public class Scenario {
+    public final List<Component> walls = new ArrayList<>(20);
+    public final List<Component> shadedAreas = new ArrayList<>();
+    public final List<Component> portals = new ArrayList<>();
+    //replaced the get static component's method with a list containing them instead
+    public final List<Component> COMPONENTS = new ArrayList<>(30);
     public GameMode GUARD_GAME_MODE = ALL_INTRUDERS_CAUGHT;
     public GameMode INTRUDER_GAME_MODE = ALL_INTRUDER_AT_TARGET;
     public String NAME = "untitled map";
@@ -26,18 +33,11 @@ public class Scenario {
     public Component targetArea = new Component(new Rectangle(), TARGET, null, null);
     public Component intruderSpawnArea = new Component(new Rectangle(), INTRUDER_SPAWN, null, null);
     public Component guardSpawnArea = new Component(new Rectangle(), GUARD_SPAWN, null, null);
-
     public int INTRUDERS_CAUGHT = 0;
     public int INTRUDERS_AT_TARGET = 0;
-
-    public final List<Component> walls = new ArrayList<>(20);
-    public final List<Component> shadedAreas = new ArrayList<>();
-    public final List<Component> portals = new ArrayList<>();
-
-    //replaced the get static component's method with a list containing them instead
-    public final List<Component> COMPONENTS = new ArrayList<>(30);
-
     public TileMap TILE_MAP;
+
+    public List<Double> chromosome = Methods.readGAWeights(GeneticAlgorithm.fileName).get(0);
 
     public Scenario() {
 //        SCENARIO = this;//empty constructor used by ScenarioBuilder
@@ -57,5 +57,13 @@ public class Scenario {
 
     public TileMap getTileMap() {
         return TILE_MAP;
+    }
+
+    public List<Double> getChromosome() {
+        return chromosome;
+    }
+
+    public void setChromosome(List<Double> chromosome) {
+        this.chromosome = chromosome;
     }
 }

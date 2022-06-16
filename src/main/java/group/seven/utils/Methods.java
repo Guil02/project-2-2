@@ -3,8 +3,9 @@ package group.seven.utils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Methods {
 
@@ -63,7 +64,64 @@ public class Methods {
      * @param fileName the path to the file containing the weights of the GA
      * @return a list containing the chromosome for each individual
      */
-    public static ArrayList<ArrayList<Double>> readGAWeights(String fileName) {
-        throw new UnsupportedOperationException("Operation not implemented yet");
+    public static List<List<Double>> readGAWeights(String fileName) {
+        List<List<Double>> weights = new ArrayList<>();
+        String line;
+        try {
+            BufferedReader bufferreader = new BufferedReader(new FileReader(fileName));
+            while ((line = bufferreader.readLine()) != null) {
+                if (line.charAt(0) == 'W') {
+                    weights.add(makeList(line));
+                }
+            }
+
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return weights;
+    }
+
+    private static ArrayList<Double> makeList(String s) {
+        ArrayList<Double> weights = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder(s);
+        StringBuilder st = new StringBuilder();//TODO ADD TO LIST
+
+
+        for (int i = 16; i < stringBuilder.length(); i++) {
+            char nextChar = stringBuilder.charAt(i);
+            switch (nextChar) {
+                case '[', ' ', ':':
+                    break;
+                case ',', ']':
+                    weights.add(Double.parseDouble(st.toString()));
+                    st = new StringBuilder();
+                    System.out.println();
+                    break;
+                default:
+                    st.append(nextChar);
+                    System.out.print(nextChar);
+            }
+        }
+
+
+        return weights;
+    }
+
+    public static void writeWeights(List<List<Double>> weights, String path) {
+        try (FileWriter fileWriter = new FileWriter(path, true)) {
+            fileWriter.write("NEW ITERATION: \n");
+            for (List<Double> t : weights) {
+                for (Double weight : t) {
+                    fileWriter.write(weight + ", ");
+                }
+                fileWriter.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

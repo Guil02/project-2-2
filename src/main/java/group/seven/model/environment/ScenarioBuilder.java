@@ -1,10 +1,12 @@
 package group.seven.model.environment;
 
 import group.seven.enums.GameMode;
+import group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
 import group.seven.logic.simulation.CollisionHandler;
 import group.seven.utils.Config;
+import group.seven.utils.Methods;
 import javafx.util.Builder;
 
 import java.io.File;
@@ -57,6 +59,7 @@ public class ScenarioBuilder implements Builder<Scenario> {
         initMap();
         fillMap();
         setAdjacent();
+        scenario.setChromosome(Methods.readGAWeights(GeneticAlgorithm.fileName).get(0));
         return scenario;
     }
 

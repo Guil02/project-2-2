@@ -29,7 +29,7 @@ public class Population {
     }
 
     private void readInWeights() {
-        ArrayList<ArrayList<Double>> weights = Methods.readGAWeights(fileName);
+        List<List<Double>> weights = Methods.readGAWeights(fileName);
         throw new UnsupportedOperationException("Operation not implemented yet");
     }
 
