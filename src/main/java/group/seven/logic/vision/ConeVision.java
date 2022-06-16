@@ -37,8 +37,9 @@ public class ConeVision implements Vision {
     @Override
     public List<Tile> updateAndGetVisionAgent(Agent agent) {
         List<Tile> observedTiles = new LinkedList<>();
-        int xCoordinate = agent.getX();
-        int yCoordinate = agent.getY();
+        XY globalCoordinates = agent.getXY();
+        int xCoordinate = globalCoordinates.x();
+        int yCoordinate = globalCoordinates.y();
         int distance = Scenario.VIEW_DISTANCE;   // shortens the view distance if wall is encountered
         Cardinal directionAgent = agent.getDirection();
 
@@ -160,8 +161,6 @@ public class ConeVision implements Vision {
             }
         }
 
-        System.out.println("Size "+observedTiles.size());
-        System.out.println("count "+counterBIG);
         counterBIG++;
         return observedTiles;
     }

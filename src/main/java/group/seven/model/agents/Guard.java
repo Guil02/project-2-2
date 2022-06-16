@@ -69,6 +69,7 @@ public class Guard extends Agent {
 
     @Override
     public void updateVision() {
+        seenTiles.clear();
         List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
         seenTiles = duplicatedTiles(seenTiles, newTiles);
         //print(seenTiles);

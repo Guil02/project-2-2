@@ -82,6 +82,16 @@ public abstract class Agent {
             case TURN_DOWN -> direction = SOUTH;
             case TURN_LEFT -> direction = WEST;
             case TURN_RIGHT -> direction = EAST;
+            case FLIP -> {
+                if (this.direction == NORTH)
+                    direction = SOUTH;
+                else if (this.direction == SOUTH)
+                    direction = NORTH;
+                else if (this.direction == EAST)
+                    direction = WEST;
+                else
+                    direction = EAST;
+            }
         }
     }
 
@@ -202,6 +212,16 @@ public abstract class Agent {
             case TURN_DOWN -> direction = SOUTH;
             case TURN_LEFT -> direction = WEST;
             case TURN_RIGHT -> direction = EAST;
+            case FLIP -> {
+                if (this.direction == NORTH)
+                    direction = SOUTH;
+                else if (this.direction == SOUTH)
+                    direction = NORTH;
+                else if (this.direction == EAST)
+                    direction = WEST;
+                else
+                    direction = EAST;
+            }
         }
 
         update();

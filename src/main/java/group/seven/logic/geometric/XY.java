@@ -25,4 +25,8 @@ public record XY(int x, int y) {
         return distance <= range;
     }
 
+    public boolean equals(XY xy) {
+        return this.x() == xy.x() && this.y() == xy.y();
+    }
+
 }
