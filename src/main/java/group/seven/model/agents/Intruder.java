@@ -41,7 +41,6 @@ public class Intruder extends Agent {
         this(x, y, s);
         //this.algorithm = algorithm;
         updateOrientationToGoal();
-
     }
 
     public Intruder(int x, int y, Scenario s) {
@@ -80,8 +79,7 @@ public class Intruder extends Agent {
 
 //       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX() ,this.getY(), x, y); //todo changed to match frame
         //I think the parameter order might have been wrong
-        this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX(), x, this.getY(), y); //todo changed to match frame
-
+        this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, agentGlobal.x(), x, agentGlobal.y(), y); //todo changed to match frame
     }
 
     public Cardinal getOrientationToGoal() {
@@ -192,16 +190,17 @@ public class Intruder extends Agent {
     }
 
     public int intruderInTargetArea() {
-        print("Intruder " + ID + " has got the goods");
+        print("Intruder " + ID + " has coolin");
         inTargetArea += 1;
         return inTargetArea;
     }
 
     public void killIntruder() {
-        if (this.alive) {
-            scenario.INTRUDERS_CAUGHT++;
-            this.alive = false;
+        if (alive) {
+            //scenario.INTRUDERS_CAUGHT++;
+            alive = false;
             System.out.println("Intruder " + ID + " just got shot");
+            scenario.removeIntruder(this);
         }
     }
 

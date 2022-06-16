@@ -2,13 +2,18 @@ package group.seven.model.environment;
 
 import group.seven.enums.GameMode;
 import group.seven.logic.geometric.Rectangle;
+import group.seven.model.agents.Agent;
+import group.seven.model.agents.Intruder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static group.seven.enums.GameMode.ALL_INTRUDERS_CAUGHT;
 import static group.seven.enums.GameMode.ALL_INTRUDER_AT_TARGET;
 import static group.seven.enums.TileType.*;
+import static group.seven.utils.Methods.print;
 
 public class Scenario {
     public GameMode GUARD_GAME_MODE = ALL_INTRUDERS_CAUGHT;
@@ -36,8 +41,10 @@ public class Scenario {
 
     //replaced the get static component's method with a list containing them instead
     public final List<Component> COMPONENTS = new ArrayList<>(30);
+    public final Set<Agent> agents = new HashSet<>();
 
     public TileMap TILE_MAP;
+    private long currentTime;
 
     public Scenario() {
 //        SCENARIO = this;//empty constructor used by ScenarioBuilder
@@ -57,5 +64,15 @@ public class Scenario {
 
     public TileMap getTileMap() {
         return TILE_MAP;
+    }
+
+    public void removeIntruder(Intruder intruder) {
+        agents.remove(intruder);
+        INTRUDERS_CAUGHT++;
+        print("Intruders caught: " + INTRUDERS_CAUGHT + "\t agents left: " + agents.size(), true);
+    }
+
+    public long currentTime() {
+        return currentTime;
     }
 }

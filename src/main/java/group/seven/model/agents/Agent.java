@@ -35,6 +35,7 @@ public abstract class Agent {
     boolean ignorePortal = false;
     boolean isTeleported = false;
     public Scenario scenario;
+    private double currentTime = 0;
 
     //Current Speed
     //Strategy
@@ -319,4 +320,11 @@ public abstract class Agent {
         return this.markers;
     }
 
+    public double getTime() {
+        return currentTime;
+    }
+
+    public void setTime(double elapsedTimeSteps) {
+        currentTime = elapsedTimeSteps;
+    }
 }

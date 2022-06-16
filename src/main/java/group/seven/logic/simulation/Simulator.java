@@ -33,8 +33,8 @@ public class Simulator extends AnimationTimer {
     private long prev; //used for frame-rate calculation (eventually)
     double elapsedTimeSteps;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
-    final boolean guiMode = true;
-    final int RANGE_TO_CATCH_INTRUDER = 5;
+    boolean guiMode = Config.GUI_MODE;
+    final int RANGE_TO_CATCH_INTRUDER = 1;
     final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
 
     public static Status status;
@@ -45,6 +45,7 @@ public class Simulator extends AnimationTimer {
         rand = new Random();
 
         spawnAgents(scenario.GUARD_GAME_MODE);
+        print(scenario.agents.size(), true);
 
         elapsedTimeSteps = 0;
         if (guiMode) {
@@ -63,6 +64,7 @@ public class Simulator extends AnimationTimer {
         }
 
         status = Status.RUNNING;
+        print("Started : " + scenario.NAME + "\n");
     }
 
     public void pause() {
@@ -86,12 +88,17 @@ public class Simulator extends AnimationTimer {
             display.render();   //update GUI
             elapsedTimeSteps += timeStep; //update elapsed time steps
         }
+        System.out.print("\rElapsed Time Steps: " + elapsedTimeSteps + "\t framerate: " + ((double) now - prev) / 1e9);
 
-        //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
-        if (((int) elapsedTimeSteps) % 10 == 0) {
-            Tuple<Double, Double> coverage = calculateCoverage();
-            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
-        }
+
+//        //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
+//        if (((int) elapsedTimeSteps) % 10 == 0) {
+//            Tuple<Double, Double> coverage = calculateCoverage();
+//            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
+//        }
+
+        for (Agent a : scenario.agents)
+            a.setTime(elapsedTimeSteps);
 
         //TODO: implement GameOver condition checking
         if (count > 100000) stop();
@@ -127,7 +134,7 @@ public class Simulator extends AnimationTimer {
 
                 case ALL_INTRUDER_AT_TARGET -> {
                     if (scenario.INTRUDERS_AT_TARGET == scenario.NUM_INTRUDERS) {
-                        status = Status.GUARD_WIN;
+                        status = Status.INTRUDER_WIN;
                         return true;
                     }
                 }
@@ -312,9 +319,8 @@ public class Simulator extends AnimationTimer {
             print("added " + agentType.name() + " : " + agent.getID());
             System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
             i++;
+            scenario.agents.add(agent);
         }
-
-
     }
 
     //we don't really need to calculate the total grids every time

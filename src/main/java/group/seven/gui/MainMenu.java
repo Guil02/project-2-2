@@ -149,12 +149,18 @@ public class MainMenu {
         messageLabel.setText("");
         logDataChoice.setOnAction(event -> Config.LOG_DATA = !Config.LOG_DATA);
 
-        mapLibrary = new LinkedHashMap<>(3);
+        mapLibrary = new LinkedHashMap<>(4);
         mapLibrary.put("biggerTestMap.txt", new Image("/img/biggerTestMap.png"));
+        mapLibrary.put("mazeMap.txt", new Image("/img/examinermap_phase1.png"));
+        mapLibrary.put("small_map.txt", new Image("/img/small_map.png"));
+        mapLibrary.put("tiny.txt", new Image("/img/tiny.png"));
         mapLibrary.put("testmap.txt", new Image("/img/testmap.png"));
         mapLibrary.put("examinermap_phase1.txt", new Image("/img/examinermap_phase1.png"));
 
         maps.add("biggerTestMap.txt");
+        maps.add("mazeMap.txt");
+        maps.add("small_map.txt");
+        maps.add("tiny.txt");
         maps.add("testmap.txt");
         maps.add("examinermap_phase1.txt");
 

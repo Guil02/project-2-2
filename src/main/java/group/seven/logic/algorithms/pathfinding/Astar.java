@@ -123,6 +123,7 @@ public class Astar implements Algorithm {
             System.out.println(angle);
         }
 
+
         return new Move(Action.NOTHING, 0, agent);
     }
 

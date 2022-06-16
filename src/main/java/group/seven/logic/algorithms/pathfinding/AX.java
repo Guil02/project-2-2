@@ -33,10 +33,10 @@ public class AX {
         open.add(start);
 
         while (open.size() > 0) {
-            ANode current = open.poll();
-            closed.add(current);
+            ANode current = open.poll(); //retrieve next node from open list
+            closed.add(current); //mark as evaluated
 
-            if (current.equals(target))
+            if (current.equals(target)) //TODO if current at goal
                 break;
 
             //get neighbours
@@ -47,7 +47,6 @@ public class AX {
 
                 if (nX < 0 || nY < 0 || nX > scenario.TILE_MAP.map.length || nY > scenario.TILE_MAP.map[0].length) {
                     ANode neighbor = new ANode(nX, nY);
-
                 }
             }
         }

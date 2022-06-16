@@ -18,6 +18,10 @@ public class Vector extends Point2D implements VectorPoint {
         super(x, y);
     }
 
+    public Vector(XY xy) {
+        super(xy.x(), xy.y());
+    }
+
     public XY getXY() {
         return new XY(this);
     }
