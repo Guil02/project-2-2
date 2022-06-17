@@ -6,28 +6,37 @@ import group.seven.enums.TileType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
+import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class FishSwarm implements Algorithm {
     private final int layerLevels = 2; // levels of neighbours to consider
-    private final int F_MAX = 1;
+    private final int F_MAX = 201;
     private final int CROWDING_FACTOR = 5;
-    private final double EPSILON = 0.000001;
-    private final double min = -1 * 8 * layerLevels;
-    private final double max = 8 * layerLevels;
-    private final double[][] fitnessMap;
+    //private final double EPSILON = 0.000001;
+    //private final double min = -1 * 8 * layerLevels;
+    //private final double max = 8 * layerLevels;
+    private final int[][] fitnessMap;
+    private final int maxValueFitness = 8*layerLevels;
     Agent agent;
     LinkedList<Move> moves = new LinkedList<>();
     //private final double[][] fitnessMap = new double[Scenario.HEIGHT][Scenario.WIDTH];
+    private final Queue<Tile> shortTermMemory;
+    private int numberOfTilesInVision;
+    private final int maxHCost;
+
+
 
     public FishSwarm(Agent agent) {
         this.agent = agent;
-        fitnessMap = new double[agent.scenario.WIDTH][agent.scenario.HEIGHT];
+        fitnessMap = new int[agent.scenario.WIDTH][agent.scenario.HEIGHT];
         calculateFitness();
+        maxHCost = calculateMaxHCost();
+        shortTermMemory = new CircularFifoQueue<Tile>(16*(numberOfTilesInVision));
+
         //  TESTING PURPOSES
         for (int i = 0; i < fitnessMap[0].length; i++) {
             for (int j = 0; j < fitnessMap[1].length; j++) {
@@ -44,6 +53,9 @@ public class FishSwarm implements Algorithm {
 
     @Override
     public Move getNext() {
+        Tile current = new Tile(agent.getXY().x(),agent.getXY().y(), agent.scenario);
+        shortTermMemory.add(current);
+        shortTermMemory.addAll(neighbours(current));
 
         //TODO: CHECK which mode the fish should be
         if (moves.isEmpty()) {
@@ -56,7 +68,7 @@ public class FishSwarm implements Algorithm {
             }
             XY agentGlobalPosition = agent.getXY();
             double x_i = getTileValue(new Tile(agentGlobalPosition.x(), agentGlobalPosition.y(), agent.scenario));
-            Tile x_c_Tile = getHighestFrontier();
+            Tile x_c_Tile = getHighestFrontier(agent.getSeenTiles());
             double x_c = getTileValue(x_c_Tile);
             int fishesInVision = countFishesInVision(agent.getSeenTiles());
 
@@ -101,7 +113,6 @@ public class FishSwarm implements Algorithm {
     private int countFishesInVision(List<Tile> seenTiles) {
         int seenFishes = 0;
         for (Tile tile : seenTiles) {
-            //TODO: This doesn't work - look in global map to see if Guard
             for (Agent potentialGuard : agent.scenario.TILE_MAP.agents) {
                 if (potentialGuard.getType() == TileType.GUARD && potentialGuard.getXY().equals(tile.getXY())) {
                     seenFishes++;
@@ -130,17 +141,35 @@ public class FishSwarm implements Algorithm {
     }
 
     public double getTileValue(Tile tile) {
-        if (tile.getType() == TileType.INTRUDER) {
-            return 1;
+        int tileValue = getFitnessValue(tile) + calculateHCost(tile, new Tile(agent.getXY().x(), agent.getXY().y(), agent.scenario));
+
+        for (Agent potentialIntruder : agent.scenario.TILE_MAP.agents) {
+            if (potentialIntruder.getType() == TileType.INTRUDER && potentialIntruder.getXY().equals(tile.getXY())) {
+                tileValue = F_MAX;
+            }
         }
-        return fitnessMap[tile.getX()][tile.getY()];
+        return tileValue;
+    }
+
+    public int getFitnessValue(Tile tile){
+        int fitnessValue =  fitnessMap[tile.getX()][tile.getY()];
+        //System.out.println("Fitness Value "+fitnessValue);
+        int normalizedFitnessValue = (fitnessValue*100)/maxValueFitness;
+        //System.out.println("Fitness Value Normalized "+ normalizedFitnessValue );
+        return  normalizedFitnessValue;
+    }
+
+    public int calculateHCost(Tile tile, Tile tileAgent) {
+        int hCost = (Math.abs((tile.getXY().x()) - tileAgent.getXY().x()) + Math.abs(tile.getXY().y() - tileAgent.getXY().y()));
+        int normalizedHCost = (hCost*100)/maxHCost;
+        return normalizedHCost;
     }
 
     public void calculateFitness() {
         double maxVal = 0;
         int numberOfNeighbours = layerLevels * 8;
-        for (int x = 0; x < fitnessMap[0].length; x++) {
-            for (int y = 0; y < fitnessMap[1].length; y++) {
+        for (int x = 0; x < fitnessMap.length; x++) {
+            for (int y = 0; y < fitnessMap[0].length; y++) {
                 //loop through the levels of layers
                 List<Tile> neighbours = new LinkedList<>();
                 if (agent.scenario.TILE_MAP.getTile(x, y).getType() != TileType.WALL) {
@@ -149,15 +178,15 @@ public class FishSwarm implements Algorithm {
                         neighbours.addAll(traverseNeighbours(agent.scenario.TILE_MAP.getTile(x, y), layer));
                     }
                     int walls = countWalls(neighbours);
-                    double random = (Math.round(Math.random() * (max - min + 1) + min));
-                    fitnessMap[y][x] = numberOfNeighbours - walls + random;
-                    if (fitnessMap[y][x] > maxVal) {
-                        maxVal = fitnessMap[y][x];
+                   // double random = (Math.round(Math.random() * (max - min + 1) + min));
+                    fitnessMap[x][y] = Math.round(numberOfNeighbours - walls);// + random);
+                    if (fitnessMap[x][y] > maxVal) {
+                        maxVal = fitnessMap[x][y];
                     }
                 }
             }
         }
-        //normalize fitness
+        /**normalize fitness
         for (int x = 0; x < fitnessMap[0].length; x++) {
             for (int y = 0; y < fitnessMap[1].length; y++) {
                 if (fitnessMap[y][x] == maxVal) {
@@ -166,7 +195,7 @@ public class FishSwarm implements Algorithm {
                     fitnessMap[y][x] = fitnessMap[y][x] / maxVal;
                 }
             }
-        }
+        }*/
     }
 
     public List<Tile> traverseNeighbours(Tile current, int layer) {
@@ -224,7 +253,7 @@ public class FishSwarm implements Algorithm {
         return numberOfWalls;
     }
 
-    public Tile getHighestFrontier() {
+    public Tile getHighestFrontierOLD() {
         Random rand = new Random();
         Tile max = agent.getSeenTiles().get(rand.nextInt(agent.getSeenTiles().size()));
         for (Tile tile : agent.getSeenTiles()) {
@@ -235,5 +264,63 @@ public class FishSwarm implements Algorithm {
             }
         }
         return max;
+    }
+    public Tile getHighestFrontier(List<Tile> vision){
+        XY coordinates = agent.getXY();
+        Random rand = new Random();
+        Tile max = agent.getSeenTiles().get(rand.nextInt(agent.getSeenTiles().size()));
+        Tile secondHighest = agent.getSeenTiles().get(rand.nextInt(agent.getSeenTiles().size()));
+        for (Tile tile : vision) {
+            if (tile.getType() == TileType.INTRUDER) {
+                return tile;
+            }
+            System.out.println("TILE " + getTileValue(tile));
+            System.out.println("MAX " + getTileValue(max));
+            if (getTileValue(tile) > getTileValue(max)) {
+                secondHighest = max;
+                max = tile;
+            }
+        }
+        if (!(shortTermMemory.contains(max))) {
+            return max;
+        }
+        else if (!(shortTermMemory.contains(secondHighest))) {
+            return secondHighest;
+        }
+        else {
+            List<Tile> adaptedVision = agent.getSeenTiles();
+            adaptedVision.remove(max);
+            adaptedVision.remove(secondHighest);
+            return getHighestFrontier(adaptedVision);
+        }
+    }
+
+    public int calculateMaxHCost() {
+        int lastRow = 1+(2* agent.scenario.VIEW_DISTANCE);
+        numberOfTilesInVision = agent.scenario.VIEW_DISTANCE+1 + (agent.scenario.VIEW_DISTANCE*(agent.scenario.VIEW_DISTANCE+1));
+        System.out.println("MAX H COST "+Math.abs((lastRow/2)+agent.scenario.VIEW_DISTANCE+1));
+        return Math.abs((lastRow/2)+agent.scenario.VIEW_DISTANCE+1);
+    }
+
+    public List<Tile> neighbours(Tile tile) {
+        int x = tile.getX();
+        int y = tile.getY();
+        List<Tile> neighbours = new ArrayList<>();
+        for (int i = -2; i < 3; i++) {
+            if(i != 0) {
+                Tile neighbor1 = new Tile(x + i, y, agent.scenario);
+                Tile neighbor2 = new Tile(x, y+i, agent.scenario);
+                if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x > 0 && y > 0) {
+                    if (!neighbours.contains(neighbor1))
+                        neighbours.add(neighbor1);
+
+                }
+                if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x > 0 && y > 0) {
+                    if (!neighbours.contains(neighbor2))
+                        neighbours.add(neighbor2);
+                }
+            }
+        }
+        return neighbours;
     }
 }
