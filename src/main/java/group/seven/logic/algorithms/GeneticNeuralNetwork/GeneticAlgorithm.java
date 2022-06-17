@@ -24,7 +24,7 @@ public class GeneticAlgorithm {
     static final double mutationRate = 0.05;
     static final int amountOfGenerations = 10;
     static final int maxTime = 1000;
-    static final int amountToStore = 1;
+    static final int amountToStore = populationSize;
     private final Population population;
 
     public GeneticAlgorithm() {
