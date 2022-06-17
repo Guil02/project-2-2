@@ -38,9 +38,6 @@ public class AntsPursuit implements Algorithm {
             return new Move(Action.NOTHING, 0, agent);
         }
 
-
-//        Move nextMove = moves.get(0);
-//        moves.remove(0);
         return moves.poll();
     }
 
@@ -54,7 +51,6 @@ public class AntsPursuit implements Algorithm {
             }
         }
 
-        //tODO: not sure if makes sense with coordinate transform cuz that's an valid coordinate
         return new XY(-1, -1);
     }
 

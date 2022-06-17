@@ -12,7 +12,7 @@ public enum AlgorithmType {
     public static AlgorithmType getEnum(String name) {
         return switch (name) {
             case "A*" -> A_STAR;
-//            case "A*" -> A_STAR_ALT;
+            case "A* Alt" -> A_STAR_ALT;
             case "Brick And Mortar" -> BRICK_AND_MORTAR;
             case "Ant Pursuit" -> ANT_PURSUIT;
             default -> RANDOM;

@@ -187,6 +187,7 @@ public class MainMenu {
 
         chosenIntruder.getItems().addAll(
                 "A*",
+                "A* Alt",
                 "Random"
         );
 

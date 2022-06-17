@@ -96,6 +96,6 @@ public class AIStar implements Algorithm {
 
     @Override
     public AlgorithmType getType() {
-        return AlgorithmType.A_STAR_ALT;
+        return null;//AlgorithmType.A_STAR_ALT;
     }
 }

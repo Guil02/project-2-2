@@ -126,6 +126,6 @@ public class TileMap {
     }
 
     public Tile getTile(XY xy) {
-        return map[xy.x()][xy.y()];
+        return getTile(xy.x(), xy.y());
     }
 }
