@@ -18,6 +18,10 @@ public class Vector extends Point2D implements VectorPoint {
         super(x, y);
     }
 
+    public XY getXY() {
+        return new XY(this);
+    }
+
     @Override
     public int distance(Vector vector) {
         return (int) distance((Point2D) vector);

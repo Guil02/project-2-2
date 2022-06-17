@@ -9,38 +9,36 @@ import group.seven.model.environment.Component;
 import group.seven.model.environment.Scenario;
 import javafx.geometry.Point2D;
 
-import java.util.Collections;
 import java.util.List;
 
 import static group.seven.enums.TileType.*;
-import static group.seven.model.environment.Scenario.TILE_MAP;
 import static group.seven.utils.Methods.print;
 
 
 public class CollisionHandler {
 
-    public static void handle2(List<Move> moves){
-        for (Move move : moves){
+    public static void handle2(List<Move> moves, Scenario s) {
+        for (Move move : moves) {
             Agent agent = move.agent();
             agent.clearVision();
             agent.updateVision();
             agent.updateMap();
-            for (int i = 0; i < move.distance(); i++){
+            for (int i = 0; i < move.distance(); i++) {
                 int x = agent.getX();
                 int y = agent.getY();
-                XY targetPos = new XY(x,y);
+                XY targetPos = new XY(x, y);
                 targetPos = targetPos.add(agent.getDirection().unitVector.x(), agent.getDirection().unitVector.y());
 
-                if(!(i < move.agent().getCurrentSpeed())){/*is out of bounds*/
+                if (!(i < move.agent().getSpeed())) {/*is out of bounds*/
                     break;
                 }
-                if (isOutOfBounds(targetPos)) {
+                if (isOutOfBounds(targetPos, s)) {
                     break;
                 }
-                if (check(WALL, targetPos) || check(INTRUDER, targetPos) || check(GUARD, targetPos)) {
+                if (check(WALL, targetPos, s) || check(INTRUDER, targetPos, s) || check(GUARD, targetPos, s)) {
                     break;
-                } else if (check(PORTAL, targetPos)) {
-                    Component portal = getComponent(targetPos, PORTAL);
+                } else if (check(PORTAL, targetPos, s)) {
+                    Component portal = getComponent(targetPos, PORTAL, s);
                     print(agent.getID() + " just whooshed");
                     agent.moveTo(portal.exit());
                     agent.updateVision();
@@ -56,32 +54,30 @@ public class CollisionHandler {
 
     }
 
-    public static void handle(List<Move> moves){
+    public static void handle(List<Move> moves, Scenario s) {
         int max_distance = max_distance(moves);
         for (int i = 0; i < max_distance; i++) {
             for (Move move : moves) {
                 Agent agent = move.agent();
                 agent.clearVision();
                 agent.updateVision();
-                int x = agent.getX();
-                int y = agent.getY();
+                //int x = agent.getX();
+                //int y = agent.getY();
                 XY position = agent.getXY();
-                XY targetPos = new XY(x, y);
+                XY targetPos = new XY(position.x(), position.y());
                 targetPos = targetPos.add(agent.getDirection().unitVector.x(), agent.getDirection().unitVector.y());
-                int distance = Math.abs((position.x()-targetPos.x()) + (position.y() - targetPos.y()));
+                int distance = Math.abs((position.x() - targetPos.x()) + (position.y() - targetPos.y()));
                 if (i < move.distance()) {
-                    if (isOutOfBounds(targetPos)) {
+                    if (isOutOfBounds(targetPos, s)) {
                         break;
                     }
-                    if (check(WALL, targetPos)) {
+                    if (check(WALL, targetPos, s)) {
                         break;
-                    } else
-                    if (checkAgents(agent, targetPos)){
+                    } else if (checkAgents(agent, targetPos, s)) {
                         print("intruder or guard");
                         break;
-                    }
-                    else if (check(PORTAL, targetPos)) {
-                        Component portal = getComponent(targetPos, PORTAL);
+                    } else if (check(PORTAL, targetPos, s)) {
+                        Component portal = getComponent(targetPos, PORTAL, s);
                         print(agent.getID() + " just whooshed");
                         agent.moveTo(portal.exit());
                         agent.updateVision();
@@ -99,19 +95,19 @@ public class CollisionHandler {
 
     private static int max_distance(List<Move> moves) {
         int max = 0;
-        for(Move move : moves) {
+        for (Move move : moves) {
             max = Math.max(max, move.distance());
         }
         return max;
     }
 
 
-    public static boolean isOutOfBounds(XY pos){
-        return pos.x()<0||pos.x()>=Scenario.WIDTH||pos.y()<0||pos.y()>=Scenario.HEIGHT;
+    public static boolean isOutOfBounds(XY pos, Scenario s) {
+        return pos.x() < 0 || pos.x() >= s.WIDTH || pos.y() < 0 || pos.y() >= s.HEIGHT;
     }
 
-    public static boolean checkAgents(Agent agent, XY target) {
-        for (Agent other : TILE_MAP.agents) {
+    public static boolean checkAgents(Agent agent, XY target, Scenario s) {
+        for (Agent other : s.TILE_MAP.agents) {
             if (agent != other) {
                 if (other.getXY() == target) {
                     return true;
@@ -121,20 +117,24 @@ public class CollisionHandler {
         return false;
     }
 
-    public static boolean check(TileType type, XY targetPosition){
-        return TILE_MAP.getTile(targetPosition.x(), targetPosition.y()).getType() == type;
+    public static boolean check(TileType type, XY targetPosition, Scenario s) {
+        return s.TILE_MAP.getTile(targetPosition.x(), targetPosition.y()).getType() == type;
     }
 
-    public static Component getComponent(XY pos, TileType type){
-        switch(type){
-            case PORTAL -> {return getComponentFromList(pos,Scenario.portals);}
-            case WALL -> {return getComponentFromList(pos,Scenario.walls);}
+    public static Component getComponent(XY pos, TileType type, Scenario s) {
+        switch (type) {
+            case PORTAL -> {
+                return getComponentFromList(pos, s.portals);
+            }
+            case WALL -> {
+                return getComponentFromList(pos, s.walls);
+            }
         }
         print("Could not get :( returning default");
         return new Component(null, null, pos, Cardinal.NORTH);
     }
 
-    public static Component getComponentFromList(XY pos, List<Component> components){
+    public static Component getComponentFromList(XY pos, List<Component> components) {
         //You can use JavaFX Rectangle and Point2D
         Point2D agentPos = new Point2D(pos.x(), pos.y());
         for (Component component : components)

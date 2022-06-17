@@ -2,8 +2,6 @@ package group.seven.logic.geometric;
 
 import javafx.geometry.Point2D;
 
-import java.util.Objects;
-
 /**
  * Very simple wrapper to store integer x, y coordinates (or such)
  * Autogenerates the getters, hashcode, equals, and toString
@@ -26,4 +24,9 @@ public record XY(int x, int y) {
         double distance = guard.distance(intruder);
         return distance <= range;
     }
+
+    public boolean equals(XY xy) {
+        return this.x() == xy.x() && this.y() == xy.y();
+    }
+
 }
