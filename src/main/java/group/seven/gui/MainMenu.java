@@ -71,6 +71,7 @@ public class MainMenu {
 
         if (!algorithm.equals("Choose Guard") && !algorithm2.equals(("Choose Intruder")) && !gamemode.equals("Choose Gamemode")) {
             Config.ALGORITHM_GUARD = AlgorithmType.getEnum(algorithm);
+            System.out.println("BRICK GOT SELECTED "+AlgorithmType.getEnum(algorithm));
             Config.ALGORITHM_INTRUDER = AlgorithmType.getEnum(algorithm2);
             Config.GAMEMODE = GameMode.getEnum(gamemode);
 
@@ -170,7 +171,8 @@ public class MainMenu {
         chosenAlgorithm.getItems().addAll(
                 "Ant Pursuit",
                 "Brick And Mortar",
-                "Random"        //RandomTest.java file, not RandomMoves
+                "Random",        //RandomTest.java file, not RandomMoves
+                "Fish Swarm"
         );
 
         chosenAlgorithm.setValue("Choose Guard");

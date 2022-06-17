@@ -25,6 +25,7 @@ public abstract class Agent {
     public TileType agentType;
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
+    protected List<Tile> seenFurthestTiles = new ArrayList<>(30); // TODO: connect it with vision - waiting for xander
     //Marker and Pheromone
     public int PHEROMONELIFETIME = 20;
     private final ArrayList<Marker> markers = new ArrayList<>();
@@ -86,6 +87,16 @@ public abstract class Agent {
             case TURN_DOWN -> direction = SOUTH;
             case TURN_LEFT -> direction = WEST;
             case TURN_RIGHT -> direction = EAST;
+            case FLIP -> {
+                if (this.direction == NORTH)
+                    direction = SOUTH;
+                else if (this.direction == SOUTH)
+                    direction = NORTH;
+                else if (this.direction == EAST)
+                    direction = WEST;
+                else
+                    direction = EAST;
+            }
         }
     }
 
@@ -93,11 +104,17 @@ public abstract class Agent {
 
     public void clearVision() {
         seenTiles.clear();
+        seenFurthestTiles.clear();
     }
 
     public List<Tile> getSeenTiles() {
         return seenTiles;
     }
+
+    public List<Tile> getSeenFurthestTiles() {
+        return seenFurthestTiles;
+    }
+
 
     protected int newID() {
         return IDs++;
@@ -200,6 +217,16 @@ public abstract class Agent {
             case TURN_DOWN -> direction = SOUTH;
             case TURN_LEFT -> direction = WEST;
             case TURN_RIGHT -> direction = EAST;
+            case FLIP -> {
+                if (this.direction == NORTH)
+                    direction = SOUTH;
+                else if (this.direction == SOUTH)
+                    direction = NORTH;
+                else if (this.direction == EAST)
+                    direction = WEST;
+                else
+                    direction = EAST;
+            }
         }
 
         update();

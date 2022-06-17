@@ -4,6 +4,7 @@ package group.seven.model.agents;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.*;
+import group.seven.logic.vision.ConeVision;
 import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
@@ -50,7 +51,7 @@ public class Guard extends Agent {
         currentSpeed = 3; //DEFAULT //TODO base speed?
         direction = Cardinal.randomDirection();
         algorithm = initAlgo(Config.ALGORITHM_GUARD); //DEFAULT
-        vision = new RectangleVision(this); //DEFAULT
+        vision = new ConeVision(this); //DEFAULT
         maxSpeed = (int) scenario.GUARD_SPRINT_SPEED;
 
         // algorithm = new RandomTest(this);
@@ -58,16 +59,18 @@ public class Guard extends Agent {
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
-            case BRICK_AND_MORTAR -> new BrickAndMortar(this);
-            case ANT_PURSUIT -> new AntsPursuit(this);
-            case ANT -> new Ant(this);
-            case EVAW -> new EVAW(this);
-            default -> new RandomAlt(this);
+            case BRICK_AND_MORTAR   -> new BrickAndMortar(this);
+            case ANT_PURSUIT        -> new AntsPursuit(this);
+            case ANT                -> new Ant(this);
+            case EVAW               -> new EVAW(this);
+            case FISH               -> new FishSwarm(this);
+            default                 -> new RandomAlt(this);
         };
     }
 
     @Override
     public void updateVision() {
+        seenTiles.clear();
         List<Tile> newTiles = vision.updateAndGetVisionAgent(this);
         seenTiles = duplicatedTiles(seenTiles, newTiles);
         //print(seenTiles);
