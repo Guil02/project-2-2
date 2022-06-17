@@ -68,11 +68,11 @@ public class Methods {
         List<List<Double>> weights = new ArrayList<>();
         String line;
         try {
-            BufferedReader bufferreader = new BufferedReader(new FileReader(fileName));
+//            BufferedReader bufferreader = new BufferedReader(new FileReader(fileName));
+            BufferedReader bufferreader = new BufferedReader(new InputStreamReader(Methods.class.getClassLoader().getResourceAsStream(fileName)));
             while ((line = bufferreader.readLine()) != null) {
-                if (line.charAt(0) == 'W') {
-                    weights.add(makeList(line));
-                }
+//                print(line);
+                weights.add(makeList(line));
             }
 
         } catch (FileNotFoundException ex) {
@@ -84,13 +84,13 @@ public class Methods {
         return weights;
     }
 
-    private static ArrayList<Double> makeList(String s) {
-        ArrayList<Double> weights = new ArrayList<>();
+    private static List<Double> makeList(String s) {
+        List<Double> weights = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder(s);
         StringBuilder st = new StringBuilder();//TODO ADD TO LIST
 
 
-        for (int i = 16; i < stringBuilder.length(); i++) {
+        for (int i = 0; i < stringBuilder.length(); i++) {
             char nextChar = stringBuilder.charAt(i);
             switch (nextChar) {
                 case '[', ' ', ':':
@@ -98,11 +98,9 @@ public class Methods {
                 case ',', ']':
                     weights.add(Double.parseDouble(st.toString()));
                     st = new StringBuilder();
-                    System.out.println();
                     break;
                 default:
                     st.append(nextChar);
-                    System.out.print(nextChar);
             }
         }
 
@@ -110,7 +108,8 @@ public class Methods {
         return weights;
     }
 
-    public static void writeWeights(List<List<Double>> weights, String path) {
+    public static void writeWeights(List<List<Double>> weights, File path) {
+        System.out.println("started writing");
         try (FileWriter fileWriter = new FileWriter(path, true)) {
             fileWriter.write("NEW ITERATION: \n");
             for (List<Double> t : weights) {
@@ -121,6 +120,7 @@ public class Methods {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("file not found");
         }
 
     }

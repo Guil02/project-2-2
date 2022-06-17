@@ -2,6 +2,8 @@ package group.seven.logic.algorithms.GeneticNeuralNetwork;
 
 import group.seven.utils.Methods;
 
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -144,6 +146,15 @@ public class Population {
 
 
     public void storeWeights() {
-        throw new UnsupportedOperationException("Operation not implemented yet");
+        List<List<Double>> list = new ArrayList<>();
+        for (int i = 0; i < GeneticAlgorithm.amountToStore; i++) {
+            list.add(population.get(0).getChromosome());
+        }
+        try {
+            Methods.writeWeights(list, Paths.get(getClass().getResource(GeneticAlgorithm.fileName2).toURI()).toFile());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+//        throw new UnsupportedOperationException("Operation not implemented yet");
     }
 }

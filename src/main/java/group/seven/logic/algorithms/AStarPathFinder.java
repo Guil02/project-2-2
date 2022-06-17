@@ -19,20 +19,18 @@ public class AStarPathFinder {
     public static int instances = 0;
 
     private final AStarNode currentNode;
-
-
-    private AStarNode target;
     private final Agent player;
     int[][] additions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; //TODO: maybe remove
     List<Move> movesLeft; // moves left to do //TODO: maybe remove
     List<AStarNode> open;//TODO: maybe remove
     List<AStarNode> closed; //TODO: maybe remove
+    private AStarNode target;
     private TileNode[][] internalMap; // agent representation
 
 
     public AStarPathFinder(Agent player, XY goal) {
         instances++;
-        System.out.print("\r number: " + instances + " from: " + player.getType());
+//        System.out.print("\r number: " + instances + " from: " + player.getType());
         this.target = new AStarNode(goal, this);
         open = new ArrayList<>();
         closed = new ArrayList<>();
@@ -207,12 +205,12 @@ public class AStarPathFinder {
 
     public static class AStarNode {
         private final XY coordinate;
+        private final int rCost = Integer.MAX_VALUE;
+        private final AStarPathFinder aStarPath;
         private int gCost = Integer.MAX_VALUE;
         private int fCost = Integer.MAX_VALUE;
         private int hCost = Integer.MAX_VALUE;
-        private final int rCost = Integer.MAX_VALUE;
         private AStarNode parent;
-        private final AStarPathFinder aStarPath;
 
         // TODO: if bugs, check this
         public AStarNode(XY xy, AStarPathFinder aStarPath) {
@@ -258,13 +256,12 @@ public class AStarPathFinder {
             return gCost;
         }
 
-        public int gethCost() {
-            return hCost;
-        }
-
-
         public void setgCost(int gCost) {
             this.gCost = gCost;
+        }
+
+        public int gethCost() {
+            return hCost;
         }
 
         public int getX() {

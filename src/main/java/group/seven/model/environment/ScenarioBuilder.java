@@ -11,6 +11,8 @@ import javafx.util.Builder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -23,7 +25,7 @@ import static java.lang.Integer.parseInt;
 
 public class ScenarioBuilder implements Builder<Scenario> {
 
-    private final File mapFile;
+    private File mapFile;
     private Scenario scenario;
 
     /**
@@ -41,7 +43,21 @@ public class ScenarioBuilder implements Builder<Scenario> {
      * in the Config class
      */
     public ScenarioBuilder() {
-        this(new File(Config.DEFAULT_MAP_PATH));
+//        this(new File(Config.DEFAULT_MAP_PATH));
+
+        try {
+            if (Config.GUI_ON) {
+
+                this.mapFile = Paths.get(ScenarioBuilder.class.getClassLoader().getResource(Config.DEFAULT_MAP_PATH).toURI()).toFile();
+            } else {
+
+                this.mapFile = Paths.get(ScenarioBuilder.class.getClassLoader().getResource(Config.DEFAULT_MAP_PATH_GUI_OFF).toURI()).toFile();
+            }
+        } catch (URISyntaxException e) {
+
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -59,7 +75,9 @@ public class ScenarioBuilder implements Builder<Scenario> {
         initMap();
         fillMap();
         setAdjacent();
-        scenario.setChromosome(Methods.readGAWeights(GeneticAlgorithm.fileName).get(0));
+        if (!(Config.GA_ON && !Config.GUI_ON)) {
+            scenario.setChromosome(Methods.readGAWeights(GeneticAlgorithm.fileName).get(0));
+        }
         return scenario;
     }
 

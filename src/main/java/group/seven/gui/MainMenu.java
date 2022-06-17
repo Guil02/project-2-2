@@ -1,5 +1,6 @@
 package group.seven.gui;
 
+import group.seven.Main;
 import group.seven.enums.AlgorithmType;
 import group.seven.enums.GameMode;
 import group.seven.logic.simulation.Simulator;
@@ -10,12 +11,11 @@ import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.effect.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import group.seven.Main;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -26,6 +26,8 @@ import java.util.Map;
 
 public class MainMenu {
 
+    private final List<String> maps = new ArrayList<>();
+    FadeTransition fade;
     @FXML
     private ChoiceBox<String> chosenAlgorithm;
     @FXML
@@ -56,9 +58,9 @@ public class MainMenu {
     private RadioButton uploadToggle;
     @FXML
     private RadioButton existingToggle;
-
     private File scenarioFile;
     private Map<String, Image> mapLibrary;
+    private int count = 1;
 
     @FXML
     void start(ActionEvent event) {
@@ -103,10 +105,6 @@ public class MainMenu {
             messageLabel.setText("No file chosen!");
         }
     }
-
-    private int count = 1;
-    private final List<String> maps = new ArrayList<>();
-    FadeTransition fade;
 
     @FXML
     void nextMap(ActionEvent event) {
@@ -181,6 +179,7 @@ public class MainMenu {
 
         chosenIntruder.getItems().addAll(
                 "A*",
+                "Genetic Neural Network",
                 "Random"
         );
 

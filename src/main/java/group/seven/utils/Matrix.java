@@ -261,4 +261,12 @@ public class Matrix {
 
         return new Matrix(newData);
     }
+
+    @Override
+    public String toString() {
+        return "Matrix{" +
+                "rows=" + rows +
+                ", columns=" + columns +
+                '}';
+    }
 }

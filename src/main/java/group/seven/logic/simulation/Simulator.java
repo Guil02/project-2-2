@@ -324,8 +324,8 @@ public class Simulator extends AnimationTimer {
             agent.initializeInitialTile();
             //agent.updateVision();
             scenario.TILE_MAP.addAgent(agent);
-            print("added " + agentType.name() + " : " + agent.getID());
-            System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
+//            print("added " + agentType.name() + " : " + agent.getID());
+//            System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
             i++;
         }
 

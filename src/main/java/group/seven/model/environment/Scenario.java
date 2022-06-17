@@ -3,7 +3,6 @@ package group.seven.model.environment;
 import group.seven.enums.GameMode;
 import group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm;
 import group.seven.logic.geometric.Rectangle;
-import group.seven.utils.Methods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +35,9 @@ public class Scenario {
     public int INTRUDERS_CAUGHT = 0;
     public int INTRUDERS_AT_TARGET = 0;
     public TileMap TILE_MAP;
+    public int ID = 0;
 
-    public List<Double> chromosome = Methods.readGAWeights(GeneticAlgorithm.fileName).get(0);
+    public List<Double> chromosome = new ArrayList<>(GeneticAlgorithm.chromosomeLength);
 
     public Scenario() {
 //        SCENARIO = this;//empty constructor used by ScenarioBuilder
@@ -65,5 +65,9 @@ public class Scenario {
 
     public void setChromosome(List<Double> chromosome) {
         this.chromosome = chromosome;
+    }
+
+    public int getId() {
+        return ID++;
     }
 }

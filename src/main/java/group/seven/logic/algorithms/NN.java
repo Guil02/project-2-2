@@ -34,6 +34,7 @@ public class NN implements Algorithm {
             Matrix input = getVisionAnalysis();
             Matrix output = nn.pass_forward(input);
             double[] outputValues = output.toArray();
+//            System.out.println(Arrays.toString(outputValues));
             Action chosenAction = getBestAction(outputValues);
             if (chosenAction != null) {
                 moves.add(new Move(chosenAction, 1, agent));
@@ -42,7 +43,7 @@ public class NN implements Algorithm {
         if (moves.isEmpty()) {
             return new Move(Action.NOTHING, 0, agent);
         }
-
+//        System.out.println(moves.get(0) + "\n");
         return moves.poll();
     }
 
@@ -67,12 +68,15 @@ public class NN implements Algorithm {
     private Matrix getVisionAnalysis() {
         List<Tile> seenTiles = agent.getSeenTiles();
         Matrix input = new Matrix(1, GeneticAlgorithm.inputSize);
+
         input.set(0, 0, VisionAnalysis.numStaticComponent(seenTiles, WALL));
         input.set(0, 1, VisionAnalysis.numStaticComponent(seenTiles, TARGET));
         input.set(0, 2, VisionAnalysis.numStaticComponent(seenTiles, PORTAL));
-        input.set(0, 2, VisionAnalysis.numStaticComponent(seenTiles, EMPTY));
+        input.set(0, 3, VisionAnalysis.numStaticComponent(seenTiles, EMPTY));
+        input.set(0, 4, VisionAnalysis.numIntruders(agent.scenario, seenTiles));
+        input.set(0, 5, VisionAnalysis.numGuards(agent.scenario, seenTiles));
 
-        return null;
+        return input;
     }
 
     @Override

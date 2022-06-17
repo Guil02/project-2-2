@@ -24,8 +24,8 @@ public class NeuralNetwork {
     }
 
     public Matrix pass_forward(Matrix input) {
-        Matrix output = input.multiply(weight_hidden).add(bias_hidden).sigmoid();
-        output = output.multiply(weight_output).add(bias_output).sigmoid();
+        Matrix output = input.dot(weight_hidden).add(bias_hidden).sigmoid();
+        output = output.dot(weight_output).add(bias_output).sigmoid();
         return output;
     }
 
@@ -93,5 +93,15 @@ public class NeuralNetwork {
             }
         }
         return newWeights;
+    }
+
+    @Override
+    public String toString() {
+        return "NeuralNetwork{" +
+                "weight_hidden=" + weight_hidden +
+                ", weight_output=" + weight_output +
+                ", bias_hidden=" + bias_hidden +
+                ", bias_output=" + bias_output +
+                '}';
     }
 }

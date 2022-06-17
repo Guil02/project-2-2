@@ -6,8 +6,9 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.AStarGoal;
 import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.pathfinding.Astar;
+import group.seven.logic.algorithms.NN;
 import group.seven.logic.algorithms.RandomAlt;
+import group.seven.logic.algorithms.pathfinding.Astar;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
@@ -26,10 +27,10 @@ import static group.seven.utils.Methods.print;
 public class Intruder extends Agent {
 
     private final int ID;
-    protected int currentSpeed;
     private final int maxSpeed;
-    private Vision vision;
+    protected int currentSpeed;
     Algorithm algorithm;
+    private Vision vision;
     private Cardinal orientationToGoal;
     private double angleToGoal;  // in degrees
     private int inTargetArea = 0;
@@ -37,16 +38,16 @@ public class Intruder extends Agent {
     private boolean firstTimeInTargetArea = true;
     private boolean alive = true;
 
-    public Intruder(int x, int y, Scenario s, AlgorithmType algorithm) { //TODO: fix and finish
+    public Intruder(int x, int y, Scenario s, AlgorithmType algorithm) {
         this(x, y, s);
-        //this.algorithm = algorithm;
+        this.algorithm = initAlgo(algorithm);
         updateOrientationToGoal();
 
     }
 
     public Intruder(int x, int y, Scenario s) {
         super(x, y, s);
-        ID = newID();
+        ID = s.getId();
         agentType = INTRUDER;
         direction = Cardinal.randomDirection();      //DEFAULT
         algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
@@ -56,10 +57,17 @@ public class Intruder extends Agent {
         maxSpeed = (int) scenario.INTRUDER_SPRINT_SPEED;
     }
 
+    //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
+    //Methods here all return an instance to the object, so you can chain methods together
+    public static Intruder create(int x, int y, Scenario s) {
+        return new Intruder(x, y, s);
+    }
+
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
             case A_STAR -> new AStarGoal(this);
             case A_STAR_ALT -> new Astar(this);
+            case GENETIC_NEURAL_NETWORK -> new NN(this);
             default -> new RandomAlt(this);
         };
     }
@@ -140,13 +148,6 @@ public class Intruder extends Agent {
     @Override
     public void setSpeed(int speed) {
         currentSpeed = speed;
-    }
-
-
-    //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
-    //Methods here all return an instance to the object, so you can chain methods together
-    public static Intruder create(int x, int y, Scenario s) {
-        return new Intruder(x, y, s);
     }
 
     //sets the speed of this intruder and returns the same intruder object back

@@ -22,11 +22,11 @@ public class Guard extends Agent {
     public final int PHEROMONE_LIFETIME = 20;
     private final int ID;
     private final int maxSpeed;
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     public int currentSpeed;
     Algorithm algorithm;
     private Vision vision;
     private ArrayList<Marker> markers = new ArrayList<>();
-    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
 
     public Guard(int x, int y, Scenario s, Algorithm algorithm, int startSpeed, Vision vision, ArrayList<Marker> markers) {
         this(x, y, s);
@@ -39,13 +39,13 @@ public class Guard extends Agent {
     public Guard(int x, int y, Scenario s, AlgorithmType algorithmType) {
         this(x, y, s);
         algorithm = initAlgo(algorithmType);
-        System.out.println(algorithmType);
+//        System.out.println(algorithmType);
     }
 
 
     public Guard(int x, int y, Scenario s) {
         super(x, y, s);
-        ID = newID();
+        ID = s.getId();
         agentType = GUARD;
         currentSpeed = 3; //DEFAULT //TODO base speed?
         direction = Cardinal.randomDirection();
@@ -84,13 +84,13 @@ public class Guard extends Agent {
     }
 
     @Override
-    public void setSpeed(int speed) {
-        this.currentSpeed = speed;
+    public int getSpeed() {
+        return currentSpeed;
     }
 
     @Override
-    public int getSpeed() {
-        return currentSpeed;
+    public void setSpeed(int speed) {
+        this.currentSpeed = speed;
     }
 
     @Override
