@@ -24,47 +24,64 @@ import java.util.Random;
 
 import static group.seven.enums.Action.MOVE_FORWARD;
 import static group.seven.enums.TileType.*;
-import static group.seven.model.environment.Scenario.*;
 import static group.seven.utils.Methods.print;
 
 public class Simulator extends AnimationTimer {
-    public static Simulator sim;
+    public static final int maxTime = Config.MAX_GAME_LENGTH;
     public static Random rand = new Random();
-    private SimulationScreen display = null;
-    private int count = 0;
-    private long prev; //used for frame-rate calculation (eventually)
-    double elapsedTimeSteps;
+    public static Status status;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
     final boolean guiMode = true;
     final int RANGE_TO_CATCH_INTRUDER = 5;
     final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
-
-    public static Status status;
+    public Scenario scenario;
+    double elapsedTimeSteps;
+    private SimulationScreen display = null;
+    private int count = 0;
+    private long prev; //used for frame-rate calculation (eventually)
 
     public Simulator(Scenario scenario) {
-        sim = this;
-        spawnAgents(GAURD_GAME_MODE);
+        this.scenario = scenario;
+        rand = new Random();
+
+        spawnAgents(scenario.GUARD_GAME_MODE);
+
         elapsedTimeSteps = 0;
-        if (guiMode) {
-            display = new SimulationScreen();
+        if (Config.GUI_ON) {
+            display = new SimulationScreen(this);
             Main.stage.setScene(new Scene(display));
             Main.stage.centerOnScreen();
         }
         //Either there's a bug in my GUI or in the Vision or in the way agents vision is tracked/stored
         //Arrays.stream(TILE_MAP.agents).forEach(Agent::updateVision);
-        if (guiMode) {
+        if (Config.GUI_ON) {
             display.render();
         }
         prev = System.nanoTime();
-        if (guiMode) {
+        if (Config.GUI_ON) {
             start();
+        }
+
+        if (!Config.GUI_ON) {
+            runSimulation();
         }
 
         status = Status.RUNNING;
     }
 
-    public static void pause() {
-        sim.stop();
+    /**
+     * This is the main simulation loop, similar too {@link Simulator#handle(long)}
+     * The only difference is that it runs without the GUI.
+     */
+    private void runSimulation() {
+        while (count < maxTime) {
+            count++;
+            update();
+        }
+    }
+
+    public void pause() {
+        stop();
         status = Status.PAUSED;
     }
 
@@ -72,6 +89,7 @@ public class Simulator extends AnimationTimer {
      * Main Simulation Loop. Executed every "timeStep"
      * First we update the model by calculating and applying all the agent's moves (if legal),
      * Then update the GUI to reflect the state of the model after the timeStep.
+     *
      * @param now current time in nanoseconds. Can be used for frame-rate calculation
      */
     @Override
@@ -85,7 +103,7 @@ public class Simulator extends AnimationTimer {
         }
 
         //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
-        if (((int)elapsedTimeSteps) % 10 == 0) {
+        if (((int) elapsedTimeSteps) % 10 == 0) {
             Tuple<Double, Double> coverage = calculateCoverage();
             display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
         }
@@ -107,7 +125,7 @@ public class Simulator extends AnimationTimer {
                 }
 
                 case ALL_INTRUDERS_CAUGHT -> {
-                    if (INTRUDERS_CAUGHT == NUM_INTRUDERS) {
+                    if (scenario.INTRUDERS_CAUGHT == scenario.NUM_INTRUDERS) {
                         status = Status.GUARD_WIN;
                         return true;
                     }
@@ -123,7 +141,7 @@ public class Simulator extends AnimationTimer {
                 }
 
                 case ALL_INTRUDER_AT_TARGET -> {
-                    if (INTRUDERS_AT_TARGET == NUM_INTRUDERS) {
+                    if (scenario.INTRUDERS_AT_TARGET == scenario.NUM_INTRUDERS) {
                         status = Status.GUARD_WIN;
                         return true;
                     }
@@ -140,7 +158,7 @@ public class Simulator extends AnimationTimer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        GameEnd end = new GameEnd();
+        GameEnd end = new GameEnd(display);
         Main.stage.setScene(new Scene(end));
         Main.stage.centerOnScreen();
     }
@@ -157,54 +175,56 @@ public class Simulator extends AnimationTimer {
         //List<Agent> intruders = Arrays.stream(TILE_MAP.agents).filter(a -> a.getType() == INTRUDER).toList();
 
 
-        for (Agent agent : TILE_MAP.agents) {
+        for (Agent agent : scenario.getTileMap().agents) {
             agent.updateVision();
             agent.updateMap();
             if (agent.agentType == GUARD) {
-                for (Agent intruder : TILE_MAP.agents) {
+                for (Agent intruder : scenario.TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
                         if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
-                            ((Intruder)intruder).killIntruder();
+                            ((Intruder) intruder).killIntruder();
 
-                            if (checkGameOver(GAURD_GAME_MODE, GUARD)) {
-                                System.out.println("GAURDS WON");
+                            if (checkGameOver(scenario.GUARD_GAME_MODE, GUARD)) {
+                                System.out.println("GUARDS WON");
                                 stop();
-                                endSimulation();
+                                Agent.IDs = 0;
+                                if (guiMode)
+                                    endSimulation();
+                                //endSimulation();
                             }
                         }
                     }
                 }
             } else {//if agent is not Guard it has to be an Intruder
-                for (Agent intruder : TILE_MAP.agents) {
+                for (Agent intruder : scenario.TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
-                        if (targetArea.contains(intruder.getXY())) {
-                            int inTargetAreaSince = ((Intruder)intruder).intruderInTargetArea();
+                        if (scenario.targetArea.contains(intruder.getXY())) {
+                            int inTargetAreaSince = ((Intruder) intruder).intruderInTargetArea();
                             print("Intruder " + intruder.getID() + " made it to target");
                             print("In target area since: " + inTargetAreaSince);
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
-                                if (checkGameOver(INTRUDER_GAME_MODE, INTRUDER)) {
+                                if (checkGameOver(scenario.INTRUDER_GAME_MODE, INTRUDER)) {
                                     System.out.println("INTRUDER WON");
-//                                    GameEnd end = new GameEnd();
-//                                    Main.stage.setScene(new Scene(end));
-//                                    Main.stage.centerOnScreen();
                                     stop(); // stops AnimationTimer
-                                    endSimulation();
+                                    Agent.IDs = 0;
+                                    if (guiMode)
+                                        endSimulation();
                                 }
                             }
                         } else {
-                            ((Intruder)intruder).intruderNotInTargetArea(); //reset time in target area counter
+                            ((Intruder) intruder).intruderNotInTargetArea(); //reset time in target area counter
                         }
                     }
                 }
             }
         }
         //System.out.println("TARGET AREA: "+targetArea.area().contains(intruder.x,intruder.y));
-//        List<Move> allMoves = Arrays.stream(TILE_MAP.agents).map(Agent::calculateMove).toList();
+
 
         //List<Move> allMoves = new LinkedList<>();
         List<Move> positionChangeMoves = new LinkedList<>();
         List<Move> rotationChangeMoves = new LinkedList<>();
-        for (Agent a : TILE_MAP.agents) {
+        for (Agent a : scenario.TILE_MAP.agents) {
             Move m = a.calculateMove();
             //allMoves.add(m);
             if (m.action() == MOVE_FORWARD)
@@ -213,12 +233,8 @@ public class Simulator extends AnimationTimer {
                 rotationChangeMoves.add(m);
         }
 
-        //List of Moves where the agent's want to move forward (change position). Previous moves List is unaffected.
-        //List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
-        //List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
-
-        CollisionHandler.handle(positionChangeMoves);
-        for (Move move : rotationChangeMoves){
+        CollisionHandler.handle(positionChangeMoves, scenario);
+        for (Move move : rotationChangeMoves) {
             move.agent().executeTurn(move);
             move.agent().clearVision();
             //move.agent().updateVision();
@@ -229,12 +245,13 @@ public class Simulator extends AnimationTimer {
     }
 
     private void updatePheromones() {
-        for(Pheromone f: TILE_MAP.getPheromones()){
+        for (Pheromone f : scenario.TILE_MAP.getPheromones()) {
             f.update();
         }
     }
 
-    /** FOR TESTING PURPOSE ONLY
+    /**
+     * FOR TESTING PURPOSE ONLY
      * Called every timeStep to update the model.
      * Collects each agent's moves, resolves collisions, updates their vision and applies to the model.
      */
@@ -243,11 +260,11 @@ public class Simulator extends AnimationTimer {
         List<Move> positionChangeMoves = allMoves.stream().filter(move -> move.action() == MOVE_FORWARD).toList();
         List<Move> rotationChangeMoves = allMoves.stream().filter(move -> move.action() != MOVE_FORWARD).toList();
 
-        CollisionHandler.handle(positionChangeMoves);
+        CollisionHandler.handle(positionChangeMoves, scenario);
         for (Move move : rotationChangeMoves) {
             move.agent().executeTurn(move);
-            move.agent().clearVision();
-            move.agent().updateVision();
+//            move.agent().clearVision();
+//            move.agent().updateVision();
         }
         updateAllAgents();
     }
@@ -261,30 +278,29 @@ public class Simulator extends AnimationTimer {
             spawnAgents(INTRUDER);
         }
         updateAllAgents();
-        //print(Arrays.stream(TILE_MAP.agents).filter(Objects::nonNull).map(Agent::getID).toList());
     }
 
     private void updateAllAgents() {
-        for(Agent agent : TILE_MAP.agents){
+        for (Agent agent : scenario.TILE_MAP.agents) {
             agent.update();
         }
     }
 
-    private void spawnAgents(TileType agentType){
+    private void spawnAgents(TileType agentType) {
         XY point;
         int dx, dy, number;
         switch (agentType) {
             case GUARD -> {
-                point = new XY(Scenario.guardSpawnArea.area().getX(), Scenario.guardSpawnArea.area().getY());
-                dx = Scenario.guardSpawnArea.area().getIntWidth();
-                dy = Scenario.guardSpawnArea.area().getIntHeight();
-                number = NUM_GUARDS;
+                point = new XY(scenario.guardSpawnArea.area().getX(), scenario.guardSpawnArea.area().getY());
+                dx = scenario.guardSpawnArea.area().getIntWidth();
+                dy = scenario.guardSpawnArea.area().getIntHeight();
+                number = scenario.NUM_GUARDS;
             }
             case INTRUDER -> {
-                point = new XY(intruderSpawnArea.area().getX(), intruderSpawnArea.area().getY());
-                dx = intruderSpawnArea.area().getIntWidth();
-                dy = intruderSpawnArea.area().getIntHeight();
-                number = NUM_INTRUDERS;
+                point = new XY(scenario.intruderSpawnArea.area().getX(), scenario.intruderSpawnArea.area().getY());
+                dx = scenario.intruderSpawnArea.area().getIntWidth();
+                dy = scenario.intruderSpawnArea.area().getIntHeight();
+                number = scenario.NUM_INTRUDERS;
             }
             default -> {
                 point = new XY(0, 0);
@@ -295,21 +311,21 @@ public class Simulator extends AnimationTimer {
         }
 
         int i = 0;
-        while(i < number){
+        while (i < number) {
             int x = point.x() + (int) (dx * Math.random());
             int y = point.y() + (int) (dy * Math.random());
 
             Agent agent = switch (agentType) {
-                case INTRUDER -> new Intruder(x,y, Config.ALGORITHM_INTRUDER);
-                case GUARD -> new Guard(x,y, Config.ALGORITHM_GUARD);
+                case INTRUDER -> new Intruder(x, y, scenario, Config.ALGORITHM_INTRUDER);
+                case GUARD -> new Guard(x, y, scenario, Config.ALGORITHM_GUARD);
                 default -> throw new IllegalStateException("Unexpected value: " + agentType);
                 //better throw exception to fail-fast to catch bugs quickly, than to pick our heads later down the line
             };
             agent.initializeInitialTile();
             //agent.updateVision();
-            TILE_MAP.addAgent(agent);
-            print("added "+agentType.name()+" : " + agent.getID());
-            System.out.println(agent.getType() + ": " + agent.getX() + " " +agent.getY());
+            scenario.TILE_MAP.addAgent(agent);
+//            print("added " + agentType.name() + " : " + agent.getID());
+//            System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
             i++;
         }
 
@@ -325,24 +341,24 @@ public class Simulator extends AnimationTimer {
         int guardSeenGrids = 0;
         int intruderSeenGrids = 0;
         double totalGrids = 0;
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                if(!(TILE_MAP.map[i][j].getType() == WALL)) {
+        for (int i = 0; i <= scenario.WIDTH; i++) {
+            for (int j = 0; j <= scenario.HEIGHT; j++) {
+                if (!(scenario.TILE_MAP.map[i][j].getType() == WALL)) {
                     totalGrids++;
 
                     //for guards
-                    if(TILE_MAP.map[i][j].getExploredGuard()) {
+                    if (scenario.TILE_MAP.map[i][j].getExploredGuard()) {
                         guardSeenGrids++;
                     }
 
-                    if(TILE_MAP.map[i][j].getExploredIntruder()) {
+                    if (scenario.TILE_MAP.map[i][j].getExploredIntruder()) {
                         intruderSeenGrids++;
                     }
                 }
             }
         }
 
-        return new Tuple<>((guardSeenGrids / totalGrids)*100, (intruderSeenGrids/totalGrids)*100);
+        return new Tuple<>((guardSeenGrids / totalGrids) * 100, (intruderSeenGrids / totalGrids) * 100);
     }
 }
 

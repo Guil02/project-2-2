@@ -5,7 +5,6 @@ import group.seven.enums.AlgorithmType;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
 
 import java.util.LinkedList;
@@ -47,7 +46,7 @@ public class AntsPursuit implements Algorithm {
 
     public XY seeTarget() {
         for (Tile t : agent.getSeenTiles()) {
-            for (Agent a : Scenario.TILE_MAP.agents) {
+            for (Agent a : agent.scenario.TILE_MAP.agents) {
                 XY agentPos; //doing the coordinate transform is expensive, so only initialize if a == Intruder
                 if (a.getType() == INTRUDER && (agentPos = a.getXY()).equals(t.getXY())) {
                     return agentPos;
@@ -55,6 +54,7 @@ public class AntsPursuit implements Algorithm {
             }
         }
 
+        //tODO: not sure if makes sense with coordinate transform cuz that's an valid coordinate
         return new XY(-1, -1);
     }
 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.TileType.PORTAL;
-import static group.seven.model.environment.Scenario.TILE_MAP;
 import static group.seven.utils.Methods.print;
 
 public class TileNode {
@@ -25,14 +24,16 @@ public class TileNode {
     List<Marker> markers;
     Adjacent<TileNode> adjacent;
     Pheromone pheromone;
+    Scenario scenario;
 
     public TileNode(Tile tile, Agent a) {
         x = tile.getX();
         y = tile.getY();
         xy = tile.getXY();
         agent = a;
+        scenario = a.scenario;
         pheromone = tile.pheromone;
-        for (Agent agent : TILE_MAP.agents) {
+        for (Agent agent : scenario.TILE_MAP.agents) {
             //if(agent!=null && agent.x==tile.getX()&& agent.y==tile.getY()){ //theirs
             if (agent != null && agent.getXY().equals(xy)) {//mine
                 agentType = agent.agentType;
@@ -43,7 +44,7 @@ public class TileNode {
         updateAdjacent();
 
         markers = new ArrayList<>();
-        for (Marker marker : TILE_MAP.markers) {
+        for (Marker marker : scenario.TILE_MAP.markers) {
             if (marker.getXY().equals(xy)) {
                 markers.add(marker);
             }
@@ -62,7 +63,7 @@ public class TileNode {
 //                break;
 //            }
 //        }
-        for (Agent agent : TILE_MAP.agents) { //mine
+        for (Agent agent : scenario.TILE_MAP.agents) { //mine
             if (agent.getXY().equals(xy)) {
                 this.agentType = agent.agentType;
                 break;
@@ -71,13 +72,13 @@ public class TileNode {
 
         if (atype != agentType) print("before: " + atype + " after update: " + agentType, false);
 
-        for (Marker marker : TILE_MAP.markers) {
+        for (Marker marker : scenario.TILE_MAP.markers) {
             if (marker.getXY().equals(xy)) {
                 markers.add(marker);
             }
         }
 
-        updateAdjacent();
+//        updateAdjacent();
 
     }
 
@@ -100,8 +101,8 @@ public class TileNode {
 
         TileNode target = null;
         if (type == PORTAL) {
-            int xTar = TILE_MAP.getTile(x, y).adjacent.targetLocation().getX();
-            int yTar = TILE_MAP.getTile(x, y).adjacent.targetLocation().getY();
+            int xTar = scenario.TILE_MAP.getTile(x, y).adjacent.targetLocation().getX();
+            int yTar = scenario.TILE_MAP.getTile(x, y).adjacent.targetLocation().getY();
             target = agent.getMapPosition(xTar, yTar);
         }
 
@@ -133,10 +134,10 @@ public class TileNode {
     }
 
     public MarkerType getExploreType() {
-        return TILE_MAP.getTile(x, y).getExploreType();
+        return scenario.TILE_MAP.getTile(x, y).getExploreType();
     }
 
     public void setExploreType(MarkerType m) {
-        TILE_MAP.getTile(x, y).setExploreType(m);
+        scenario.TILE_MAP.getTile(x, y).setExploreType(m);
     }
 }

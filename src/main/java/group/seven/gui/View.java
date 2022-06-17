@@ -12,7 +12,6 @@ import java.util.Arrays;
 
 import static group.seven.gui.GuardUI.selectedGuard;
 import static group.seven.gui.IntruderGUI.selectedIntruder;
-import static group.seven.model.environment.Scenario.TILE_MAP;
 import static javafx.scene.paint.Color.BLACK;
 
 public class View extends ScrollPane {
@@ -23,10 +22,12 @@ public class View extends ScrollPane {
     protected double TILE_SIZE = 10;
     protected int MAP_WIDTH;
     protected int MAP_HEIGHT;
+    protected Scenario s;
 
-    public View() {
-        MAP_WIDTH = Scenario.WIDTH;
-        MAP_HEIGHT = Scenario.HEIGHT;
+    public View(SimulationScreen simulationScreen) {
+        s = simulationScreen.scenario;
+        MAP_WIDTH = s.WIDTH;
+        MAP_HEIGHT = s.HEIGHT;
 
         canvas = new Canvas(MAP_WIDTH * (TILE_SIZE + 1), MAP_HEIGHT * (TILE_SIZE + 1));
         g = canvas.getGraphicsContext2D();
@@ -49,7 +50,7 @@ public class View extends ScrollPane {
 
 
     public void update() {
-        g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
+        g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         drawMap();
         drawAgents();
     }
@@ -60,14 +61,14 @@ public class View extends ScrollPane {
 //    }
 
     private void drawAgents() {
-        Arrays.stream(Scenario.TILE_MAP.agents)
+        Arrays.stream(s.TILE_MAP.agents)
                 .forEach(a -> {
                     g.setFill(a.getType().getColor());
                     paintTile(a.getX(), a.getY());
                 });
 
         if (GuardUI.selected != 0) {
-            g.setFill(Color.rgb(23,129,118));
+            g.setFill(Color.rgb(23, 129, 118));
             paintTile(selectedGuard.guard.getX(), selectedGuard.guard.getY());
         }
 
@@ -80,9 +81,9 @@ public class View extends ScrollPane {
     }
 
     private void drawMap() {
-        for (int y = 0; y < MAP_HEIGHT; y++){
-            for(int x = 0; x < MAP_WIDTH; x++) {
-                Tile tile = TILE_MAP.getMap()[x][y];
+        for (int y = 0; y < MAP_HEIGHT; y++) {
+            for (int x = 0; x < MAP_WIDTH; x++) {
+                Tile tile = s.TILE_MAP.map[x][y];
 
                 //TODO: change exploration colors for guards and intruders just for fun
                 if (tile.getExploredGuard()) g.setFill(tile.getType().getColor());

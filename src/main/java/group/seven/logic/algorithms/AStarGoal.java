@@ -5,8 +5,6 @@ import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
-import group.seven.model.environment.Scenario;
-import group.seven.model.environment.Tile;
 import group.seven.model.environment.TileNode;
 import group.seven.utils.Methods;
 
@@ -24,7 +22,8 @@ public class AStarGoal implements Algorithm {
 
     private final int initialX;
     private final int initialY;
-    private final Tile[][] map;
+    //private final Tile[][] map;
+    //private Scenario scenario;
 
     private AStarNode current;
     private AStarNode target;
@@ -42,7 +41,7 @@ public class AStarGoal implements Algorithm {
         open = new ArrayList<>();
         closed = new ArrayList<>();
         movesLeft = new ArrayList<>();
-        this.map = Scenario.TILE_MAP.getMap();
+        //this.map = scenario.TILE_MAP.getMap();
         current = new AStarNode(player.getXY(), this);
         open.add(current);
         this.player = player;

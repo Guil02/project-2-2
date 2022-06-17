@@ -6,8 +6,9 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.AStarGoal;
 import group.seven.logic.algorithms.Algorithm;
-import group.seven.logic.algorithms.pathfinding.Astar;
+import group.seven.logic.algorithms.NN;
 import group.seven.logic.algorithms.RandomAlt;
+import group.seven.logic.algorithms.pathfinding.Astar;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
@@ -21,16 +22,15 @@ import group.seven.utils.Config;
 import java.util.List;
 
 import static group.seven.enums.TileType.INTRUDER;
-import static group.seven.model.environment.Scenario.targetArea;
 import static group.seven.utils.Methods.print;
 
 public class Intruder extends Agent {
 
     private final int ID;
+    private final int maxSpeed;
     protected int currentSpeed;
-    private final int maxSpeed = (int) Scenario.INTRUDER_SPRINT_SPEED;
-    private Vision vision;
     Algorithm algorithm;
+    private Vision vision;
     private Cardinal orientationToGoal;
     private double angleToGoal;  // in degrees
     private int inTargetArea = 0;
@@ -38,40 +38,50 @@ public class Intruder extends Agent {
     private boolean firstTimeInTargetArea = true;
     private boolean alive = true;
 
-    public Intruder(int x, int y, AlgorithmType algorithm) { //TODO: fix and finish
-        this(x, y);
-        //this.algorithm = algorithm;
+    public Intruder(int x, int y, Scenario s, AlgorithmType algorithm) {
+        this(x, y, s);
+        this.algorithm = initAlgo(algorithm);
         updateOrientationToGoal();
 
     }
 
-    public Intruder(int x, int y) {
-        super(x, y);
-        ID = newID();
+    public Intruder(int x, int y, Scenario s) {
+        super(x, y, s);
+        ID = s.getId();
         agentType = INTRUDER;
         direction = Cardinal.randomDirection();      //DEFAULT
         algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
         vision = new ConeVision(this); //DEFAULT
         updateOrientationToGoal();
         currentSpeed = 3; //TODO base soeed?
+        maxSpeed = (int) scenario.INTRUDER_SPRINT_SPEED;
+    }
+
+    //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
+    //Methods here all return an instance to the object, so you can chain methods together
+    public static Intruder create(int x, int y, Scenario s) {
+        return new Intruder(x, y, s);
     }
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
             case A_STAR -> new AStarGoal(this);
             case A_STAR_ALT -> new Astar(this);
+            case GENETIC_NEURAL_NETWORK -> new NN(this);
             default -> new RandomAlt(this);
         };
     }
 
     public void updateOrientationToGoal() {
-        Rectangle goalLocationArea = targetArea.area();
+        Rectangle goalLocationArea = scenario.targetArea.area();
         double heightMediumPoint = goalLocationArea.getHeight() / 2;
         double widthMediumPoint = goalLocationArea.getWidth() / 2;
         int x = (int) (goalLocationArea.getX() + widthMediumPoint);
         int y = (int) (goalLocationArea.getY() + heightMediumPoint);
+        XY agentGlobal = getXY();
 //        double angle = Pythagoras.angleFromAgentToTarget(new XY(x,y), new XY(this.x, this.y));
-        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), new XY(this.getX(), this.getY())); //todo changed so frames match
+//        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), new XY(this.getX(), this.getY())); //todo changed so frames match
+        double angle = Pythagoras.angleFromAgentToTarget(new XY(x, y), agentGlobal); //todo changed so frames match
         //double angle = Pythagoras.getAnglePythagoras(this.x,this.y,x,y);
         //Update angle to goal, which is in degrees
         this.angleToGoal = angle;
@@ -105,12 +115,12 @@ public class Intruder extends Agent {
     @Override
     public Move calculateMove() {
         //Check if Intruder is in the target area
-        if (targetArea.contains(getXY())) {
+        if (scenario.targetArea.contains(getXY())) {
 //        if (Scenario.targetArea.area().contains(this.getX(),this.getY())) {
             if (firstTimeInTargetArea) {
                 print("Intruder " + getID() + " made it to target");
                 //TODO handle leaving and returning to target area
-                Scenario.INTRUDERS_AT_TARGET++;
+                scenario.INTRUDERS_AT_TARGET++;
                 firstTimeInTargetArea = false;
                 return algorithm.getNext();
             } else {
@@ -131,15 +141,13 @@ public class Intruder extends Agent {
     }
 
     @Override
-    public int getCurrentSpeed() {
+    public int getSpeed() {
         return currentSpeed;
     }
 
-
-    //Builder methods, just experimenting, feel free to ignore. Would want to use for easy customization
-    //Methods here all return an instance to the object, so you can chain methods together
-    public static Intruder create(int x, int y) {
-        return new Intruder(x, y);
+    @Override
+    public void setSpeed(int speed) {
+        currentSpeed = speed;
     }
 
     //sets the speed of this intruder and returns the same intruder object back
@@ -192,7 +200,7 @@ public class Intruder extends Agent {
 
     public void killIntruder() {
         if (this.alive) {
-            Scenario.INTRUDERS_CAUGHT++;
+            scenario.INTRUDERS_CAUGHT++;
             this.alive = false;
             System.out.println("Intruder " + ID + " just got shot");
         }

@@ -20,7 +20,6 @@ import java.util.List;
 
 import static group.seven.enums.TileType.GUARD;
 import static group.seven.enums.TileType.INTRUDER;
-import static group.seven.model.environment.Scenario.TILE_MAP;
 
 public class SimulationScreen extends BorderPane {
 
@@ -28,9 +27,13 @@ public class SimulationScreen extends BorderPane {
     private boolean running;
     private List<GuardUI> guardsVis;
     private List<IntruderGUI> intruderVis;
+    protected Scenario scenario;
+    protected Simulator runner;
 
-    public SimulationScreen() {
-        view = new View();
+    public SimulationScreen(Simulator runner) {
+        this.runner = runner;
+        this.scenario = runner.scenario;
+        view = new View(this);
         Methods.loadFXML(this, "/fxml/simulationScreen.fxml");
     }
 
@@ -44,19 +47,27 @@ public class SimulationScreen extends BorderPane {
         double guardCoverage = coverage.a();
         double intruderCoverage = coverage.b();
 
-        elapsedTime.setText(((int)(elapsedTimeStep * 100) / 100) + " units");
-        explorationPercent.setText(String.valueOf((int)(guardCoverage * 100) / 100));
+        elapsedTime.setText(((int) (elapsedTimeStep * 100) / 100) + " units");
+        explorationPercent.setText(String.valueOf((int) (guardCoverage * 100) / 100));
 
     }
 
-    @FXML private Label elapsedTime;
-    @FXML private Label explorationPercent;
-    @FXML private Label gameModeLabel;
-    @FXML private VBox guardsList;
-    @FXML private VBox intrudersList;
-    @FXML private Button pauseButton;
-    @FXML private Button quitButton;
-    @FXML private Button resetButton;
+    @FXML
+    private Label elapsedTime;
+    @FXML
+    private Label explorationPercent;
+    @FXML
+    private Label gameModeLabel;
+    @FXML
+    private VBox guardsList;
+    @FXML
+    private VBox intrudersList;
+    @FXML
+    private Button pauseButton;
+    @FXML
+    private Button quitButton;
+    @FXML
+    private Button resetButton;
 
     @FXML
     void zoomIn(Event event) {
@@ -74,7 +85,7 @@ public class SimulationScreen extends BorderPane {
         setCenter(view);
         pauseButton.setText(!running ? "Play" : "Pause");
 
-        String gameMode = switch (Scenario.GAURD_GAME_MODE) {
+        String gameMode = switch (scenario.GUARD_GAME_MODE) {
             case EXPLORATION -> "Exploration";
             default -> "Intruders";
         };
@@ -82,8 +93,8 @@ public class SimulationScreen extends BorderPane {
         gameModeLabel.setText(gameMode);
 
         pauseButton.setOnAction(event -> {
-            if (running) Simulator.pause();
-            else Simulator.sim.start();
+            if (running) runner.pause();
+            else runner.start();
 
             pauseButton.setText(running ? "Play" : "Pause");
             running = !running;
@@ -108,7 +119,7 @@ public class SimulationScreen extends BorderPane {
     }
 
     private void setUpSidebar() {
-        guardsVis = Arrays.stream(TILE_MAP.agents)
+        guardsVis = Arrays.stream(scenario.TILE_MAP.agents)
                 .filter(a -> a.getType() == GUARD)
                 .map(a -> new GuardUI((Guard) a, view))
                 .toList();
@@ -118,7 +129,7 @@ public class SimulationScreen extends BorderPane {
             g.setOnMouseClicked(e -> g.select());
         });
 
-        intruderVis = Arrays.stream(TILE_MAP.agents)
+        intruderVis = Arrays.stream(scenario.TILE_MAP.agents)
                 .filter(a -> a.getType() == INTRUDER)
                 .map(a -> new IntruderGUI((Intruder) a, view))
                 .toList();

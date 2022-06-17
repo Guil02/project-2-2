@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.Cardinal.*;
-import static group.seven.model.environment.Scenario.TILE_MAP;
 import static group.seven.utils.Methods.print;
 
 //TODO the agent structure very much work in progress
 public abstract class Agent {
-    private static int IDs = 0;
+    public static int IDs = 0;
 
     private double numExplored;
     //Coordinates and Frames:
@@ -36,24 +35,30 @@ public abstract class Agent {
     //Type
     boolean ignorePortal = false;
     boolean isTeleported = false;
+    public Scenario scenario;
 
     //Current Speed
     //Strategy
 
-    public Agent(int x, int y) {
+    public Agent(int x, int y, Scenario s) {
+        scenario = s;
         frame = new Frame(new Translate(-x, -y));
         globalSpawn = new XY(x, y);
 
-        map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
+        map = new TileNode[s.WIDTH + 1][s.HEIGHT + 1];
         setXY(x, y);
         //initializeMap();
     }
 
+    //--------<Abstract methods>---------//
     public abstract Move calculateMove();
 
     public abstract int getID();
 
-    public abstract int getCurrentSpeed();
+    public abstract int getSpeed();
+
+    public abstract void setSpeed(int speed);
+    //-----------------------------------//
 
     //is the distance parameter required here? Seems like it's always 1 based oon CollisionHandler line 46
     public void executeMove(int distance) {
@@ -68,7 +73,7 @@ public abstract class Agent {
         this.y = pos.y();
     }
 
-    public void setIgnorePortal(boolean ignorePortal){  // TODO: handle by simulator
+    public void setIgnorePortal(boolean ignorePortal) {  // TODO: handle by simulator
         this.ignorePortal = ignorePortal;
     }
 
@@ -240,14 +245,14 @@ public abstract class Agent {
 
     //
     public void initializeMap() {
-        map = new TileNode[Scenario.WIDTH + 1] [Scenario.HEIGHT + 1];
+        map = new TileNode[scenario.WIDTH + 1][scenario.HEIGHT + 1];
     }
 
     //I think this just gets called once upon spawning
-    public void initializeInitialTile(){
+    public void initializeInitialTile() {
         try {
-            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(TILE_MAP.getTile(globalSpawn),this);
-        } catch (Exception e){
+            map[globalSpawn.x()][globalSpawn.y()] = new TileNode(scenario.TILE_MAP.getTile(globalSpawn), this);
+        } catch (Exception e) {
             System.err.println("An error occurred in the initialization of the initial tile in the agent class");
             e.printStackTrace();
         }
@@ -265,19 +270,18 @@ public abstract class Agent {
         }
 
 
-//        for(TileNode[] tiles : map){
-//            for(TileNode tile: tiles){
-//                if(tile != null) tile.updateAdjacent();
-//            }
-//        }
+        for (TileNode[] tiles : map) {
+            for (TileNode tile : tiles) {
+                if (tile != null) tile.updateAdjacent();
+            }
+        }
     }
 
     //parameters are in global
     public TileNode getMapPosition(int x, int y) {
-        try{
+        try {
             return map[x][y];
-        }
-        catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             print(e.getMessage());
             return null;
         }
@@ -306,7 +310,7 @@ public abstract class Agent {
         return "Agent{" +
                 "x=" + x +
                 ", y=" + y +
-                ", globalX=" +  global.x() +
+                ", globalX=" + global.x() +
                 ", globalY=" + global.y() +
                 ", direction=" + direction +
                 ", agentType=" + agentType +

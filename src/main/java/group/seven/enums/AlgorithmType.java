@@ -8,6 +8,7 @@ public enum AlgorithmType {
     EVAW,
     ANT_PURSUIT,
     A_STAR_ALT,
+    GENETIC_NEURAL_NETWORK,
     FISH;
 
     public static AlgorithmType getEnum(String name) {
@@ -17,6 +18,7 @@ public enum AlgorithmType {
             case "Brick And Mortar" -> BRICK_AND_MORTAR;
             case "Ant Pursuit" -> ANT_PURSUIT;
             case "Fish Swarm" -> FISH;
+            case "Genetic Neural Network" -> GENETIC_NEURAL_NETWORK;
             default -> RANDOM;
         };
     }

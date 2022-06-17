@@ -22,36 +22,37 @@ public class Guard extends Agent {
 
     public final int PHEROMONE_LIFETIME = 20;
     private final int ID;
-    private final int maxSpeed = (int) Scenario.GUARD_SPRINT_SPEED;
+    private final int maxSpeed;
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     public int currentSpeed;
     Algorithm algorithm;
     private Vision vision;
     private ArrayList<Marker> markers = new ArrayList<>();
-    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
 
-    public Guard(int x, int y, Algorithm algorithm, int startSpeed, Vision vision, ArrayList<Marker> markers) {
-        this(x, y);
+    public Guard(int x, int y, Scenario s, Algorithm algorithm, int startSpeed, Vision vision, ArrayList<Marker> markers) {
+        this(x, y, s);
         this.algorithm = algorithm;
         this.currentSpeed = startSpeed;
         this.vision = vision;
         this.markers = markers;
     }
 
-    public Guard(int x, int y, AlgorithmType algorithmType) {
-        this(x, y);
+    public Guard(int x, int y, Scenario s, AlgorithmType algorithmType) {
+        this(x, y, s);
         algorithm = initAlgo(algorithmType);
-        System.out.println(algorithmType);
+//        System.out.println(algorithmType);
     }
 
 
-    public Guard(int x, int y) {
-        super(x, y);
-        ID = newID();
+    public Guard(int x, int y, Scenario s) {
+        super(x, y, s);
+        ID = s.getId();
         agentType = GUARD;
         currentSpeed = 3; //DEFAULT //TODO base speed?
         direction = Cardinal.randomDirection();
         algorithm = initAlgo(Config.ALGORITHM_GUARD); //DEFAULT
         vision = new ConeVision(this); //DEFAULT
+        maxSpeed = (int) scenario.GUARD_SPRINT_SPEED;
 
         // algorithm = new RandomTest(this);
     }
@@ -86,8 +87,13 @@ public class Guard extends Agent {
     }
 
     @Override
-    public int getCurrentSpeed() {
+    public int getSpeed() {
         return currentSpeed;
+    }
+
+    @Override
+    public void setSpeed(int speed) {
+        this.currentSpeed = speed;
     }
 
     @Override

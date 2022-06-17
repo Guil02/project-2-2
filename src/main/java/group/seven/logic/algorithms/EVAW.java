@@ -17,13 +17,19 @@ import static group.seven.enums.TileType.WALL;
 public class EVAW implements Algorithm {
     private Cardinal lastMove = null;
     Agent agent;
+    private Scenario s;
 
     public EVAW(Agent a) {
         this.agent = a;
+        s = a.scenario;
     }
 
+//    public EVAW(Agent a, Scenario scenario) {
+//        this.agent = a;
+//        s = scenario;
+//    }
+
     LinkedList<Move> moves = new LinkedList<>();
-//    Queue<Move> moves = new LinkedList<>();
 
     /**
      * This method will check if
@@ -53,7 +59,7 @@ public class EVAW implements Algorithm {
      */
     public void calculateMove() {
         TileNode target = chooseTile(agent.getX(), agent.getY(), 10); //TODO, this is agents global pos
-        Scenario.TILE_MAP.dropPheromone(target.getX(), target.getY());
+        s.TILE_MAP.dropPheromone(target.getX(), target.getY());
         AStarPathFinder pf = new AStarPathFinder(agent, new XY(target.getX(), target.getY()));
         moves.addAll(pf.findPath());
     }
