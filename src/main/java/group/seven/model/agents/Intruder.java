@@ -51,7 +51,7 @@ public class Intruder extends Agent {
         agentType = INTRUDER;
         direction = Cardinal.randomDirection();      //DEFAULT
         algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
-        vision = new RectangleVision(this); //DEFAULT
+        vision = new ConeVision(this); //DEFAULT
         updateOrientationToGoal();
         currentSpeed = 3; //TODO base soeed?
     }

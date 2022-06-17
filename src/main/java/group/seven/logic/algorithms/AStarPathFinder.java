@@ -32,7 +32,7 @@ public class AStarPathFinder {
 
     public AStarPathFinder(Agent player, XY goal) {
         instances++;
-        System.out.print("\r number: " + instances + " from: " + player.getType());
+        //System.out.print("\r number: " + instances + " from: " + player.getType());
         this.target = new AStarNode(goal, this);
         open = new ArrayList<>();
         closed = new ArrayList<>();
