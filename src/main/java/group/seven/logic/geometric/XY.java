@@ -50,4 +50,13 @@ public record XY(int x, int y) implements VectorPoint {
     public XY getXY() {
         return this;
     }
+
+    public String asNodeID() {
+        return x + ":" + y;
+    }
+
+    public XY fromNodeID(String nodeID) {
+        String[] xy = nodeID.split(",");
+        return new XY(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
+    }
 }

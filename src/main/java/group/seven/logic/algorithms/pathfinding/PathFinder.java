@@ -22,6 +22,7 @@ public class PathFinder implements Algorithm {
     private final Agent player;
     Random random = new Random();
 
+
     private Node currentNode;
     private Node target;
     VectorPoint globalTargetPoint;

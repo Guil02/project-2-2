@@ -1,8 +1,30 @@
 package group.seven.enums;
 
+/**
+ * The enum Status.
+ */
 public enum Status {
 
-    GAME_OVER, RUNNING, GUARD_WIN(GAME_OVER), INTRUDER_WIN(GAME_OVER), PAUSED;
+    /**
+     * Game over status.
+     */
+    GAME_OVER,
+    /**
+     * Running status.
+     */
+    RUNNING,
+    /**
+     * Guard win status.
+     */
+    GUARD_WIN(GAME_OVER),
+    /**
+     * Intruder win status.
+     */
+    INTRUDER_WIN(GAME_OVER),
+    /**
+     * Paused status.
+     */
+    PAUSED;
 
     Status() {
         type = this;

@@ -1,5 +1,11 @@
 package group.seven.enums;
 
+/**
+ * The enum Pheromone type.
+ */
 public enum PheromoneType {
-SMELL
+    /**
+     * Smell pheromone type.
+     */
+    SMELL
 }

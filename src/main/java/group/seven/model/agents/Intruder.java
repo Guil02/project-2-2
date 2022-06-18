@@ -7,7 +7,7 @@ import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.AStarGoal;
 import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.algorithms.RandomAlt;
-import group.seven.logic.algorithms.pathfinding.PathFinder;
+import group.seven.logic.algorithms.GraphAstar;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
@@ -51,15 +51,14 @@ public class Intruder extends Agent {
         algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
         vision = new RectangleVision(this); //DEFAULT
         updateOrientationToGoal();
-        currentSpeed = 3; //TODO base soeed?
+        currentSpeed = 3; //TODO base speed?
         maxSpeed = (int) scenario.INTRUDER_SPRINT_SPEED;
     }
 
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
             case A_STAR -> new AStarGoal(this);
-            case A_STAR_ALT -> new PathFinder(this);
-//            case A_STAR_ALT -> new Astar(this);
+            case A_STAR_ALT -> new GraphAstar(this);
             default -> new RandomAlt(this);
         };
     }
@@ -123,6 +122,7 @@ public class Intruder extends Agent {
             return algorithm.getNext();
         } else {
             return new Move(Action.NOTHING, 0, this);
+
         }
     }
 
@@ -159,6 +159,7 @@ public class Intruder extends Agent {
     public Intruder algorithm(Algorithm algorithm) {
         this.algorithm = switch (algorithm.getType()) {
             case A_STAR -> new AStarGoal(this);
+            case A_STAR_ALT -> new GraphAstar(this);
             default -> new RandomAlt(this);
         };
 
@@ -169,6 +170,7 @@ public class Intruder extends Agent {
     public Intruder algorithm(AlgorithmType algorithm) {
         this.algorithm = switch (algorithm) {
             case A_STAR -> new AStarGoal(this);
+            case A_STAR_ALT -> new GraphAstar(this);
             default -> new RandomAlt(this);
         };
 
@@ -191,7 +193,6 @@ public class Intruder extends Agent {
     }
 
     public int intruderInTargetArea() {
-        print("Intruder " + ID + " has coolin");
         inTargetArea += 1;
         return inTargetArea;
     }
@@ -200,7 +201,7 @@ public class Intruder extends Agent {
         if (alive) {
             //scenario.INTRUDERS_CAUGHT++;
             alive = false;
-            System.out.println("Intruder " + ID + " just got shot");
+            System.out.println("\nIntruder " + ID + " just got shot");
             scenario.removeIntruder(this);
         }
     }
