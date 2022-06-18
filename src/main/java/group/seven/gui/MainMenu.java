@@ -151,6 +151,7 @@ public class MainMenu {
 
         mapLibrary = new LinkedHashMap<>(4);
         mapLibrary.put("biggerTestMap.txt", new Image("/img/biggerTestMap.png"));
+        mapLibrary.put("complex_map.txt", new Image("/img/complex_map.png"));
         mapLibrary.put("mazeMap.txt", new Image("/img/examinermap_phase1.png"));
         mapLibrary.put("small_map.txt", new Image("/img/small_map.png"));
         mapLibrary.put("tiny.txt", new Image("/img/tiny.png"));
@@ -158,6 +159,7 @@ public class MainMenu {
         mapLibrary.put("examinermap_phase1.txt", new Image("/img/examinermap_phase1.png"));
 
         maps.add("biggerTestMap.txt");
+        maps.add("complex_map.txt");
         maps.add("mazeMap.txt");
         maps.add("small_map.txt");
         maps.add("tiny.txt");
