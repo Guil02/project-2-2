@@ -13,6 +13,7 @@ import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
 import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
+import group.seven.model.environment.Tile;
 import group.seven.utils.Config;
 import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
@@ -31,14 +32,15 @@ public class Simulator extends AnimationTimer {
     public static Random rand = new Random();
     public static Status status;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
-    final boolean guiMode = true;
-    final int RANGE_TO_CATCH_INTRUDER = 5;
+    final boolean guiMode = Config.GUI_ON;
     final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
     public Scenario scenario;
     double elapsedTimeSteps;
     private SimulationScreen display = null;
     private int count = 0;
     private long prev; //used for frame-rate calculation (eventually)
+    private boolean gameOver = false;
+    private boolean intruderWin = false;
 
     public Simulator(Scenario scenario) {
         this.scenario = scenario;
@@ -74,10 +76,12 @@ public class Simulator extends AnimationTimer {
      * The only difference is that it runs without the GUI.
      */
     private void runSimulation() {
-        while (count < maxTime) {
+        while (count < maxTime && !gameOver) {
             count++;
             update();
         }
+        scenario.storeTimeTaken(count);
+        scenario.storeIntruderWin(intruderWin);
     }
 
     public void pause() {
@@ -181,12 +185,17 @@ public class Simulator extends AnimationTimer {
             if (agent.agentType == GUARD) {
                 for (Agent intruder : scenario.TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
-                        if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
+                        if (checkIntruderInSight(agent,intruder)) {
+                        //if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
                             ((Intruder) intruder).killIntruder();
 
                             if (checkGameOver(scenario.GUARD_GAME_MODE, GUARD)) {
-                                System.out.println("GUARDS WON");
-                                stop();
+                                if (Config.GUI_ON) {
+                                    System.out.println("GUARDS WON");
+                                    stop();
+                                } else {
+                                    gameOver = true;
+                                }
                                 Agent.IDs = 0;
                                 if (guiMode)
                                     endSimulation();
@@ -200,12 +209,19 @@ public class Simulator extends AnimationTimer {
                     if (intruder.agentType == INTRUDER) {
                         if (scenario.targetArea.contains(intruder.getXY())) {
                             int inTargetAreaSince = ((Intruder) intruder).intruderInTargetArea();
-                            print("Intruder " + intruder.getID() + " made it to target");
-                            print("In target area since: " + inTargetAreaSince);
+                            if (Config.GUI_ON) {
+                                print("Intruder " + intruder.getID() + " made it to target");
+                                print("In target area since: " + inTargetAreaSince);
+                            }
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
                                 if (checkGameOver(scenario.INTRUDER_GAME_MODE, INTRUDER)) {
-                                    System.out.println("INTRUDER WON");
-                                    stop(); // stops AnimationTimer
+                                    if (Config.GUI_ON) {
+                                        System.out.println("INTRUDER WON");
+                                        stop(); // stops AnimationTimer
+                                    } else {
+                                        gameOver = true;
+                                        intruderWin = true;
+                                    }
                                     Agent.IDs = 0;
                                     if (guiMode)
                                         endSimulation();
@@ -359,6 +375,17 @@ public class Simulator extends AnimationTimer {
         }
 
         return new Tuple<>((guardSeenGrids / totalGrids) * 100, (intruderSeenGrids / totalGrids) * 100);
+    }
+
+    public boolean checkIntruderInSight(Agent guard, Agent intruder){
+        List<Tile> visionGuard = guard.getSeenTiles();
+        XY intruderTile = intruder.getXY();
+        for (Tile tile : visionGuard) {
+            if (tile.getXY().equals(intruderTile)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

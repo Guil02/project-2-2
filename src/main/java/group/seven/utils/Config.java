@@ -19,7 +19,7 @@ public class Config {
     public static boolean GUI_ON = true;
     public static boolean GA_ON = true;
 
-    public static int MAX_GAME_LENGTH = 10;
+    public static int MAX_GAME_LENGTH = 100;
     public static GameMode GAMEMODE;
 
 }

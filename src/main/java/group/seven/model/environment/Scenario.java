@@ -3,6 +3,7 @@ package group.seven.model.environment;
 import group.seven.enums.GameMode;
 import group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm;
 import group.seven.logic.geometric.Rectangle;
+import group.seven.utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,8 @@ public class Scenario {
     public int ID = 0;
 
     public List<Double> chromosome = new ArrayList<>(GeneticAlgorithm.chromosomeLength);
+    private int count = Config.MAX_GAME_LENGTH;
+    private boolean intruderWin = false;
 
     public Scenario() {
 //        SCENARIO = this;//empty constructor used by ScenarioBuilder
@@ -69,5 +72,21 @@ public class Scenario {
 
     public int getId() {
         return ID++;
+    }
+
+    public void storeTimeTaken(int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void storeIntruderWin(boolean intruderWin) {
+        this.intruderWin = intruderWin;
+    }
+
+    public boolean isIntruderWin() {
+        return intruderWin;
     }
 }
