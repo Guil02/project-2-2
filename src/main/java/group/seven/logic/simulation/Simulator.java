@@ -101,12 +101,17 @@ public class Simulator extends AnimationTimer {
             display.render();   //update GUI
             elapsedTimeSteps += timeStep; //update elapsed time steps
         }
+        System.out.print("\rElapsed Time Steps: " + elapsedTimeSteps + "\t framerate: " + ((double) now - prev) / 1e9);
 
-        //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
-        if (((int) elapsedTimeSteps) % 10 == 0) {
-            Tuple<Double, Double> coverage = calculateCoverage();
-            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
-        }
+
+//        //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
+//        if (((int) elapsedTimeSteps) % 10 == 0) {
+//            Tuple<Double, Double> coverage = calculateCoverage();
+//            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
+//        }
+
+        for (Agent a : scenario.agents)
+            a.setTime(elapsedTimeSteps);
 
         //TODO: implement GameOver condition checking
         if (count > 100000) stop();
@@ -142,7 +147,7 @@ public class Simulator extends AnimationTimer {
 
                 case ALL_INTRUDER_AT_TARGET -> {
                     if (scenario.INTRUDERS_AT_TARGET == scenario.NUM_INTRUDERS) {
-                        status = Status.GUARD_WIN;
+                        status = Status.INTRUDER_WIN;
                         return true;
                     }
                 }
@@ -181,8 +186,8 @@ public class Simulator extends AnimationTimer {
             if (agent.agentType == GUARD) {
                 for (Agent intruder : scenario.TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
-                        if (checkIntruderInSight(agent,intruder)) {
-                        //if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
+                        if (checkIntruderInSight(agent, intruder)) {
+                            //if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
                             ((Intruder) intruder).killIntruder();
 
                             if (checkGameOver(scenario.GUARD_GAME_MODE, GUARD)) {
@@ -325,12 +330,11 @@ public class Simulator extends AnimationTimer {
             agent.initializeInitialTile();
             //agent.updateVision();
             scenario.TILE_MAP.addAgent(agent);
-//            print("added " + agentType.name() + " : " + agent.getID());
-//            System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
+            print("added " + agentType.name() + " : " + agent.getID());
+            System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
             i++;
+            scenario.agents.add(agent);
         }
-
-
     }
 
     //we don't really need to calculate the total grids every time
@@ -362,7 +366,7 @@ public class Simulator extends AnimationTimer {
         return new Tuple<>((guardSeenGrids / totalGrids) * 100, (intruderSeenGrids / totalGrids) * 100);
     }
 
-    public boolean checkIntruderInSight(Agent guard, Agent intruder){
+    public boolean checkIntruderInSight(Agent guard, Agent intruder) {
         List<Tile> visionGuard = guard.getSeenTiles();
         XY intruderTile = intruder.getXY();
         for (Tile tile : visionGuard) {

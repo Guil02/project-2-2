@@ -7,6 +7,12 @@ public enum GameMode {
     ONE_INTRUDER_AT_TARGET, // 3
     ALL_INTRUDER_AT_TARGET; // 4
 
+    /**
+     * Gets enum.
+     *
+     * @param name the name
+     * @return the enum
+     */
     public static GameMode getEnum(String name) {
         return switch (name) {
             case "Single Intruder Caught" -> SINGLE_INTRUDER_CAUGHT;

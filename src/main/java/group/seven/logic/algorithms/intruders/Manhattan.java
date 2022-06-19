@@ -1,4 +1,6 @@
-package group.seven.logic.algorithms.pathfinding;
+package group.seven.logic.algorithms.intruders;
+
+import group.seven.logic.algorithms.pathfinding.ANode;
 
 public class Manhattan implements Heuristic {
 

@@ -296,7 +296,6 @@ public class AStarGoal implements Algorithm {
             return coordinate.hashCode();
         }
 
-
         @Override
         public String toString() {
             return "AStarNode{" +
