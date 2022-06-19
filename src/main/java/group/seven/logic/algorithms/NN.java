@@ -2,6 +2,7 @@ package group.seven.logic.algorithms;
 
 import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
+import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm;
 import group.seven.logic.algorithms.GeneticNeuralNetwork.NeuralNetwork.NeuralNetwork.NeuralNetwork;
 import group.seven.logic.algorithms.GeneticNeuralNetwork.VisionAnalysis;
@@ -35,9 +36,9 @@ public class NN implements Algorithm {
             Matrix output = nn.pass_forward(input);
             double[] outputValues = output.toArray();
 //            System.out.println(Arrays.toString(outputValues));
-            Action chosenAction = getBestAction(outputValues);
+            Move chosenAction = getBestAction(outputValues);
             if (chosenAction != null) {
-                moves.add(new Move(chosenAction, 1, agent));
+                moves.add(chosenAction);
             }
         }
         if (moves.isEmpty()) {
@@ -47,7 +48,7 @@ public class NN implements Algorithm {
         return moves.poll();
     }
 
-    private Action getBestAction(double[] outputValues) {
+    private Move getBestAction(double[] outputValues) {
         int bestIndex = 0;
         for (int i = 0; i < outputValues.length; i++) {
             if (outputValues[i] > outputValues[bestIndex]) {
@@ -55,12 +56,15 @@ public class NN implements Algorithm {
             }
         }
         return switch (bestIndex) {
-            case 0 -> MOVE_FORWARD;
-            case 1 -> TURN_UP;
-            case 2 -> TURN_RIGHT;
-            case 3 -> TURN_DOWN;
-            case 4 -> TURN_LEFT;
-            case 5 -> NOTHING;
+            case 0 -> new Move(MOVE_FORWARD, 1, agent);
+            case 1 -> new Move(MOVE_FORWARD, 2, agent);
+            case 2 -> new Move(MOVE_FORWARD, 3, agent);
+            case 3 -> new Move(MOVE_FORWARD, 4, agent);
+            case 4 -> new Move(TURN_UP, 0, agent);
+            case 5 -> new Move(TURN_RIGHT, 0, agent);
+            case 6 -> new Move(TURN_DOWN, 0, agent);
+            case 7 -> new Move(TURN_LEFT, 0, agent);
+            case 8 -> new Move(NOTHING, 0, agent);
             default -> throw new RuntimeException("impossible value found in output index");
         };
     }
@@ -69,14 +73,26 @@ public class NN implements Algorithm {
         List<Tile> seenTiles = agent.getSeenTiles();
         Matrix input = new Matrix(1, GeneticAlgorithm.inputSize);
 
-        input.set(0, 0, VisionAnalysis.numStaticComponent(seenTiles, WALL));
-        input.set(0, 1, VisionAnalysis.numStaticComponent(seenTiles, TARGET));
-        input.set(0, 2, VisionAnalysis.numStaticComponent(seenTiles, PORTAL));
-        input.set(0, 3, VisionAnalysis.numStaticComponent(seenTiles, EMPTY));
-        input.set(0, 4, VisionAnalysis.numIntruders(agent.scenario, seenTiles));
-        input.set(0, 5, VisionAnalysis.numGuards(agent.scenario, seenTiles));
+        input.set(0, 0, VisionAnalysis.numStaticComponent(seenTiles, WALL) * (-0.5 + Math.random()) * 0.1);
+        input.set(0, 1, VisionAnalysis.numStaticComponent(seenTiles, TARGET) * (-0.5 + Math.random()) * 0.1);
+        input.set(0, 2, VisionAnalysis.numStaticComponent(seenTiles, PORTAL) * (-0.5 + Math.random()) * 0.1);
+        input.set(0, 3, VisionAnalysis.numStaticComponent(seenTiles, EMPTY) * (-0.5 + Math.random()) * 0.1);
+        input.set(0, 4, VisionAnalysis.numIntruders(agent.scenario, seenTiles) * (-0.5 + Math.random()) * 0.1);
+        input.set(0, 5, VisionAnalysis.numGuards(agent.scenario, seenTiles) * (-0.5 + Math.random()) * 0.1);
+        input.set(0, 6, directionToNumber(agent.getDirection()));
 
         return input;
+    }
+
+    private int directionToNumber(Cardinal c) {
+        return switch (c) {
+
+            case NORTH -> 0;
+            case SOUTH -> 1;
+            case EAST -> 2;
+            case WEST -> 3;
+            default -> 0;
+        };
     }
 
     @Override

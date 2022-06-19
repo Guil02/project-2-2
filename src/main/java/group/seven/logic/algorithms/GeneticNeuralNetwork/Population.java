@@ -12,8 +12,8 @@ import java.util.List;
 import static group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm.fileName2;
 
 public class Population {
-    private final static int numberOfStrongest = 20;
-    private final static int numberOfSurvivors = 10;
+    private final static int numberOfStrongest = 40;
+    private final static int numberOfSurvivors = 20;
     private final static String fileName = "TBD";
     private final int chromosomeLength;
     List<Individual> population;
@@ -51,7 +51,10 @@ public class Population {
      * Updates the population to a new generation. (Combination of consecutive methods)
      */
     public void updateGeneration() {
-        updateFitness();
+//        updateFitness();
+        for (Individual i : population) {
+            i.setCurrentScenario(null);
+        }
         steadyStateSelection();
         mutatePopulation();
     }
@@ -69,6 +72,7 @@ public class Population {
             Collections.reverse(population);
             isSorted = true;
         }
+        System.out.println("Best performance: " + population.get(0).getFitness());
         birth();
     }
 
