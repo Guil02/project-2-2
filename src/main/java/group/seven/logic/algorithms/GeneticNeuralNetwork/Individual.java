@@ -75,7 +75,7 @@ public class Individual {
         double averageDistance = distance / amountOfAgent;
         double b = getCurrentScenario().HEIGHT;
         b = b * b;
-        double c = getCurrentScenario().WIDTH ^ 2;
+        double c = getCurrentScenario().WIDTH;
         c = c * c;
         double maxDistance = Math.sqrt(b + c);
         fitness = 1 - (averageDistance / maxDistance);

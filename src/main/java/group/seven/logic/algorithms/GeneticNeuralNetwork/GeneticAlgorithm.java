@@ -16,7 +16,7 @@ public class GeneticAlgorithm {
     public static final int hiddenSize = 5;
     public static final int outputSize = 9;
     public static final int chromosomeLength = inputSize * hiddenSize + hiddenSize + hiddenSize * outputSize + outputSize;
-    static final int populationSize = 1000;
+    static final int populationSize = 200;
     static final double mutationRate = 0.1;
     static final int amountToStore = populationSize;
     static final int amountOfGenerations = 10000;
