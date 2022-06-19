@@ -156,7 +156,12 @@ public class FishSwarm implements Algorithm {
         //System.out.println("Fitness Value "+fitnessValue);
         int normalizedFitnessValue = (fitnessValue*100)/maxValueFitness;
         //System.out.println("Fitness Value Normalized "+ normalizedFitnessValue );
-        return  normalizedFitnessValue;
+        int max = 8*layerLevels;
+        int min = -1*8*layerLevels;
+        double random = (Math.round(Math.random() * (max - min + 1) + min));
+        random = ((random*100)/max)*0.1;
+        System.out.println("Random number "+random);
+        return  normalizedFitnessValue + (int)random;
     }
 
     public int calculateHCost(Tile tile, Tile tileAgent) {

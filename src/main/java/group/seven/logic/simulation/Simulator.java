@@ -13,6 +13,7 @@ import group.seven.model.agents.Intruder;
 import group.seven.model.agents.Move;
 import group.seven.model.environment.Pheromone;
 import group.seven.model.environment.Scenario;
+import group.seven.model.environment.Tile;
 import group.seven.utils.Config;
 import group.seven.utils.Tuple;
 import javafx.animation.AnimationTimer;
@@ -32,7 +33,6 @@ public class Simulator extends AnimationTimer {
     public static Status status;
     final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
     final boolean guiMode = true;
-    final int RANGE_TO_CATCH_INTRUDER = 5;
     final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
     public Scenario scenario;
     double elapsedTimeSteps;
@@ -181,7 +181,8 @@ public class Simulator extends AnimationTimer {
             if (agent.agentType == GUARD) {
                 for (Agent intruder : scenario.TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
-                        if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
+                        if (checkIntruderInSight(agent,intruder)) {
+                        //if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
                             ((Intruder) intruder).killIntruder();
 
                             if (checkGameOver(scenario.GUARD_GAME_MODE, GUARD)) {
@@ -359,6 +360,17 @@ public class Simulator extends AnimationTimer {
         }
 
         return new Tuple<>((guardSeenGrids / totalGrids) * 100, (intruderSeenGrids / totalGrids) * 100);
+    }
+
+    public boolean checkIntruderInSight(Agent guard, Agent intruder){
+        List<Tile> visionGuard = guard.getSeenTiles();
+        XY intruderTile = intruder.getXY();
+        for (Tile tile : visionGuard) {
+            if (tile.getXY().equals(intruderTile)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
