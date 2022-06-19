@@ -23,8 +23,12 @@ public class Vector extends Point2D implements VectorPoint {
     }
 
     @Override
-    public int distance(Vector vector) {
-        return (int) distance((Point2D) vector);
+    public int distance(VectorPoint vector) {
+        if (vector instanceof Point2D v) {
+            return (int) v.distance(v);
+        } else if (vector instanceof XY xy) {
+            return (int) distance(xy.x(), xy.y());
+        } else throw new IllegalArgumentException();
     }
 
 }

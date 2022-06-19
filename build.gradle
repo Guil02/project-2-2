@@ -17,11 +17,13 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     implementation 'com.opencsv:opencsv:5.6'
+    implementation 'org.jgrapht:jgrapht:1.5.1'
+    implementation 'org.jgrapht:jgrapht-core:1.5.1'
 }
 
 javafx {
     version = "18"
-    modules = [ 'javafx.controls','javafx.fxml', 'javafx.media' ]
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.media']
 }
 
 mainClassName = 'group.seven.Main'

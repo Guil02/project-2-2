@@ -4,11 +4,15 @@ import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.environment.Scenario;
 import group.seven.utils.Methods;
+import org.jgrapht.GraphPath;
+import org.jgrapht.graph.DefaultWeightedEdge;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static group.seven.enums.TileType.INTRUDER;
+import static group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm.astar;
+import static group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm.maxDistance;
 
 public class Individual {
     final int chromosomeLength;
@@ -66,19 +70,22 @@ public class Individual {
 //        } else {
         int amountOfAgent = 0;
         double distance = 0;
+
         for (Agent a : getCurrentScenario().TILE_MAP.agents) {
             if (a.getType() == INTRUDER) {
-                distance += calculateDistanceFromTarget(a);
+
+                GraphPath<XY, DefaultWeightedEdge> path = astar.getPath(a.getXY(), a.scenario.targetArea.getXY());
+                List<XY> nodePath = path.getVertexList();
+                distance += nodePath.size();
+//                distance += calculateDistanceFromTarget(a);
                 amountOfAgent++;
             }
         }
         double averageDistance = distance / amountOfAgent;
-        double b = getCurrentScenario().HEIGHT;
-        b = b * b;
-        double c = getCurrentScenario().WIDTH;
-        c = c * c;
-        double maxDistance = Math.sqrt(b + c);
+
         fitness = 1 - (averageDistance / maxDistance);
+
+
         if (Double.isNaN(fitness)) {
             throw new IllegalStateException("fitness value was NAN" + "\naverage distance " + averageDistance + "\n");
         }

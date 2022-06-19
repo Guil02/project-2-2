@@ -14,28 +14,27 @@ import static group.seven.utils.Methods.print;
 //TODO the agent structure very much work in progress
 public abstract class Agent {
     public static int IDs = 0;
-
-    private double numExplored;
     //Coordinates and Frames:
     public final XY globalSpawn; //global spawn position
-    protected int x, y;
     public final Frame frame; //handles coordinate transforms
-    protected Cardinal direction;
+    private final ArrayList<Marker> markers = new ArrayList<>();
+    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
     //Type
     public TileType agentType;
+    //Marker and Pheromone
+    public int PHEROMONELIFETIME = 20;
+    public Scenario scenario;
+    protected int x, y;
+    protected Cardinal direction;
     //Frontier
     protected List<Tile> seenTiles = new ArrayList<>(30);
     protected List<Tile> seenFurthestTiles = new ArrayList<>(30); // TODO: connect it with vision - waiting for xander
-    //Marker and Pheromone
-    public int PHEROMONELIFETIME = 20;
-    private final ArrayList<Marker> markers = new ArrayList<>();
-    private final ArrayList<Pheromone> pheromones = new ArrayList<>();
-    //Internal map
-    private TileNode[][] map;
     //Type
     boolean ignorePortal = false;
     boolean isTeleported = false;
-    public Scenario scenario;
+    private double numExplored;
+    //Internal map
+    private TileNode[][] map;
 
     //Current Speed
     //Strategy
@@ -73,12 +72,12 @@ public abstract class Agent {
         this.y = pos.y();
     }
 
-    public void setIgnorePortal(boolean ignorePortal) {  // TODO: handle by simulator
-        this.ignorePortal = ignorePortal;
-    }
-
     public boolean getIgnorePortal() {
         return this.ignorePortal;
+    }
+
+    public void setIgnorePortal(boolean ignorePortal) {  // TODO: handle by simulator
+        this.ignorePortal = ignorePortal;
     }
 
     public void executeTurn(Move move) {
@@ -111,10 +110,13 @@ public abstract class Agent {
         return seenTiles;
     }
 
+    public void setSeenTiles(List<Tile> seenTiles) {
+        this.seenTiles = seenTiles;
+    }
+
     public List<Tile> getSeenFurthestTiles() {
         return seenFurthestTiles;
     }
-
 
     protected int newID() {
         return IDs++;
@@ -160,12 +162,12 @@ public abstract class Agent {
         return direction;
     }
 
-    public XY getGlobalSpawn() {
-        return globalSpawn;
-    }
-
     public void setDirection(Cardinal d) {
         direction = d;
+    }
+
+    public XY getGlobalSpawn() {
+        return globalSpawn;
     }
 
     public TileType getType() {
@@ -176,16 +178,16 @@ public abstract class Agent {
         return numExplored;
     }
 
-    public void updateNumExplored() {
-        this.numExplored++;
-    }
-
     /*
 
     Feel free to ignore these methods below, I'm trying to think of a way to make
     updating agents based on their moves more intuitive, and maybe will make these update
     w.r.g the coordinate frame in future
      */
+
+    public void updateNumExplored() {
+        this.numExplored++;
+    }
 
     //perhaps this method overloading could be an approach to update the agent
     public void update() {
@@ -287,14 +289,13 @@ public abstract class Agent {
         }
     }
 
-    public TileNode[][] getMap() {
-        return map;
-    }
-
 //    public XY getLocalCoordinate(int x, int y) {
 //        return new XY(x - globalSpawn.x(), y - globalSpawn.y());
 //    }
 
+    public TileNode[][] getMap() {
+        return map;
+    }
 
     public void setTeleported(boolean isTeleported) {
         this.isTeleported = isTeleported;
@@ -303,6 +304,9 @@ public abstract class Agent {
     public boolean getIsTeleported() {
         return this.isTeleported;
     }
+
+
+    //#################### Unused methods: ##########################//
 
     @Override
     public String toString() {
@@ -316,9 +320,6 @@ public abstract class Agent {
                 ", agentType=" + agentType +
                 '}';
     }
-
-
-    //#################### Unused methods: ##########################//
 
     /**
      * This function adds a marker to the list of markers.
@@ -346,4 +347,7 @@ public abstract class Agent {
         return this.markers;
     }
 
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
+    }
 }
