@@ -2,6 +2,7 @@ package group.seven.logic.algorithms;
 
 import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
+import group.seven.enums.Cardinal;
 import group.seven.logic.geometric.Vector;
 import group.seven.logic.geometric.VectorPoint;
 import group.seven.logic.geometric.XY;
@@ -32,6 +33,7 @@ public class GraphAstar implements Algorithm {
     Vector targetEstimate;
     VectorPoint currentPos;
     Graph<XY, DefaultWeightedEdge> graph;
+    int count = 0;
 
     public GraphAstar(Agent agent) {
         this.agent = agent;
@@ -81,6 +83,53 @@ public class GraphAstar implements Algorithm {
         }
 
         return g;
+    }
+
+    public Move calculateMovement(LinkedList<XY> xyLinkedList) {
+
+        Move move = null;
+
+        Cardinal agentFace = agent.getDirection();
+        Cardinal differenceFace = null;
+
+
+        if (xyLinkedList.get(0).getXY().x() - agent.getX() > 0) {
+
+            differenceFace = Cardinal.EAST;
+
+        } else if (xyLinkedList.get(0).getXY().x() - agent.getX() < 0) {
+
+            differenceFace = Cardinal.WEST;
+
+        } else if (xyLinkedList.get(0).getXY().y() - agent.getY() > 0) {
+
+            differenceFace = Cardinal.SOUTH;
+
+        } else if (xyLinkedList.get(0).getXY().y() - agent.getY() < 0) {
+
+            differenceFace = Cardinal.NORTH;
+
+        }
+
+        if (agentFace == differenceFace) {
+            count++;
+            xyLinkedList.removeFirst();
+            calculateMovement(xyLinkedList);
+        } else if (count > 0) {
+            move = new Move(Action.MOVE_FORWARD, count, agent);
+            count = 0;
+            return move;
+        }
+
+        if (agentFace != differenceFace) {
+            //translate cardinal to action
+
+            move = new Move(Action.NOTHING, count, agent);
+            count = 0;
+            return move;
+        }
+
+        return null;
     }
 
     @Override
