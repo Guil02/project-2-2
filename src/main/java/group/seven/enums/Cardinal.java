@@ -1,11 +1,11 @@
 package group.seven.enums;
 
 import group.seven.logic.geometric.XY;
-import group.seven.logic.simulation.Simulator;
 import javafx.geometry.Point2D;
 
+import java.util.Random;
+
 import static group.seven.enums.Action.*;
-import static group.seven.enums.Action.TURN_LEFT;
 
 /**
  * Represents the cardinal directions on a map compass.
@@ -25,13 +25,25 @@ public enum Cardinal {
      * Cardinal value in both the x and y directions
      */
     public final XY unitVector;
+    private static final Random rand = new Random();
 
     Cardinal(XY unitVector) {
         this.unitVector = unitVector;
     }
 
     /**
+     * Returns a random Cardinal direction of the 4 types
+     * NOWHERE is excluded
+     *
+     * @return a random cardinal direction
+     */
+    public static Cardinal randomDirection() {
+        return Cardinal.values()[rand.nextInt(4)];
+    }
+
+    /**
      * Rotation cardinal.
+     * No idea if this works. Please use only with extreme caution and testing
      *
      * @param location the location
      * @return the cardinal
@@ -52,6 +64,7 @@ public enum Cardinal {
 
     /**
      * Gets rotation.
+     * PLS don't use this. Not tested and no idea if it works
      *
      * @param x the x
      * @param y the y
@@ -78,16 +91,6 @@ public enum Cardinal {
     }
 
     /**
-     * Returns a random Cardinal direction of the 4 types
-     * NOWHERE is excluded
-     *
-     * @return a random cardinal direction
-     */
-    public static Cardinal randomDirection() {
-        return Cardinal.values()[Simulator.rand.nextInt(4)];
-    }
-
-    /**
      * Inverts this Cardinals direction
      *
      * @return the opposite direction of this Cardinal
@@ -102,6 +105,12 @@ public enum Cardinal {
         };
     }
 
+    /**
+     * Returns an Action rotation enum associated with the given direction
+     *
+     * @param c Cardinal Direction
+     * @return Action representing rotating to the given cardinal direction
+     */
     private Action getAction(Cardinal c) {
         return switch (c) {
             case NORTH -> TURN_UP;

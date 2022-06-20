@@ -20,3 +20,6 @@ gradle-app.setting
 Terms
 .idea
 *csv
+/java_pid4408.hprof.9fxswo.b.ij/classes.index
+*.index
+/java_pid*

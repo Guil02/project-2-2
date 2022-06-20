@@ -43,21 +43,19 @@ public class Simulator extends AnimationTimer {
     public Simulator(Scenario scenario) {
         this.scenario = scenario;
         rand = new Random();
-
+        prev = System.nanoTime();
         spawnAgents(scenario.GUARD_GAME_MODE);
-
         elapsedTimeSteps = 0;
+
         if (Config.GUI_ON) {
             display = new SimulationScreen(this);
             Main.stage.setScene(new Scene(display));
             Main.stage.centerOnScreen();
         }
-        //Either there's a bug in my GUI or in the Vision or in the way agents vision is tracked/stored
-        //Arrays.stream(TILE_MAP.agents).forEach(Agent::updateVision);
+
         if (Config.GUI_ON) {
             display.render();
         }
-        prev = System.nanoTime();
         if (Config.GUI_ON) {
             start();
         }
