@@ -14,7 +14,7 @@ import java.util.*;
 public class FishSwarm implements Algorithm {
     private final int layerLevels = 2; // levels of neighbours to consider
     private final int F_MAX = 201;
-    private final int CROWDING_FACTOR = 5;
+    private final int CROWDING_FACTOR;
     //private final double EPSILON = 0.000001;
     //private final double min = -1 * 8 * layerLevels;
     //private final double max = 8 * layerLevels;
@@ -30,6 +30,7 @@ public class FishSwarm implements Algorithm {
 
     public FishSwarm(Agent agent) {
         this.agent = agent;
+        CROWDING_FACTOR = agent.scenario.NUM_GUARDS/2;
         fitnessMap = new int[agent.scenario.WIDTH][agent.scenario.HEIGHT];
         calculateFitness();
         maxHCost = calculateMaxHCost();
