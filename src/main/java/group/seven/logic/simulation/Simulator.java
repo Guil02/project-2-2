@@ -39,6 +39,7 @@ public class Simulator extends AnimationTimer {
     private SimulationScreen display = null;
     private int count = 0;
     private long prev; //used for frame-rate calculation (eventually)
+    private final int catchIntruderInSight = 14;
 
     public Simulator(Scenario scenario) {
         this.scenario = scenario;
@@ -367,10 +368,12 @@ public class Simulator extends AnimationTimer {
     public boolean checkIntruderInSight(Agent guard, Agent intruder) {
         List<Tile> visionGuard = guard.getSeenTiles();
         XY intruderTile = intruder.getXY();
+        int counter = 0;
         for (Tile tile : visionGuard) {
-            if (tile.getXY().equals(intruderTile)) {
+            if (tile.getXY().equals(intruderTile) && counter <= catchIntruderInSight ) {
                 return true;
             }
+            counter++;
         }
         return false;
     }
