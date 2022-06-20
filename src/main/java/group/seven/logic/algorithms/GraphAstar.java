@@ -87,7 +87,7 @@ public class GraphAstar implements Algorithm {
 
     public Move calculateMovement(LinkedList<XY> xyLinkedList) {
 
-        Move move = null;
+        Move move ;
 
         Cardinal agentFace = agent.getDirection();
         Cardinal differenceFace = null;
@@ -111,6 +111,7 @@ public class GraphAstar implements Algorithm {
 
         }
 
+
         if (agentFace == differenceFace) {
             count++;
             xyLinkedList.removeFirst();
@@ -123,10 +124,24 @@ public class GraphAstar implements Algorithm {
 
         if (agentFace != differenceFace) {
             //translate cardinal to action
+            if (differenceFace == Cardinal.NORTH) {
+                move = new Move(Action.TURN_UP, 0, agent);
+                count = 0;
+                return move;
+            } else if (differenceFace == Cardinal.SOUTH) {
+                move = new Move(Action.TURN_DOWN, 0, agent);
+                count = 0;
+                return move;
+            } else if (differenceFace == Cardinal.WEST) {
+                move = new Move(Action.TURN_LEFT, 0, agent);
+                count = 0;
+                return move;
+            } else if (differenceFace == Cardinal.EAST) {
+                move = new Move(Action.TURN_RIGHT, 0, agent);
+                count = 0;
+                return move;
+            }
 
-            move = new Move(Action.NOTHING, count, agent);
-            count = 0;
-            return move;
         }
 
         return null;
