@@ -14,15 +14,17 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="584.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="group.seven.gui.ExperimentMenu">
+<fx:root prefHeight="584.0" prefWidth="745.0" type="AnchorPane" xmlns="http://javafx.com/javafx/18"
+         xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox alignment="TOP_CENTER" minHeight="540.0" minWidth="720.0" prefHeight="598.0" prefWidth="745.0"
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
@@ -66,7 +68,7 @@
                                                 <Font size="16.0"/>
                                             </font>
                                         </Label>
-                                        <Label fx:id="gameModeLabel1" text="Intruders" textFill="WHITE">
+                                        <Label fx:id="terminateLabel" text="Intruders" textFill="WHITE">
                                             <font>
                                                 <Font name="System Italic" size="14.0"/>
                                             </font>
@@ -89,7 +91,7 @@
                                                 <Font size="16.0"/>
                                             </font>
                                         </Label>
-                                        <Label fx:id="algorithmLabel0" text="None Selected" textFill="WHITE">
+                                        <Label fx:id="guardsLabel" text="None Selected" textFill="WHITE">
                                             <font>
                                                 <Font name="System Italic" size="14.0"/>
                                             </font>
@@ -109,7 +111,7 @@
                                                 <Font size="16.0"/>
                                             </font>
                                         </Label>
-                                        <Label fx:id="algorithmLabel1" text="None Selected" textFill="WHITE">
+                                        <Label fx:id="intrudersLabel" text="None Selected" textFill="WHITE">
                                             <font>
                                                 <Font name="System Italic" size="14.0"/>
                                             </font>
@@ -132,7 +134,7 @@
                                                 <Font size="16.0"/>
                                             </font>
                                         </Label>
-                                        <Label fx:id="algorithmLabel2" text="None Selected" textFill="WHITE">
+                                        <Label fx:id="winConditionLabel" text="None Selected" textFill="WHITE">
                                             <font>
                                                 <Font name="System Italic" size="14.0"/>
                                             </font>
@@ -153,7 +155,7 @@
                                                 <Font size="16.0"/>
                                             </font>
                                         </Label>
-                                        <Label fx:id="algorithmLabel21" text="None Selected" textFill="WHITE">
+                                        <Label fx:id="dataLoggerLabel" text="None Selected" textFill="WHITE">
                                             <font>
                                                 <Font name="System Italic" size="14.0"/>
                                             </font>
@@ -434,7 +436,7 @@
             <children>
                 <VBox alignment="TOP_CENTER" spacing="5.0" style="-fx-background-color: #ffebad;" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label text="Configure" VBox.vgrow="ALWAYS">
+                        <Label text="Configure Scenario Properties" VBox.vgrow="ALWAYS">
                             <font>
                                 <Font size="22.0"/>
                             </font>
@@ -442,14 +444,15 @@
                         <HBox alignment="TOP_CENTER" style="-fx-background-color: #ffebad;" VBox.vgrow="ALWAYS">
                             <children>
                                 <Region prefWidth="10.0" HBox.hgrow="SOMETIMES"/>
-                                <VBox alignment="TOP_CENTER" minWidth="140.0" spacing="10.0"
+                                <VBox alignment="TOP_CENTER" minWidth="140.0" prefHeight="518.0" prefWidth="230.0"
+                                      spacing="10.0"
                                       style="-fx-background-color: f2cc8f; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10;"
                                       HBox.hgrow="ALWAYS">
                                     <HBox.margin>
                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                     </HBox.margin>
                                     <children>
-                                        <Label text="Scenario Properties">
+                                        <Label text="Environment">
                                             <font>
                                                 <Font size="18.0"/>
                                             </font>
@@ -474,10 +477,22 @@
                                                 </DropShadow>
                                             </effect>
                                             <children>
-                                                <TextField fx:id="scenarioName" promptText="Name"/>
-                                                <TextField fx:id="scenarioWidth" promptText="Width"/>
-                                                <TextField fx:id="scenarioHeight" layoutX="15.0" layoutY="15.0"
-                                                           promptText="Height"/>
+                                                <TextField fx:id="scenarioName" promptText="Name">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </TextField>
+                                                <TextField fx:id="scenarioWidth" editable="false" promptText="Width">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </TextField>
+                                                <TextField fx:id="scenarioHeight" editable="false" layoutX="15.0"
+                                                           layoutY="15.0" promptText="Height">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </TextField>
                                             </children>
                                         </VBox>
                                         <VBox layoutX="25.0" layoutY="62.0" prefHeight="100.0" prefWidth="100.0"
@@ -519,7 +534,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
                                                         <Label text="Algorithm"/>
-                                                        <ChoiceBox fx:id="defaultGuardAlgoSelection" prefWidth="150.0"/>
+                                                        <ChoiceBox fx:id="defaultGaurdAlgo" prefWidth="150.0"/>
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -547,10 +562,10 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
                                                         <Label text="Amount"/>
-                                                        <Slider fx:id="numGuardSlider1" blockIncrement="1.0"
+                                                        <Slider fx:id="numIntruderSlider" blockIncrement="1.0"
                                                                 majorTickUnit="5.0" max="10.0" minorTickCount="5"
                                                                 snapToTicks="true" value="3.0"/>
-                                                        <Label fx:id="numGuardVal1" text="3">
+                                                        <Label fx:id="numIntruderVal" text="3">
                                                             <font>
                                                                 <Font name="System Bold Italic" size="14.0"/>
                                                             </font>
@@ -560,8 +575,7 @@
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
                                                         <Label text="Algorithm"/>
-                                                        <ChoiceBox fx:id="defaultGuardAlgoSelection1"
-                                                                   prefWidth="150.0"/>
+                                                        <ChoiceBox fx:id="defaultAgentAlgo" prefWidth="150.0"/>
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -569,9 +583,10 @@
                                                 <Insets left="5.0" right="5.0"/>
                                             </VBox.margin>
                                         </VBox>
-                                        <VBox layoutX="20.0" layoutY="282.0" prefHeight="100.0" prefWidth="100.0"
-                                              spacing="5.0"
-                                              style="-fx-background-color: fafafa; -fx-background-radius: 8;">
+                                        <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="282.0" prefHeight="100.0"
+                                              prefWidth="100.0" spacing="5.0"
+                                              style="-fx-background-color: fafafa; -fx-background-radius: 8;"
+                                              VBox.vgrow="ALWAYS">
                                             <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                             </padding>
@@ -586,6 +601,72 @@
                                             <VBox.margin>
                                                 <Insets left="5.0" right="5.0"/>
                                             </VBox.margin>
+                                            <children>
+                                                <GridPane alignment="CENTER" prefHeight="102.0" prefWidth="210.0"
+                                                          VBox.vgrow="ALWAYS">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.200048828125"
+                                                                           minWidth="10.0"
+                                                                           prefWidth="80.79996337890626"/>
+                                                        <ColumnConstraints hgrow="SOMETIMES"
+                                                                           maxWidth="82.19999999999999" minWidth="10.0"
+                                                                           prefWidth="65.60003662109375"/>
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.4000244140625"
+                                                                           minWidth="10.0" prefWidth="74.199951171875"/>
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints maxHeight="36.60001220703125" minHeight="10.0"
+                                                                        prefHeight="26.6" vgrow="SOMETIMES"/>
+                                                        <RowConstraints maxHeight="47.8" minHeight="10.0"
+                                                                        prefHeight="40.20000000000001"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints maxHeight="36.8" minHeight="1.2000488281249986"
+                                                                        prefHeight="34.3999755859375"
+                                                                        vgrow="SOMETIMES"/>
+                                                    </rowConstraints>
+                                                    <children>
+                                                        <Label text="Guards" GridPane.columnIndex="1"
+                                                               GridPane.halignment="CENTER"
+                                                               GridPane.valignment="CENTER">
+                                                            <font>
+                                                                <Font size="14.0"/>
+                                                            </font>
+                                                        </Label>
+                                                        <Label text="Intruders" GridPane.columnIndex="2"
+                                                               GridPane.halignment="CENTER"
+                                                               GridPane.valignment="CENTER">
+                                                            <font>
+                                                                <Font size="14.0"/>
+                                                            </font>
+                                                        </Label>
+                                                        <Label text="Base Speed:" GridPane.rowIndex="1">
+                                                            <font>
+                                                                <Font size="14.0"/>
+                                                            </font>
+                                                        </Label>
+                                                        <Label text="Max Speed" GridPane.rowIndex="2">
+                                                            <font>
+                                                                <Font size="14.0"/>
+                                                            </font>
+                                                        </Label>
+                                                        <TextField fx:id="baseSpeedGuard" GridPane.columnIndex="1"
+                                                                   GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+                                                        <TextField fx:id="sprintSpeedGuard" GridPane.columnIndex="2"
+                                                                   GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+                                                        <TextField fx:id="baseSpeedIntruder" GridPane.columnIndex="1"
+                                                                   GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+                                                        <TextField fx:id="sprintSpeedIntruder" GridPane.columnIndex="2"
+                                                                   GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+                                                        <Label text="Agents">
+                                                            <font>
+                                                                <Font size="14.0"/>
+                                                            </font>
+                                                        </Label>
+                                                    </children>
+                                                </GridPane>
+                                                <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="40.0"
+                                                      spacing="10.0"/>
+                                            </children>
                                         </VBox>
                                     </children>
                                     <padding>
@@ -600,13 +681,14 @@
                                         </DropShadow>
                                     </effect>
                                 </VBox>
-                                <Region maxWidth="30.0" minWidth="20.0" HBox.hgrow="SOMETIMES"/>
+                                <Region maxWidth="30.0" minWidth="10.0" prefHeight="538.0" prefWidth="10.0"
+                                        HBox.hgrow="SOMETIMES"/>
                                 <VBox alignment="TOP_CENTER" layoutX="176.0" layoutY="10.0" minWidth="140.0"
-                                      spacing="10.0"
+                                      prefHeight="518.0" prefWidth="206.0" spacing="10.0"
                                       style="-fx-background-color: f2cc8f; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10;"
                                       HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label text="Data Logging" VBox.vgrow="ALWAYS">
+                                        <Label text="Sensors" VBox.vgrow="ALWAYS">
                                             <font>
                                                 <Font size="18.0"/>
                                             </font>
@@ -627,6 +709,28 @@
                                                     </color>
                                                 </DropShadow>
                                             </effect>
+                                            <children>
+                                                <Label text="Sensors">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </Label>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label text="View Distance"/>
+                                                        <TextField fx:id="viewDistance" prefHeight="25.0"
+                                                                   prefWidth="30.0" HBox.hgrow="NEVER"/>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="40.0"
+                                                      spacing="10.0">
+                                                    <children>
+                                                        <Label text="Smell Distance"/>
+                                                        <TextField fx:id="smellDistance" prefHeight="25.0"
+                                                                   prefWidth="30.0" HBox.hgrow="NEVER"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
                                             <VBox.margin>
                                                 <Insets left="5.0" right="5.0"/>
                                             </VBox.margin>
@@ -647,6 +751,21 @@
                                             <VBox.margin>
                                                 <Insets left="5.0" right="5.0"/>
                                             </VBox.margin>
+                                            <children>
+                                                <Label text="Vision Type">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </Label>
+                                                <RadioButton fx:id="coneVision" mnemonicParsing="false"
+                                                             text="Cone Vision">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="visionType"/>
+                                                    </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="rectangleVision" mnemonicParsing="false"
+                                                             text="Rectangle Vision" toggleGroup="$visionType"/>
+                                            </children>
                                         </VBox>
                                         <VBox prefHeight="100.0" prefWidth="100.0" spacing="5.0"
                                               style="-fx-background-color: fafafa; -fx-background-radius: 8;">
@@ -664,6 +783,21 @@
                                             <VBox.margin>
                                                 <Insets left="5.0" right="5.0"/>
                                             </VBox.margin>
+                                            <children>
+                                                <Label text="Winning Condition: Guards:">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </Label>
+                                                <RadioButton fx:id="singleCaught" mnemonicParsing="false"
+                                                             text="Single Intruder Caught">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="guardWin"/>
+                                                    </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="allCaught" mnemonicParsing="false"
+                                                             text="All Intruders Caught" toggleGroup="$guardWin"/>
+                                            </children>
                                         </VBox>
                                         <VBox prefHeight="100.0" prefWidth="100.0" spacing="5.0"
                                               style="-fx-background-color: fafafa; -fx-background-radius: 8;">
@@ -681,6 +815,21 @@
                                             <VBox.margin>
                                                 <Insets left="5.0" right="5.0"/>
                                             </VBox.margin>
+                                            <children>
+                                                <Label text="Winning Condition: Intruders">
+                                                    <font>
+                                                        <Font size="14.0"/>
+                                                    </font>
+                                                </Label>
+                                                <RadioButton fx:id="oneIntruder" mnemonicParsing="false"
+                                                             text="One Intruder at Target">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="intruderWin"/>
+                                                    </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="allIntruders" mnemonicParsing="false"
+                                                             text="All Intruders At Target" toggleGroup="$intruderWin"/>
+                                            </children>
                                         </VBox>
                                     </children>
                                     <HBox.margin>
@@ -709,4 +858,4 @@
             </children>
         </HBox>
     </children>
-</AnchorPane>
+</fx:root>

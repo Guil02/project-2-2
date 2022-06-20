@@ -89,6 +89,7 @@ public class MainMenu {
 
     @FXML
     void newExperiment(ActionEvent event) {
+        ExperimentMenu menu = new ExperimentMenu(new ScenarioBuilder(scenarioFile).build());
 
     }
 
