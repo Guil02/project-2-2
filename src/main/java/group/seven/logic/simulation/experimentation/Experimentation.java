@@ -13,6 +13,7 @@ import static group.seven.enums.Status.GAME_OVER;
 import static group.seven.enums.Status.RUNNING;
 import static group.seven.utils.Methods.print;
 
+//TODO ignore, first draft
 public class Experimentation {
 
     public static File[] mapFiles;

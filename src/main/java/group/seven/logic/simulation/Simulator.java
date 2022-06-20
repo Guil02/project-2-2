@@ -31,15 +31,25 @@ public class Simulator extends AnimationTimer {
     public static final int maxTime = Config.MAX_GAME_LENGTH;
     public static Random rand = new Random();
     public static Status status;
-    final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
-    final boolean guiMode = true;
+    public final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
+    public boolean guiMode = true;
     final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
     public Scenario scenario;
-    double elapsedTimeSteps;
+    public double elapsedTimeSteps;
     private SimulationScreen display = null;
-    private int count = 0;
-    private long prev; //used for frame-rate calculation (eventually)
-    private final int catchIntruderInSight = 14;
+    protected int count = 0;
+    protected long prev; //used for frame-rate calculation (eventually)
+    protected final int catchIntruderInSight = 14;
+
+    public Simulator(Scenario scenario, boolean experiment) {
+        this.scenario = scenario;
+        rand = new Random();
+        prev = System.nanoTime();
+        spawnAgents(scenario.GUARD_GAME_MODE);
+        elapsedTimeSteps = 0;
+        status = Status.RUNNING;
+        guiMode = false;
+    }
 
     public Simulator(Scenario scenario) {
         this.scenario = scenario;
@@ -370,7 +380,7 @@ public class Simulator extends AnimationTimer {
         XY intruderTile = intruder.getXY();
         int counter = 0;
         for (Tile tile : visionGuard) {
-            if (tile.getXY().equals(intruderTile) && counter <= catchIntruderInSight ) {
+            if (tile.getXY().equals(intruderTile) && counter <= catchIntruderInSight) {
                 return true;
             }
             counter++;

@@ -106,6 +106,8 @@ public class ExperimentMenu extends AnchorPane {
         scenario.INTRUDER_SPRINT_SPEED = Double.parseDouble(baseSpeedIntruder.getText());
         scenario.GUARD_BASE_SPEED = Double.parseDouble(baseSpeedGuard.getText());
         scenario.GUARD_SPRINT_SPEED = Double.parseDouble(baseSpeedIntruder.getText());
+        scenario.NAME = scenarioName.getText();
+        scenario.SMELL_DISTANCE = Integer.parseInt(smellDistance.getText());
     }
 
     @FXML

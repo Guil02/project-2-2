@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static com.opencsv.ICSVWriter.*;
+//TODO not sure what to do with this class yet
 
 /**
  * Default mode is to append to existing files, and to create new file with supplied header
