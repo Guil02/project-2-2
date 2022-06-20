@@ -33,14 +33,14 @@ public class Simulator extends AnimationTimer {
     public static Status status;
     public final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
     public boolean guiMode = true;
-    final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
-    private final int catchIntruderInSight = 14;
+    protected int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
+    protected final int catchIntruderInSight = 14;
     public Scenario scenario;
     public double elapsedTimeSteps;
     private SimulationScreen display = null;
-    private int count = 0;
-    private long prev; //used for frame-rate calculation (eventually)
-    private int rotaions = 0;
+    protected int count = 0;
+    protected long prev; //used for frame-rate calculation (eventually)
+    protected int rotations = 0;
 
     public Simulator(Scenario scenario, boolean experiment) {
         this.scenario = scenario;
@@ -111,7 +111,7 @@ public class Simulator extends AnimationTimer {
             display.render();   //update GUI
             elapsedTimeSteps += timeStep; //update elapsed time steps
         }
-        System.out.print("\rElapsed Time Steps: " + elapsedTimeSteps + "rotation count: " + rotaions +"\t framerate: " + ((double) now - prev) / 1e9);
+        System.out.print("\rElapsed Time Steps: " + elapsedTimeSteps + "rotation count: " + rotations + "\t framerate: " + ((double) now - prev) / 1e9);
 
 
 //        //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
@@ -247,7 +247,7 @@ public class Simulator extends AnimationTimer {
                 positionChangeMoves.add(m);
             else
                 rotationChangeMoves.add(m);
-            rotaions++;
+            rotations++;
         }
 
         CollisionHandler.handle(positionChangeMoves, scenario);
