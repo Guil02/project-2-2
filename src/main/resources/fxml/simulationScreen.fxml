@@ -23,8 +23,8 @@
                     <graphic>
                         <Label fx:id="gameModeLabel" text="Exploration" textFill="WHITE">
                             <font>
-                        <Font name="System Italic" size="24.0" />
-                     </font>
+                                <Font name="System Italic" size="24.0"/>
+                            </font>
                   </Label>
                </graphic>
             </Label>
