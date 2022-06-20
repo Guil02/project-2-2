@@ -147,7 +147,7 @@ public class Measures {
                     gFOVs.add((double) g.getSeenTiles().size());
                 } else if (a instanceof Intruder i) {
                     iSpeeds.add((double) i.getSpeed());
-                    gFOVs.add((double) i.getSeenTiles().size());
+                    iFOVs.add((double) i.getSeenTiles().size());
                 }
             }
         }
