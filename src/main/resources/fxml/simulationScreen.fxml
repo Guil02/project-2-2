@@ -10,17 +10,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <HBox alignment="CENTER" prefHeight="60.0" prefWidth="900.0" style="-fx-background-color: #2c3e50;" BorderPane.alignment="CENTER">
-         <children>
-            <Label contentDisplay="RIGHT" graphicTextGap="8.0" text="Surveillance:" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-               <graphic>
-                  <Label fx:id="gameModeLabel" text="Exploration" textFill="WHITE">
-                     <font>
+<fx:root minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" type="BorderPane"
+         xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <HBox alignment="CENTER" prefHeight="60.0" prefWidth="900.0" style="-fx-background-color: #2c3e50;"
+              BorderPane.alignment="CENTER">
+            <children>
+                <Label contentDisplay="RIGHT" graphicTextGap="8.0" text="Surveillance:" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="24.0"/>
+                    </font>
+                    <graphic>
+                        <Label fx:id="gameModeLabel" text="Exploration" textFill="WHITE">
+                            <font>
                         <Font name="System Italic" size="24.0" />
                      </font>
                   </Label>

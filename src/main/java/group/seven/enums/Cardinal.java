@@ -105,14 +105,8 @@ public enum Cardinal {
         };
     }
 
-    /**
-     * Returns an Action rotation enum associated with the given direction
-     *
-     * @param c Cardinal Direction
-     * @return Action representing rotating to the given cardinal direction
-     */
-    private Action getAction(Cardinal c) {
-        return switch (c) {
+    public Action getAction() {
+        return switch (this) {
             case NORTH -> TURN_UP;
             case SOUTH -> TURN_DOWN;
             case EAST -> TURN_RIGHT;

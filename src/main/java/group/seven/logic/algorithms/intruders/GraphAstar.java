@@ -2,6 +2,7 @@ package group.seven.logic.algorithms.intruders;
 
 import group.seven.enums.Action;
 import group.seven.enums.AlgorithmType;
+import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.geometric.Vector;
 import group.seven.logic.geometric.VectorPoint;
@@ -21,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import static group.seven.enums.Cardinal.*;
 import static group.seven.enums.TileType.WALL;
 
 public class GraphAstar implements Algorithm {
@@ -33,6 +35,7 @@ public class GraphAstar implements Algorithm {
     Vector targetEstimate;
     VectorPoint currentPos;
     Graph<XY, DefaultWeightedEdge> graph;
+    int count = 0;
 
     public GraphAstar(Agent agent) {
         this.agent = agent;
@@ -84,6 +87,94 @@ public class GraphAstar implements Algorithm {
         return g;
     }
 
+    /**
+     * Non-recursive implementation using randomness to prevent collision and always try to move at
+     * maximum speed
+     *
+     * @param path sequence of (tile) coordinates to reach destination
+     * @return the Move associated with taking the next step in the sequence
+     */
+    private Move calculateMove(LinkedList<XY> path) {
+        if (path.isEmpty()) {
+            Action rotate = randomDirection().getAction();
+            return new Move(rotate, 0, agent);
+        } else {
+            XY tile = path.getFirst();
+            Cardinal direction = getCardinal(tile);
+
+            if (agent.getDirection() == direction) {
+                int step; //distance to travel this move
+                for (step = 0; agent.getDirection() == direction && step <= agent.getSpeed() && !path.isEmpty(); step++) {
+                    direction = getCardinal(path.poll()); //update direction to next cordinate
+                }
+                //to prevent collision adjust move distance randomly with gaussian distribution
+                return new Move(Action.MOVE_FORWARD, (int) (step + Math.rint(rand.nextGaussian())), agent);
+            } else {
+                //also introduce randomness for taking a random rotation, more exploration and helps against agent collisions
+                Action rotate = Math.random() < 0.95 ? direction.getAction() : randomDirection().getAction();
+                return new Move(rotate, 0, agent);
+            }
+        }
+    }
+
+    public Move calculateMovement(LinkedList<XY> path) {
+        Move move;
+        Cardinal agentFace = agent.getDirection();
+        Cardinal differenceFace = getCardinal(path.get(0));
+
+        if (agentFace == differenceFace && path.size() > 1) {
+            count++;
+            path.removeFirst();
+            calculateMovement(path);
+        } else if (count > 0) {
+            move = new Move(Action.MOVE_FORWARD, count, agent);
+            count = 0;
+            return move;
+        }
+        if (agentFace != differenceFace) {
+//            Action rotation = differenceFace.getAction();
+//            count = 0;
+//            return new Move(rotation, 0, agent);
+
+            //translate cardinal to action
+            if (differenceFace == NORTH) {
+                move = new Move(Action.TURN_UP, 0, agent);
+                count = 0;
+                return move;
+            } else if (differenceFace == SOUTH) {
+                move = new Move(Action.TURN_DOWN, 0, agent);
+                count = 0;
+                return move;
+            } else if (differenceFace == WEST) {
+                move = new Move(Action.TURN_LEFT, 0, agent);
+                count = 0;
+                return move;
+            } else if (differenceFace == EAST) {
+                move = new Move(Action.TURN_RIGHT, 0, agent);
+                count = 0;
+                return move;
+            }
+
+        }
+
+        return null;
+    }
+
+    private Cardinal getCardinal(XY tile) {
+        XY pos = agent.getXY();
+        if (tile.x() - pos.x() > 0) {
+            return EAST;
+        } else if (tile.x() - pos.x() < 0) {
+            return WEST;
+        } else if (tile.y() - pos.y() > 0) {
+            return SOUTH;
+        } else if (tile.y() - pos.y() < 0) {
+            return NORTH;
+        } else {
+            return NOWHERE;
+        }
+    }
+
     @Override
     public Move getNext() {
         AStarShortestPath<XY, DefaultWeightedEdge> astar = new AStarShortestPath<>(graph, XY::distance);
@@ -92,13 +183,17 @@ public class GraphAstar implements Algorithm {
         LinkedList<XY> nodePath = new LinkedList<>(path.getVertexList());
 
         nodePath.removeFirst();
-        XY next = nodePath.removeFirst();
-        agent.update(next);
-        agent.setXY(next);
-        currentPos = next;
-        currentPos = agent.getXY();
+        XY next = nodePath.peek();
+        Move m = calculateMove(nodePath);
 
-        return new Move(Action.NOTHING, 0, agent);
+//        if (m == null) {
+//            System.out.print("\r\n null : " + ++nullCount);
+//            agent.update(next);
+//            currentPos = next;
+//            return new Move(Action.NOTHING, 0, agent);
+//        }
+
+        return m;
     }
 
     @Override

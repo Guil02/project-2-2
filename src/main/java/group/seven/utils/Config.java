@@ -17,7 +17,7 @@ public class Config {
     public static AlgorithmType ALGORITHM_INTRUDER = AlgorithmType.A_STAR;
 
     public static boolean GUI_ON = true;
-    public static boolean GA_ON = true;
+    public static boolean GA_ON = false;
 
     public static int MAX_GAME_LENGTH = 10;
     public static GameMode GAMEMODE;
