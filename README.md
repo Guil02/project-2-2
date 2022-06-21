@@ -29,4 +29,3 @@
 
 ### Known bugs:
 * the simulation keeps slowing down for no reason.
-* frontier based algorithm keeps looping.
