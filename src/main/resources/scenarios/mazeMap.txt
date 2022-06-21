@@ -1,10 +1,12 @@
 name = mazeTest_MeliTheBest
 height = 105 // height of map in cells (discrete space) or in units of distance (continuous space)
 width = 200 // width of map in cells (discrete space) or in units of distance (continuous space)
-numGuards = 2
+numGuards = 4
 numIntruders = 4 // will be your exploration agents
-baseSpeedIntruder = 5 // speed of exploration agents when walking
-baseSpeedGuard = 5
+baseSpeedIntruder = 1 // speed of exploration agents when walking
+baseSpeedGuard = 3
+sprintSpeedGuard = 5
+sprintSpeedIntruder = 2
 distanceViewing = 10 // how many cells/units of distance an agent can see features in front of them (except walls or other obstacles are in their way).
 numberMarkers = 5 //number of markers available per marker type (if they are visual markers, they can be seen in the viewing area if not hidden by obstacles).
 smellingDistance = 0 // distance from which you can smell the markers (if they are phereomones) -> from all directions. If you have visual markers only, you can ignore this parameter. It is up to you to decide which markers are visual ones and which are pheremone-like

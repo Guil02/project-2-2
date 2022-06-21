@@ -31,35 +31,45 @@ public class Simulator extends AnimationTimer {
     public static final int maxTime = Config.MAX_GAME_LENGTH;
     public static Random rand = new Random();
     public static Status status;
-    final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
-    final boolean guiMode = Config.GUI_ON;
-    final int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
+    public final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
+    public boolean guiMode = Config.GUI_ON;
+    protected int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
+    protected final int catchIntruderInSight = 14;
     public Scenario scenario;
-    double elapsedTimeSteps;
+    public double elapsedTimeSteps;
     private SimulationScreen display = null;
-    private int count = 0;
-    private long prev; //used for frame-rate calculation (eventually)
+    protected int count = 0;
+    protected long prev; //used for frame-rate calculation (eventually)
+    protected int rotations = 0;
     private boolean gameOver = false;
     private boolean intruderWin = false;
+
+    public Simulator(Scenario scenario, boolean experiment) {
+        this.scenario = scenario;
+        rand = new Random();
+        prev = System.nanoTime();
+        spawnAgents(scenario.GUARD_GAME_MODE);
+        elapsedTimeSteps = 0;
+        status = Status.RUNNING;
+        guiMode = false;
+    }
 
     public Simulator(Scenario scenario) {
         this.scenario = scenario;
         rand = new Random();
-
+        prev = System.nanoTime();
         spawnAgents(scenario.GUARD_GAME_MODE);
-
         elapsedTimeSteps = 0;
+
         if (Config.GUI_ON) {
             display = new SimulationScreen(this);
             Main.stage.setScene(new Scene(display));
             Main.stage.centerOnScreen();
         }
-        //Either there's a bug in my GUI or in the Vision or in the way agents vision is tracked/stored
-        //Arrays.stream(TILE_MAP.agents).forEach(Agent::updateVision);
+
         if (Config.GUI_ON) {
             display.render();
         }
-        prev = System.nanoTime();
         if (Config.GUI_ON) {
             start();
         }
@@ -105,12 +115,17 @@ public class Simulator extends AnimationTimer {
             display.render();   //update GUI
             elapsedTimeSteps += timeStep; //update elapsed time steps
         }
+        System.out.print("\rElapsed Time Steps: " + elapsedTimeSteps + "rotation count: " + rotations + "\t framerate: " + ((double) now - prev) / 1e9);
 
-        //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
-        if (((int) elapsedTimeSteps) % 10 == 0) {
-            Tuple<Double, Double> coverage = calculateCoverage();
-            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
-        }
+
+//        //Goal: update only every second. I realize this is not what's happening here though since handle is being executed ~60x per second
+//        if (((int) elapsedTimeSteps) % 10 == 0) {
+//            Tuple<Double, Double> coverage = calculateCoverage();
+//            display.updateStats(elapsedTimeSteps, coverage); //guard coverage, will move to SimulationScreen to handle prolly
+//        }
+
+        for (Agent a : scenario.agents)
+            a.setTime(elapsedTimeSteps);
 
         //TODO: implement GameOver condition checking
         if (count > 100000) stop();
@@ -146,7 +161,7 @@ public class Simulator extends AnimationTimer {
 
                 case ALL_INTRUDER_AT_TARGET -> {
                     if (scenario.INTRUDERS_AT_TARGET == scenario.NUM_INTRUDERS) {
-                        status = Status.GUARD_WIN;
+                        status = Status.INTRUDER_WIN;
                         return true;
                     }
                 }
@@ -247,6 +262,7 @@ public class Simulator extends AnimationTimer {
                 positionChangeMoves.add(m);
             else
                 rotationChangeMoves.add(m);
+            rotations++;
         }
 
         CollisionHandler.handle(positionChangeMoves, scenario);
@@ -340,12 +356,11 @@ public class Simulator extends AnimationTimer {
             agent.initializeInitialTile();
             //agent.updateVision();
             scenario.TILE_MAP.addAgent(agent);
-//            print("added " + agentType.name() + " : " + agent.getID());
-//            System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
+            print("added " + agentType.name() + " : " + agent.getID());
+            System.out.println(agent.getType() + ": " + agent.getX() + " " + agent.getY());
             i++;
+            scenario.agents.add(agent);
         }
-
-
     }
 
     //we don't really need to calculate the total grids every time
@@ -377,13 +392,15 @@ public class Simulator extends AnimationTimer {
         return new Tuple<>((guardSeenGrids / totalGrids) * 100, (intruderSeenGrids / totalGrids) * 100);
     }
 
-    public boolean checkIntruderInSight(Agent guard, Agent intruder){
+    public boolean checkIntruderInSight(Agent guard, Agent intruder) {
         List<Tile> visionGuard = guard.getSeenTiles();
         XY intruderTile = intruder.getXY();
+        int counter = 0;
         for (Tile tile : visionGuard) {
-            if (tile.getXY().equals(intruderTile)) {
+            if (tile.getXY().equals(intruderTile) && counter <= catchIntruderInSight) {
                 return true;
             }
+            counter++;
         }
         return false;
     }

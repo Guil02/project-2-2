@@ -36,6 +36,7 @@ public abstract class Agent {
     boolean ignorePortal = false;
     boolean isTeleported = false;
     public Scenario scenario;
+    private double currentTime = 0;
 
     //Current Speed
     //Strategy
@@ -111,10 +112,13 @@ public abstract class Agent {
         return seenTiles;
     }
 
+    public void setSeenTiles(List<Tile> seenTiles) {
+        this.seenTiles = seenTiles;
+    }
+
     public List<Tile> getSeenFurthestTiles() {
         return seenFurthestTiles;
     }
-
 
     protected int newID() {
         return IDs++;
@@ -133,13 +137,10 @@ public abstract class Agent {
 
     public int getY() {
         return frame.convertToGlobal(x, y).y();
-//        return y;
     }
 
     public void setY(int y) {
-        //this.y = y;
         this.y = frame.convertToLocal(0, y).y();
-
     }
 
     public XY getXY() {
@@ -304,6 +305,14 @@ public abstract class Agent {
         return this.isTeleported;
     }
 
+    public double getTime() {
+        return currentTime;
+    }
+
+    public void setTime(double elapsedTimeSteps) {
+        currentTime = elapsedTimeSteps;
+    }
+
     @Override
     public String toString() {
         XY global = getXY();
@@ -346,4 +355,7 @@ public abstract class Agent {
         return this.markers;
     }
 
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
+    }
 }

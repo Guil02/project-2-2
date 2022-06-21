@@ -3,7 +3,6 @@ package group.seven.logic.geometric;
 import javafx.geometry.Point2D;
 
 //honestly not even sure If I should include
-//TODO probably should not use this class
 public class Vector extends Point2D implements VectorPoint {
     //Orientation orientation;
 
@@ -18,13 +17,28 @@ public class Vector extends Point2D implements VectorPoint {
         super(x, y);
     }
 
+    public Vector(XY xy) {
+        super(xy.x(), xy.y());
+    }
+
+    @Override
     public XY getXY() {
         return new XY(this);
     }
 
     @Override
-    public int distance(Vector vector) {
-        return (int) distance((Point2D) vector);
+    public int distance(VectorPoint vector) {
+        if (vector instanceof Point2D v) {
+            return (int) v.distance(v);
+        } else if (vector instanceof XY xy) {
+            return (int) distance(xy.x(), xy.y());
+        } else throw new IllegalArgumentException();
+    }
+
+    @Override
+    public int manhattan(VectorPoint vector) {
+        XY diff = getXY().sub(vector.getXY());
+        return Math.abs(diff.x()) + Math.abs(diff.y());
     }
 
 }

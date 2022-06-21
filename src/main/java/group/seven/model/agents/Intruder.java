@@ -8,7 +8,7 @@ import group.seven.logic.algorithms.AStarGoal;
 import group.seven.logic.algorithms.Algorithm;
 import group.seven.logic.algorithms.NN;
 import group.seven.logic.algorithms.RandomAlt;
-import group.seven.logic.algorithms.pathfinding.Astar;
+import group.seven.logic.algorithms.intruders.GraphAstar;
 import group.seven.logic.geometric.Pythagoras;
 import group.seven.logic.geometric.Rectangle;
 import group.seven.logic.geometric.XY;
@@ -53,7 +53,7 @@ public class Intruder extends Agent {
         algorithm = initAlgo(Config.ALGORITHM_INTRUDER); //DEFAULT
         vision = new ConeVision(this); //DEFAULT
         updateOrientationToGoal();
-        currentSpeed = 3; //TODO base soeed?
+        currentSpeed = 3; //TODO base speed?
         maxSpeed = (int) scenario.INTRUDER_SPRINT_SPEED;
     }
 
@@ -66,7 +66,7 @@ public class Intruder extends Agent {
     public Algorithm initAlgo(AlgorithmType type) {
         return switch (type) {
             case A_STAR -> new AStarGoal(this);
-            case A_STAR_ALT -> new Astar(this);
+            case A_STAR_ALT -> new GraphAstar(this);
             case GENETIC_NEURAL_NETWORK -> new NN(this);
             default -> new RandomAlt(this);
         };
@@ -87,9 +87,8 @@ public class Intruder extends Agent {
         this.angleToGoal = angle;
 
 //       this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX() ,this.getY(), x, y); //todo changed to match frame
-        //I think the parameter order might have been wrong
-        this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, this.getX(), x, this.getY(), y); //todo changed to match frame
-
+        //TODO: investtigate ->I think the parameter order might have been wrong
+        this.orientationToGoal = Pythagoras.fromAngleToCardinal(angle, agentGlobal.x(), x, agentGlobal.y(), y); //todo changed to match frame
     }
 
     public Cardinal getOrientationToGoal() {
@@ -161,6 +160,7 @@ public class Intruder extends Agent {
     public Intruder algorithm(Algorithm algorithm) {
         this.algorithm = switch (algorithm.getType()) {
             case A_STAR -> new AStarGoal(this);
+            case A_STAR_ALT -> new GraphAstar(this);
             default -> new RandomAlt(this);
         };
 
@@ -171,6 +171,7 @@ public class Intruder extends Agent {
     public Intruder algorithm(AlgorithmType algorithm) {
         this.algorithm = switch (algorithm) {
             case A_STAR -> new AStarGoal(this);
+            case A_STAR_ALT -> new GraphAstar(this);
             default -> new RandomAlt(this);
         };
 
@@ -199,10 +200,11 @@ public class Intruder extends Agent {
     }
 
     public void killIntruder() {
-        if (this.alive) {
-            scenario.INTRUDERS_CAUGHT++;
-            this.alive = false;
-            System.out.println("Intruder " + ID + " just got shot");
+        if (alive) {
+            //scenario.INTRUDERS_CAUGHT++;
+            alive = false;
+            System.out.println("\nIntruder " + ID + " just got shot");
+            scenario.removeIntruder(this);
         }
     }
 

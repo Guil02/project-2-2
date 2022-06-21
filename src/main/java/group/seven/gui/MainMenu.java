@@ -47,6 +47,8 @@ public class MainMenu {
     @FXML
     private Label messageLabel;
     @FXML
+    private Button newExperimentBtn;
+    @FXML
     private Label algorithmLabel0;
     @FXML
     private Label algorithmLabel1;
@@ -58,6 +60,7 @@ public class MainMenu {
     private RadioButton uploadToggle;
     @FXML
     private RadioButton existingToggle;
+
     private File scenarioFile;
     private Map<String, Image> mapLibrary;
     private int count = 1;
@@ -71,7 +74,7 @@ public class MainMenu {
 
         if (!algorithm.equals("Choose Guard") && !algorithm2.equals(("Choose Intruder")) && !gamemode.equals("Choose Gamemode")) {
             Config.ALGORITHM_GUARD = AlgorithmType.getEnum(algorithm);
-            System.out.println("BRICK GOT SELECTED "+AlgorithmType.getEnum(algorithm));
+            System.out.println("BRICK GOT SELECTED " + AlgorithmType.getEnum(algorithm));
             Config.ALGORITHM_INTRUDER = AlgorithmType.getEnum(algorithm2);
             Config.GAMEMODE = GameMode.getEnum(gamemode);
 
@@ -82,6 +85,12 @@ public class MainMenu {
         } else {
             messageLabel.setText("Please Select an Algorithm");
         }
+    }
+
+    @FXML
+    void newExperiment(ActionEvent event) {
+        ExperimentMenu menu = new ExperimentMenu(new ScenarioBuilder(scenarioFile).build());
+
     }
 
     @FXML
@@ -148,12 +157,20 @@ public class MainMenu {
         messageLabel.setText("");
         logDataChoice.setOnAction(event -> Config.LOG_DATA = !Config.LOG_DATA);
 
-        mapLibrary = new LinkedHashMap<>(3);
+        mapLibrary = new LinkedHashMap<>(4);
         mapLibrary.put("biggerTestMap.txt", new Image("/img/biggerTestMap.png"));
+        mapLibrary.put("complex_map.txt", new Image("/img/complex_map.png"));
+        mapLibrary.put("mazeMap.txt", new Image("/img/examinermap_phase1.png"));
+        mapLibrary.put("small_map.txt", new Image("/img/small_map.png"));
+        mapLibrary.put("tiny.txt", new Image("/img/tiny.png"));
         mapLibrary.put("testmap.txt", new Image("/img/testmap.png"));
         mapLibrary.put("examinermap_phase1.txt", new Image("/img/examinermap_phase1.png"));
 
         maps.add("biggerTestMap.txt");
+        maps.add("complex_map.txt");
+        maps.add("mazeMap.txt");
+        maps.add("small_map.txt");
+        maps.add("tiny.txt");
         maps.add("testmap.txt");
         maps.add("examinermap_phase1.txt");
 
@@ -181,6 +198,7 @@ public class MainMenu {
 
         chosenIntruder.getItems().addAll(
                 "A*",
+                "A* Alt",
                 "Genetic Neural Network",
                 "Random"
         );

@@ -7,30 +7,27 @@ import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
 import group.seven.model.environment.TileNode;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static group.seven.enums.TileType.WALL;
 
 public class AStarPathFinder {
 
-    public static int instances = 0;
+    //public static int instances = 0;
 
     private final AStarNode currentNode;
+
+    private AStarNode target;
     private final Agent player;
     int[][] additions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; //TODO: maybe remove
     List<Move> movesLeft; // moves left to do //TODO: maybe remove
     List<AStarNode> open;//TODO: maybe remove
     List<AStarNode> closed; //TODO: maybe remove
-    private AStarNode target;
     private TileNode[][] internalMap; // agent representation
 
-
     public AStarPathFinder(Agent player, XY goal) {
-        instances++;
-//        System.out.print("\r number: " + instances + " from: " + player.getType());
+        //instances++;
+        //System.out.print("\r number: " + instances + " from: " + player.getType());
         this.target = new AStarNode(goal, this);
         open = new ArrayList<>();
         closed = new ArrayList<>();
@@ -42,24 +39,32 @@ public class AStarPathFinder {
         //internalMap.add(new TileNode(new Tile(startCoordinate.x(), startCoordinate.y())));
     }
 
-
     public List<Move> findPath() {
         internalMap = player.getMap();
-        List<AStarNode> openedNodes = new ArrayList<>();
-        List<AStarNode> closedNodes = new ArrayList<>();
+        LinkedList<AStarNode> openedNodes = new LinkedList<>();
+        List<AStarNode> closedNodes = new LinkedList<>();
         openedNodes.add(currentNode);
         currentNode.updateCost();
 
         while (!openedNodes.isEmpty()) {
-            AStarNode node = openedNodes.get(0);
+//            AStarNode node = openedNodes.get(0);
+            AStarNode node = openedNodes.getFirst();
             for (int i = 1; i < openedNodes.size(); i++) {
-                if (openedNodes.get(i).getfCost() < node.getfCost()) {
-                    node = openedNodes.get(i);
-                } else if (openedNodes.get(i).getfCost() == node.getfCost()) {
-                    if (openedNodes.get(i).gethCost() < node.gethCost()) {
-                        node = openedNodes.get(i);
-                    }
+                AStarNode ith = openedNodes.get(i);
+                if (ith.getfCost() < node.getfCost()) {
+                    node = ith;
+                } else if (ith.getfCost() == node.getfCost()) {
+                    if (ith.gethCost() < node.gethCost())
+                        node = ith;
                 }
+
+//                if (openedNodes.get(i).getfCost() < node.getfCost()) {
+//                    node = openedNodes.get(i);
+//                } else if (openedNodes.get(i).getfCost() == node.getfCost()) {
+//                    if (openedNodes.get(i).gethCost() < node.gethCost()) {
+//                        node = openedNodes.get(i);
+//                    }
+//                }
             }
             openedNodes.remove(node);
             //System.out.println("agent"+player.getType());
@@ -91,7 +96,6 @@ public class AStarPathFinder {
         return makePath();
     }
 
-
     public List<AStarNode> neighbours(AStarNode node) {
         int x = node.getX();
         int y = node.getY();
@@ -106,7 +110,6 @@ public class AStarPathFinder {
         }
         return neighbours;
     }
-
 
     public boolean outOfBounds(int x, int y) {
         return x < 0 || x >= internalMap.length || y < 0 || y >= internalMap[0].length;
@@ -138,7 +141,8 @@ public class AStarPathFinder {
 
     // from path of nodes to path of actions
     public List<Action> actionsPath(List<AStarNode> nodePath) {
-        List<Action> actionPath = new ArrayList<>();
+//        List<Action> actionPath = new ArrayList<>();
+        List<Action> actionPath = new LinkedList<>();
         Cardinal orientation = player.getDirection();
         for (int i = 0; i < nodePath.size() - 1; i++) {
             AStarNode previous = nodePath.get(i);
@@ -180,7 +184,6 @@ public class AStarPathFinder {
         return actionPath;
     }
 
-
     public List<AStarNode> nodePath() {
         List<AStarNode> nodePath = new ArrayList<>();
         AStarNode node = target;
@@ -219,7 +222,6 @@ public class AStarPathFinder {
             this.aStarPath = aStarPath;
         }
 
-
         public void updateCost() {
             updateGCost();
             updateHCost();
@@ -242,7 +244,6 @@ public class AStarPathFinder {
         public XY getCoordinate() {
             return coordinate;
         }
-
 
         public int getfCost() {
             return fCost;
@@ -280,7 +281,6 @@ public class AStarPathFinder {
             this.parent = parent;
         }
 
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -288,7 +288,6 @@ public class AStarPathFinder {
             AStarNode aStarNode = (AStarNode) o;
             return Objects.equals(coordinate, aStarNode.coordinate);
         }
-
 
         @Override
         public String toString() {

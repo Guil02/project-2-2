@@ -60,6 +60,10 @@ public class ScenarioBuilder implements Builder<Scenario> {
 
     }
 
+    public ScenarioBuilder(boolean o) {
+        this(new File(Config.DEFAULT_MAP_PATH));
+    }
+
     /**
      * This method must be called in order to actually assemble the Scenario object
      *

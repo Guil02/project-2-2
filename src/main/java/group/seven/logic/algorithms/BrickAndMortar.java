@@ -6,10 +6,10 @@ import group.seven.enums.Cardinal;
 import group.seven.logic.geometric.XY;
 import group.seven.model.agents.Agent;
 import group.seven.model.agents.Move;
-import group.seven.model.environment.TileNode;
 import group.seven.model.environment.Adjacent;
 import group.seven.model.environment.Scenario;
 import group.seven.model.environment.Tile;
+import group.seven.model.environment.TileNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,8 +172,9 @@ public class BrickAndMortar implements Algorithm {
         } else if (t == null || t.getExploreType() == UNEXPLORED) {
             if (t != null) {
                 d.unexplored.add(t);
+                d.unexploredTiles++;
             }
-            d.unexploredTiles++;
+//            d.unexploredTiles++;
         } else if (t.getExploreType() == EXPLORED) {
             d.exploredTiles++;
         }
@@ -204,18 +205,17 @@ public class BrickAndMortar implements Algorithm {
      * an inner class made to store some information about the tile and its neighbours
      */
     static class D {
-        //        the amount of explored + unexplored neighbours it has
+        // the amount of explored + unexplored neighbours it has
         int exploredTiles = 0;
-        //        the amount of unexplored
+        //the amount of unexplored
         int unexploredTiles = 0;
-        //        a list containing all the unexplored tiles in the neighbourhood
+        //a list containing all the unexplored tiles in the neighbourhood
         List<TileNode> unexplored = new ArrayList<>();
     }
 
 
     private Action getAction(Cardinal c) {
         switch (c) {
-
             case NORTH -> {
                 return TURN_UP;
             }
