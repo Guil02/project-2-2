@@ -5,6 +5,7 @@ import group.seven.enums.AlgorithmType;
 import group.seven.enums.Cardinal;
 import group.seven.logic.algorithms.*;
 import group.seven.logic.vision.ConeVision;
+import group.seven.logic.vision.RectangleVision;
 import group.seven.logic.vision.Vision;
 import group.seven.model.environment.Marker;
 import group.seven.model.environment.Pheromone;
