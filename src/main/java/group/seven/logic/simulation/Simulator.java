@@ -32,7 +32,7 @@ public class Simulator extends AnimationTimer {
     public static Random rand = new Random();
     public static Status status;
     public final double timeStep = 0.1; //Or should get from Config or from Scenario, idk
-    public boolean guiMode = true;
+    public boolean guiMode = Config.GUI_ON;
     protected int TIME_NEEDED_IN_TARGET_AREA_INTRUDER = 5;
     protected final int catchIntruderInSight = 14;
     public Scenario scenario;
@@ -41,6 +41,8 @@ public class Simulator extends AnimationTimer {
     protected int count = 0;
     protected long prev; //used for frame-rate calculation (eventually)
     protected int rotations = 0;
+    private boolean gameOver = false;
+    private boolean intruderWin = false;
 
     public Simulator(Scenario scenario, boolean experiment) {
         this.scenario = scenario;
@@ -84,10 +86,12 @@ public class Simulator extends AnimationTimer {
      * The only difference is that it runs without the GUI.
      */
     private void runSimulation() {
-        while (count < maxTime) {
+        while (count < maxTime && !gameOver) {
             count++;
             update();
         }
+        scenario.storeTimeTaken(count);
+        scenario.storeIntruderWin(intruderWin);
     }
 
     public void pause() {
@@ -196,13 +200,17 @@ public class Simulator extends AnimationTimer {
             if (agent.agentType == GUARD) {
                 for (Agent intruder : scenario.TILE_MAP.agents) {
                     if (intruder.agentType == INTRUDER) {
-                        if (checkIntruderInSight(agent, intruder)) {
-                            //if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
+                        if (checkIntruderInSight(agent,intruder)) {
+                        //if (agent.getXY().equalsWithinRange(intruder.getXY(), RANGE_TO_CATCH_INTRUDER)) {
                             ((Intruder) intruder).killIntruder();
 
                             if (checkGameOver(scenario.GUARD_GAME_MODE, GUARD)) {
-                                System.out.println("GUARDS WON");
-                                stop();
+                                if (Config.GUI_ON) {
+                                    System.out.println("GUARDS WON");
+                                    stop();
+                                } else {
+                                    gameOver = true;
+                                }
                                 Agent.IDs = 0;
                                 if (guiMode)
                                     endSimulation();
@@ -216,12 +224,19 @@ public class Simulator extends AnimationTimer {
                     if (intruder.agentType == INTRUDER) {
                         if (scenario.targetArea.contains(intruder.getXY())) {
                             int inTargetAreaSince = ((Intruder) intruder).intruderInTargetArea();
-                            print("Intruder " + intruder.getID() + " made it to target");
-                            print("In target area since: " + inTargetAreaSince);
+                            if (Config.GUI_ON) {
+                                print("Intruder " + intruder.getID() + " made it to target");
+                                print("In target area since: " + inTargetAreaSince);
+                            }
                             if (inTargetAreaSince >= TIME_NEEDED_IN_TARGET_AREA_INTRUDER) {
                                 if (checkGameOver(scenario.INTRUDER_GAME_MODE, INTRUDER)) {
-                                    System.out.println("INTRUDER WON");
-                                    stop(); // stops AnimationTimer
+                                    if (Config.GUI_ON) {
+                                        System.out.println("INTRUDER WON");
+                                        stop(); // stops AnimationTimer
+                                    } else {
+                                        gameOver = true;
+                                        intruderWin = true;
+                                    }
                                     Agent.IDs = 0;
                                     if (guiMode)
                                         endSimulation();

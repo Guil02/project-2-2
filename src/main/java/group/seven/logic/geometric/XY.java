@@ -11,13 +11,12 @@ import javafx.geometry.Point2D;
  * @param y int y coordinate
  */
 public record XY(int x, int y) implements VectorPoint {
+    public XY(Point2D p) {
+        this((int) p.getX(), (int) p.getY());
+    }
 
     public XY add(int X, int Y) {
         return new XY(x() + X, y() + Y);
-    }
-
-    public XY(Point2D p) {
-        this((int) p.getX(), (int) p.getY());
     }
 
     public boolean equalsWithinRange(XY xy, int range) {
@@ -25,6 +24,10 @@ public record XY(int x, int y) implements VectorPoint {
         Point2D intruder = new Point2D(xy.x, xy.y);
         double distance = guard.distance(intruder);
         return distance <= range;
+    }
+
+    public boolean equals(XY xy) {
+        return this.x() == xy.x() && this.y() == xy.y();
     }
 
     public XY add(XY other) {

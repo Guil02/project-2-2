@@ -17,11 +17,15 @@ public record Component(Rectangle area, TileType type, XY exit, Cardinal exitDir
         return area().contains(xy.x(), xy.y());
     }
 
-    public int getX(){
+    public int getX() {
         return area().getX();
     }
 
-    public int getY(){
+    public int getY() {
         return area().getY();
+    }
+
+    public XY getXY() {
+        return new XY(area.getX(), area.getY());
     }
 }

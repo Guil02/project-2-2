@@ -118,6 +118,7 @@ public class Methods {
                 }
                 fileWriter.write("\n");
             }
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("file not found");

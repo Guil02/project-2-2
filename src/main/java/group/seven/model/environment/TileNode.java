@@ -64,7 +64,7 @@ public class TileNode {
 //            }
 //        }
         for (Agent agent : scenario.TILE_MAP.agents) { //mine
-            if (agent.getXY().equals(xy)) {
+            if (agent != null && agent.getXY().equals(xy)) {
                 this.agentType = agent.agentType;
                 break;
             }

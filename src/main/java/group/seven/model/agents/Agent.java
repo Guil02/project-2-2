@@ -112,10 +112,13 @@ public abstract class Agent {
         return seenTiles;
     }
 
+    public void setSeenTiles(List<Tile> seenTiles) {
+        this.seenTiles = seenTiles;
+    }
+
     public List<Tile> getSeenFurthestTiles() {
         return seenFurthestTiles;
     }
-
 
     protected int newID() {
         return IDs++;
@@ -350,5 +353,9 @@ public abstract class Agent {
 
     public ArrayList<Marker> getMarkers() {
         return this.markers;
+    }
+
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
     }
 }

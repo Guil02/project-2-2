@@ -1,5 +1,6 @@
 package group.seven.logic.algorithms.GeneticNeuralNetwork;
 
+import group.seven.utils.Config;
 import group.seven.utils.Methods;
 
 import java.net.URISyntaxException;
@@ -8,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static group.seven.logic.algorithms.GeneticNeuralNetwork.GeneticAlgorithm.fileName2;
+
 public class Population {
-    private final static int numberOfStrongest = 20;
-    private final static int numberOfSurvivors = 10;
+    private final static int numberOfStrongest = 40;
+    private final static int numberOfSurvivors = 20;
     private final static String fileName = "TBD";
     private final int chromosomeLength;
     List<Individual> population;
@@ -31,15 +34,27 @@ public class Population {
     }
 
     private void readInWeights() {
-        List<List<Double>> weights = Methods.readGAWeights(fileName);
-        throw new UnsupportedOperationException("Operation not implemented yet");
+        if (Config.DEBUG_MODE) {
+            System.out.println("started reading weights");
+        }
+        List<List<Double>> weights = Methods.readGAWeights(GeneticAlgorithm.fileName);
+        if (Config.DEBUG_MODE) {
+            System.out.println("finished reading weights");
+        }
+        int index = 0;
+        for (Individual i : population) {
+            i.setChromosome(weights.get(index++));
+        }
     }
 
     /**
      * Updates the population to a new generation. (Combination of consecutive methods)
      */
     public void updateGeneration() {
-        updateFitness();
+//        updateFitness();
+        for (Individual i : population) {
+            i.setCurrentScenario(null);
+        }
         steadyStateSelection();
         mutatePopulation();
     }
@@ -57,6 +72,7 @@ public class Population {
             Collections.reverse(population);
             isSorted = true;
         }
+        System.out.println("Best performance: " + population.get(0).getFitness());
         birth();
     }
 
@@ -148,10 +164,10 @@ public class Population {
     public void storeWeights() {
         List<List<Double>> list = new ArrayList<>();
         for (int i = 0; i < GeneticAlgorithm.amountToStore; i++) {
-            list.add(population.get(0).getChromosome());
+            list.add(population.get(i).getChromosome());
         }
         try {
-            Methods.writeWeights(list, Paths.get(getClass().getResource(GeneticAlgorithm.fileName2).toURI()).toFile());
+            Methods.writeWeights(list, Paths.get(getClass().getResource(fileName2).toURI()).toFile());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

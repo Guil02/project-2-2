@@ -49,24 +49,22 @@ public class ConeVision implements Vision {
                 int x_counter = 1;
                 int see_wall = 0;
                 // <= or <, ceck the for loops with debugging
-                outerloop:
                 for (int y = yCoordinate - counter; y >= yCoordinate - distance; y--) {
                     for (int x = xCoordinate - x_counter; x <= xCoordinate + x_counter; x++) {
-                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x > 0 && y > 0) {
-                            if (blockedTiles.contains(x)) {
-                                break outerloop;
-                            } else if (agent.scenario.TILE_MAP.getTile(x, y).getType() == WALL) {
-                                blockedTiles.add(x);
-                                break outerloop;
-                            } else {
-                                observe(x, y, observedTiles, agent);
-                            }
-                            // see_wall++;
-                            // for (int i = y; y <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
-                            //     blockedTiles.add(x - see_wall * i);
-                            //     blockedTiles.add(x + see_wall * i);
-                            //     System.out.println("STUCK HERE 1");
-                            // }
+                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x >= 0 && y >= 0) {
+                            if (x == xCoordinate - x_counter) {
+                                if (blockedTiles.contains(xCoordinate - x_counter + 1)) {
+                                    blockedTiles.add(x);
+                                    continue;
+                                } else doChecksX(agent, observedTiles, blockedTiles, x, y);
+                            } else if (x == xCoordinate + x_counter) {
+                                if (blockedTiles.contains(xCoordinate + x_counter - 1)) {
+                                    blockedTiles.add(x);
+                                    continue;
+                                } else doChecksX(agent, observedTiles, blockedTiles, x, y);
+                            } else if (blockedTiles.contains(x)) {
+                                continue;
+                            } else doChecksX(agent, observedTiles, blockedTiles, x, y);
                         }
                     }
                     x_counter++;
@@ -78,24 +76,22 @@ public class ConeVision implements Vision {
                 int counter = 1;
                 int x_counter = 1;
                 int see_wall = 0;
-                outerloop:
                 for (int y = yCoordinate + counter; y <= yCoordinate + distance; y++) {
                     for (int x = xCoordinate - x_counter; x <= xCoordinate + x_counter; x++) {
-                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x > 0 && y > 0) {
-                            if (blockedTiles.contains(x)) {
-                                break outerloop;
-                            } else if (agent.scenario.TILE_MAP.getTile(x, y).getType() == WALL) {
-                                blockedTiles.add(x);
-                                break outerloop;
-                            } else {
-                                observe(x, y, observedTiles, agent);
-                            }
-                            // see_wall++;
-                            // for (int i = y; y <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
-                            //     blockedTiles.add(x - see_wall * i);
-                            //     blockedTiles.add(x + see_wall * i);
-                            //     System.out.println("STUCK HERE 1");
-                            // }
+                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x >= 0 && y >= 0) {
+                            if (x == xCoordinate - x_counter) {
+                                if (blockedTiles.contains(xCoordinate - x_counter + 1)) {
+                                    blockedTiles.add(x);
+                                    continue;
+                                } else doChecksX(agent, observedTiles, blockedTiles, x, y);
+                            } else if (x == xCoordinate + x_counter) {
+                                if (blockedTiles.contains(xCoordinate + x_counter - 1)) {
+                                    blockedTiles.add(x);
+                                    continue;
+                                } else doChecksX(agent, observedTiles, blockedTiles, x, y);
+                            } else if (blockedTiles.contains(x)) {
+                                continue;
+                            } else doChecksX(agent, observedTiles, blockedTiles, x, y);
                         }
                     }
                     x_counter++;
@@ -107,24 +103,26 @@ public class ConeVision implements Vision {
                 int counter = 1;
                 int y_counter = 1;
                 int see_wall = 0;
-                outerloop:
                 for (int x = xCoordinate + counter; x <= xCoordinate + distance; x++) {
                     for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
-                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x > 0 && y > 0) {
-                            if (blockedTiles.contains(x)) {
-                                break outerloop;
-                            } else if (agent.scenario.TILE_MAP.getTile(x, y).getType() == WALL) {
-                                blockedTiles.add(x);
-                                break outerloop;
-                            } else {
-                                observe(x, y, observedTiles, agent);
-                            }
-                            // see_wall++;
-                            // for (int i = y; y <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
-                            //     blockedTiles.add(x - see_wall * i);
-                            //     blockedTiles.add(x + see_wall * i);
-                            //     System.out.println("STUCK HERE 1");
-                            // }
+                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x >= 0 && y >= 0) {
+                            if (y == yCoordinate - y_counter) {
+                                if (blockedTiles.contains(yCoordinate - y_counter + 1)) {
+                                    blockedTiles.add(y);
+                                    continue;
+                                } else {
+                                    doChecksY(agent, observedTiles, blockedTiles, x, y);
+                                }
+                            } else if (y == yCoordinate + y_counter - 1) {
+                                if (blockedTiles.contains(yCoordinate + y_counter - 1)) {
+                                    blockedTiles.add(y);
+                                    continue;
+                                } else {
+                                    doChecksY(agent, observedTiles, blockedTiles, x, y);
+                                }
+                            } else if (blockedTiles.contains(y)) {
+                                continue;
+                            } else doChecksY(agent, observedTiles, blockedTiles, x, y);
                         }
                     }
                     y_counter++;
@@ -136,25 +134,26 @@ public class ConeVision implements Vision {
                 List<Integer> blockedTiles = new LinkedList<>();
                 int counter = 1;
                 int y_counter = 1;
-                int see_wall = 0;
-                outerloop:
                 for (int x = xCoordinate - counter; x >= xCoordinate - distance; x--) {
                     for (int y = yCoordinate - y_counter; y <= yCoordinate + y_counter; y++) {
-                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x > 0 && y > 0) {
-                            if (blockedTiles.contains(x)) {
-                                break outerloop;
-                            } else if (agent.scenario.TILE_MAP.getTile(x, y).getType() == WALL) {
-                                blockedTiles.add(x);
-                                break outerloop;
-                            } else {
-                                observe(x, y, observedTiles, agent);
-                            }
-                            // see_wall++;
-                            // for (int i = y; y <= yCoordinate - Scenario.VIEW_DISTANCE; i--) {
-                            //     blockedTiles.add(x - see_wall * i);
-                            //     blockedTiles.add(x + see_wall * i);
-                            //     System.out.println("STUCK HERE 1");
-                            // }
+                        if (y < agent.scenario.HEIGHT && x < agent.scenario.WIDTH && x >= 0 && y >= 0) {
+                            if (y == yCoordinate - y_counter) {
+                                if (blockedTiles.contains(yCoordinate - y_counter + 1)) {
+                                    blockedTiles.add(y);
+                                    continue;
+                                } else {
+                                    doChecksY(agent, observedTiles, blockedTiles, x, y);
+                                }
+                            } else if (y == yCoordinate + y_counter - 1) {
+                                if (blockedTiles.contains(yCoordinate + y_counter - 1)) {
+                                    blockedTiles.add(y);
+                                    continue;
+                                } else {
+                                    doChecksY(agent, observedTiles, blockedTiles, x, y);
+                                }
+                            } else if (blockedTiles.contains(y)) {
+                                continue;
+                            } else doChecksY(agent, observedTiles, blockedTiles, x, y);
                         }
                     }
                     y_counter++;
@@ -165,6 +164,24 @@ public class ConeVision implements Vision {
 
         counterBIG++;
         return observedTiles;
+    }
+
+    private void doChecksX(Agent agent, List<Tile> observedTiles, List<Integer> blockedTiles, int x, int y) {
+        if (agent.scenario.TILE_MAP.getTile(x, y).getType() == WALL) {
+            observe(x, y, observedTiles, agent);
+            blockedTiles.add(x);
+        } else {
+            observe(x, y, observedTiles, agent);
+        }
+    }
+
+    private void doChecksY(Agent agent, List<Tile> observedTiles, List<Integer> blockedTiles, int x, int y) {
+        if (agent.scenario.TILE_MAP.getTile(x, y).getType() == WALL) {
+            blockedTiles.add(y);
+            observe(x, y, observedTiles, agent);
+        } else {
+            observe(x, y, observedTiles, agent);
+        }
     }
 
     @Override
