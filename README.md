@@ -1,4 +1,4 @@
-# Group07_2022
+# Group 7: Guillaume Bams, Rosamelia Carioni Porras, Sam Glassman, Xander Karnebeek, Roman Marjusins, Elena Perego, Mischa Rauch
 
 ## Multi-Agent Surveillance!
 
