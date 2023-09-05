@@ -2,6 +2,8 @@
 
 # Multi-agent system for guarding and intruding an unknown area
 
+This project implements A* and Genetic Neural Network algorithms to reproduce intelligent intruders and Artificial Fish Swarm, Brick and Mortar, and Ants Patrol algorithms to imitate the behavior of intelligent guards.
+
 ### How to run:
 
 1. Unzip the source code project folder.
@@ -26,6 +28,3 @@
    4. Set variable GameMode to 3 for ```One Intuder at Target```
    5. Set variable GameMode to 4 for ```All Intruder at Target```
 4. Enjoy - in the bottom you can find the elapsed time and the current total coverage. "Follow" different agents by clicking on their associated icon. Make sure to zoom in/out to see the whole map.
-
-### Known bugs:
-* the simulation keeps slowing down for no reason.
