@@ -1,6 +1,6 @@
-# Group 7: Guillaume Bams, Rosamelia Carioni Porras, Sam Glassman, Xander Karnebeek, Roman Marjusins, Elena Perego, Mischa Rauch
+## Group 7: Guillaume Bams, Rosamelia Carioni Porras, Sam Glassman, Xander Karnebeek, Roman Marjusins, Elena Perego, Mischa Rauch
 
-## Multi-Agent Surveillance!
+# Multi-agent system for guarding and intruding an unknown area
 
 ### How to run:
 
