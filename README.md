@@ -2,8 +2,8 @@
 
 This repository contains a multi-agent system designed for guarding and intruding an unknown area. This research delves into the application of various algorithms to simulate the behaviour of intelligent intruders and guards. The primary algorithms implemented include A*, Genetic Neural Network, Artificial Fish Swarm, Brick and Mortar, and Ants Patrol.
 
-## Essay:
-For a detailed understanding of the research and methodologies employed in this project, you can refer to the [essay](https://drive.google.com/file/d/1oQJD-LeZYbpJkblvc1ZNCZFuouJtjkN9/view?usp=share_link).
+## Report:
+For a detailed understanding of the research and methodologies employed in this project, you can refer to the [report](https://drive.google.com/file/d/1oQJD-LeZYbpJkblvc1ZNCZFuouJtjkN9/view?usp=share_link).
 
 ## Team Members
 Guillaume Bams, Rosamelia Carioni Porras, Sam Glassman, Xander Karnebeek, Roman Marjusins, Elena Perego, Mischa Rauch
